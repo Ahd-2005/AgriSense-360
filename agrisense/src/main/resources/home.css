@@ -54,9 +54,9 @@
 .sidebar {
     -fx-background-color: linear-gradient(to bottom, rgba(32, 61, 28, 0.98) 0%, rgba(24, 44, 20, 0.98) 100%);
     -fx-text-fill: #f6f6f2;
-    -fx-padding: 36px 28px;
-    -fx-pref-width: 300px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 5);
+    -fx-padding: 36px 20px;
+    -fx-pref-width: 260px;
+    -fx-min-width: 0;
 }
 
 .sidebar-toggle {
@@ -121,6 +121,7 @@
     -fx-alignment: center-left;
     -fx-text-fill: inherit;
     -fx-cursor: hand;
+    -fx-wrap-text: true;
 }
 
 .nav-link:hover {

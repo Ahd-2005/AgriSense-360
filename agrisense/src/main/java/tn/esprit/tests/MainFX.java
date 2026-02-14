@@ -23,6 +23,8 @@ public class MainFX extends Application {
             primaryStage.setScene(scene);
             primaryStage.setMinWidth(900);
             primaryStage.setMinHeight(600);
+            primaryStage.setWidth(1200);
+            primaryStage.setHeight(800);
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
