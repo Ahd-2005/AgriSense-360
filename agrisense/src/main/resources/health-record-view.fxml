@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.controllers.HealthRecordController"
+           dividerPositions="0.5" styleClass="tab-content-area">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <VBox styleClass="form-section" spacing="15" minWidth="380">
+        <Label text="Health Records by Animal" styleClass="form-title"/>
+        <GridPane hgap="15" vgap="10">
+            <Label text="Select Animal:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="animalCombo" promptText="Choose animal" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="250" onAction="#onAnimalSelected"/>
+
+            <Label text="Record Date:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <DatePicker fx:id="recordDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Label text="Weight (kg):" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="weightField" promptText="kg" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="Appetite:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <ComboBox fx:id="appetiteCombo" promptText="Select" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="150"/>
+
+            <Label text="Condition:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <ComboBox fx:id="conditionCombo" promptText="Select" GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="150"/>
+
+            <Label fx:id="productionLabel" text="Production:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <TextField fx:id="productionField" promptText="value" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+            <Label text="Notes:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <TextField fx:id="notesField" promptText="Optional notes" GridPane.columnIndex="1" GridPane.rowIndex="6" prefWidth="250"/>
+
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                <Button text="Add Record" onAction="#onAddRecord"/>
+                <Button text="Update" fx:id="updateBtn" onAction="#onUpdateRecord" disable="true"/>
+                <Button text="Delete" fx:id="deleteBtn" styleClass="button-danger" onAction="#onDeleteRecord" disable="true"/>
+            </HBox>
+        </GridPane>
+    </VBox>
+
+
+    <VBox styleClass="form-section" minWidth="400">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="recordsTitleLabel" text="Health Records for Selected Animal" styleClass="form-title"/>
+            <Button text="Refresh" onAction="#onRefreshRecords"/>
+        </HBox>
+        <TableView fx:id="recordTable" VBox.vgrow="ALWAYS" minHeight="200" prefHeight="250">
+            <columns>
+                <TableColumn fx:id="colRecordId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colRecordDate" text="Date" prefWidth="100"/>
+                <TableColumn fx:id="colWeight" text="Weight" prefWidth="70"/>
+                <TableColumn fx:id="colAppetite" text="Appetite" prefWidth="80"/>
+                <TableColumn fx:id="colCondition" text="Condition" prefWidth="80"/>
+                <TableColumn fx:id="colProduction" text="Production" prefWidth="80"/>
+                <TableColumn fx:id="colNotes" text="Notes" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </VBox>
+</SplitPane>

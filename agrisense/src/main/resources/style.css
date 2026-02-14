@@ -1,0 +1,93 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #f5f5f5;
+}
+
+.tab-pane {
+    -fx-background-color: #f5f5f5;
+}
+
+.tab {
+    -fx-background-color: #e0e0e0;
+    -fx-padding: 12 24;
+}
+
+.tab:selected {
+    -fx-background-color: #333;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: white;
+}
+
+.tab-label {
+    -fx-text-fill: #333;
+}
+
+.tab-content-area {
+    -fx-background-color: #f5f5f5;
+}
+
+
+.form-section {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1;
+}
+
+.form-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding: 0 0 15 0;
+}
+
+.button {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #555;
+}
+
+.button-danger {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+}
+
+.button-danger:hover {
+    -fx-background-color: #555;
+}
+
+.text-field, .combo-box {
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+}
+
+.table-view {
+    -fx-background-color: white;
+}
+
+.table-view .column-header {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+    -fx-padding: 12 10;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fafafa;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #e0e0e0;
+}
+
+.label {
+    -fx-text-fill: #333;
+}
