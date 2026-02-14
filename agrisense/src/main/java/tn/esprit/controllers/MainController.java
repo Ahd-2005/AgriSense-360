@@ -1,21 +1,40 @@
 package tn.esprit.controllers;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.io.IOException;
 
 public class MainController {
 
+    @FXML private GridPane mainRootPane;
+    @FXML private VBox sidebar;
     @FXML private StackPane contentStack;
 
     private Node animalsView;
+    private boolean sidebarExpanded = true;
+    private static final double SIDEBAR_WIDTH_EXPANDED = 260.0;
+    private static final double SIDEBAR_WIDTH_COLLAPSED = 0.0;
 
     @FXML
     private void initialize() {
-
+        Rectangle clip = new Rectangle();
+        clip.widthProperty().bind(sidebar.widthProperty());
+        clip.heightProperty().bind(sidebar.heightProperty());
+        sidebar.setClip(clip);
+        sidebar.setMinWidth(0);
+        ColumnConstraints col = mainRootPane.getColumnConstraints().get(0);
+        col.setMaxWidth(SIDEBAR_WIDTH_EXPANDED);
     }
 
     @FXML
@@ -69,6 +88,28 @@ public class MainController {
 
     @FXML
     private void toggleSidebar() {
-
+        ColumnConstraints col = mainRootPane.getColumnConstraints().get(0);
+        double targetWidth = sidebarExpanded ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_EXPANDED;
+        col.setMinWidth(0);
+        if (sidebarExpanded) {
+            col.setMaxWidth(SIDEBAR_WIDTH_EXPANDED);
+        } else {
+            sidebar.setVisible(true);
+        }
+        KeyValue kvPref = new KeyValue(col.prefWidthProperty(), targetWidth);
+        KeyValue kvMin = new KeyValue(col.minWidthProperty(), targetWidth);
+        KeyValue kvMax = new KeyValue(col.maxWidthProperty(), targetWidth);
+        KeyFrame kf = new KeyFrame(Duration.millis(280), kvPref, kvMin, kvMax);
+        Timeline timeline = new Timeline(kf);
+        timeline.setOnFinished(e -> {
+            sidebarExpanded = !sidebarExpanded;
+            if (sidebarExpanded) {
+                col.setMaxWidth(SIDEBAR_WIDTH_EXPANDED);
+            } else {
+                col.setMaxWidth(SIDEBAR_WIDTH_COLLAPSED);
+                sidebar.setVisible(false);
+            }
+        });
+        timeline.play();
     }
 }
