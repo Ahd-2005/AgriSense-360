@@ -246,7 +246,7 @@
     </VBox>
 
     <columnConstraints>
-        <ColumnConstraints minWidth="0.0" prefWidth="260.0" />
+        <ColumnConstraints minWidth="260.0" prefWidth="260.0" maxWidth="260.0" />
         <ColumnConstraints hgrow="ALWAYS" minWidth="0.0" />
     </columnConstraints>
     <rowConstraints>
