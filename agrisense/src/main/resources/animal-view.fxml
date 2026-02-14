@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.controllers.AnimalController"
+           dividerPositions="0.45" styleClass="tab-content-area">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+
+    <VBox styleClass="form-section" spacing="15" minWidth="350">
+        <Label text="Add New Animal" styleClass="form-title"/>
+        <GridPane hgap="15" vgap="10">
+            <Label text="Ear Tag:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="earTagField" promptText="e.g. 34" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+            <Label text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="typeCombo" promptText="Select type" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="150"/>
+
+            <Label text="Gender:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="genderCombo" promptText="Select gender" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="150"/>
+
+            <Label text="Weight:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <TextField fx:id="weightField" promptText="kg" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <Label text="Birth Date:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <DatePicker fx:id="birthDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+            <Label text="Entry Date:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <DatePicker fx:id="entryDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+            <Label text="Origin:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <ComboBox fx:id="originCombo" promptText="Select origin" GridPane.columnIndex="1" GridPane.rowIndex="6" prefWidth="150"/>
+
+            <Label text="Vaccinated:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+            <CheckBox fx:id="vaccinatedCheck" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+            <Button text="Add Animal" onAction="#onAddAnimal" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+        </GridPane>
+    </VBox>
+
+    <!-- Right: All Animals List -->
+    <VBox styleClass="form-section" minWidth="400">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="All Animals" styleClass="form-title"/>
+            <Button text="Refresh List" onAction="#onRefreshAnimals"/>
+            <Button text="Update" fx:id="updateAnimalBtn" onAction="#onUpdateAnimal" disable="true"/>
+            <Button text="Delete" fx:id="deleteAnimalBtn" styleClass="button-danger" onAction="#onDeleteAnimal" disable="true"/>
+        </HBox>
+        <TableView fx:id="animalTable" VBox.vgrow="ALWAYS" minHeight="250" prefHeight="350">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colEarTag" text="Ear Tag" prefWidth="80"/>
+                <TableColumn fx:id="colType" text="Type" prefWidth="80"/>
+                <TableColumn fx:id="colGender" text="Gender" prefWidth="70"/>
+                <TableColumn fx:id="colWeight" text="Weight" prefWidth="70"/>
+                <TableColumn fx:id="colHealthStatus" text="Health" prefWidth="80"/>
+                <TableColumn fx:id="colBirthDate" text="Birth Date" prefWidth="100"/>
+                <TableColumn fx:id="colOrigin" text="Origin" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </VBox>
+</SplitPane>

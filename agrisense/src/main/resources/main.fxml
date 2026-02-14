@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@style.css" prefWidth="900" prefHeight="650">
+    <top>
+        <VBox styleClass="form-section">
+            <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+            <Label text="AgriSense 360" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+        </VBox>
+    </top>
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+            <Tab text="Animals">
+                <fx:include source="animal-view.fxml"/>
+            </Tab>
+            <Tab text="Health Records">
+                <fx:include source="health-record-view.fxml"/>
+            </Tab>
+        </TabPane>
+    </center>
+</BorderPane>
