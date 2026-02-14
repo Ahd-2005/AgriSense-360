@@ -4,60 +4,61 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.controllers.HealthRecordController"
-           dividerPositions="0.5" styleClass="tab-content-area">
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.controllers.HealthRecordController"
+      spacing="24" VBox.vgrow="ALWAYS">
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets top="0" right="0" bottom="0" left="0"/>
     </padding>
 
-    <VBox styleClass="form-section" spacing="15" minWidth="380">
-        <Label text="Health Records by Animal" styleClass="form-title"/>
-        <GridPane hgap="15" vgap="10">
-            <Label text="Select Animal:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <ComboBox fx:id="animalCombo" promptText="Choose animal" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="250" onAction="#onAnimalSelected"/>
+    <!-- Add/Edit Health Record Form Card -->
+    <VBox styleClass="mgmt-form-card" spacing="16">
+        <Label text="Add or edit health record" styleClass="mgmt-form-title"/>
+        <GridPane hgap="20" vgap="12" styleClass="mgmt-form-grid">
+            <Label text="Select animal" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="animalCombo" promptText="Choose animal" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="280" onAction="#onAnimalSelected"/>
 
-            <Label text="Record Date:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <DatePicker fx:id="recordDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label text="Record date" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <DatePicker fx:id="recordDatePicker" styleClass="mgmt-datepicker" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="160"/>
 
-            <Label text="Weight (kg):" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <TextField fx:id="weightField" promptText="kg" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label text="Weight (kg)" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="weightField" promptText="kg" styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="140"/>
 
-            <Label text="Appetite:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-            <ComboBox fx:id="appetiteCombo" promptText="Select" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="150"/>
+            <Label text="Appetite" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <ComboBox fx:id="appetiteCombo" promptText="Select" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="160"/>
 
-            <Label text="Condition:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-            <ComboBox fx:id="conditionCombo" promptText="Select" GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="150"/>
+            <Label text="Condition" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <ComboBox fx:id="conditionCombo" promptText="Select" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="160"/>
 
-            <Label fx:id="productionLabel" text="Production:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-            <TextField fx:id="productionField" promptText="value" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            <Label fx:id="productionLabel" text="Production" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <TextField fx:id="productionField" promptText="value" styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="5" prefWidth="140"/>
 
-            <Label text="Notes:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-            <TextField fx:id="notesField" promptText="Optional notes" GridPane.columnIndex="1" GridPane.rowIndex="6" prefWidth="250"/>
+            <Label text="Notes" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <TextField fx:id="notesField" promptText="Optional notes" styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="6" prefWidth="280"/>
 
-            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                <Button text="Add Record" onAction="#onAddRecord"/>
-                <Button text="Update" fx:id="updateBtn" onAction="#onUpdateRecord" disable="true"/>
-                <Button text="Delete" fx:id="deleteBtn" styleClass="button-danger" onAction="#onDeleteRecord" disable="true"/>
+            <HBox spacing="12" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                <Button text="Add Record" onAction="#onAddRecord" styleClass="mgmt-btn-primary"/>
+                <Button text="Update" fx:id="updateBtn" onAction="#onUpdateRecord" styleClass="mgmt-btn-ghost" disable="true"/>
+                <Button text="Delete" fx:id="deleteBtn" onAction="#onDeleteRecord" styleClass="mgmt-btn-danger" disable="true"/>
             </HBox>
         </GridPane>
     </VBox>
 
-
-    <VBox styleClass="form-section" minWidth="400">
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <Label fx:id="recordsTitleLabel" text="Health Records for Selected Animal" styleClass="form-title"/>
-            <Button text="Refresh" onAction="#onRefreshRecords"/>
+    <!-- Records Table Card -->
+    <VBox styleClass="mgmt-table-card" VBox.vgrow="ALWAYS" spacing="12">
+        <HBox alignment="CENTER_LEFT" spacing="16">
+            <Label fx:id="recordsTitleLabel" text="Health records for selected animal" styleClass="mgmt-table-title"/>
+            <Button text="Refresh" onAction="#onRefreshRecords" styleClass="mgmt-btn-ghost"/>
         </HBox>
-        <TableView fx:id="recordTable" VBox.vgrow="ALWAYS" minHeight="200" prefHeight="250">
+        <TableView fx:id="recordTable" styleClass="mgmt-table" VBox.vgrow="ALWAYS" minHeight="200">
             <columns>
                 <TableColumn fx:id="colRecordId" text="ID" prefWidth="50"/>
-                <TableColumn fx:id="colRecordDate" text="Date" prefWidth="100"/>
-                <TableColumn fx:id="colWeight" text="Weight" prefWidth="70"/>
-                <TableColumn fx:id="colAppetite" text="Appetite" prefWidth="80"/>
-                <TableColumn fx:id="colCondition" text="Condition" prefWidth="80"/>
-                <TableColumn fx:id="colProduction" text="Production" prefWidth="80"/>
-                <TableColumn fx:id="colNotes" text="Notes" prefWidth="150"/>
+                <TableColumn fx:id="colRecordDate" text="Date" prefWidth="110"/>
+                <TableColumn fx:id="colWeight" text="Weight" prefWidth="80"/>
+                <TableColumn fx:id="colAppetite" text="Appetite" prefWidth="90"/>
+                <TableColumn fx:id="colCondition" text="Condition" prefWidth="90"/>
+                <TableColumn fx:id="colProduction" text="Production" prefWidth="90"/>
+                <TableColumn fx:id="colNotes" text="Notes" prefWidth="180"/>
             </columns>
         </TableView>
     </VBox>
-</SplitPane>
+</VBox>
