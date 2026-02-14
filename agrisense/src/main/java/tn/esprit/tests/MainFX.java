@@ -18,11 +18,11 @@ public class MainFX extends Application {
     public void start(Stage primaryStage) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
-            Scene scene = new Scene(root, 900, 650);
+            Scene scene = new Scene(root, 1200, 800);
             primaryStage.setTitle("AgriSense 360");
             primaryStage.setScene(scene);
-            primaryStage.setMinWidth(800);
-            primaryStage.setMinHeight(550);
+            primaryStage.setMinWidth(900);
+            primaryStage.setMinHeight(600);
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
