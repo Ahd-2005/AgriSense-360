@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.HomeContentController"
+      spacing="0.0"
+      style="-fx-background-color: linear-gradient(to bottom, #fbf7ef 0%, #eef5ee 100%);">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="topbar">
+        <padding>
+            <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+        </padding>
+
+        <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+            <Label styleClass="topbar-title"
+                   text="AgriSense 360 helps farms grow healthier, faster, and smarter."
+                   wrapText="true"/>
+            <Label styleClass="topbar-sub"
+                   text="Your AI assistant unifies livestock, crops, equipment, inventory, and workforce data into one living system."
+                   wrapText="true"/>
+        </VBox>
+
+        <VBox spacing="10.0" styleClass="topbar-right">
+            <HBox spacing="10.0">
+                <VBox styleClass="stat" alignment="CENTER">
+                    <Label styleClass="stat-value" text="98%" />
+                    <Label styleClass="stat-label" text="YIELD INSIGHT" />
+                </VBox>
+                <VBox styleClass="stat" alignment="CENTER">
+                    <Label styleClass="stat-value" text="24/7" />
+                    <Label styleClass="stat-label" text="AI MONITORING" />
+                </VBox>
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <!-- Content (scrollable) -->
+    <ScrollPane fitToWidth="true" pannable="true" styleClass="content" VBox.vgrow="ALWAYS">
+        <VBox spacing="30.0" styleClass="content-inner">
+            <padding>
+                <Insets top="20" right="40" bottom="30" left="40"/>
+            </padding>
+
+            <!-- Hero Banner -->
+            <HBox spacing="24.0" styleClass="hero-banner">
+                <VBox spacing="14.0" styleClass="hero-copy" HBox.hgrow="ALWAYS">
+                    <Label styleClass="hero-kicker" text="FUTURE-READY FARMS START HERE" />
+                    <Label styleClass="hero-title"
+                           text="Turn every field signal into a confident decision."
+                           wrapText="true"/>
+                    <Label styleClass="hero-lead"
+                           text="AgriSense 360 watches your farm in real time, detects risks early, and guides teams with a clear, unified view of operations."
+                           wrapText="true"/>
+                    <HBox spacing="16.0" styleClass="hero-actions">
+                        <Button styleClass="primary" text="Explore the platform" />
+                        <Button styleClass="ghost" text="See how it works" />
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="12.0" styleClass="hero-panel">
+                    <HBox spacing="10.0" alignment="CENTER_LEFT">
+                        <Label styleClass="panel-label" text="Field Health" />
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label styleClass="panel-value" text="92%" />
+                    </HBox>
+                    <HBox spacing="10.0" alignment="CENTER_LEFT">
+                        <Label styleClass="panel-label" text="Active Sensors" />
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label styleClass="panel-value" text="148" />
+                    </HBox>
+                    <HBox spacing="10.0" alignment="CENTER_LEFT">
+                        <Label styleClass="panel-label" text="Worker Tasks" />
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label styleClass="panel-value" text="36" />
+                    </HBox>
+                    <VBox spacing="8.0" styleClass="panel-chart">
+                        <Label styleClass="panel-label" text="Climate Stress Index" />
+                        <Label text="📈 Rising trend this week"
+                               style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 12px;"/>
+                    </VBox>
+                </VBox>
+            </HBox>
+
+            <!-- Services Grid - ALWAYS VISIBLE -->
+            <VBox spacing="16.0" styleClass="services">
+                <VBox spacing="8.0">
+                    <Label text="WHAT WE MANAGE" styleClass="section-title" />
+                    <Label styleClass="section-title-main"
+                           text="Every department in one control center." />
+                </VBox>
+
+                <GridPane hgap="16.0" vgap="16.0" styleClass="grid">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="33.33" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="33.33" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="33.33" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                    </rowConstraints>
+
+                    <!-- Animal Management -->
+                    <Button styleClass="card-clickable" onAction="#navigateToAnimals"
+                            GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <graphic>
+                            <VBox styleClass="card" spacing="8" alignment="TOP_LEFT">
+                                <Label style="-fx-font-size: 36px;" text="🐄" />
+                                <Label styleClass="card-title" text="Animals Management" />
+                                <Label styleClass="card-text"
+                                       text="Monitor health, feeding schedules, and productivity."
+                                       wrapText="true"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <!-- Equipment Management -->
+                    <Button styleClass="card-clickable" onAction="#navigateToEquipment"
+                            GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <graphic>
+                            <VBox styleClass="card" spacing="8" alignment="TOP_LEFT">
+                                <Label style="-fx-font-size: 36px;" text="🚜" />
+                                <Label styleClass="card-title" text="Equipments Management" />
+                                <Label styleClass="card-text"
+                                       text="Track maintenance cycles and readiness."
+                                       wrapText="true"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <!-- Stock Management -->
+                    <Button styleClass="card-clickable" onAction="#navigateToStock"
+                            GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <graphic>
+                            <VBox styleClass="card" spacing="8" alignment="TOP_LEFT">
+                                <Label style="-fx-font-size: 36px;" text="📦" />
+                                <Label styleClass="card-title" text="Stock Management" />
+                                <Label styleClass="card-text"
+                                       text="Control inventory and reduce waste."
+                                       wrapText="true"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <!-- Culture Management -->
+                    <Button styleClass="card-clickable" onAction="#navigateToCulture"
+                            GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <graphic>
+                            <VBox styleClass="card" spacing="8" alignment="TOP_LEFT">
+                                <Label style="-fx-font-size: 36px;" text="🌱" />
+                                <Label styleClass="card-title" text="Culture Management" />
+                                <Label styleClass="card-text"
+                                       text="Plan crop cycles with climate trends."
+                                       wrapText="true"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <!-- Users Management -->
+                    <Button styleClass="card-clickable" onAction="#navigateToUsers"
+                            GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <graphic>
+                            <VBox styleClass="card" spacing="8" alignment="TOP_LEFT">
+                                <Label style="-fx-font-size: 36px;" text="👤" />
+                                <Label styleClass="card-title" text="User Management" />
+                                <Label styleClass="card-text"
+                                       text="Manage accounts and permissions."
+                                       wrapText="true"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <!-- Workers Management -->
+                    <Button styleClass="card-clickable" onAction="#navigateToWorkers"
+                            GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <graphic>
+                            <VBox styleClass="card" spacing="8" alignment="TOP_LEFT">
+                                <Label style="-fx-font-size: 36px;" text="👷" />
+                                <Label styleClass="card-title" text="Workers Management" />
+                                <Label styleClass="card-text"
+                                       text="Coordinate tasks and scheduling."
+                                       wrapText="true"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+                </GridPane>
+            </VBox>
+
+            <!-- Stats Strip -->
+            <HBox spacing="18.0" styleClass="stats-strip" alignment="CENTER">
+                <VBox styleClass="stat-block" alignment="CENTER">
+                    <Label styleClass="stat-number" text="16%" />
+                    <Label styleClass="stat-text" text="REDUCED INPUT WASTE" />
+                </VBox>
+                <VBox styleClass="stat-block" alignment="CENTER">
+                    <Label styleClass="stat-number" text="4.8x" />
+                    <Label styleClass="stat-text" text="FASTER ISSUE RESPONSE" />
+                </VBox>
+                <VBox styleClass="stat-block" alignment="CENTER">
+                    <Label styleClass="stat-number" text="37%" />
+                    <Label styleClass="stat-text" text="HIGHER TASK COMPLETION" />
+                </VBox>
+            </HBox>
+        </VBox>
+    </ScrollPane>
+
+</VBox>
