@@ -447,22 +447,203 @@
     }
 }
 
-.tab-content-area {
-    -fx-background-color: #f5f5f5;
+/* ===== Animals Management Page ===== */
+.mgmt-tab-pane {
+    -fx-background-color: transparent;
 }
 
-.form-section {
-    -fx-background-color: white;
-    -fx-padding: 20;
-    -fx-border-color: #ddd;
+.mgmt-tab-pane > .tab-header-area {
+    -fx-padding: 0 0 16 0;
+}
+
+.mgmt-tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: transparent;
+    -fx-background-radius: 12 12 0 0;
+    -fx-padding: 12 24;
+}
+
+.mgmt-tab-pane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+
+.mgmt-tab-pane > .tab-header-area > .headers-region > .tab .tab-label {
+    -fx-font-family: "Fraunces", "Georgia", serif;
+    -fx-font-size: 16px;
+    -fx-text-fill: rgba(35, 48, 27, 0.7);
+}
+
+.mgmt-tab-pane > .tab-header-area > .headers-region > .tab:selected .tab-label {
+    -fx-text-fill: #22301b;
+    -fx-font-weight: bold;
+}
+
+.mgmt-form-card {
+    -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(255,255,255,0.88));
+    -fx-background-radius: 20px;
+    -fx-padding: 24 28;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 16, 0, 0, 6);
+    -fx-border-color: rgba(43, 59, 31, 0.08);
+    -fx-border-width: 1;
+    -fx-border-radius: 20px;
+}
+
+.mgmt-form-title {
+    -fx-font-family: "Fraunces", "Georgia", serif;
+    -fx-font-size: 20px;
+    -fx-text-fill: #22301b;
+    -fx-font-weight: bold;
+}
+
+.mgmt-form-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(35, 48, 27, 0.8);
+}
+
+.mgmt-input {
+    -fx-background-color: #fff;
+    -fx-background-radius: 10px;
+    -fx-border-color: rgba(43, 59, 31, 0.15);
+    -fx-border-radius: 10px;
+    -fx-border-width: 1;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+}
+
+.mgmt-input:focused {
+    -fx-border-color: rgba(90, 152, 20, 0.5);
+    -fx-effect: dropshadow(gaussian, rgba(90, 152, 20, 0.15), 6, 0, 0, 0);
+}
+
+.mgmt-combo {
+    -fx-background-color: #fff;
+    -fx-background-radius: 10px;
+    -fx-border-color: rgba(43, 59, 31, 0.15);
+    -fx-border-radius: 10px;
     -fx-border-width: 1;
 }
 
-.form-title {
-    -fx-font-size: 18px;
+.mgmt-datepicker {
+    -fx-background-color: #fff;
+    -fx-background-radius: 10px;
+    -fx-border-color: rgba(43, 59, 31, 0.15);
+    -fx-border-radius: 10px;
+}
+
+.mgmt-btn-primary {
+    -fx-background-color: #5a9814;
+    -fx-text-fill: #0f1b0f;
+    -fx-background-radius: 10px;
+    -fx-padding: 10 20;
     -fx-font-weight: bold;
-    -fx-text-fill: #333;
-    -fx-padding: 0 0 15 0;
+    -fx-cursor: hand;
+}
+
+.mgmt-btn-primary:hover {
+    -fx-background-color: #6aab18;
+}
+
+.mgmt-btn-ghost {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(43, 59, 31, 0.25);
+    -fx-border-width: 1;
+    -fx-border-radius: 10px;
+    -fx-text-fill: #22301b;
+    -fx-padding: 10 18;
+    -fx-cursor: hand;
+}
+
+.mgmt-btn-ghost:hover {
+    -fx-background-color: rgba(96, 152, 16, 0.08);
+}
+
+.mgmt-btn-danger {
+    -fx-background-color: #c62828;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 10 18;
+    -fx-cursor: hand;
+}
+
+.mgmt-btn-danger:hover {
+    -fx-background-color: #b71c1c;
+}
+
+.mgmt-table-card {
+    -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(255,255,255,0.88));
+    -fx-background-radius: 20px;
+    -fx-padding: 20 24 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 16, 0, 0, 6);
+    -fx-border-color: rgba(43, 59, 31, 0.08);
+    -fx-border-width: 1;
+    -fx-border-radius: 20px;
+}
+
+.mgmt-table-title {
+    -fx-font-family: "Fraunces", "Georgia", serif;
+    -fx-font-size: 18px;
+    -fx-text-fill: #22301b;
+    -fx-font-weight: bold;
+}
+
+/* Management tables - match farm aesthetic */
+.mgmt-table {
+    -fx-background-color: transparent;
+    -fx-background-radius: 14px;
+    -fx-border-color: transparent;
+}
+
+.mgmt-table .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, rgba(32, 61, 28, 0.9), rgba(24, 44, 20, 0.9));
+    -fx-background-radius: 12 12 0 0;
+}
+
+.mgmt-table .column-header {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f6f4ec;
+    -fx-padding: 14 12;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-alignment: center-left;
+}
+
+.mgmt-table .column-header .label {
+    -fx-text-fill: #f6f4ec;
+}
+
+.mgmt-table .table-row-cell {
+    -fx-background-color: #fff;
+}
+
+.mgmt-table .table-row-cell:odd {
+    -fx-background-color: #fafcf8;
+}
+
+.mgmt-table .table-row-cell:selected {
+    -fx-background-color: rgba(96, 152, 16, 0.18);
+}
+
+.mgmt-table .table-row-cell:selected .text {
+    -fx-fill: #22301b;
+}
+
+.mgmt-table .table-cell {
+    -fx-padding: 12 14;
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(35, 48, 27, 0.9);
+}
+
+.mgmt-table .table-row-cell:empty {
+    -fx-background-color: #fff;
+}
+
+/* Legacy compatibility */
+.tab-content-area {
+    -fx-background-color: transparent;
+}
+
+.form-section {
+    -fx-background-color: transparent;
 }
 
 .button-danger {
@@ -473,19 +654,4 @@
 
 .button-danger:hover {
     -fx-background-color: #b71c1c;
-}
-
-.table-view .column-header {
-    -fx-background-color: #333;
-    -fx-text-fill: white;
-    -fx-padding: 12 10;
-    -fx-font-weight: bold;
-}
-
-.table-row-cell:odd {
-    -fx-background-color: #fafafa;
-}
-
-.table-row-cell:selected {
-    -fx-background-color: #e0e0e0;
 }
