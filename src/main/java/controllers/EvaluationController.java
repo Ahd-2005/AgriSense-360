@@ -260,4 +260,14 @@ public class EvaluationController implements Initializable {
         al.setContentText(message);
         al.showAndWait();
     }
+    @FXML
+    private void goBack() {
+        MainLayoutController mainLayout =
+                MainLayoutController.getInstance();
+
+        if (mainLayout != null) {
+            mainLayout.navigateToWorkers();
+        }
+    }
+
 }
