@@ -377,7 +377,7 @@ public class ParcelleController {
             String typeSol = typeSolField.getText();
             String statut = statutComboBox.getValue();
 
-            if (nom == null || nom.trim().isEmpty() || !nom.matches("[A-Za-zÀ-ÿ0-9 ]{3,}")) {
+            if (nom == null || nom.trim().isEmpty() || !nom.matches("[A-Za-zÀ-ÿ ]{3,}")) {
                 showError(messageLabel, "❌ Nom invalide (min 3 caractères)");
                 return false;
             }
@@ -442,7 +442,7 @@ public class ParcelleController {
             String typeSol = typeSolField.getText();
             String statut = statutComboBox.getValue();
 
-            if (nom == null || nom.trim().isEmpty() || !nom.matches("[A-Za-zÀ-ÿ0-9 ]{3,}")) {
+            if (nom == null || nom.trim().isEmpty() || !nom.matches("[A-Za-zÀ-ÿ ]{3,}")) {
                 showError(messageLabel, "❌ Nom invalide (min 3 caractères)");
                 return false;
             }

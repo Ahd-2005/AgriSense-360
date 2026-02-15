@@ -173,7 +173,7 @@ public class MainLayoutController {
 
     @FXML
     public void navigateToWorkers() {
-        loadContent("/fxml/afficher_workers.fxml");
+        loadContent("/fxml/affectation_view.fxml");
         setActiveButton(workersBtn);
     }
 
