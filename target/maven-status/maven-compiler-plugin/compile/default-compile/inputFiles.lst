@@ -3,6 +3,7 @@ C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\com\example\agrisens
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\com\example\agrisens360\Launcher.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\controllers\AnimalController.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\controllers\CultureController.java
+C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\controllers\EnumManagementController.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\controllers\HealthRecordController.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\controllers\HomeContentController.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\controllers\MainLayoutController.java
@@ -17,5 +18,6 @@ C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\services\IService.ja
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\services\ParcelleService.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\services\ServiceAnimal.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\services\ServiceAnimalHealthRecord.java
+C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\services\ServiceEnumManagement.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\utils\AnimalListRefresh.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\utils\MyDataBase.java

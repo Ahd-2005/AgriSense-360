@@ -7,7 +7,7 @@ public class Animal {
 
     private Integer id;
     private Integer earTag;
-    private AnimalType type;
+    private String type;       // dynamic: from DB ENUM (e.g. sheep, cow, goat, chicken)
     private Gender gender;
     private Double weight;
     private String healthStatus;
@@ -15,19 +15,17 @@ public class Animal {
     private LocalDate entryDate;
     private Origin origin;
     private Boolean vaccinated;
-    private Location location;
+    private String location;    // dynamic: from DB ENUM (e.g. barn1, chicken_coop1)
 
-    public enum AnimalType { SHEEP, COW, GOAT, CHICKEN }
     public enum Gender { MALE, FEMALE }
     public enum Origin { BORN_IN_FARM, OUTSIDE }
-    public enum Location { BARN1, BARN2, BARN3, CHICKEN_COOP1, CHICKEN_COOP2 }
 
     public Animal() {
     }
 
-    public Animal(Integer id, Integer earTag, AnimalType type, Gender gender, Double weight,
+    public Animal(Integer id, Integer earTag, String type, Gender gender, Double weight,
                   String healthStatus, LocalDate birthDate, LocalDate entryDate, Origin origin,
-                  Boolean vaccinated, Location location) {
+                  Boolean vaccinated, String location) {
         this.id = id;
         this.earTag = earTag;
         this.type = type;
@@ -41,9 +39,9 @@ public class Animal {
         this.location = location;
     }
 
-    public Animal(Integer earTag, AnimalType type, Gender gender, Double weight,
+    public Animal(Integer earTag, String type, Gender gender, Double weight,
                   String healthStatus, LocalDate birthDate, LocalDate entryDate, Origin origin,
-                  Boolean vaccinated, Location location) {
+                  Boolean vaccinated, String location) {
         this.earTag = earTag;
         this.type = type;
         this.gender = gender;
@@ -57,7 +55,7 @@ public class Animal {
     }
 
     /** Backward-compatible: location is null. */
-    public Animal(Integer earTag, AnimalType type, Gender gender, Double weight,
+    public Animal(Integer earTag, String type, Gender gender, Double weight,
                   String healthStatus, LocalDate birthDate, LocalDate entryDate, Origin origin,
                   Boolean vaccinated) {
         this(earTag, type, gender, weight, healthStatus, birthDate, entryDate, origin, vaccinated, null);
@@ -67,8 +65,8 @@ public class Animal {
     public void setId(Integer id) { this.id = id; }
     public Integer getEarTag() { return earTag; }
     public void setEarTag(Integer earTag) { this.earTag = earTag; }
-    public AnimalType getType() { return type; }
-    public void setType(AnimalType type) { this.type = type; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
     public Gender getGender() { return gender; }
     public void setGender(Gender gender) { this.gender = gender; }
     public Double getWeight() { return weight; }
@@ -83,8 +81,8 @@ public class Animal {
     public void setOrigin(Origin origin) { this.origin = origin; }
     public Boolean getVaccinated() { return vaccinated; }
     public void setVaccinated(Boolean vaccinated) { this.vaccinated = vaccinated; }
-    public Location getLocation() { return location; }
-    public void setLocation(Location location) { this.location = location; }
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
 
     /** Age in years from birthDate to today; interface only, not stored in DB. */
     public Integer getAge() {
