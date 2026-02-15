@@ -35,13 +35,10 @@
             <Label text="Origin" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
             <ComboBox fx:id="originCombo" promptText="Select origin" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="6" prefWidth="160"/>
 
-            <Label text="Location" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-            <ComboBox fx:id="locationCombo" promptText="Select location" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="7" prefWidth="160"/>
+            <Label text="Vaccinated" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+            <CheckBox fx:id="vaccinatedCheck" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
 
-            <Label text="Vaccinated" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-            <CheckBox fx:id="vaccinatedCheck" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
-
-            <HBox spacing="12" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="9">
+            <HBox spacing="12" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="8">
                 <Button text="Add Animal" onAction="#onAddAnimal" styleClass="mgmt-btn-primary"/>
                 <Button text="Update" fx:id="updateAnimalBtn" onAction="#onUpdateAnimal" styleClass="mgmt-btn-ghost" disable="true"/>
                 <Button text="Delete" fx:id="deleteAnimalBtn" onAction="#onDeleteAnimal" styleClass="mgmt-btn-danger" disable="true"/>
@@ -64,9 +61,7 @@
                 <TableColumn fx:id="colWeight" text="Weight" prefWidth="80"/>
                 <TableColumn fx:id="colHealthStatus" text="Health" prefWidth="90"/>
                 <TableColumn fx:id="colBirthDate" text="Birth Date" prefWidth="110"/>
-                <TableColumn fx:id="colAge" text="Age" prefWidth="60"/>
                 <TableColumn fx:id="colOrigin" text="Origin" prefWidth="110"/>
-                <TableColumn fx:id="colLocation" text="Location" prefWidth="120"/>
             </columns>
         </TableView>
     </VBox>
