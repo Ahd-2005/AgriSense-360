@@ -118,21 +118,24 @@ public class ServiceAnimalHealthRecord implements IService<AnimalHealthRecord> {
         return null;
     }
 
-    private AnimalHealthRecord clearProductionFieldsByType(AnimalHealthRecord record, Animal.AnimalType type) {
+    private AnimalHealthRecord clearProductionFieldsByType(AnimalHealthRecord record, String type) {
         if (type == null) return record;
-        switch (type) {
-            case COW:
-            case GOAT:
+        String t = type.toLowerCase();
+        switch (t) {
+            case "cow":
+            case "goat":
                 record.setEggCount(null);
                 record.setWoolLength(null);
                 break;
-            case CHICKEN:
+            case "chicken":
                 record.setMilkYield(null);
                 record.setWoolLength(null);
                 break;
-            case SHEEP:
+            case "sheep":
                 record.setMilkYield(null);
                 record.setEggCount(null);
+                break;
+            default:
                 break;
         }
         return record;

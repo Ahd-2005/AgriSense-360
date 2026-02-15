@@ -20,7 +20,7 @@ public class ServiceAnimal implements IService<Animal> {
         String sql = "INSERT INTO Animal (earTag, type, gender, weight, healthStatus, birthDate, entryDate, origin, vaccinated, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setObject(1, animal.getEarTag());
-        ps.setString(2, toDbEnum(animal.getType()));
+        ps.setString(2, animal.getType() != null ? animal.getType().toLowerCase() : null);
         ps.setString(3, toDbEnum(animal.getGender()));
         ps.setObject(4, animal.getWeight());
         ps.setString(5, animal.getHealthStatus());
@@ -28,7 +28,7 @@ public class ServiceAnimal implements IService<Animal> {
         ps.setObject(7, animal.getEntryDate());
         ps.setString(8, toDbEnum(animal.getOrigin()));
         ps.setBoolean(9, animal.getVaccinated() != null && animal.getVaccinated());
-        ps.setString(10, toDbEnum(animal.getLocation()));
+        ps.setString(10, animal.getLocation() != null ? animal.getLocation().toLowerCase() : null);
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
         if (rs.next()) {
@@ -41,7 +41,7 @@ public class ServiceAnimal implements IService<Animal> {
         String sql = "UPDATE Animal SET earTag=?, type=?, gender=?, weight=?, healthStatus=?, birthDate=?, entryDate=?, origin=?, vaccinated=?, location=? WHERE id=?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setObject(1, animal.getEarTag());
-        ps.setString(2, toDbEnum(animal.getType()));
+        ps.setString(2, animal.getType() != null ? animal.getType().toLowerCase() : null);
         ps.setString(3, toDbEnum(animal.getGender()));
         ps.setObject(4, animal.getWeight());
         ps.setString(5, animal.getHealthStatus());
@@ -49,7 +49,7 @@ public class ServiceAnimal implements IService<Animal> {
         ps.setObject(7, animal.getEntryDate());
         ps.setString(8, toDbEnum(animal.getOrigin()));
         ps.setBoolean(9, animal.getVaccinated() != null && animal.getVaccinated());
-        ps.setString(10, toDbEnum(animal.getLocation()));
+        ps.setString(10, animal.getLocation() != null ? animal.getLocation().toLowerCase() : null);
         ps.setInt(11, animal.getId());
         ps.executeUpdate();
     }
@@ -98,7 +98,7 @@ public class ServiceAnimal implements IService<Animal> {
         Animal a = new Animal();
         a.setId(rs.getInt("id"));
         a.setEarTag(rs.getObject("earTag") != null ? rs.getInt("earTag") : null);
-        a.setType(fromDbAnimalType(rs.getString("type")));
+        a.setType(rs.getString("type"));
         a.setGender(fromDbGender(rs.getString("gender")));
         a.setWeight(rs.getObject("weight") != null ? rs.getDouble("weight") : null);
         a.setHealthStatus(rs.getString("healthStatus"));
@@ -108,17 +108,12 @@ public class ServiceAnimal implements IService<Animal> {
         a.setEntryDate(ed != null ? ed.toLocalDate() : null);
         a.setOrigin(fromDbOrigin(rs.getString("origin")));
         a.setVaccinated(rs.getBoolean("vaccinated"));
-        a.setLocation(fromDbLocation(rs.getString("location")));
+        a.setLocation(rs.getString("location"));
         return a;
     }
 
     private static String toDbEnum(Enum<?> e) {
         return e != null ? e.name().toLowerCase() : null;
-    }
-
-    private static Animal.AnimalType fromDbAnimalType(String s) {
-        if (s == null) return null;
-        return Animal.AnimalType.valueOf(s.toUpperCase());
     }
 
     private static Animal.Gender fromDbGender(String s) {
@@ -129,10 +124,5 @@ public class ServiceAnimal implements IService<Animal> {
     private static Animal.Origin fromDbOrigin(String s) {
         if (s == null) return null;
         return Animal.Origin.valueOf(s.toUpperCase().replace(" ", "_"));
-    }
-
-    private static Animal.Location fromDbLocation(String s) {
-        if (s == null) return null;
-        return Animal.Location.valueOf(s.toUpperCase());
     }
 }

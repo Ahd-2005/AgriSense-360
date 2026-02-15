@@ -17,6 +17,9 @@
             <Tab text="Health Records" styleClass="mgmt-tab">
                 <fx:include source="health_record_view.fxml"/>
             </Tab>
+            <Tab text="Types &amp; Locations" styleClass="mgmt-tab">
+                <fx:include source="enum_management_view.fxml"/>
+            </Tab>
         </tabs>
     </TabPane>
 </VBox>
