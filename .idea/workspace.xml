@@ -4,20 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AnimalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AnimalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/HealthRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/HealthRecordController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entity/Animal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/Animal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/services/ServiceAnimal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/ServiceAnimal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/services/ServiceAnimalHealthRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/ServiceAnimalHealthRecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/animals_management_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/animals_management_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/servicetests/ServiceAnimalHealthRecordTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/servicetests/ServiceAnimalHealthRecordTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/servicetests/ServiceAnimalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/servicetests/ServiceAnimalTest.java" afterDir="false" />
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="update">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/animal_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/animal_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/MainLayoutController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/MainLayoutController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/MainLayout.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/animal_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/animal_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/services/CultureService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/services/CultureService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/services/ParcelleService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/services/ParcelleService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/utils/MyDataBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/utils/MyDataBase.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -36,12 +41,13 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.HelloApplication.executor": "Run",
     "Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "amin",
+    "git-widget-placeholder": "gestion__culture",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/aminp/Documents/GitHub/AgriSense-360",
     "node.js.detected.package.eslint": "true",
@@ -57,6 +63,19 @@
   }
 }]]></component>
   <component name="RunManager">
+    <configuration name="HelloApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.agrisens360.HelloApplication" />
+      <module name="agrisens360" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.agrisens360.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <method v="2">
         <option name="Make" enabled="true" />
@@ -66,6 +85,11 @@
       <option name="filePath" />
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.HelloApplication" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>

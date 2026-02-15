@@ -70,6 +70,7 @@
                         </graphic>
                     </Button>
 
+
                     <!-- Equipment Management -->
                     <Button fx:id="equipmentBtn" styleClass="nav-link" onAction="#navigateToEquipment">
                         <graphic>
