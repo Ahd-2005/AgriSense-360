@@ -138,7 +138,7 @@ public class MainLayoutController {
 
     @FXML
     public void navigateToAnimals() {
-        loadContent("/fxml/afficher_animals.fxml");
+        loadContent("/fxml/animals_management_view.fxml");
         setActiveButton(animalsBtn);
     }
 
