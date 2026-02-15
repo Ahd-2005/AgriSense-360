@@ -1,6 +1,7 @@
 package entity;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Animal {
 
@@ -14,17 +15,19 @@ public class Animal {
     private LocalDate entryDate;
     private Origin origin;
     private Boolean vaccinated;
+    private Location location;
 
     public enum AnimalType { SHEEP, COW, GOAT, CHICKEN }
     public enum Gender { MALE, FEMALE }
     public enum Origin { BORN_IN_FARM, OUTSIDE }
+    public enum Location { BARN1, BARN2, BARN3, CHICKEN_COOP1, CHICKEN_COOP2 }
 
     public Animal() {
     }
 
     public Animal(Integer id, Integer earTag, AnimalType type, Gender gender, Double weight,
                   String healthStatus, LocalDate birthDate, LocalDate entryDate, Origin origin,
-                  Boolean vaccinated) {
+                  Boolean vaccinated, Location location) {
         this.id = id;
         this.earTag = earTag;
         this.type = type;
@@ -35,11 +38,12 @@ public class Animal {
         this.entryDate = entryDate;
         this.origin = origin;
         this.vaccinated = vaccinated;
+        this.location = location;
     }
 
     public Animal(Integer earTag, AnimalType type, Gender gender, Double weight,
                   String healthStatus, LocalDate birthDate, LocalDate entryDate, Origin origin,
-                  Boolean vaccinated) {
+                  Boolean vaccinated, Location location) {
         this.earTag = earTag;
         this.type = type;
         this.gender = gender;
@@ -49,6 +53,14 @@ public class Animal {
         this.entryDate = entryDate;
         this.origin = origin;
         this.vaccinated = vaccinated;
+        this.location = location;
+    }
+
+    /** Backward-compatible: location is null. */
+    public Animal(Integer earTag, AnimalType type, Gender gender, Double weight,
+                  String healthStatus, LocalDate birthDate, LocalDate entryDate, Origin origin,
+                  Boolean vaccinated) {
+        this(earTag, type, gender, weight, healthStatus, birthDate, entryDate, origin, vaccinated, null);
     }
 
     public Integer getId() { return id; }
@@ -71,4 +83,12 @@ public class Animal {
     public void setOrigin(Origin origin) { this.origin = origin; }
     public Boolean getVaccinated() { return vaccinated; }
     public void setVaccinated(Boolean vaccinated) { this.vaccinated = vaccinated; }
+    public Location getLocation() { return location; }
+    public void setLocation(Location location) { this.location = location; }
+
+    /** Age in years from birthDate to today; interface only, not stored in DB. */
+    public Integer getAge() {
+        if (birthDate == null) return null;
+        return Period.between(birthDate, LocalDate.now()).getYears();
+    }
 }
