@@ -6,6 +6,7 @@ services\ServiceAnimalHealthRecord.class
 services\ParcelleService.class
 com\example\agrisens360\HelloController.class
 utils\MyDataBase.class
+entity\Animal$Location.class
 controllers\HomeContentController.class
 controllers\ParcelleController.class
 controllers\MainLayoutController.class

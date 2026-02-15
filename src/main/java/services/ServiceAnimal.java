@@ -17,7 +17,7 @@ public class ServiceAnimal implements IService<Animal> {
 
     @Override
     public void add(Animal animal) throws SQLException {
-        String sql = "INSERT INTO Animal (earTag, type, gender, weight, healthStatus, birthDate, entryDate, origin, vaccinated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Animal (earTag, type, gender, weight, healthStatus, birthDate, entryDate, origin, vaccinated, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setObject(1, animal.getEarTag());
         ps.setString(2, toDbEnum(animal.getType()));
@@ -28,6 +28,7 @@ public class ServiceAnimal implements IService<Animal> {
         ps.setObject(7, animal.getEntryDate());
         ps.setString(8, toDbEnum(animal.getOrigin()));
         ps.setBoolean(9, animal.getVaccinated() != null && animal.getVaccinated());
+        ps.setString(10, toDbEnum(animal.getLocation()));
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
         if (rs.next()) {
@@ -37,7 +38,7 @@ public class ServiceAnimal implements IService<Animal> {
 
     @Override
     public void update(Animal animal) throws SQLException {
-        String sql = "UPDATE Animal SET earTag=?, type=?, gender=?, weight=?, healthStatus=?, birthDate=?, entryDate=?, origin=?, vaccinated=? WHERE id=?";
+        String sql = "UPDATE Animal SET earTag=?, type=?, gender=?, weight=?, healthStatus=?, birthDate=?, entryDate=?, origin=?, vaccinated=?, location=? WHERE id=?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setObject(1, animal.getEarTag());
         ps.setString(2, toDbEnum(animal.getType()));
@@ -48,7 +49,8 @@ public class ServiceAnimal implements IService<Animal> {
         ps.setObject(7, animal.getEntryDate());
         ps.setString(8, toDbEnum(animal.getOrigin()));
         ps.setBoolean(9, animal.getVaccinated() != null && animal.getVaccinated());
-        ps.setInt(10, animal.getId());
+        ps.setString(10, toDbEnum(animal.getLocation()));
+        ps.setInt(11, animal.getId());
         ps.executeUpdate();
     }
 
@@ -106,6 +108,7 @@ public class ServiceAnimal implements IService<Animal> {
         a.setEntryDate(ed != null ? ed.toLocalDate() : null);
         a.setOrigin(fromDbOrigin(rs.getString("origin")));
         a.setVaccinated(rs.getBoolean("vaccinated"));
+        a.setLocation(fromDbLocation(rs.getString("location")));
         return a;
     }
 
@@ -126,5 +129,10 @@ public class ServiceAnimal implements IService<Animal> {
     private static Animal.Origin fromDbOrigin(String s) {
         if (s == null) return null;
         return Animal.Origin.valueOf(s.toUpperCase().replace(" ", "_"));
+    }
+
+    private static Animal.Location fromDbLocation(String s) {
+        if (s == null) return null;
+        return Animal.Location.valueOf(s.toUpperCase());
     }
 }
