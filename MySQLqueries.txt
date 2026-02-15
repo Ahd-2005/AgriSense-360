@@ -39,3 +39,12 @@ CREATE TABLE AnimalHealthRecord (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+ALTER TABLE Animal
+ADD COLUMN location ENUM(
+    'barn1',
+    'barn2',
+    'barn3',
+    'chicken_coop1',
+    'chicken_coop2'
+);

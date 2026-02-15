@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS Animal (
     birthDate DATE,
     entryDate DATE,
     origin VARCHAR(32) NOT NULL,
-    vaccinated BOOLEAN DEFAULT FALSE
+    vaccinated BOOLEAN DEFAULT FALSE,
+    location VARCHAR(64) NULL
 );
 
 CREATE TABLE IF NOT EXISTS AnimalHealthRecord (

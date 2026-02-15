@@ -14,6 +14,9 @@
             <Tab text="Animals" styleClass="mgmt-tab">
                 <fx:include source="animal_view.fxml"/>
             </Tab>
+            <Tab text="Options" styleClass="mgmt-tab">
+                <fx:include source="options_view.fxml"/>
+            </Tab>
             <Tab text="Health Records" styleClass="mgmt-tab">
                 <fx:include source="health_record_view.fxml"/>
             </Tab>
