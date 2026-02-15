@@ -13,7 +13,9 @@ CREATE TABLE Animal (
 
     origin ENUM('born_in_farm','outside'),
 
-    vaccinated BOOLEAN DEFAULT FALSE
+    vaccinated BOOLEAN DEFAULT FALSE,
+
+    location ENUM('barn1','barn2','barn3','chicken_coop1','chicken_coop2')
 );
 
 
