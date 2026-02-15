@@ -6,10 +6,13 @@ C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\controllers\CultureC
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\controllers\HealthRecordController.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\controllers\HomeContentController.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\controllers\MainLayoutController.java
+C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\controllers\OptionsController.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\controllers\ParcelleController.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\entity\Animal.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\entity\AnimalHealthRecord.java
+C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\entity\AnimalTypeOption.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\entity\Culture.java
+C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\entity\LocationOption.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\entity\Parcelle.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\module-info.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\services\CultureService.java
@@ -17,5 +20,7 @@ C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\services\IService.ja
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\services\ParcelleService.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\services\ServiceAnimal.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\services\ServiceAnimalHealthRecord.java
+C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\services\ServiceAnimalTypeOption.java
+C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\services\ServiceLocationOption.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\utils\AnimalListRefresh.java
 C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\java\utils\MyDataBase.java

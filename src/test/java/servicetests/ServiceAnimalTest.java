@@ -24,9 +24,9 @@ class ServiceAnimalTest {
     @Test
     @Order(1)
     void testAddAnimal() throws SQLException {
-        Animal a = new Animal(9999, Animal.AnimalType.COW, Animal.Gender.FEMALE, 450.0,
+        Animal a = new Animal(9999, "cow", Animal.Gender.FEMALE, 450.0,
                 null, LocalDate.of(2020, 3, 15), LocalDate.of(2020, 4, 1),
-                Animal.Origin.BORN_IN_FARM, true);
+                Animal.Origin.BORN_IN_FARM, true, "barn1");
         service.add(a);
         assertNotNull(a.getId());
         idAnimalTest = a.getId();
@@ -49,7 +49,7 @@ class ServiceAnimalTest {
         assertNotNull(found);
         assertEquals(idAnimalTest, found.getId());
         assertEquals(9999, found.getEarTag());
-        assertEquals(Animal.AnimalType.COW, found.getType());
+        assertEquals("cow", found.getType());
         assertEquals(Animal.Gender.FEMALE, found.getGender());
     }
 
