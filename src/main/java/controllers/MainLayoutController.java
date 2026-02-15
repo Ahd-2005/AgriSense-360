@@ -176,6 +176,13 @@ public class MainLayoutController {
         loadContent("/fxml/affectation_view.fxml");
         setActiveButton(workersBtn);
     }
+    @FXML
+    public void navigateToEvaluation() {
+        loadContent("/fxml/evaluation_view.fxml");
+        // optionnel : garder workersBtn actif
+        setActiveButton(workersBtn);
+    }
+
 
     private void loadContent(String fxmlPath) {
         try {
