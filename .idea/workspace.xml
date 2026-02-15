@@ -4,17 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="update">
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="gestion culture +gestion animals+template">
+      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/animal_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/animal_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/MainLayoutController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/MainLayoutController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/MainLayout.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/animal_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/animal_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/services/CultureService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/services/CultureService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/services/ParcelleService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/services/ParcelleService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/utils/MyDataBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/utils/MyDataBase.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ParcelleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ParcelleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/update_culture.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/update_parcelle.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +32,9 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="39hY3WnNB8aBAJH3nKEko32WjpC" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -47,9 +47,10 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "gestion__culture",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/aminp/Documents/GitHub/AgriSense-360",
+    "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/fxml",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -62,6 +63,15 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\fxml" />
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\java\services" />
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\java\entity" />
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\java\controllers" />
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\db" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="HelloApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.agrisens360.HelloApplication" />
@@ -112,10 +122,23 @@
       <workItem from="1771172457982" duration="31000" />
       <workItem from="1771173290062" duration="617000" />
     </task>
+    <task id="LOCAL-00001" summary="gestion culture +gestion animals+template">
+      <option name="closed" value="true" />
+      <created>1771186335892</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1771186335892</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="gestion culture +gestion animals+template" />
+    <option name="LAST_COMMIT_MESSAGE" value="gestion culture +gestion animals+template" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
