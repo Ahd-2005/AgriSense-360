@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.smartfarm.MainLayoutController"
+            prefWidth="1000" prefHeight="700">
+
+    <!-- Left: Sidebar -->
+    <left>
+        <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="220" maxWidth="220" spacing="0">
+            <padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
+
+            <!-- Brand -->
+            <VBox styleClass="brand" spacing="4">
+                <padding><Insets top="10" right="20" bottom="15" left="20"/></padding>
+                <Label text="SmartFarm" styleClass="brand-name"/>
+                <Label text="Gestion agricole" styleClass="brand-tagline"/>
+            </VBox>
+
+            <!-- Nav section -->
+            <VBox spacing="4" VBox.vgrow="ALWAYS">
+                <padding><Insets top="15" right="20" bottom="10" left="20"/></padding>
+                <Label text="NAVIGATION" styleClass="nav-title"/>
+                <Button fx:id="navHome" text="Accueil" styleClass="nav-link" onAction="#onHome"/>
+                <Button fx:id="navAffectations" text="Affectations" styleClass="nav-link" onAction="#onAffectations"/>
+                <Button fx:id="navEvaluations" text="Évaluations" styleClass="nav-link" onAction="#onEvaluations"/>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+            <VBox styleClass="sidebar-foot">
+                <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+                <Label text="SmartFarm v1.0"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Center: Content area -->
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content" BorderPane.alignment="CENTER"/>
+    </center>
+</BorderPane>

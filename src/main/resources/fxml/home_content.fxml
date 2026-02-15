@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.smartfarm.HomeController"
+            fitToWidth="true" styleClass="content">
+
+    <VBox styleClass="content-inner" spacing="30">
+        <padding><Insets top="30" right="40" bottom="40" left="40"/></padding>
+
+        <!-- Topbar -->
+        <HBox styleClass="topbar" spacing="20">
+            <VBox alignment="CENTER_LEFT">
+                <Label text="SmartFarm" styleClass="topbar-title"/>
+                <Label text="Gestion des affectations et évaluations" styleClass="topbar-sub"/>
+            </VBox>
+        </HBox>
+
+        <!-- Hero / Quick actions -->
+        <VBox styleClass="hero-banner" spacing="24">
+            <Label text="Accès rapide" styleClass="hero-kicker"/>
+            <Label text="Choisir un module" styleClass="hero-title"/>
+            <Label text="Accédez aux affectations de travail ou aux évaluations de performance." styleClass="hero-lead"/>
+            <HBox styleClass="hero-actions" spacing="16">
+                <Button fx:id="btnAffectations" text="Affectations" styleClass="primary" onAction="#onAffectations"/>
+                <Button fx:id="btnEvaluations" text="Évaluations" styleClass="primary" onAction="#onEvaluations"/>
+            </HBox>
+        </VBox>
+
+        <!-- Cards grid -->
+        <VBox spacing="18">
+            <Label text="MODULES" styleClass="section-title"/>
+            <Label text="Gestion" styleClass="section-title-main"/>
+            <FlowPane styleClass="grid" hgap="20" vgap="20">
+                <VBox styleClass="card-clickable" onMouseClicked="#onAffectationsCard">
+                    <VBox styleClass="card" spacing="8">
+                        <Label text="Affectations" styleClass="card-title"/>
+                        <Label text="Gérer les affectations de travail (zones, dates, statuts)." styleClass="card-text"/>
+                        <Button text="Ouvrir" styleClass="ghost" onAction="#onAffectations"/>
+                    </VBox>
+                </VBox>
+                <VBox styleClass="card-clickable" onMouseClicked="#onEvaluationsCard">
+                    <VBox styleClass="card" spacing="8">
+                        <Label text="Évaluations" styleClass="card-title"/>
+                        <Label text="Évaluer les performances et consulter les notes." styleClass="card-text"/>
+                        <Button text="Ouvrir" styleClass="ghost" onAction="#onEvaluations"/>
+                    </VBox>
+                </VBox>
+            </FlowPane>
+        </VBox>
+    </VBox>
+</ScrollPane>

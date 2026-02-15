@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.AffectationController"
+            fitToWidth="true" styleClass="content">
+
+    <VBox spacing="20" styleClass="content-inner">
+        <padding><Insets top="30" right="40" bottom="40" left="40"/></padding>
+
+        <Label text="Gestion des Affectations de Travail" styleClass="topbar-title"/>
+
+        <!-- Form -->
+        <VBox styleClass="hero-banner" spacing="16">
+            <Label text="Formulaire" styleClass="hero-kicker"/>
+            <GridPane hgap="15" vgap="12">
+                <Label text="Type travail:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="tfTypeTravail" styleClass="form-field" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Date début:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <DatePicker fx:id="dpDateDebut" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Date fin:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <DatePicker fx:id="dpDateFin" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Zone travail:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <TextField fx:id="tfZoneTravail" styleClass="form-field" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label text="Statut:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <ComboBox fx:id="cbStatut" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="4" editable="false"/>
+            </GridPane>
+            <HBox spacing="10">
+                <Button fx:id="btnAdd" text="Ajouter" styleClass="add-button" onAction="#onAdd"/>
+                <Button fx:id="btnUpdate" text="Modifier" styleClass="edit-button" onAction="#onUpdate"/>
+                <Button fx:id="btnDelete" text="Supprimer" styleClass="delete-button" onAction="#onDelete"/>
+                <Button fx:id="btnClear" text="Vider" styleClass="ghost" onAction="#onClear"/>
+            </HBox>
+        </VBox>
+
+        <!-- TableView -->
+        <VBox spacing="10">
+            <Label text="Liste des affectations" styleClass="section-title-main"/>
+            <TableView fx:id="tvAffectations" prefHeight="300" styleClass="table-view" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colTypeTravail" text="Type travail" prefWidth="150"/>
+                    <TableColumn fx:id="colDateDebut" text="Date début" prefWidth="100"/>
+                    <TableColumn fx:id="colDateFin" text="Date fin" prefWidth="100"/>
+                    <TableColumn fx:id="colZoneTravail" text="Zone travail" prefWidth="120"/>
+                    <TableColumn fx:id="colStatut" text="Statut" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </VBox>
+</ScrollPane>
