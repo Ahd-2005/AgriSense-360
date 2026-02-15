@@ -116,21 +116,20 @@ public class HealthRecordController implements Initializable {
         loadRecordsForAnimal(a.getId());
     }
 
-    private void updateProductionLabel(String type) {
-        if (type == null || type.isEmpty()) {
+    private void updateProductionLabel(Animal.AnimalType type) {
+        if (type == null) {
             productionLabel.setText("Production:");
             return;
         }
-        String t = type.toLowerCase();
-        switch (t) {
-            case "cow":
-            case "goat":
+        switch (type) {
+            case COW:
+            case GOAT:
                 productionLabel.setText("Milk Yield (L):");
                 break;
-            case "chicken":
+            case CHICKEN:
                 productionLabel.setText("Egg Count:");
                 break;
-            case "sheep":
+            case SHEEP:
                 productionLabel.setText("Wool Length (cm):");
                 break;
             default:
@@ -175,16 +174,15 @@ public class HealthRecordController implements Initializable {
             Double woolLength = null;
             String prod = productionField.getText().trim();
             if (!prod.isEmpty()) {
-                String type = a.getType() != null ? a.getType().toLowerCase() : "";
-                switch (type) {
-                    case "cow":
-                    case "goat":
+                switch (a.getType()) {
+                    case COW:
+                    case GOAT:
                         milkYield = Double.parseDouble(prod);
                         break;
-                    case "chicken":
+                    case CHICKEN:
                         eggCount = Integer.parseInt(prod);
                         break;
-                    case "sheep":
+                    case SHEEP:
                         woolLength = Double.parseDouble(prod);
                         break;
                     default:
@@ -252,16 +250,15 @@ public class HealthRecordController implements Initializable {
             Double woolLength = null;
             String prod = productionField.getText().trim();
             if (!prod.isEmpty()) {
-                String type = a.getType() != null ? a.getType().toLowerCase() : "";
-                switch (type) {
-                    case "cow":
-                    case "goat":
+                switch (a.getType()) {
+                    case COW:
+                    case GOAT:
                         milkYield = Double.parseDouble(prod);
                         break;
-                    case "chicken":
+                    case CHICKEN:
                         eggCount = Integer.parseInt(prod);
                         break;
-                    case "sheep":
+                    case SHEEP:
                         woolLength = Double.parseDouble(prod);
                         break;
                     default:

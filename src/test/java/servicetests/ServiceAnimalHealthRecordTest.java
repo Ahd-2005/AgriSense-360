@@ -24,9 +24,9 @@ class ServiceAnimalHealthRecordTest {
     static void setup() throws SQLException {
         serviceAnimal = new ServiceAnimal();
         serviceRecord = new ServiceAnimalHealthRecord();
-        Animal a = new Animal(8888, "cow", Animal.Gender.FEMALE, 400.0,
+        Animal a = new Animal(8888, Animal.AnimalType.COW, Animal.Gender.FEMALE, 400.0,
                 null, LocalDate.of(2021, 1, 10), LocalDate.of(2021, 2, 1),
-                Animal.Origin.BORN_IN_FARM, false, "barn2");
+                Animal.Origin.BORN_IN_FARM, false);
         serviceAnimal.add(a);
         idAnimalTest = a.getId();
     }

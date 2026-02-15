@@ -11,16 +11,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import services.ServiceAnimal;
-import services.ServiceAnimalTypeOption;
-import services.ServiceLocationOption;
 import utils.AnimalListRefresh;
 
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class AnimalController implements Initializable {
 
@@ -31,7 +27,6 @@ public class AnimalController implements Initializable {
     @FXML private DatePicker birthDatePicker;
     @FXML private DatePicker entryDatePicker;
     @FXML private ComboBox<String> originCombo;
-    @FXML private ComboBox<String> locationCombo;
     @FXML private CheckBox vaccinatedCheck;
     @FXML private TableView<Animal> animalTable;
     @FXML private TableColumn<Animal, Integer> colId;
@@ -41,35 +36,27 @@ public class AnimalController implements Initializable {
     @FXML private TableColumn<Animal, Double> colWeight;
     @FXML private TableColumn<Animal, String> colHealthStatus;
     @FXML private TableColumn<Animal, LocalDate> colBirthDate;
-    @FXML private TableColumn<Animal, String> colAge;
     @FXML private TableColumn<Animal, String> colOrigin;
-    @FXML private TableColumn<Animal, String> colLocation;
     @FXML private Button deleteAnimalBtn;
     @FXML private Button updateAnimalBtn;
 
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
-    private final ServiceLocationOption serviceLocationOption = new ServiceLocationOption();
-    private final ServiceAnimalTypeOption serviceAnimalTypeOption = new ServiceAnimalTypeOption();
     private final ObservableList<Animal> animalList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        genderCombo.setItems(FXCollections.observableArrayList(
-                java.util.Arrays.stream(Animal.Gender.values()).map(Enum::name).collect(Collectors.toList())));
-        originCombo.setItems(FXCollections.observableArrayList(
-                java.util.Arrays.stream(Animal.Origin.values()).map(Enum::name).collect(Collectors.toList())));
-        loadTypeAndLocationCombos();
+        typeCombo.setItems(FXCollections.observableArrayList("SHEEP", "COW", "GOAT", "CHICKEN"));
+        genderCombo.setItems(FXCollections.observableArrayList("MALE", "FEMALE"));
+        originCombo.setItems(FXCollections.observableArrayList("BORN_IN_FARM", "OUTSIDE"));
 
         colId.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getId()).asObject());
         colEarTag.setCellValueFactory(c -> c.getValue().getEarTag() != null ? new SimpleIntegerProperty(c.getValue().getEarTag()).asObject() : new SimpleObjectProperty<>());
-        colType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType() != null ? c.getValue().getType() : ""));
+        colType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType() != null ? c.getValue().getType().name() : ""));
         colGender.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getGender() != null ? c.getValue().getGender().name() : ""));
         colWeight.setCellValueFactory(c -> c.getValue().getWeight() != null ? new SimpleDoubleProperty(c.getValue().getWeight()).asObject() : new SimpleObjectProperty<>());
         colHealthStatus.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getHealthStatus() != null ? c.getValue().getHealthStatus() : ""));
         colBirthDate.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getBirthDate()));
-        colAge.setCellValueFactory(c -> new SimpleStringProperty(formatAge(c.getValue().getBirthDate())));
         colOrigin.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOrigin() != null ? c.getValue().getOrigin().name() : ""));
-        colLocation.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLocation() != null ? c.getValue().getLocation() : ""));
 
         animalTable.setItems(animalList);
         animalTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -79,25 +66,6 @@ public class AnimalController implements Initializable {
             if (hasSelection) populateForm(newVal);
         });
         refreshTable();
-    }
-
-    private String formatAge(LocalDate birthDate) {
-        if (birthDate == null) return "";
-        int years = Period.between(birthDate, LocalDate.now()).getYears();
-        if (years == 0) {
-            int months = Period.between(birthDate, LocalDate.now()).getMonths();
-            return months + " mo";
-        }
-        return years + " y";
-    }
-
-    private void loadTypeAndLocationCombos() {
-        try {
-            typeCombo.getItems().setAll(serviceAnimalTypeOption.getAll().stream().map(o -> o.getName()).collect(Collectors.toList()));
-            locationCombo.getItems().setAll(serviceLocationOption.getAll().stream().map(o -> o.getName()).collect(Collectors.toList()));
-        } catch (SQLException e) {
-            showError("Could not load types/locations: " + e.getMessage());
-        }
     }
 
     @FXML
@@ -128,13 +96,12 @@ public class AnimalController implements Initializable {
         if (selected == null) return;
         try {
             int earTag = Integer.parseInt(earTagField.getText().trim());
-            String type = typeCombo.getSelectionModel().getSelectedItem();
+            Animal.AnimalType type = Animal.AnimalType.valueOf(typeCombo.getSelectionModel().getSelectedItem());
             Animal.Gender gender = Animal.Gender.valueOf(genderCombo.getSelectionModel().getSelectedItem());
             Double weight = weightField.getText().trim().isEmpty() ? null : Double.parseDouble(weightField.getText().trim());
             LocalDate birthDate = birthDatePicker.getValue();
             LocalDate entryDate = entryDatePicker.getValue();
             Animal.Origin origin = Animal.Origin.valueOf(originCombo.getSelectionModel().getSelectedItem());
-            String location = locationCombo.getSelectionModel().getSelectedItem();
             boolean vaccinated = vaccinatedCheck.isSelected();
 
             selected.setEarTag(earTag);
@@ -144,7 +111,6 @@ public class AnimalController implements Initializable {
             selected.setBirthDate(birthDate);
             selected.setEntryDate(entryDate);
             selected.setOrigin(origin);
-            selected.setLocation(location);
             selected.setVaccinated(vaccinated);
             serviceAnimal.update(selected);
             refreshTable();
@@ -166,16 +132,15 @@ public class AnimalController implements Initializable {
     private void onAddAnimal() {
         try {
             int earTag = Integer.parseInt(earTagField.getText().trim());
-            String type = typeCombo.getSelectionModel().getSelectedItem();
+            Animal.AnimalType type = Animal.AnimalType.valueOf(typeCombo.getSelectionModel().getSelectedItem());
             Animal.Gender gender = Animal.Gender.valueOf(genderCombo.getSelectionModel().getSelectedItem());
             Double weight = weightField.getText().trim().isEmpty() ? null : Double.parseDouble(weightField.getText().trim());
             LocalDate birthDate = birthDatePicker.getValue();
             LocalDate entryDate = entryDatePicker.getValue();
             Animal.Origin origin = Animal.Origin.valueOf(originCombo.getSelectionModel().getSelectedItem());
-            String location = locationCombo.getSelectionModel().getSelectedItem();
             boolean vaccinated = vaccinatedCheck.isSelected();
 
-            Animal a = new Animal(earTag, type, gender, weight, null, birthDate, entryDate, origin, vaccinated, location);
+            Animal a = new Animal(earTag, type, gender, weight, null, birthDate, entryDate, origin, vaccinated);
             serviceAnimal.add(a);
             refreshTable();
             clearForm();
@@ -194,7 +159,6 @@ public class AnimalController implements Initializable {
         animalList.clear();
         try {
             animalList.addAll(serviceAnimal.getAll());
-            loadTypeAndLocationCombos();
         } catch (SQLException e) {
             showError("Could not load animals: " + e.getMessage());
         }
@@ -202,13 +166,12 @@ public class AnimalController implements Initializable {
 
     private void populateForm(Animal a) {
         earTagField.setText(a.getEarTag() != null ? String.valueOf(a.getEarTag()) : "");
-        typeCombo.getSelectionModel().select(a.getType());
+        typeCombo.getSelectionModel().select(a.getType() != null ? a.getType().name() : null);
         genderCombo.getSelectionModel().select(a.getGender() != null ? a.getGender().name() : null);
         weightField.setText(a.getWeight() != null ? String.valueOf(a.getWeight()) : "");
         birthDatePicker.setValue(a.getBirthDate());
         entryDatePicker.setValue(a.getEntryDate());
         originCombo.getSelectionModel().select(a.getOrigin() != null ? a.getOrigin().name() : null);
-        locationCombo.getSelectionModel().select(a.getLocation());
         vaccinatedCheck.setSelected(a.getVaccinated() != null && a.getVaccinated());
     }
 
@@ -220,7 +183,6 @@ public class AnimalController implements Initializable {
         birthDatePicker.setValue(null);
         entryDatePicker.setValue(null);
         originCombo.getSelectionModel().clearSelection();
-        locationCombo.getSelectionModel().clearSelection();
         vaccinatedCheck.setSelected(false);
     }
 
