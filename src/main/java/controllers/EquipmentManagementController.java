@@ -1,4 +1,4 @@
-package com.example.agrisense360.controllers;
+package controllers;
 
 import javafx.fxml.FXML;
 

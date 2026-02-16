@@ -2,6 +2,8 @@ module com.example.agrisens360 {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
+    requires java.sql;
+    requires java.net.http;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
@@ -10,13 +12,18 @@ module com.example.agrisens360 {
     requires org.kordamp.bootstrapfx.core;
     //requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
-    requires java.sql;
+    requires org.json;
 
     opens com.example.agrisens360 to javafx.fxml;
     opens controllers to javafx.fxml;
     exports com.example.agrisens360;
     opens entity to javafx.base;
+    opens services;
+    opens utils;
     exports controllers;
+    exports entity;
+    exports services;
+    exports utils;
 
 }
 

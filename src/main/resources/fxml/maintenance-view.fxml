@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.agrisense360.controllers.MaintenanceController"
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.MaintenanceController"
       spacing="16" styleClass="tab-content-area">
     <padding>
         <Insets top="12" right="12" bottom="12" left="12"/>

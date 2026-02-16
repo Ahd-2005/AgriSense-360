@@ -1,4 +1,4 @@
-package com.example.agrisense360.controllers;
+package controllers;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -16,10 +16,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import com.example.agrisense360.entity.Equipment;
-import com.example.agrisense360.services.ServiceEquipment;
-import com.example.agrisense360.services.ServiceMaintenance;
-import com.example.agrisense360.utils.EquipmentListRefresh;
+import entity.Equipment;
+import services.ServiceEquipment;
+import services.ServiceMaintenance;
+import utils.EquipmentListRefresh;
 
 import java.net.URL;
 import java.sql.SQLException;
