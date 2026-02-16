@@ -1,7 +1,7 @@
 package services;
 
 import entity.AffectationTravail;
-import utils.MyConnection;
+import utils.MyDataBase;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ public class AffectationTravailService {
             INSERT INTO affectation_travail (type_travail, date_debut, date_fin, zone_travail, statut)
             VALUES (?, ?, ?, ?, ?)
             """;
-        Connection cnx = MyConnection.getInstance().getCnx();
+        Connection cnx = MyDataBase.getInstance().getCnx();
         if (cnx == null) throw new SQLException("No connection");
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setString(1, a.getTypeTravail());
@@ -33,7 +33,7 @@ public class AffectationTravailService {
             SET type_travail = ?, date_debut = ?, date_fin = ?, zone_travail = ?, statut = ?
             WHERE id_affectation = ?
             """;
-        Connection cnx = MyConnection.getInstance().getCnx();
+        Connection cnx = MyDataBase.getInstance().getCnx();
         if (cnx == null) throw new SQLException("No connection");
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setString(1, a.getTypeTravail());
@@ -48,7 +48,7 @@ public class AffectationTravailService {
 
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM affectation_travail WHERE id_affectation = ?";
-        Connection cnx = MyConnection.getInstance().getCnx();
+        Connection cnx = MyDataBase.getInstance().getCnx();
         if (cnx == null) throw new SQLException("No connection");
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -59,7 +59,7 @@ public class AffectationTravailService {
     public List<AffectationTravail> getAll() throws SQLException {
         String sql = "SELECT id_affectation, type_travail, date_debut, date_fin, zone_travail, statut FROM affectation_travail";
         List<AffectationTravail> list = new ArrayList<>();
-        Connection cnx = MyConnection.getInstance().getCnx();
+        Connection cnx = MyDataBase.getInstance().getCnx();
         if (cnx == null) throw new SQLException("No connection");
         try (PreparedStatement ps = cnx.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -72,7 +72,7 @@ public class AffectationTravailService {
 
     public AffectationTravail getById(int id) throws SQLException {
         String sql = "SELECT id_affectation, type_travail, date_debut, date_fin, zone_travail, statut FROM affectation_travail WHERE id_affectation = ?";
-        Connection cnx = MyConnection.getInstance().getCnx();
+        Connection cnx = MyDataBase.getInstance().getCnx();
         if (cnx == null) throw new SQLException("No connection");
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setInt(1, id);
