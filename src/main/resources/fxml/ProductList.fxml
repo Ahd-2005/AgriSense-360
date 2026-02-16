@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="800.0" prefWidth="1530.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.ProductListController">
+
+    <!-- CONTENU CENTRAL -->
+    <!-- CONTENU CENTRAL -->
+    <center>
+        <ScrollPane fitToWidth="true" pannable="true" styleClass="content">
+            <VBox alignment="TOP_CENTER" spacing="30.0">
+                <padding>
+                    <Insets bottom="600.0" left="60.0" right="60.0" top="40.0" />
+                </padding>
+
+                <!-- Titre -->
+                <Label style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="📦 Liste des Produits" />
+
+                <!-- Boutons de navigation -->
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Button onAction="#goToHome" prefHeight="48.0" prefWidth="150.0" styleClass="ghost" text="🏠 Accueil" />
+                    <Button onAction="#goToStockList" prefHeight="48.0" prefWidth="150.0" styleClass="ghost" text="📊 Stocks" />
+                </HBox>
+
+                <!-- Bouton Ajouter -->
+                <HBox alignment="CENTER_RIGHT">
+                    <Button onAction="#ajouterProduit" prefHeight="48.0" prefWidth="200.0" styleClass="primary" text="➕ Ajouter Nouveau Produit" />
+                </HBox>
+
+                <!-- Grille des Produits -->
+                <GridPane fx:id="gridProduits" hgap="20.0" styleClass="grid" vgap="20.0">
+                    <!-- Les cartes seront ajoutées dynamiquement -->
+                    <columnConstraints>
+                        <ColumnConstraints />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints />
+                    </rowConstraints>
+                </GridPane>
+
+                <!-- ESPACE VIDE EN BAS -->
+                <Region prefHeight="800.0" VBox.vgrow="NEVER" />
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <stylesheets>
+        <URL value="file:///C:/Users/Super%20User/Documents/Esprit/3A/PI/Agritech/src/main/resources/css/home.css" />
+    </stylesheets>
+</BorderPane>

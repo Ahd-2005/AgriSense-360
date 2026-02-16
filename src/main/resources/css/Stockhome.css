@@ -1,0 +1,593 @@
+/* Root and Global */
+.root {
+    -fx-font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: linear-gradient(to bottom, #fbf7ef 0%, #eef5ee 100%);
+}
+
+/* Topbar */
+.topbar {
+    -fx-background-color: transparent;
+    -fx-padding: 48px 56px;
+    -fx-alignment: center-left;
+}
+
+.topbar-title {
+    -fx-font-family: "Fraunces", "Georgia", serif;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #22301b;
+    -fx-wrap-text: true;
+}
+
+.topbar-sub {
+    -fx-font-size: 16px;
+    -fx-text-fill: rgba(23, 35, 24, 0.72);
+    -fx-wrap-text: true;
+}
+
+.topbar-right {
+    -fx-alignment: center;
+}
+
+.stat {
+    -fx-background-color: #fff;
+    -fx-padding: 16px 20px;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
+    -fx-min-width: 120px;
+}
+
+.stat-value {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #22301b;
+}
+
+.stat-label {
+    -fx-font-size: 12px;
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 1px;
+    -fx-text-fill: rgba(43, 59, 31, 0.6);
+}
+
+/* Sidebar - Remplacé par les nouveaux styles */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #1e3c2c, #2a5a3a);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 2, 0);
+}
+
+.brand {
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 0 0 1 0;
+}
+
+.brand-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffd700;
+}
+
+.brand-tagline {
+    -fx-font-size: 11px;
+    -fx-text-fill: #a0d6a0;
+}
+
+.sidebar-toggle {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1 0;
+    -fx-padding: 15 20;
+    -fx-cursor: hand;
+}
+
+.sidebar-toggle:hover {
+    -fx-background-color: rgba(255, 215, 0, 0.1);
+}
+
+.toggle-icon {
+    -fx-min-width: 20px;
+    -fx-min-height: 2px;
+    -fx-background-color: #a0d6a0;
+}
+
+.toggle-text {
+    -fx-text-fill: #a0d6a0;
+    -fx-font-size: 14px;
+}
+
+.nav-title {
+    -fx-text-fill: #8f9bb3;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+}
+
+.nav-link {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8px;
+    -fx-padding: 12 15;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+    -fx-max-width: Infinity;
+}
+
+.nav-link:hover {
+    -fx-background-color: rgba(255, 215, 0, 0.15);
+}
+
+.nav-link.active {
+    -fx-background-color: #5a9814;
+}
+
+.nav-link.active .nav-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.nav-icon {
+    -fx-min-width: 24px;
+    -fx-min-height: 24px;
+    -fx-max-width: 24px;
+    -fx-max-height: 24px;
+}
+
+.nav-icon SVGPath {
+    -fx-stroke: #e0e0e0;
+    -fx-stroke-width: 2;
+    -fx-fill: transparent;
+}
+
+.nav-link.active .nav-icon SVGPath {
+    -fx-stroke: white;
+}
+
+.nav-label {
+    -fx-text-fill: #e0e0e0;
+    -fx-font-size: 14px;
+}
+
+.sidebar-foot {
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1 0 0 0;
+    -fx-text-fill: #a0d6a0;
+    -fx-font-size: 12px;
+}
+
+.pulse-dot {
+    -fx-min-width: 8px;
+    -fx-min-height: 8px;
+    -fx-background-color: #4caf50;
+    -fx-background-radius: 50%;
+    -fx-effect: dropshadow(gaussian, #4caf50, 8, 0.5, 0, 0);
+}
+
+/* Content */
+.content {
+    -fx-background-color: transparent;
+    -fx-padding: 48px 56px 64px;
+}
+
+.content-inner {
+    -fx-spacing: 40px;
+}
+
+/* Hero Banner */
+.hero-banner {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.55));
+    -fx-background-radius: 28px;
+    -fx-padding: 32px 36px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
+    -fx-alignment: center-left;
+    -fx-spacing: 32px;
+}
+
+.hero-copy {
+    -fx-alignment: top-left;
+}
+
+.hero-kicker {
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 2px;
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(43, 59, 31, 0.7);
+}
+
+.hero-title {
+    -fx-font-family: "Fraunces", "Georgia", serif;
+    -fx-font-size: 40px;
+    -fx-text-fill: #22301b;
+    -fx-wrap-text: true;
+}
+
+.hero-lead {
+    -fx-font-size: 16px;
+    -fx-line-height: 1.7;
+    -fx-max-width: 520px;
+    -fx-text-fill: #22301b;
+    -fx-wrap-text: true;
+}
+
+.hero-actions {
+    -fx-spacing: 16px;
+}
+
+.primary {
+    -fx-background-color: #5a9814;
+    -fx-text-fill: #0f1b0f;
+    -fx-background-radius: 999px;
+    -fx-padding: 12px 24px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(96, 152, 16, 0.3), 12, 0, 0, 6);
+}
+
+.ghost {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(43, 59, 31, 0.2);
+    -fx-border-width: 1;
+    -fx-text-fill: #22301b;
+    -fx-background-radius: 999px;
+    -fx-padding: 12px 24px;
+    -fx-cursor: hand;
+}
+
+.hero-visual {
+    -fx-background-radius: 20px;
+    -fx-overflow: hidden;
+    -fx-min-height: 240px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
+    -fx-alignment: bottom-left;
+}
+
+.hero-badge {
+    -fx-background-color: rgba(21, 150, 214, 0.85);
+    -fx-text-fill: #fff;
+    -fx-padding: 10px 14px;
+    -fx-background-radius: 14px;
+    -fx-position: absolute;
+    -fx-bottom: 18px;
+    -fx-left: 18px;
+    -fx-font-size: 12px;
+    -fx-letter-spacing: 0.6px;
+}
+
+.hero-panel {
+    -fx-background-color: rgba(43, 59, 31, 0.9);
+    -fx-text-fill: #f6f4ec;
+    -fx-background-radius: 20px;
+    -fx-padding: 18px 20px;
+    -fx-spacing: 16px;
+}
+
+.panel-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+}
+
+.panel-value {
+    -fx-font-weight: bold;
+    -fx-text-fill: #fff;
+}
+
+.panel-chart {
+    -fx-font-size: 12px;
+}
+
+.panel-note {
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+}
+
+/* About Band */
+.about-band {
+    -fx-background-color: rgba(96, 152, 16, 0.08);
+    -fx-background-radius: 28px;
+    -fx-padding: 28px 32px;
+    -fx-spacing: 28px;
+}
+
+.about-title {
+    -fx-font-family: "Fraunces", "Georgia", serif;
+    -fx-font-size: 30px;
+    -fx-text-fill: #22301b;
+    -fx-margin-bottom: 10px;
+}
+
+.about-band .text {
+    -fx-font-size: 15px;
+    -fx-line-height: 1.7;
+    -fx-text-fill: rgba(23, 35, 24, 0.75);
+    -fx-wrap-text: true;
+}
+
+.climate-card {
+    -fx-background-color: rgba(255, 255, 255, 0.7);
+    -fx-background-radius: 20px;
+    -fx-padding: 18px 20px;
+    -fx-spacing: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
+}
+
+.climate-title {
+    -fx-font-family: "Fraunces", "Georgia", serif;
+    -fx-text-fill: #22301b;
+    -fx-margin-bottom: 6px;
+}
+
+.climate-graph {
+    -fx-spacing: 16px;
+    -fx-alignment: center-left;
+}
+
+.climate-stats {
+    -fx-spacing: 12px;
+}
+
+.stat-number {
+    -fx-font-size: 18px;
+    -fx-text-fill: #22301b;
+}
+
+.stat-text {
+    -fx-font-size: 11px;
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 1px;
+    -fx-text-fill: rgba(43, 59, 31, 0.6);
+}
+
+.about-media {
+    -fx-background-radius: 20px;
+    -fx-overflow: hidden;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
+    -fx-min-height: 180px;
+}
+
+.about-card {
+    -fx-background-color: #fff;
+    -fx-background-radius: 20px;
+    -fx-padding: 18px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
+    -fx-spacing: 8px;
+}
+
+.about-card-title {
+    -fx-text-fill: #22301b;
+    -fx-margin-bottom: 8px;
+}
+
+/* Services */
+.services {
+    -fx-spacing: 20px;
+}
+
+.section-title {
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 2px;
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(43, 59, 31, 0.6);
+}
+
+.section-title-main {
+    -fx-font-family: "Fraunces", "Georgia", serif;
+    -fx-font-size: 32px;
+    -fx-text-fill: #22301b;
+    -fx-margin-top: 10px;
+}
+
+.grid {
+    -fx-hgap: 20px;
+    -fx-vgap: 20px;
+}
+
+.card {
+    -fx-background-color: #fff;
+    -fx-background-radius: 20px;
+    -fx-padding: 20px 22px 22px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
+    -fx-border-color: rgba(43, 59, 31, 0.06);
+    -fx-border-width: 1;
+    /*-fx-transform: translateY(10px);
+    -fx-opacity: 0;*/
+}
+
+.card:hover {
+    /* -fx-transform: translateY(0);
+     -fx-opacity: 1;*/
+}
+
+.card-title {
+    -fx-font-family: "Fraunces", "Georgia", serif;
+    -fx-font-size: 20px;
+    -fx-text-fill: #22301b;
+    -fx-margin-bottom: 8px;
+}
+
+.card .text {
+    -fx-font-size: 14px;
+    -fx-line-height: 1.6;
+    -fx-text-fill: rgba(23, 35, 24, 0.75);
+    -fx-wrap-text: true;
+}
+
+/* Stats Strip */
+.stats-strip {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(21, 150, 214, 0.32), rgba(96, 152, 16, 0.2));
+    -fx-background-radius: 28px;
+    -fx-padding: 22px 26px;
+    -fx-spacing: 18px;
+}
+
+.stat-block {
+    -fx-background-color: #fff;
+    -fx-background-radius: 20px;
+    -fx-padding: 16px 18px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
+    -fx-border-color: rgba(21, 150, 214, 0.2);
+    -fx-border-width: 1;
+    -fx-spacing: 6px;
+}
+
+/* Footer */
+.image-credits {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(23, 35, 24, 0.6);
+    -fx-spacing: 10px;
+}
+
+.credit-links {
+    -fx-spacing: 12px;
+}
+
+/* Responsive (approximated; use Java code for full responsiveness) */
+@media (max-width: 1100px) {
+    .sidebar {
+        -fx-pref-width: 240px;
+    }
+    .content {
+        -fx-padding: 32px 24px 48px;
+    }
+}
+
+@media (max-width: 820px) {
+    .hero-banner, .about-band {
+        -fx-padding: 22px 20px;
+    }
+    .climate-graph {
+        -fx-orientation: vertical;
+    }
+}
+
+@media (max-width: 640px) {
+    .sidebar {
+        -fx-padding: 24px 20px;
+    }
+    .hero-banner, .about-band, .stats-strip {
+        -fx-padding: 22px 20px;
+    }
+}
+
+/* Additional styles for the form (from your FXML) */
+.input-field {
+    -fx-background-color: #fff;
+    -fx-border-color: rgba(43, 59, 31, 0.2);
+    -fx-border-width: 1;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 12px;
+}
+
+.input-field:focused {
+    -fx-border-color: #5a9814;
+}
+.card {
+    -fx-opacity: 1 !important;
+    -fx-transform: translateY(0) !important;
+}
+
+
+.card .primary {
+    -fx-pref-width: 80px;
+    -fx-font-size: 12px;
+}
+
+.card .ghost {
+    -fx-pref-width: 80px;
+    -fx-font-size: 12px;
+}
+
+/* Header styles - harmonisé avec la sidebar */
+.header {
+    -fx-background-color: white;
+    -fx-border-color: #e0e7d0;
+    -fx-border-width: 0 0 2 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
+}
+
+.header-brand {
+    -fx-background-color: transparent;
+}
+
+.header-logo {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
+}
+
+.header-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-font-family: "System";
+}
+
+.header-subtitle {
+    -fx-font-size: 12px;
+    -fx-opacity: 0.8;
+}
+
+.header-stats {
+    -fx-background-color: #f8faf5;
+    -fx-background-radius: 12px;
+    -fx-padding: 8px 16px;
+    -fx-border-color: #e0e7d0;
+    -fx-border-radius: 12px;
+}
+
+.stat-item {
+    -fx-min-width: 60px;
+    -fx-spacing: 2px;
+}
+
+.stat-number {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.stat-label-header {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6b7b5a;
+}
+
+.header-separator {
+    -fx-min-width: 1px;
+    -fx-min-height: 30px;
+    -fx-background-color: #e0e7d0;
+}
+
+.user-profile {
+    -fx-cursor: hand;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 30px;
+}
+
+.user-profile:hover {
+    -fx-background-color: #f0f5ea;
+}
+
+.user-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.user-role {
+    -fx-font-size: 11px;
+}
+
+.user-avatar {
+    -fx-fill: linear-gradient(from 0% 0% to 100% 100%, #8aa87d, #5a7d4a);
+    -fx-stroke: #e0e7d0;
+    -fx-stroke-width: 2;
+}
+
+.notification-btn, .settings-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 50%;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-cursor: hand;
+    -fx-font-size: 16px;
+}
+
+.notification-btn:hover, .settings-btn:hover {
+    -fx-background-color: #f0f5ea;
+}
+
+.notification-btn:pressed, .settings-btn:pressed {
+    -fx-background-color: #e0e7d0;
+}

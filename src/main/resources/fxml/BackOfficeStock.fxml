@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.ScrollPane?>
+
+<ScrollPane pannable="true" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.controllers.BackOfficeStockController" VBox.vgrow="ALWAYS" prefWidth="1530" prefHeight="800">
+    <VBox alignment="TOP_CENTER" spacing="40.0">
+        <padding>
+            <Insets bottom="600.0" left="60.0" right="60.0" top="40.0" />
+        </padding>
+
+        <Label style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="🏢 Backoffice Unifié - Gestion Produits et Stocks" />
+
+        <!-- Section des statistiques -->
+        <HBox alignment="CENTER" spacing="40.0" style="-fx-background-color: #f0f0f0; -fx-padding: 20px; -fx-border-radius: 10px;">
+            <VBox alignment="CENTER" spacing="10.0">
+                <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="Produits" />
+                <Label fx:id="statProduits" style="-fx-font-size: 32px; -fx-text-fill: #4caf50;" text="0" />
+            </VBox>
+            <VBox alignment="CENTER" spacing="10.0">
+                <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="Stocks" />
+                <Label fx:id="statStocks" style="-fx-font-size: 32px; -fx-text-fill: #2196f3;" text="0" />
+            </VBox>
+            <VBox alignment="CENTER" spacing="10.0">
+                <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="En alerte" />
+                <Label fx:id="statAlertes" style="-fx-font-size: 32px; -fx-text-fill: #f44336;" text="0" />
+            </VBox>
+        </HBox>
+
+        <!-- Section Produits -->
+        <VBox spacing="20.0" styleClass="card">
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="📦 Produits" />
+                <Button onAction="#addProduct" styleClass="primary" text="➕ Ajouter Produit" />
+            </HBox>
+            <GridPane fx:id="gridProduits" hgap="20.0" vgap="20.0">
+                <columnConstraints>
+                    <ColumnConstraints />
+                    <ColumnConstraints />
+                </columnConstraints>
+                <!-- Les cartes seront ajoutées dynamiquement -->
+            </GridPane>
+        </VBox>
+
+        <!-- Section Stocks -->
+        <VBox spacing="20.0" styleClass="card">
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="📊 Stocks" />
+                <Button onAction="#addStock" styleClass="primary" text="➕ Ajouter Stock" />
+            </HBox>
+            <GridPane fx:id="gridStocks" hgap="20.0" vgap="20.0">
+                <columnConstraints>
+                    <ColumnConstraints />
+                    <ColumnConstraints />
+                </columnConstraints>
+                <!-- Les cartes seront ajoutées dynamiquement -->
+            </GridPane>
+        </VBox>
+
+        <!-- Section des alertes récentes -->
+        <VBox alignment="TOP_LEFT" spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-padding: 20px; -fx-border-radius: 10px;" VBox.vgrow="ALWAYS">
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="🚨 Alertes Récentes" />
+            <Label fx:id="alertesText" style="-fx-font-size: 16px; -fx-text-fill: #6b7b5a;" text="Aucune alerte pour le moment." />
+        </VBox>
+
+        <!-- ESPACE VIDE EN BAS -->
+        <Region prefHeight="800.0" VBox.vgrow="NEVER" />
+
+        <stylesheets>
+            <URL value="file:///C:/Users/Super%20User/Documents/Esprit/3A/PI/Agritech/src/main/resources/css/home.css" />
+        </stylesheets>
+    </VBox>
+</ScrollPane>
