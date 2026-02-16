@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-<<<<<<< HEAD
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/animals-management.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
     </list>
-=======
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="" />
->>>>>>> parent of 881fc95 (table improvements)
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -48,9 +44,9 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "amin",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/aminp/Downloads/AgriSense-360-main/AgriSense-360-main",
+    "last_opened_file_path": "C:/Users/aminp/Documents/GitHub/AgriSense-360",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -70,6 +66,9 @@
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\java\entity" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\java\controllers" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\db" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\aminp\Documents\GitHub\AgriSense-360\src\main\resources\css" />
     </key>
   </component>
   <component name="RunManager">
@@ -122,10 +121,7 @@
       <workItem from="1771172457982" duration="31000" />
       <workItem from="1771173290062" duration="617000" />
       <workItem from="1771264333332" duration="99000" />
-<<<<<<< HEAD
       <workItem from="1771264610230" duration="758000" />
-=======
->>>>>>> parent of 881fc95 (table improvements)
     </task>
     <task id="LOCAL-00001" summary="gestion culture +gestion animals+template">
       <option name="closed" value="true" />
