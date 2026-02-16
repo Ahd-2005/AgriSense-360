@@ -12,7 +12,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.12.1</junit.version>
-        <javafx.version>17.0.14</javafx.version>
     </properties>
 
     <dependencies>
@@ -133,38 +132,6 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.6.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-javafx-for-tests</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/javafx-mods</outputDirectory>
-                            <includeGroupIds>org.openjfx</includeGroupIds>
-                            <excludeTransitive>false</excludeTransitive>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
-                <configuration>
-                    <argLine>
-                        --module-path "${project.build.directory}/javafx-mods"
-                        --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base
-                        --add-opens java.base/java.lang=ALL-UNNAMED
-                        -Djava.awt.headless=true
-                    </argLine>
                 </configuration>
             </plugin>
             <plugin>
