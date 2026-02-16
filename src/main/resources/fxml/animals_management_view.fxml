@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" VBox.vgrow="ALWAYS" stylesheets="@/animals-management.css">
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" VBox.vgrow="ALWAYS" stylesheets="@../css/animals-management.css">
     <padding>
         <Insets top="24" right="32" bottom="24" left="32"/>
     </padding>
