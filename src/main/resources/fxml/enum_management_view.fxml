@@ -10,7 +10,7 @@
         <Insets top="0" right="0" bottom="0" left="0"/>
     </padding>
 
-    <Label text="Manage animal types and locations (ENUM values in DB). Changes apply to the Animal table only." styleClass="mgmt-form-title" wrapText="true"/>
+    <Label text="Manage animal types and locations" styleClass="mgmt-form-title" wrapText="true"/>
 
     <HBox spacing="32" HBox.hgrow="ALWAYS">
 
@@ -18,7 +18,7 @@
             <Label text="Animal types" styleClass="mgmt-form-title"/>
             <ListView fx:id="typesList" styleClass="mgmt-table" prefHeight="180" VBox.vgrow="NEVER"/>
             <HBox spacing="8" alignment="CENTER_LEFT">
-                <TextField fx:id="newTypeField" promptText="New type (e.g. duck)" styleClass="mgmt-input" prefWidth="160"/>
+                <TextField fx:id="newTypeField" promptText="New type" styleClass="mgmt-input" prefWidth="160"/>
                 <Button text="Add type" onAction="#onAddType" styleClass="mgmt-btn-primary"/>
             </HBox>
             <Button text="Delete selected type" onAction="#onDeleteType" styleClass="mgmt-btn-ghost" fx:id="deleteTypeBtn" disable="true"/>
@@ -29,7 +29,7 @@
             <Label text="Locations" styleClass="mgmt-form-title"/>
             <ListView fx:id="locationsList" styleClass="mgmt-table" prefHeight="180" VBox.vgrow="NEVER"/>
             <HBox spacing="8" alignment="CENTER_LEFT">
-                <TextField fx:id="newLocationField" promptText="New location (e.g. barn4)" styleClass="mgmt-input" prefWidth="160"/>
+                <TextField fx:id="newLocationField" promptText="New location" styleClass="mgmt-input" prefWidth="160"/>
                 <Button text="Add location" onAction="#onAddLocation" styleClass="mgmt-btn-primary"/>
             </HBox>
             <Button text="Delete selected location" onAction="#onDeleteLocation" styleClass="mgmt-btn-ghost" fx:id="deleteLocationBtn" disable="true"/>
