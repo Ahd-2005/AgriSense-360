@@ -52,6 +52,8 @@ public class MainLayoutController {
     @FXML private Label workersLabel;
     @FXML private Label profileLabel;
     @FXML private Label logoutLabel;
+    @FXML private Button ouvrierBtn;
+    @FXML private Label ouvrierLabel;
 
     private boolean sidebarCollapsed = false;
     private user currentUser;
@@ -116,6 +118,7 @@ public class MainLayoutController {
                 showButton(stockBtn, stockLabel);
                 showButton(cultureBtn, cultureLabel);
                 showButton(workersBtn, workersLabel);
+                showButton(ouvrierBtn, ouvrierLabel);
                 break;
 
             case ROLE_OUVRIER:
@@ -149,6 +152,8 @@ public class MainLayoutController {
         usersBtn.setManaged(false);
         workersBtn.setVisible(false);
         workersBtn.setManaged(false);
+        ouvrierBtn.setVisible(false);
+        ouvrierBtn.setManaged(false);
     }
 
     private void showButton(Button button, Label label) {
@@ -258,6 +263,10 @@ public class MainLayoutController {
             workersLabel.setVisible(true);
             workersLabel.setManaged(true);
         }
+        if (ouvrierBtn.isVisible()) {
+            ouvrierLabel.setVisible(true);
+            ouvrierLabel.setManaged(true);
+        }
 
         // Profile and Logout are ALWAYS visible
         profileLabel.setVisible(true);
@@ -285,6 +294,8 @@ public class MainLayoutController {
         profileLabel.setManaged(false);
         logoutLabel.setVisible(false);
         logoutLabel.setManaged(false);
+        ouvrierLabel.setVisible(false);
+        ouvrierLabel.setManaged(false);
     }
 
     @FXML
@@ -347,9 +358,21 @@ public class MainLayoutController {
 
     @FXML
     public void navigateToWorkers() {
-        loadContent("/fxml/OuvrierManagement.fxml");
+        loadContent("/fxml/affectation_view.fxml");
         setActiveButton(workersBtn);
     }
+    @FXML
+    public void navigateToOuvrier() {
+        loadContent("/fxml/OuvrierManagement.fxml");
+        setActiveButton(ouvrierBtn);
+    }
+    @FXML
+    public void navigateToEvaluation() {
+        loadContent("/fxml/evaluation_view.fxml");
+        // optionnel : garder workersBtn actif
+        setActiveButton(workersBtn);
+    }
+
 
     @FXML
     public void navigateToProfile() {
@@ -436,6 +459,7 @@ public class MainLayoutController {
         usersBtn.getStyleClass().remove("active");
         workersBtn.getStyleClass().remove("active");
         profileBtn.getStyleClass().remove("active");
+        ouvrierBtn.getStyleClass().remove("active");
 
         // Add active class to clicked button
         if (!activeButton.getStyleClass().contains("active")) {

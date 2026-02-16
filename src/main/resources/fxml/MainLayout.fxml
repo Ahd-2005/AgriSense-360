@@ -126,6 +126,16 @@
                             </HBox>
                         </graphic>
                     </Button>
+                    <!-- Ouvrier Management -->
+                    <Button fx:id="ouvrierBtn" styleClass="nav-link" onAction="#navigateToOuvrier"
+                            visible="false" managed="false">
+                        <graphic>
+                            <HBox spacing="12" alignment="CENTER_LEFT">
+                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="👨‍🔧" />
+                                <Label fx:id="ouvrierLabel" text="Ouvrier Management" styleClass="nav-label" />
+                            </HBox>
+                        </graphic>
+                    </Button>
                 </VBox>
             </VBox>
 
