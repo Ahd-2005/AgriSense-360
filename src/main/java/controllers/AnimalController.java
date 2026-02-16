@@ -1,6 +1,8 @@
 package controllers;
 
 import entity.Animal;
+import entity.user;
+import entity.user.Role;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import services.ServiceAnimal;
 import services.ServiceEnumManagement;
+import services.SessionManager;
 import utils.AnimalListRefresh;
 
 import java.net.URL;
@@ -19,6 +22,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class AnimalController implements Initializable {
 
@@ -44,13 +48,23 @@ public class AnimalController implements Initializable {
     @FXML private ComboBox<String> locationCombo;
     @FXML private Button deleteAnimalBtn;
     @FXML private Button updateAnimalBtn;
+    @FXML private Button addAnimalBtn;
 
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
     private final ServiceEnumManagement serviceEnum = new ServiceEnumManagement();
     private final ObservableList<Animal> animalList = FXCollections.observableArrayList();
 
+    private user currentUser;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Get current user from session
+        SessionManager sessionManager = SessionManager.getInstance();
+        if (sessionManager.isLoggedIn()) {
+            this.currentUser = sessionManager.getCurrentUser();
+            configurePermissions();
+        }
+
         genderCombo.setItems(FXCollections.observableArrayList("MALE", "FEMALE"));
         originCombo.setItems(FXCollections.observableArrayList("BORN_IN_FARM", "OUTSIDE"));
         refreshTypeAndLocationCombos();
@@ -77,6 +91,30 @@ public class AnimalController implements Initializable {
         refreshTable();
     }
 
+    private void configurePermissions() {
+        if (currentUser != null) {
+            Role userRole = currentUser.getRole();
+
+            // Workers (Ouvriers) have read-only access
+            if (userRole == Role.ROLE_OUVRIER) {
+                if (addAnimalBtn != null) addAnimalBtn.setDisable(true);
+                if (deleteAnimalBtn != null) deleteAnimalBtn.setDisable(true);
+                if (updateAnimalBtn != null) updateAnimalBtn.setDisable(true);
+
+                // Make form fields non-editable for workers
+                earTagField.setEditable(false);
+                typeCombo.setDisable(true);
+                genderCombo.setDisable(true);
+                weightField.setEditable(false);
+                birthDatePicker.setDisable(true);
+                entryDatePicker.setDisable(true);
+                originCombo.setDisable(true);
+                vaccinatedCheck.setDisable(true);
+                locationCombo.setDisable(true);
+            }
+        }
+    }
+
     private void refreshTypeAndLocationCombos() {
         try {
             List<String> types = serviceEnum.getEnumValues("Animal", "type");
@@ -97,6 +135,13 @@ public class AnimalController implements Initializable {
     private void onDeleteAnimal() {
         Animal selected = animalTable.getSelectionModel().getSelectedItem();
         if (selected == null) return;
+
+        // Check permissions
+        if (currentUser != null && currentUser.getRole() == Role.ROLE_OUVRIER) {
+            showError("You don't have permission to delete animals.");
+            return;
+        }
+
         try {
             serviceAnimal.delete(selected.getId());
             refreshTable();
@@ -114,6 +159,13 @@ public class AnimalController implements Initializable {
     private void onUpdateAnimal() {
         Animal selected = animalTable.getSelectionModel().getSelectedItem();
         if (selected == null) return;
+
+        // Check permissions
+        if (currentUser != null && currentUser.getRole() == Role.ROLE_OUVRIER) {
+            showError("You don't have permission to update animals.");
+            return;
+        }
+
         try {
             int earTag = Integer.parseInt(earTagField.getText().trim());
             String type = typeCombo.getSelectionModel().getSelectedItem();
@@ -152,6 +204,12 @@ public class AnimalController implements Initializable {
 
     @FXML
     private void onAddAnimal() {
+        // Check permissions
+        if (currentUser != null && currentUser.getRole() == Role.ROLE_OUVRIER) {
+            showError("You don't have permission to add animals.");
+            return;
+        }
+
         try {
             int earTag = Integer.parseInt(earTagField.getText().trim());
             String type = typeCombo.getSelectionModel().getSelectedItem();
@@ -181,7 +239,17 @@ public class AnimalController implements Initializable {
     private void refreshTable() {
         animalList.clear();
         try {
-            animalList.addAll(serviceAnimal.getAll());
+            List<Animal> allAnimals = serviceAnimal.getAll();
+
+            // Filter by user if not admin
+            if (currentUser != null && currentUser.getRole() != Role.ROLE_ADMIN) {
+                // If you have user_id field in Animal entity, filter here
+                // For now, showing all animals
+                animalList.addAll(allAnimals);
+            } else {
+                // Admin sees all
+                animalList.addAll(allAnimals);
+            }
         } catch (SQLException e) {
             showError("Could not load animals: " + e.getMessage());
         }

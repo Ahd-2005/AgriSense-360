@@ -50,7 +50,7 @@
                 <Label fx:id="navTitle" text="MANAGEMENTS" styleClass="nav-title" />
 
                 <VBox spacing="8">
-                    <!-- Home -->
+                    <!-- Home / Mes Tâches (changes based on role) -->
                     <Button fx:id="homeBtn" styleClass="nav-link" onAction="#navigateToHome">
                         <graphic>
                             <HBox spacing="12" alignment="CENTER_LEFT">
@@ -61,7 +61,8 @@
                     </Button>
 
                     <!-- Animals Management -->
-                    <Button fx:id="animalsBtn" styleClass="nav-link" onAction="#navigateToAnimals">
+                    <Button fx:id="animalsBtn" styleClass="nav-link" onAction="#navigateToAnimals"
+                            visible="false" managed="false">
                         <graphic>
                             <HBox spacing="12" alignment="CENTER_LEFT">
                                 <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="🐄" />
@@ -72,7 +73,8 @@
 
 
                     <!-- Equipment Management -->
-                    <Button fx:id="equipmentBtn" styleClass="nav-link" onAction="#navigateToEquipment">
+                    <Button fx:id="equipmentBtn" styleClass="nav-link" onAction="#navigateToEquipment"
+                            visible="false" managed="false">
                         <graphic>
                             <HBox spacing="12" alignment="CENTER_LEFT">
                                 <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="🚜" />
@@ -82,7 +84,8 @@
                     </Button>
 
                     <!-- Stock Management -->
-                    <Button fx:id="stockBtn" styleClass="nav-link" onAction="#navigateToStock">
+                    <Button fx:id="stockBtn" styleClass="nav-link" onAction="#navigateToStock"
+                            visible="false" managed="false">
                         <graphic>
                             <HBox spacing="12" alignment="CENTER_LEFT">
                                 <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="📦" />
@@ -92,7 +95,8 @@
                     </Button>
 
                     <!-- Culture Management -->
-                    <Button fx:id="cultureBtn" styleClass="nav-link" onAction="#navigateToCulture">
+                    <Button fx:id="cultureBtn" styleClass="nav-link" onAction="#navigateToCulture"
+                            visible="false" managed="false">
                         <graphic>
                             <HBox spacing="12" alignment="CENTER_LEFT">
                                 <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="🌱" />
@@ -102,7 +106,8 @@
                     </Button>
 
                     <!-- Users Management -->
-                    <Button fx:id="usersBtn" styleClass="nav-link" onAction="#navigateToUsers">
+                    <Button fx:id="usersBtn" styleClass="nav-link" onAction="#navigateToUsers"
+                            visible="false" managed="false">
                         <graphic>
                             <HBox spacing="12" alignment="CENTER_LEFT">
                                 <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="👤" />
@@ -112,7 +117,8 @@
                     </Button>
 
                     <!-- Workers Management -->
-                    <Button fx:id="workersBtn" styleClass="nav-link" onAction="#navigateToWorkers">
+                    <Button fx:id="workersBtn" styleClass="nav-link" onAction="#navigateToWorkers"
+                            visible="false" managed="false">
                         <graphic>
                             <HBox spacing="12" alignment="CENTER_LEFT">
                                 <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="👷" />
@@ -121,6 +127,33 @@
                         </graphic>
                     </Button>
                 </VBox>
+            </VBox>
+
+            <!-- Profile & Logout Section - ALWAYS VISIBLE -->
+            <VBox spacing="8" style="-fx-padding: 15;">
+                <padding>
+                    <Insets bottom="10" left="5" right="5" top="10" />
+                </padding>
+
+                <!-- Profile Button - ALWAYS VISIBLE -->
+                <Button fx:id="profileBtn" styleClass="nav-link" onAction="#navigateToProfile">
+                    <graphic>
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="👨‍💼" />
+                            <Label fx:id="profileLabel" text="Profile" styleClass="nav-label" />
+                        </HBox>
+                    </graphic>
+                </Button>
+
+                <!-- Logout Button - ALWAYS VISIBLE -->
+                <Button fx:id="logoutBtn" styleClass="nav-link, logout-btn" onAction="#handleLogout">
+                    <graphic>
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="🚪" />
+                            <Label fx:id="logoutLabel" text="Logout" styleClass="nav-label" />
+                        </HBox>
+                    </graphic>
+                </Button>
             </VBox>
 
             <!-- Footer -->
