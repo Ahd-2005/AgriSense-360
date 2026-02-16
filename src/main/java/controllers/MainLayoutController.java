@@ -159,6 +159,7 @@ public class MainLayoutController {
         loadContent("/fxml/afficher_culture.fxml");
         setActiveButton(cultureBtn);
     }
+    @FXML
     public void navigateToParcelle() {
         loadContent("/fxml/afficher_parcelle.fxml");
         setActiveButton(cultureBtn); // Keep culture highlighted since parcelle is sub-page
@@ -172,7 +173,7 @@ public class MainLayoutController {
 
     @FXML
     public void navigateToWorkers() {
-        loadContent("/fxml/afficher_workers.fxml");
+        loadContent("/fxml/affectation_view.fxml");
         setActiveButton(workersBtn);
     }
 
