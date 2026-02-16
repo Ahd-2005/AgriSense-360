@@ -10,7 +10,7 @@
         <Insets top="0" right="0" bottom="0" left="0"/>
     </padding>
 
-    <!-- Add/Edit Health Record Form Card -->
+
     <VBox styleClass="mgmt-form-card" spacing="16">
         <Label text="Add or edit health record" styleClass="mgmt-form-title"/>
         <GridPane hgap="20" vgap="12" styleClass="mgmt-form-grid">
@@ -43,7 +43,7 @@
         </GridPane>
     </VBox>
 
-    <!-- Records Table Card -->
+
     <VBox styleClass="mgmt-table-card" VBox.vgrow="ALWAYS" spacing="12">
         <HBox alignment="CENTER_LEFT" spacing="16">
             <Label fx:id="recordsTitleLabel" text="Health records for selected animal" styleClass="mgmt-table-title"/>

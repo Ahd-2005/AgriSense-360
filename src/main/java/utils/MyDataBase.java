@@ -10,16 +10,16 @@ public class MyDataBase {
     private Connection cnx;
 
     private static final String URL =
-            "jdbc:mysql://localhost:3306/agrisense-360?useSSL=false&serverTimezone=UTC";
+            "jdbc:mysql://localhost:3306/agrisense-360";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "";
 
     private MyDataBase() {
         try {
             cnx = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("✅ Connected to database agrisense-360");
+            System.out.println("Connected...");
         } catch (SQLException e) {
-            System.out.println("❌ Database connection failed");
+            System.out.println("fix yo code bruh");
             e.printStackTrace();
         }
     }

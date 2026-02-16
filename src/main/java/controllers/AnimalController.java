@@ -72,13 +72,13 @@ public class AnimalController implements Initializable {
         colOrigin.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOrigin() != null ? c.getValue().getOrigin().name() : ""));
         colLocation.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLocation() != null ? c.getValue().getLocation() : ""));
 
-        // Setup search and sort functionality
+
         filteredAnimals = new FilteredList<>(animalList, p -> true);
         sortedAnimals = new SortedList<>(filteredAnimals);
         sortedAnimals.comparatorProperty().bind(animalTable.comparatorProperty());
         animalTable.setItems(sortedAnimals);
 
-        // Setup search field selector
+
         if (searchFieldCombo != null) {
             searchFieldCombo.setItems(FXCollections.observableArrayList(
                 "All Fields", "Ear Tag", "Type", "Gender", "Weight", "Health Status", 
@@ -87,7 +87,7 @@ public class AnimalController implements Initializable {
             searchFieldCombo.getSelectionModel().selectFirst();
         }
 
-        // Search functionality
+
         if (searchField != null) {
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filterAnimals(newValue);
@@ -99,7 +99,7 @@ public class AnimalController implements Initializable {
             });
         }
 
-        // Enable sorting on all columns
+
         animalTable.getColumns().forEach(col -> col.setSortable(true));
 
         animalTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -144,7 +144,7 @@ public class AnimalController implements Initializable {
                     return animal.getLocation() != null && animal.getLocation().toLowerCase().contains(lowerSearch);
                 case "All Fields":
                 default:
-                    // Search all fields
+
                     if (animal.getEarTag() != null && String.valueOf(animal.getEarTag()).contains(lowerSearch)) {
                         return true;
                     }
@@ -184,7 +184,7 @@ public class AnimalController implements Initializable {
             List<String> locations = serviceEnum.getEnumValues("Animal", "location");
             locationCombo.setItems(FXCollections.observableArrayList(locations));
         } catch (SQLException e) {
-            showError("Could not load types/locations: " + e.getMessage());
+            showError(e.getMessage());
         }
     }
 
@@ -222,7 +222,7 @@ public class AnimalController implements Initializable {
             if (!weightField.getText().trim().isEmpty()) {
                 weight = Double.parseDouble(weightField.getText().trim());
                 if (weight < 0) {
-                    showError("Weight cannot be negative. Please enter a value >= 0.");
+                    showError("Weight can't be negative.");
                     return;
                 }
             }
@@ -247,13 +247,13 @@ public class AnimalController implements Initializable {
             updateAnimalBtn.setDisable(true);
             AnimalListRefresh.notifyAnimalChanged();
             deleteAnimalBtn.setDisable(true);
-            showInfo("Animal updated successfully.");
+            showInfo("Animal updated.");
         } catch (NumberFormatException e) {
-            showError("Invalid number for Ear Tag or Weight.");
+            showError("Check animal ear tag and weight");
         } catch (SQLException e) {
             showError("Database error: " + e.getMessage());
         } catch (Exception e) {
-            showError("Please fill all required fields: Ear Tag, Type, Gender, Origin.");
+            showError("Please fill all required fields");
         }
     }
 
@@ -267,7 +267,7 @@ public class AnimalController implements Initializable {
             if (!weightField.getText().trim().isEmpty()) {
                 weight = Double.parseDouble(weightField.getText().trim());
                 if (weight < 0) {
-                    showError("Weight cannot be negative. Please enter a value >= 0.");
+                    showError("Weight Can't be negative.");
                     return;
                 }
             }
@@ -284,11 +284,11 @@ public class AnimalController implements Initializable {
             AnimalListRefresh.notifyAnimalChanged();
             showInfo("Animal added successfully.");
         } catch (NumberFormatException e) {
-            showError("Invalid number for Ear Tag or Weight.");
+            showError("Check ear tag and weight again");
         } catch (SQLException e) {
             showError("Database error: " + e.getMessage());
         } catch (Exception e) {
-            showError("Please fill all required fields: Ear Tag, Type, Gender, Origin.");
+            showError("Please fill all required fields");
         }
     }
 

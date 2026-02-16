@@ -3,7 +3,7 @@ package utils;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Notifies listeners when the animal list changes (e.g. after add/update/delete) so combo boxes can refresh. */
+
 public final class AnimalListRefresh {
 
     private static final List<Runnable> listeners = new ArrayList<>();
@@ -23,7 +23,7 @@ public final class AnimalListRefresh {
             try {
                 r.run();
             } catch (Exception e) {
-                // ignore to avoid breaking other listeners
+
             }
         }
     }

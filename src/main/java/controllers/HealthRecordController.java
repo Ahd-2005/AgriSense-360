@@ -68,13 +68,13 @@ public class HealthRecordController implements Initializable {
         colProduction.setCellValueFactory(c -> new SimpleStringProperty(formatProduction(c.getValue())));
         colNotes.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNotes() != null ? c.getValue().getNotes() : ""));
 
-        // Setup search and sort functionality
+
         filteredRecords = new FilteredList<>(recordList, p -> true);
         sortedRecords = new SortedList<>(filteredRecords);
         sortedRecords.comparatorProperty().bind(recordTable.comparatorProperty());
         recordTable.setItems(sortedRecords);
 
-        // Setup search field selector
+
         if (searchFieldCombo != null) {
             searchFieldCombo.setItems(FXCollections.observableArrayList(
                 "All Fields", "Date", "Weight", "Appetite", "Condition", "Production", "Notes"
@@ -82,7 +82,7 @@ public class HealthRecordController implements Initializable {
             searchFieldCombo.getSelectionModel().selectFirst();
         }
 
-        // Search functionality
+
         if (searchField != null) {
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filterRecords(newValue);
@@ -94,10 +94,10 @@ public class HealthRecordController implements Initializable {
             });
         }
 
-        // Enable sorting on all columns
+
         recordTable.getColumns().forEach(col -> col.setSortable(true));
 
-        // Set default date to today
+
         recordDatePicker.setValue(LocalDate.now());
 
         recordTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> onTableRowSelected());
@@ -178,7 +178,7 @@ public class HealthRecordController implements Initializable {
                 public Animal fromString(String s) { return null; }
             });
         } catch (SQLException e) {
-            showError("Could not load animals: " + e.getMessage());
+            showError(e.getMessage());
         }
     }
 
@@ -231,7 +231,7 @@ public class HealthRecordController implements Initializable {
         try {
             recordList.addAll(serviceRecord.getRecordsByAnimalId(animalId));
         } catch (SQLException e) {
-            showError("Could not load records: " + e.getMessage());
+            showError(e.getMessage());
         }
     }
 
@@ -252,7 +252,7 @@ public class HealthRecordController implements Initializable {
             if (!weightField.getText().trim().isEmpty()) {
                 weight = Double.parseDouble(weightField.getText().trim());
                 if (weight < 0) {
-                    showError("Weight cannot be negative. Please enter a value >= 0.");
+                    showError("Weight can't be negative.");
                     return;
                 }
             }
@@ -275,21 +275,21 @@ public class HealthRecordController implements Initializable {
                     case "goat":
                         milkYield = Double.parseDouble(prod);
                         if (milkYield < 0) {
-                            showError("Production cannot be negative. Please enter a value >= 0.");
+                            showError("Production can't be negative.");
                             return;
                         }
                         break;
                     case "chicken":
                         eggCount = Integer.parseInt(prod);
                         if (eggCount < 0) {
-                            showError("Production cannot be negative. Please enter a value >= 0.");
+                            showError("Production can't be negative.");
                             return;
                         }
                         break;
                     case "sheep":
                         woolLength = Double.parseDouble(prod);
                         if (woolLength < 0) {
-                            showError("Production cannot be negative. Please enter a value >= 0.");
+                            showError("Production can't be negative.");
                             return;
                         }
                         break;
@@ -304,7 +304,7 @@ public class HealthRecordController implements Initializable {
             clearForm();
             showInfo("Health record added.");
         } catch (NumberFormatException e) {
-            showError("Invalid number in Weight or Production.");
+            showError("Invalid number");
         } catch (SQLException e) {
             showError("Database error: " + e.getMessage());
         }
@@ -347,7 +347,7 @@ public class HealthRecordController implements Initializable {
             if (!weightField.getText().trim().isEmpty()) {
                 weight = Double.parseDouble(weightField.getText().trim());
                 if (weight < 0) {
-                    showError("Weight cannot be negative. Please enter a value >= 0.");
+                    showError("Weight can't be negative");
                     return;
                 }
             }
@@ -370,21 +370,21 @@ public class HealthRecordController implements Initializable {
                     case "goat":
                         milkYield = Double.parseDouble(prod);
                         if (milkYield < 0) {
-                            showError("Production cannot be negative. Please enter a value >= 0.");
+                            showError("Production can't be negative");
                             return;
                         }
                         break;
                     case "chicken":
                         eggCount = Integer.parseInt(prod);
                         if (eggCount < 0) {
-                            showError("Production cannot be negative. Please enter a value >= 0.");
+                            showError("Production can't be negative");
                             return;
                         }
                         break;
                     case "sheep":
                         woolLength = Double.parseDouble(prod);
                         if (woolLength < 0) {
-                            showError("Production cannot be negative. Please enter a value >= 0.");
+                            showError("Production can't be negative");
                             return;
                         }
                         break;
@@ -409,7 +409,7 @@ public class HealthRecordController implements Initializable {
             deleteBtn.setDisable(true);
             showInfo("Health record updated.");
         } catch (NumberFormatException e) {
-            showError("Invalid number in Weight or Production.");
+            showError("Invalid number");
         } catch (SQLException e) {
             showError("Database error: " + e.getMessage());
         }
