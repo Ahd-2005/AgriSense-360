@@ -37,3 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+# Build output
+/target/
+
+# IntelliJ local files
+.idea/workspace.xml
