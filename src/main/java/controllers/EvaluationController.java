@@ -268,6 +268,8 @@ public class EvaluationController implements Initializable {
         if (mainLayout != null) {
             mainLayout.navigateToWorkers();
         }
+
+
     }
 
 }
