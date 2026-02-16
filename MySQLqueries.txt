@@ -1,0 +1,43 @@
+CREATE TABLE Animal (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    earTag INT UNIQUE,
+
+    type ENUM('sheep','cow','goat','chicken') NOT NULL,
+    gender ENUM('male','female') NOT NULL,
+
+    weight DOUBLE,
+    healthStatus VARCHAR(50),
+
+    birthDate DATE,
+    entryDate DATE,
+
+    origin ENUM('born_in_farm','outside'),
+
+    vaccinated BOOLEAN DEFAULT FALSE,
+
+    location ENUM('barn1','barn2','barn3','chicken_coop1','chicken_coop2')
+);
+
+
+CREATE TABLE AnimalHealthRecord (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    animal INT NOT NULL,
+    recordDate DATE NOT NULL,
+
+    weight DOUBLE,
+
+    appetite ENUM('low','normal','high','none'),
+
+    conditionStatus ENUM('healthy','sick','injured','critical'),
+
+    milkYield DOUBLE,
+    eggCount INT,
+    woolLength DOUBLE,
+
+    notes TEXT,
+
+    FOREIGN KEY (animal) REFERENCES Animal(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
