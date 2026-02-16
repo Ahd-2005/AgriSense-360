@@ -7,6 +7,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -19,6 +21,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 public class AnimalController implements Initializable {
 
@@ -44,6 +47,8 @@ public class AnimalController implements Initializable {
     @FXML private ComboBox<String> locationCombo;
     @FXML private Button deleteAnimalBtn;
     @FXML private Button updateAnimalBtn;
+    @FXML private TextField animalSearchField;
+    @FXML private ComboBox<String> animalSortCombo;
 
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
     private final ServiceEnumManagement serviceEnum = new ServiceEnumManagement();
@@ -54,6 +59,25 @@ public class AnimalController implements Initializable {
         genderCombo.setItems(FXCollections.observableArrayList("MALE", "FEMALE"));
         originCombo.setItems(FXCollections.observableArrayList("BORN_IN_FARM", "OUTSIDE"));
         refreshTypeAndLocationCombos();
+
+        // Control saisie: weight cannot be negative
+        applyNonNegativeDoubleFormatter(weightField);
+
+        // Search/sort setup for animals table
+        FilteredList<Animal> filteredAnimals = new FilteredList<>(animalList, p -> true);
+        if (animalSearchField != null) {
+            animalSearchField.textProperty().addListener((obs, ov, nv) ->
+                filteredAnimals.setPredicate(animalPredicate(nv)));
+        }
+        SortedList<Animal> sortedAnimals = new SortedList<>(filteredAnimals);
+        sortedAnimals.comparatorProperty().bind(animalTable.comparatorProperty());
+        animalTable.setItems(sortedAnimals);
+
+        if (animalSortCombo != null) {
+            animalSortCombo.getItems().addAll("None", "Ear Tag", "Type", "Weight", "Birth Date", "Age");
+            animalSortCombo.getSelectionModel().select("None");
+            animalSortCombo.setOnAction(e -> applyAnimalSort());
+        }
 
         colId.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getId()).asObject());
         colEarTag.setCellValueFactory(c -> c.getValue().getEarTag() != null ? new SimpleIntegerProperty(c.getValue().getEarTag()).asObject() : new SimpleObjectProperty<>());
@@ -66,7 +90,6 @@ public class AnimalController implements Initializable {
         colOrigin.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOrigin() != null ? c.getValue().getOrigin().name() : ""));
         colLocation.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLocation() != null ? c.getValue().getLocation() : ""));
 
-        animalTable.setItems(animalList);
         animalTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             boolean hasSelection = newVal != null;
             deleteAnimalBtn.setDisable(!hasSelection);
@@ -118,7 +141,7 @@ public class AnimalController implements Initializable {
             int earTag = Integer.parseInt(earTagField.getText().trim());
             String type = typeCombo.getSelectionModel().getSelectedItem();
             Animal.Gender gender = Animal.Gender.valueOf(genderCombo.getSelectionModel().getSelectedItem());
-            Double weight = weightField.getText().trim().isEmpty() ? null : Double.parseDouble(weightField.getText().trim());
+            Double weight = weightField.getText().trim().isEmpty() ? null : parseNonNegativeWeight(weightField.getText().trim());
             LocalDate birthDate = birthDatePicker.getValue();
             LocalDate entryDate = entryDatePicker.getValue();
             Animal.Origin origin = Animal.Origin.valueOf(originCombo.getSelectionModel().getSelectedItem());
@@ -143,6 +166,8 @@ public class AnimalController implements Initializable {
             showInfo("Animal updated successfully.");
         } catch (NumberFormatException e) {
             showError("Invalid number for Ear Tag or Weight.");
+        } catch (IllegalArgumentException e) {
+            showError(e.getMessage());
         } catch (SQLException e) {
             showError("Database error: " + e.getMessage());
         } catch (Exception e) {
@@ -156,7 +181,7 @@ public class AnimalController implements Initializable {
             int earTag = Integer.parseInt(earTagField.getText().trim());
             String type = typeCombo.getSelectionModel().getSelectedItem();
             Animal.Gender gender = Animal.Gender.valueOf(genderCombo.getSelectionModel().getSelectedItem());
-            Double weight = weightField.getText().trim().isEmpty() ? null : Double.parseDouble(weightField.getText().trim());
+            Double weight = weightField.getText().trim().isEmpty() ? null : parseNonNegativeWeight(weightField.getText().trim());
             LocalDate birthDate = birthDatePicker.getValue();
             LocalDate entryDate = entryDatePicker.getValue();
             Animal.Origin origin = Animal.Origin.valueOf(originCombo.getSelectionModel().getSelectedItem());
@@ -171,6 +196,8 @@ public class AnimalController implements Initializable {
             showInfo("Animal added successfully.");
         } catch (NumberFormatException e) {
             showError("Invalid number for Ear Tag or Weight.");
+        } catch (IllegalArgumentException e) {
+            showError(e.getMessage());
         } catch (SQLException e) {
             showError("Database error: " + e.getMessage());
         } catch (Exception e) {
@@ -217,5 +244,52 @@ public class AnimalController implements Initializable {
 
     private void showError(String msg) {
         new Alert(Alert.AlertType.ERROR, msg).showAndWait();
+    }
+
+    private void applyNonNegativeDoubleFormatter(TextField field) {
+        if (field == null) return;
+        field.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.isEmpty() || newText.equals(".")) return change;
+            if (newText.matches("^\\d*\\.?\\d*$")) return change;
+            return null; // Reject change (e.g. minus sign)
+        }));
+    }
+
+    private Double parseNonNegativeWeight(String s) {
+        if (s == null || s.trim().isEmpty()) return null;
+        double v = Double.parseDouble(s.trim());
+        if (v < 0) throw new IllegalArgumentException("Weight cannot be negative.");
+        return v;
+    }
+
+    private Predicate<Animal> animalPredicate(String search) {
+        if (search == null || search.trim().isEmpty()) return a -> true;
+        String lower = search.toLowerCase();
+        return a -> (a.getEarTag() != null && String.valueOf(a.getEarTag()).contains(lower))
+                || (a.getType() != null && a.getType().toLowerCase().contains(lower))
+                || (a.getGender() != null && a.getGender().name().toLowerCase().contains(lower))
+                || (a.getOrigin() != null && a.getOrigin().name().toLowerCase().contains(lower))
+                || (a.getLocation() != null && a.getLocation().toLowerCase().contains(lower));
+    }
+
+    private void applyAnimalSort() {
+        if (animalSortCombo == null) return;
+        String sel = animalSortCombo.getSelectionModel().getSelectedItem();
+        if (sel == null || "None".equals(sel)) {
+            animalTable.getSortOrder().clear();
+            animalTable.sort();
+            return;
+        }
+        animalTable.getSortOrder().clear();
+        switch (sel) {
+            case "Ear Tag": animalTable.getSortOrder().add(colEarTag); break;
+            case "Type": animalTable.getSortOrder().add(colType); break;
+            case "Weight": animalTable.getSortOrder().add(colWeight); break;
+            case "Birth Date": animalTable.getSortOrder().add(colBirthDate); break;
+            case "Age": animalTable.getSortOrder().add(colAge); break;
+            default: break;
+        }
+        animalTable.sort();
     }
 }
