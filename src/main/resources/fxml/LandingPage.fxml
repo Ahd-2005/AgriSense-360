@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.LandingPage"
+            prefHeight="800.0" prefWidth="1400.0"
+            style="-fx-background-color: #e8f5e9;">
+
+    <center>
+        <VBox alignment="CENTER" spacing="30" style="-fx-padding: 50;">
+
+            <Label text="🌱 AgriSense 360"
+                   style="-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;" />
+
+            <Label text="Complete control. Complete growth"
+                   style="-fx-font-size: 18px; -fx-text-fill: #546e7a;" />
+
+            <VBox spacing="15" alignment="CENTER" style="-fx-max-width: 350;">
+                <Button text="Se connecter" onAction="#handleLogin"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;
+                               -fx-padding: 15 50; -fx-font-size: 16px; -fx-font-weight: bold;
+                               -fx-background-radius: 25; -fx-cursor: hand; -fx-pref-width: 300;" />
+
+                <Button text="Créer un compte" onAction="#goToSignup"
+                        style="-fx-background-color: transparent; -fx-text-fill: #4CAF50;
+                               -fx-padding: 15 50; -fx-font-size: 16px; -fx-font-weight: bold;
+                               -fx-border-color: #4CAF50; -fx-border-width: 2;
+                               -fx-background-radius: 25; -fx-border-radius: 25;
+                               -fx-cursor: hand; -fx-pref-width: 300;" />
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>
