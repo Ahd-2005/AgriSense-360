@@ -8,6 +8,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -43,10 +45,14 @@ public class HealthRecordController implements Initializable {
     @FXML private TableColumn<AnimalHealthRecord, String> colCondition;
     @FXML private TableColumn<AnimalHealthRecord, String> colProduction;
     @FXML private TableColumn<AnimalHealthRecord, String> colNotes;
+    @FXML private TextField searchField;
+    @FXML private ComboBox<String> searchFieldCombo;
 
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
     private final ServiceAnimalHealthRecord serviceRecord = new ServiceAnimalHealthRecord();
     private final ObservableList<AnimalHealthRecord> recordList = FXCollections.observableArrayList();
+    private FilteredList<AnimalHealthRecord> filteredRecords;
+    private SortedList<AnimalHealthRecord> sortedRecords;
     private AnimalHealthRecord selectedRecord;
 
     @Override
@@ -62,10 +68,93 @@ public class HealthRecordController implements Initializable {
         colProduction.setCellValueFactory(c -> new SimpleStringProperty(formatProduction(c.getValue())));
         colNotes.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNotes() != null ? c.getValue().getNotes() : ""));
 
-        recordTable.setItems(recordList);
+        // Setup search and sort functionality
+        filteredRecords = new FilteredList<>(recordList, p -> true);
+        sortedRecords = new SortedList<>(filteredRecords);
+        sortedRecords.comparatorProperty().bind(recordTable.comparatorProperty());
+        recordTable.setItems(sortedRecords);
+
+        // Setup search field selector
+        if (searchFieldCombo != null) {
+            searchFieldCombo.setItems(FXCollections.observableArrayList(
+                "All Fields", "Date", "Weight", "Appetite", "Condition", "Production", "Notes"
+            ));
+            searchFieldCombo.getSelectionModel().selectFirst();
+        }
+
+        // Search functionality
+        if (searchField != null) {
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+                filterRecords(newValue);
+            });
+        }
+        if (searchFieldCombo != null) {
+            searchFieldCombo.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                filterRecords(searchField.getText());
+            });
+        }
+
+        // Enable sorting on all columns
+        recordTable.getColumns().forEach(col -> col.setSortable(true));
+
+        // Set default date to today
+        recordDatePicker.setValue(LocalDate.now());
+
         recordTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> onTableRowSelected());
         loadAnimals();
         AnimalListRefresh.addListener(this::loadAnimals);
+    }
+
+    private void filterRecords(String searchText) {
+        if (searchText == null || searchText.trim().isEmpty()) {
+            filteredRecords.setPredicate(record -> true);
+            return;
+        }
+
+        String selectedField = searchFieldCombo != null && searchFieldCombo.getSelectionModel().getSelectedItem() != null
+                ? searchFieldCombo.getSelectionModel().getSelectedItem() : "All Fields";
+        String lowerSearch = searchText.toLowerCase();
+
+        filteredRecords.setPredicate(record -> {
+            switch (selectedField) {
+                case "Date":
+                    return record.getRecordDate() != null && record.getRecordDate().toString().contains(lowerSearch);
+                case "Weight":
+                    return record.getWeight() != null && String.valueOf(record.getWeight()).contains(lowerSearch);
+                case "Appetite":
+                    return record.getAppetite() != null && record.getAppetite().name().toLowerCase().contains(lowerSearch);
+                case "Condition":
+                    return record.getConditionStatus() != null && record.getConditionStatus().name().toLowerCase().contains(lowerSearch);
+                case "Production":
+                    String prod = formatProduction(record);
+                    return prod != null && prod.toLowerCase().contains(lowerSearch);
+                case "Notes":
+                    return record.getNotes() != null && record.getNotes().toLowerCase().contains(lowerSearch);
+                case "All Fields":
+                default:
+                    // Search all fields
+                    if (record.getRecordDate() != null && record.getRecordDate().toString().contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (record.getWeight() != null && String.valueOf(record.getWeight()).contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (record.getAppetite() != null && record.getAppetite().name().toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (record.getConditionStatus() != null && record.getConditionStatus().name().toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    String production = formatProduction(record);
+                    if (production != null && production.toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (record.getNotes() != null && record.getNotes().toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    return false;
+            }
+        });
     }
 
     private String formatProduction(AnimalHealthRecord r) {
@@ -159,7 +248,14 @@ public class HealthRecordController implements Initializable {
                 showError("Please select record date.");
                 return;
             }
-            Double weight = weightField.getText().trim().isEmpty() ? null : Double.parseDouble(weightField.getText().trim());
+            Double weight = null;
+            if (!weightField.getText().trim().isEmpty()) {
+                weight = Double.parseDouble(weightField.getText().trim());
+                if (weight < 0) {
+                    showError("Weight cannot be negative. Please enter a value >= 0.");
+                    return;
+                }
+            }
             AnimalHealthRecord.Appetite appetite = appetiteCombo.getSelectionModel().getSelectedItem() != null
                     ? AnimalHealthRecord.Appetite.valueOf(appetiteCombo.getSelectionModel().getSelectedItem()) : null;
             AnimalHealthRecord.ConditionStatus condition = conditionCombo.getSelectionModel().getSelectedItem() != null
@@ -178,12 +274,24 @@ public class HealthRecordController implements Initializable {
                     case "cow":
                     case "goat":
                         milkYield = Double.parseDouble(prod);
+                        if (milkYield < 0) {
+                            showError("Production cannot be negative. Please enter a value >= 0.");
+                            return;
+                        }
                         break;
                     case "chicken":
                         eggCount = Integer.parseInt(prod);
+                        if (eggCount < 0) {
+                            showError("Production cannot be negative. Please enter a value >= 0.");
+                            return;
+                        }
                         break;
                     case "sheep":
                         woolLength = Double.parseDouble(prod);
+                        if (woolLength < 0) {
+                            showError("Production cannot be negative. Please enter a value >= 0.");
+                            return;
+                        }
                         break;
                     default:
                         break;
@@ -235,7 +343,14 @@ public class HealthRecordController implements Initializable {
                 showError("Please select record date.");
                 return;
             }
-            Double weight = weightField.getText().trim().isEmpty() ? null : Double.parseDouble(weightField.getText().trim());
+            Double weight = null;
+            if (!weightField.getText().trim().isEmpty()) {
+                weight = Double.parseDouble(weightField.getText().trim());
+                if (weight < 0) {
+                    showError("Weight cannot be negative. Please enter a value >= 0.");
+                    return;
+                }
+            }
             AnimalHealthRecord.Appetite appetite = appetiteCombo.getSelectionModel().getSelectedItem() != null
                     ? AnimalHealthRecord.Appetite.valueOf(appetiteCombo.getSelectionModel().getSelectedItem()) : null;
             AnimalHealthRecord.ConditionStatus condition = conditionCombo.getSelectionModel().getSelectedItem() != null
@@ -254,12 +369,24 @@ public class HealthRecordController implements Initializable {
                     case "cow":
                     case "goat":
                         milkYield = Double.parseDouble(prod);
+                        if (milkYield < 0) {
+                            showError("Production cannot be negative. Please enter a value >= 0.");
+                            return;
+                        }
                         break;
                     case "chicken":
                         eggCount = Integer.parseInt(prod);
+                        if (eggCount < 0) {
+                            showError("Production cannot be negative. Please enter a value >= 0.");
+                            return;
+                        }
                         break;
                     case "sheep":
                         woolLength = Double.parseDouble(prod);
+                        if (woolLength < 0) {
+                            showError("Production cannot be negative. Please enter a value >= 0.");
+                            return;
+                        }
                         break;
                     default:
                         break;
@@ -306,7 +433,7 @@ public class HealthRecordController implements Initializable {
     }
 
     private void clearForm() {
-        recordDatePicker.setValue(null);
+        recordDatePicker.setValue(LocalDate.now());
         weightField.clear();
         appetiteCombo.getSelectionModel().clearSelection();
         conditionCombo.getSelectionModel().clearSelection();
