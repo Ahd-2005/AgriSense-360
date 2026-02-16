@@ -15,7 +15,7 @@
         <Label text="Add or edit animal" styleClass="mgmt-form-title"/>
         <GridPane hgap="20" vgap="12" styleClass="mgmt-form-grid">
             <Label text="Ear Tag" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <TextField fx:id="earTagField" promptText="e.g. 34" styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="140"/>
+            <TextField fx:id="earTagField" promptText="Number only" styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="140"/>
 
             <Label text="Type" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <ComboBox fx:id="typeCombo" promptText="Select type" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="160"/>

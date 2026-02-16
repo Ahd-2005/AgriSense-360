@@ -5,24 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AnimalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AnimalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/HealthRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/HealthRecordController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entity/Animal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/Animal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/services/ServiceAnimalHealthRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/ServiceAnimalHealthRecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/services/ServiceEnumManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/ServiceEnumManagement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/utils/AnimalListRefresh.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/AnimalListRefresh.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/utils/MyDataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/MyDataBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/css/animals-management.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/animals-management.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/animal_tables.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/culture_tables.sql" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/animal_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/animal_view.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/enum_management_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/enum_management_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/health_record_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/health_record_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/animal_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/animal_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/health_record_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/health_record_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/utils/MyDataBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/utils/MyDataBase.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/HealthRecordController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/HealthRecordController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/services/ServiceAnimalHealthRecord.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/services/ServiceAnimalHealthRecord.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,7 +154,7 @@
       <workItem from="1771172457982" duration="31000" />
       <workItem from="1771173290062" duration="617000" />
       <workItem from="1771264333332" duration="99000" />
-      <workItem from="1771265899574" duration="1613000" />
+      <workItem from="1771265899574" duration="1822000" />
     </task>
     <task id="LOCAL-00001" summary="gestion culture +gestion animals+template">
       <option name="closed" value="true" />
