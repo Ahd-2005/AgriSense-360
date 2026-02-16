@@ -1,7 +1,7 @@
-package tn.esprit.services;
+package com.example.agrisens360.services;
 
-import tn.esprit.entities.Stock;
-import tn.esprit.utils.MyDataBase;
+import com.example.agrisens360.entity.Stock;
+import com.example.agrisens360.utils.MyDataBase;
 
 import java.sql.*;
 import java.util.ArrayList;

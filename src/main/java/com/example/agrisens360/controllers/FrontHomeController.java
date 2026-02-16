@@ -1,9 +1,10 @@
-package tn.esprit.controllers;
+package com.example.agrisens360.controllers;
 
+import com.example.agrisens360.entity.Stock;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import tn.esprit.services.ServiceProduit;
-import tn.esprit.services.ServiceStock;
+import com.example.agrisens360.services.ServiceProduit;
+import com.example.agrisens360.services.ServiceStock;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -25,26 +26,20 @@ public class FrontHomeController {
             System.err.println("Erreur : Un ou plusieurs champs FXML ne sont pas injectés. Vérifiez les fx:id dans le FXML.");
             return;
         }
-        // Charger les statistiques au démarrage
         loadStatistics();
-        // Charger les alertes
         loadAlertes();
     }
 
-    // Méthode pour charger les statistiques dynamiquement
     private void loadStatistics() {
         try {
-            // Nombre de produits
             List<?> produits = serviceProduit.afficher();
             statProduits.setText(String.valueOf(produits.size()));
 
-            // Nombre de stocks
             List<?> stocks = serviceStock.afficher();
             statStocks.setText(String.valueOf(stocks.size()));
 
-            // Nombre d'alertes (stocks avec quantité <= seuil)
             long alertes = stocks.stream()
-                    .map(s -> (tn.esprit.entities.Stock) s)
+                    .map(s -> (Stock) s)
                     .filter(s -> s.getQuantiteActuelle() != null && s.getSeuilAlerte() != null && s.getQuantiteActuelle().compareTo(s.getSeuilAlerte()) <= 0)
                     .count();
             statAlertes.setText(String.valueOf(alertes));
@@ -56,13 +51,12 @@ public class FrontHomeController {
         }
     }
 
-    // Méthode pour charger les alertes récentes
     private void loadAlertes() {
         try {
             List<?> stocks = serviceStock.afficher();
             StringBuilder alertes = new StringBuilder();
             for (Object obj : stocks) {
-                tn.esprit.entities.Stock s = (tn.esprit.entities.Stock) obj;
+                Stock s = (Stock) obj;
                 if (s.getQuantiteActuelle() != null && s.getSeuilAlerte() != null && s.getQuantiteActuelle().compareTo(s.getSeuilAlerte()) <= 0) {
                     alertes.append("Stock ID ").append(s.getId()).append(" en alerte (Produit ID ").append(s.getProduitId()).append(").\n");
                 }
@@ -77,7 +71,6 @@ public class FrontHomeController {
         }
     }
 
-    // Navigation vers la liste des produits (utilise MainLayoutController pour préserver le layout)
     @FXML
     private void goToProductList() {
         if (MainLayoutController.getInstance() != null) {
@@ -87,7 +80,6 @@ public class FrontHomeController {
         }
     }
 
-    // Navigation vers la liste des stocks (utilise MainLayoutController pour préserver le layout)
     @FXML
     private void goToStockList() {
         if (MainLayoutController.getInstance() != null) {
@@ -97,7 +89,6 @@ public class FrontHomeController {
         }
     }
 
-    // Méthode utilitaire pour afficher des alertes
     private void showAlert(String title, String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
         alert.setTitle(title);

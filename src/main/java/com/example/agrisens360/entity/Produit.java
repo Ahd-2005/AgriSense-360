@@ -1,4 +1,4 @@
-package tn.esprit.entities;
+package com.example.agrisens360.entity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

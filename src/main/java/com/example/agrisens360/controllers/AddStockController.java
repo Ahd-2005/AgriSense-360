@@ -1,19 +1,14 @@
-package tn.esprit.controllers;
+package com.example.agrisens360.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
-import tn.esprit.entities.Produit;
-import tn.esprit.entities.Stock;
-import tn.esprit.services.ServiceProduit;
-import tn.esprit.services.ServiceStock;
+import com.example.agrisens360.entity.Produit;
+import com.example.agrisens360.entity.Stock;
+import com.example.agrisens360.services.ServiceProduit;
+import com.example.agrisens360.services.ServiceStock;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -96,7 +91,6 @@ public class AddStockController {
             }
         }
 
-        // Créer et sauvegarder le stock
         Stock stock = new Stock();
         stock.setProduitId(selectedProduit.getId());
         stock.setQuantiteActuelle(new BigDecimal(txtQuantite.getText().trim()));
@@ -118,7 +112,6 @@ public class AddStockController {
 
     @FXML
     private void annuler() {
-        // Retour à la liste des produits (charge dans le centre, sidebar reste)
         if (MainLayoutController.getInstance() != null) {
             MainLayoutController.getInstance().navigateToStockList();
         } else {

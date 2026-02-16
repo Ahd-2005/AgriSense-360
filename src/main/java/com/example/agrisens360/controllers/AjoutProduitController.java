@@ -1,22 +1,16 @@
-package tn.esprit.controllers;
+package com.example.agrisens360.controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import tn.esprit.entities.Produit;
-import tn.esprit.entities.Stock;
-import tn.esprit.services.ServiceProduit;
-import tn.esprit.services.ServiceStock;
-import tn.esprit.utils.MyDataBase;
+import com.example.agrisens360.entity.Produit;
+import com.example.agrisens360.entity.Stock;
+import com.example.agrisens360.services.ServiceProduit;
+import com.example.agrisens360.services.ServiceStock;
 
 import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
@@ -47,26 +41,21 @@ public class AjoutProduitController {
 
     @FXML
     public void initialize() {
-        // Initialiser les ComboBox
         comboCategorie.getItems().addAll("Fertilisants", "Pesticides", "Semences", "Outils", "Autres");
         comboUnite.getItems().addAll("kg", "L", "sac", "pièce");
 
-        // Récupérer le produit à éditer
         Produit produit = MainLayoutController.getProduitToEdit();
         if (produit != null) {
             setProduitToEdit(produit);
         }
     }
 
-    // Méthode pour pré-remplir le formulaire en mode modification
     public void setProduitToEdit(Produit produit) {
         this.produitToEdit = produit;
 
-        // Pré-remplir les champs produit
         comboCategorie.setValue(produit.getCategorie());
         txtNom.setText(produit.getNom());
         txtDescription.setText(produit.getDescription());
-        txtFournisseur.setText(""); // Ajouter à Produit si nécessaire
         txtPrix.setText(produit.getPrixUnitaire() != null ? produit.getPrixUnitaire().toString() : "");
         lblPhotoStatus.setText(produit.getPhotoUrl() != null ? "Photo sélectionnée" : "Aucune photo");
         selectedPhotoUrl = produit.getPhotoUrl();
@@ -80,7 +69,6 @@ public class AjoutProduitController {
 
 
 
-        // Pré-remplir les champs stock (récupérer le stock associé)
         try {
             Stock stock = serviceStock.recupererParProduitId(produit.getId());
             if (stock != null) {
@@ -95,7 +83,6 @@ public class AjoutProduitController {
             e.printStackTrace();
         }
 
-        // Changer le texte du bouton
         btnEnregistrer.setText("Modifier Produit");
     }
 
@@ -111,15 +98,13 @@ public class AjoutProduitController {
             lblPhotoStatus.setText("Photo sélectionnée : " + selectedFile.getName());
             imgPreview.setImage(new Image(selectedFile.toURI().toString()));
             selectedPhotoUrl = "file:/" + selectedFile.getAbsolutePath().replace("\\", "/");
-            // Stocker le chemin pour sauvegarde
             // produit.setPhotoUrl(selectedFile.toURI().toString());
         }
     }
 
     @FXML
     private void enregistrer() {
-        // CONTROLES DE SAISIE AJOUTÉS
-        // 1. Champs obligatoires non vides
+
         if (txtNom.getText().trim().isEmpty()) {
             showAlert("Erreur", "Le nom du produit est obligatoire.");
             return;
@@ -136,14 +121,12 @@ public class AjoutProduitController {
             showAlert("Erreur", "Le prix est obligatoire.");
             return;
         }
-        // Contrôle ajouté : Description (si remplie, max 500 caractères)
         String description = txtDescription.getText().trim();
         if (!description.isEmpty() && description.length() > 500) {
             showAlert("Erreur", "La description ne doit pas dépasser 500 caractères.");
             return;
         }
 
-        // 2. Validation des champs numériques (prix, quantité, seuil)
         BigDecimal prix = null;
         BigDecimal quantite = null;
         BigDecimal seuil = null;
@@ -182,7 +165,6 @@ public class AjoutProduitController {
             }
         }
 
-        // 3. Validation des dates
         if (dateReception.getValue() != null && dateExpiration.getValue() != null) {
             if (dateExpiration.getValue().isBefore(dateReception.getValue())) {
                 showAlert("Erreur", "La date d'expiration doit être après la date de réception.");
@@ -190,14 +172,12 @@ public class AjoutProduitController {
             }
         }
 
-        // 4. Validation de l'unité de mesure (si quantité saisie)
         if (quantite != null && (comboUnite.getValue() == null || comboUnite.getValue().trim().isEmpty())) {
             showAlert("Erreur", "L'unité de mesure est obligatoire si une quantité est saisie.");
             return;
         }
 
-        // 5. Validation de l'URL de photo (si fournie)
-        String photoUrl = null; // À définir si vous stockez l'URL
+        String photoUrl = null;
         if (photoUrl != null && !photoUrl.trim().isEmpty()) {
             try {
                 new URL(photoUrl);
@@ -208,23 +188,20 @@ public class AjoutProduitController {
         }
 
         try {
-            // 2. Création ou récupération du produit
             Produit produit;
             int produitId;
 
             if (produitToEdit == null) {
-                // Ajout d'un nouveau produit
                 produit = new Produit();
-                produit.setAgriculteurId(1); // à ajuster
+                produit.setAgriculteurId(3); // à ajuster
                 produit.setCategorie(comboCategorie.getValue());
                 produit.setNom(txtNom.getText());
                 produit.setDescription(txtDescription.getText());
                 produit.setPrixUnitaire(prix);
                 produit.setCreatedAt(new Timestamp(System.currentTimeMillis()));  // Pour éviter l'erreur de paramètre
-                // produit.setPhotoUrl(photoUrl); // si photo gérée
+                // produit.setPhotoUrl(photoUrl);
                 produit.setPhotoUrl(selectedPhotoUrl);
 
-                // Appel au service pour ajouter et récupérer l'ID
                 produitId = serviceProduit.ajouter(produit);
                 if (produitId == -1) {
                     showAlert("Erreur", "Échec de l'ajout du produit.");
@@ -233,26 +210,21 @@ public class AjoutProduitController {
                 produit.setId(produitId);
                 showAlert("Succès", "Produit ajouté avec succès.");
             } else {
-                // Modification du produit existant
                 produit = produitToEdit;
                 produit.setCategorie(comboCategorie.getValue());
                 produit.setNom(txtNom.getText());
                 produit.setDescription(txtDescription.getText());
                 produit.setPrixUnitaire(prix);
                 produit.setPhotoUrl(selectedPhotoUrl != null ? selectedPhotoUrl : produit.getPhotoUrl());
-                // mettre à jour photo si besoin
 
                 serviceProduit.modifier(produit);
                 produitId = produit.getId();
                 showAlert("Succès", "Produit modifié avec succès.");
             }
 
-            // 3. Gestion du stock (simplifiée avec vos services)
             try {
-                // Vérifier si le stock existe
                 Stock stockExistant = serviceStock.recupererParProduitId(produitId);
 
-                // Créer ou récupérer l'objet Stock
                 Stock stock;
                 if (stockExistant != null) {
                     stock = stockExistant;
@@ -263,7 +235,6 @@ public class AjoutProduitController {
                     System.out.println("Création d'un nouveau stock");
                 }
 
-                // Mettre à jour les valeurs
                 stock.setQuantiteActuelle(quantite);
                 stock.setSeuilAlerte(seuil);
                 stock.setUniteMesure(comboUnite.getValue());
@@ -271,7 +242,6 @@ public class AjoutProduitController {
                 stock.setDateExpiration(dateExpiration.getValue() != null ? Date.valueOf(dateExpiration.getValue()) : null);
                 stock.setEmplacement(txtEmplacement.getText());
 
-                // Sauvegarder
                 if (stockExistant != null) {
                     serviceStock.modifier(stock);
                     System.out.println("Stock modifié avec succès");
@@ -285,7 +255,6 @@ public class AjoutProduitController {
                 showAlert("Erreur Stock", "Erreur: " + e.getMessage());
                 return;
             }
-            // 4. Retour à la liste
             annuler();
 
         } catch (Exception e) {
@@ -297,7 +266,6 @@ public class AjoutProduitController {
 
     @FXML
     private void annuler() {
-        // Retour à la liste des produits (charge dans le centre, sidebar reste)
         if (MainLayoutController.getInstance() != null) {
             MainLayoutController.getInstance().navigateToProductList();
         } else {

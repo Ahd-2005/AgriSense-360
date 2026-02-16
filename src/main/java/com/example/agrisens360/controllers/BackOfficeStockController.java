@@ -1,4 +1,4 @@
-package tn.esprit.controllers;
+package com.example.agrisens360.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -6,16 +6,15 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import tn.esprit.entities.Produit;
-import tn.esprit.entities.Stock;
-import tn.esprit.services.ServiceProduit;
-import tn.esprit.services.ServiceStock;
+import com.example.agrisens360.entity.Produit;
+import com.example.agrisens360.entity.Stock;
+import com.example.agrisens360.services.ServiceProduit;
+import com.example.agrisens360.services.ServiceStock;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -40,7 +39,6 @@ public class BackOfficeStockController {
 
     @FXML
     public void initialize() {
-        // Charger les données
         rafraichir();
     }
 
@@ -218,7 +216,7 @@ public class BackOfficeStockController {
         if (alert.showAndWait().orElse(ButtonType.NO) == ButtonType.YES) {
             try {
                 serviceProduit.supprimer(p.getId());
-                rafraichir(); // Recharger après suppression
+                rafraichir();
             } catch (SQLException e) {
                 showAlert("Erreur", "Suppression échouée: " + e.getMessage());
             }
@@ -237,7 +235,7 @@ public class BackOfficeStockController {
         if (alert.showAndWait().orElse(ButtonType.NO) == ButtonType.YES) {
             try {
                 serviceStock.supprimer(s.getId());
-                rafraichir(); // Recharger après suppression
+                rafraichir();
             } catch (SQLException e) {
                 showAlert("Erreur", "Suppression échouée: " + e.getMessage());
             }
@@ -248,7 +246,6 @@ public class BackOfficeStockController {
         new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK).show();
     }
 
-    // Classe interne pour les données du tableau
     public static class AlerteData {
         private String nomProduit;
         private BigDecimal quantiteActuelle;
@@ -262,7 +259,6 @@ public class BackOfficeStockController {
             this.unite = unite;
         }
 
-        // Getters
         public String getNomProduit() { return nomProduit; }
         public BigDecimal getQuantiteActuelle() { return quantiteActuelle; }
         public BigDecimal getSeuilAlerte() { return seuilAlerte; }

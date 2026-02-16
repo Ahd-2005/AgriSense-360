@@ -1,4 +1,4 @@
-package tn.esprit.tests.java.config;
+package com.example.agrisens360.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

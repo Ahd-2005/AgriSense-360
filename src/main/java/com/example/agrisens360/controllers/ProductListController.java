@@ -1,9 +1,6 @@
-package tn.esprit.controllers;
+package com.example.agrisens360.controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,11 +8,9 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import tn.esprit.entities.Produit;
-import tn.esprit.services.ServiceProduit;
+import com.example.agrisens360.entity.Produit;
+import com.example.agrisens360.services.ServiceProduit;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -27,12 +22,10 @@ public class ProductListController {
     @FXML
     private Button sidebarToggle;
 
-    // Service pour gérer les produits
     private ServiceProduit produitService = new ServiceProduit();
 
     @FXML
     public void initialize() {
-        // Configurer les colonnes du GridPane
         gridProduits.getColumnConstraints().clear();
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setPercentWidth(50);
@@ -40,21 +33,16 @@ public class ProductListController {
         col2.setPercentWidth(50);
         gridProduits.getColumnConstraints().addAll(col1, col2);
 
-        // Charger les produits
         refreshProductList();
     }
 
     private void refreshProductList() {
-        // Effacer le GridPane
         gridProduits.getChildren().clear();
 
-        // Réinitialiser les contraintes de rangées
         gridProduits.getRowConstraints().clear();
 
-        // Charger les produits depuis la base de données
         List<Produit> produits = produitService.getAllProduits();
 
-        // Peupler le GridPane avec des cartes
         int col = 0;
         int row = 0;
         for (Produit produit : produits) {
@@ -69,7 +57,6 @@ public class ProductListController {
         }
     }
 
-    // Méthode complète pour créer une carte produit
     private VBox createProductCard(Produit produit) {
         VBox card = new VBox();
         card.getStyleClass().add("card");
@@ -80,19 +67,16 @@ public class ProductListController {
         card.setMaxHeight(300);
         card.setStyle("-fx-padding: 15px; -fx-background-color: white; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);");
 
-        // Image du produit
         ImageView imageView = new ImageView();
         imageView.setFitHeight(120.0);
         imageView.setFitWidth(320.0);
         imageView.setPreserveRatio(true);
 
-        // Gestion des URLs d'images de la BD avec logs et image par défaut
         String photoUrl = produit.getPhotoUrl();
         System.out.println("URL de l'image pour " + produit.getNom() + " : '" + photoUrl + "'");  // LOG POUR DÉBOGUER
 
         if (photoUrl != null && !photoUrl.trim().isEmpty()) {
             try {
-                // Gérer les chemins relatifs (commençant par @) ou absolus
                 String finalUrl = photoUrl.startsWith("@") ? getClass().getResource(photoUrl.substring(1)).toExternalForm() : photoUrl;
                 Image image = new Image(finalUrl, 320, 120, true, true);
                 imageView.setImage(image);
@@ -106,12 +90,10 @@ public class ProductListController {
             loadDefaultImage(imageView);
         }
 
-        // Titre (nom)
         Label titleLabel = new Label(produit.getNom());
         titleLabel.getStyleClass().add("card-title");
         titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #22301b;");
 
-        // Détails
         Label categorieLabel = new Label("Catégorie: " + (produit.getCategorie() != null ? produit.getCategorie() : "N/A"));
         categorieLabel.setStyle("-fx-font-size: 14px;");
 
@@ -122,7 +104,6 @@ public class ProductListController {
                 produit.getDescription().substring(0, 47) + "..." : produit.getDescription()));
         descriptionLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
 
-        // Boutons d'actions
         Button editButton = new Button("✏️ Modifier");
         editButton.getStyleClass().add("primary");
         editButton.setPrefWidth(150.0);
@@ -138,13 +119,11 @@ public class ProductListController {
         HBox buttonsBox = new HBox(10.0, editButton, deleteButton);
         buttonsBox.setAlignment(javafx.geometry.Pos.CENTER);
 
-        // Ajouter tous les éléments à la carte
         card.getChildren().addAll(imageView, titleLabel, categorieLabel, prixLabel, descriptionLabel, buttonsBox);
 
         return card;
     }
 
-    // Méthode auxiliaire pour charger l'image par défaut
     private void loadDefaultImage(ImageView imageView) {
         try {
             String defaultUrl = getClass().getResource("/images/default_product.png").toExternalForm();
@@ -167,7 +146,6 @@ public class ProductListController {
         }
     }
 
-    // Action pour supprimer un produit
     private void supprimerProduit(Produit produit) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
@@ -177,11 +155,9 @@ public class ProductListController {
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 try {
-                    // D'abord supprimer le stock associé (si vous voulez)
-                    // Puis supprimer le produit
                     produitService.supprimer(produit.getId());
                     showAlert("Succès", "Produit supprimé avec succès.");
-                    refreshProductList(); // Recharger la liste
+                    refreshProductList();
                 } catch (SQLException e) {
                     e.printStackTrace();
                     showAlert("Erreur", "Erreur lors de la suppression : " + e.getMessage());
@@ -192,7 +168,6 @@ public class ProductListController {
 
     @FXML
     private void toggleSidebar() {
-        // Implémentez la logique pour réduire/agrandir le sidebar si nécessaire
     }
 
     private void showAlert(String title, String message) {
@@ -203,7 +178,6 @@ public class ProductListController {
         alert.showAndWait();
     }
 
-    // Dans ProductListController.java
 
     @FXML
     private void goToHome() {

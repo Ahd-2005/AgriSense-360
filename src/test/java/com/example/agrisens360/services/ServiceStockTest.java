@@ -1,10 +1,10 @@
-package tn.esprit.services;
+package com.example.agrisens360.services;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import tn.esprit.entities.Produit;
-import tn.esprit.entities.Stock;
+import com.example.agrisens360.entity.Produit;
+import com.example.agrisens360.entity.Stock;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
