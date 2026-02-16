@@ -43,6 +43,7 @@ public class MainLayoutController {
     @FXML private Button liststockBtn;
     @FXML private Button ModstockBtn;
     @FXML private Button editprodBtn;
+    @FXML private Button btnBOS;
 
     // Labels to hide/show
     @FXML private Label homeLabel;
@@ -245,6 +246,11 @@ public class MainLayoutController {
 
     public static Produit getProduitToEdit() {
         return produitToEdit;
+    }
+    @FXML
+    public void navigateToBackOfficeStock() {
+        loadContent("/fxml/BackOfficeStock.fxml");
+        setActiveButton(btnBOS);
     }
 
     private void loadContent(String fxmlPath) {
