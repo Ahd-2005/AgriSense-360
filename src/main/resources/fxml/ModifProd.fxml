@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" pannable="true" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AjoutProduitController" VBox.vgrow="ALWAYS" prefWidth="1530" prefHeight="800">
+    <VBox alignment="TOP_CENTER" spacing="30.0">
+        <!-- Padding généreux en bas + espace vide = fix du bug -->
+        <padding>
+            <Insets bottom="600.0" left="60.0" right="60.0" top="40.0" />
+        </padding>
+
+        <!-- Titre -->
+        <Label style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="✏ Modifier Produit et Stock" />
+
+        <!-- Formulaire Produit -->
+        <VBox spacing="20.0" styleClass="card">
+            <Label styleClass="card-title" text="Informations Produit" />
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label prefWidth="180" style="-fx-font-weight: bold;" text="Catégorie *" />
+                <ComboBox fx:id="comboCategorie" prefWidth="500.0" promptText="Sélectionner..." styleClass="input-field" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label prefWidth="180" style="-fx-font-weight: bold;" text="Nom *" />
+                <TextField fx:id="txtNom" prefWidth="500.0" promptText="Ex : Engrais NPK" styleClass="input-field" />
+            </HBox>
+
+            <HBox alignment="TOP_LEFT" spacing="20.0">
+                <Label prefWidth="180" style="-fx-font-weight: bold;" text="Description" />
+                <TextArea fx:id="txtDescription" prefHeight="100.0" prefWidth="500.0" promptText="Détails..." styleClass="input-field" wrapText="true" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label prefWidth="180" style="-fx-font-weight: bold;" text="Fournisseur" />
+                <TextField fx:id="txtFournisseur" prefWidth="500.0" promptText="Ex : AgroPlus" styleClass="input-field" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label prefWidth="180" style="-fx-font-weight: bold;" text="Prix unitaire (DT)" />
+                <TextField fx:id="txtPrix" prefWidth="500.0" promptText="125.50" styleClass="input-field" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label prefWidth="180" style="-fx-font-weight: bold;" text="Photo" />
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
+                    <Button onAction="#choisirPhoto" styleClass="primary" text="📷 Choisir photo" />
+                    <Label fx:id="lblPhotoStatus" text="Aucune photo sélectionnée" />
+                </HBox>
+            </HBox>
+            <ImageView fx:id="imgPreview" fitHeight="160.0" fitWidth="220.0" preserveRatio="true" visible="false" />
+        </VBox>
+
+        <!-- Formulaire Stock -->
+        <VBox spacing="20.0" styleClass="card">
+            <Label styleClass="card-title" text="Informations Stock" />
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label prefWidth="180" style="-fx-font-weight: bold;" text="Quantité actuelle" />
+                <TextField fx:id="txtQuantite" prefWidth="500.0" promptText="150.0" styleClass="input-field" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label prefWidth="180" style="-fx-font-weight: bold;" text="Seuil d'alerte" />
+                <TextField fx:id="txtSeuil" prefWidth="500.0" promptText="20.0" styleClass="input-field" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label prefWidth="180" style="-fx-font-weight: bold;" text="Unité" />
+                <ComboBox fx:id="comboUnite" prefWidth="500.0" promptText="kg / L / sac" styleClass="input-field" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label prefWidth="180" style="-fx-font-weight: bold;" text="Date réception" />
+                <DatePicker fx:id="dateReception" prefWidth="500.0" styleClass="input-field" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label prefWidth="180" style="-fx-font-weight: bold;" text="Date expiration" />
+                <DatePicker fx:id="dateExpiration" prefWidth="500.0" styleClass="input-field" />
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label prefWidth="180" style="-fx-font-weight: bold;" text="Emplacement" />
+                <TextField fx:id="txtEmplacement" prefWidth="500.0" promptText="Entrepôt A - Rayon 3" styleClass="input-field" />
+            </HBox>
+        </VBox>
+
+        <!-- Boutons -->
+        <HBox alignment="CENTER_RIGHT" spacing="20.0">
+            <Button fx:id="btnAnnuler" onAction="#annuler" text="Annuler" styleClass="ghost" prefHeight="40.0" prefWidth="150.0" />
+            <Button fx:id="btnEnregistrer" onAction="#enregistrer" prefHeight="48.0" prefWidth="180.0" styleClass="primary" text="Modifier Produit" />
+        </HBox>
+
+        <!-- ESPACE VIDE TRÈS GRAND EN BAS – C’EST ÇA QUI RÈGLE LE BUG -->
+        <Region prefHeight="800.0" VBox.vgrow="NEVER" />
+
+        <stylesheets>
+            <URL value="file:///C:/Users/Super%20User/Documents/Esprit/3A/PI/Agritech/src/main/resources/css/home.css" />
+        </stylesheets>
+    </VBox>
+</ScrollPane>
