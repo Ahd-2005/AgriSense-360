@@ -35,6 +35,12 @@ public class CultureController {
     @FXML private GridPane cultureGrid;
     @FXML private TextField searchField;
 
+    // Sort buttons
+    @FXML private Button typeButton;
+    @FXML private Button etatButton;
+    @FXML private Button surfaceButton;
+    @FXML private Button resetButton;
+
     private List<Culture> allCultures = new ArrayList<>();
     private List<Culture> filteredCultures = new ArrayList<>();
 
@@ -109,26 +115,57 @@ public class CultureController {
 
     @FXML
     private void sortByType() {
-        filteredCultures.sort(Comparator.comparing(Culture::getTypeCulture));
+        // Custom order: Céréales, Légumes, Fruits, Ornementales
+        Map<String, Integer> typeOrder = new HashMap<>();
+        typeOrder.put("Céréales", 1);
+        typeOrder.put("Légumes", 2);
+        typeOrder.put("Fruits", 3);
+        typeOrder.put("Ornementales", 4);
+
+        filteredCultures.sort(Comparator.comparing(c -> typeOrder.getOrDefault(c.getTypeCulture(), 999)));
         displayCultures(filteredCultures);
+        setActiveSortButton(typeButton);
     }
 
     @FXML
     private void sortByEtat() {
-        filteredCultures.sort(Comparator.comparing(Culture::getEtat));
+        // Custom order: Semis, Croissance, Maturité, Récolte
+        Map<String, Integer> etatOrder = new HashMap<>();
+        etatOrder.put("Semis", 1);
+        etatOrder.put("Croissance", 2);
+        etatOrder.put("Maturité", 3);
+        etatOrder.put("Récolte", 4);
+
+        filteredCultures.sort(Comparator.comparing(c -> etatOrder.getOrDefault(c.getEtat(), 999)));
         displayCultures(filteredCultures);
+        setActiveSortButton(etatButton);
     }
 
     @FXML
     private void sortBySurface() {
         filteredCultures.sort(Comparator.comparing(Culture::getSurface).reversed());
         displayCultures(filteredCultures);
+        setActiveSortButton(surfaceButton);
     }
 
     @FXML
     private void resetSort() {
         filteredCultures = new ArrayList<>(allCultures);
         displayCultures(filteredCultures);
+        setActiveSortButton(null); // Remove active from all
+    }
+
+    // Helper method to manage active sort button styling
+    private void setActiveSortButton(Button activeButton) {
+        // Remove active class from all buttons
+        if (typeButton != null) typeButton.getStyleClass().remove("sort-button-active");
+        if (etatButton != null) etatButton.getStyleClass().remove("sort-button-active");
+        if (surfaceButton != null) surfaceButton.getStyleClass().remove("sort-button-active");
+
+        // Add active class to selected button
+        if (activeButton != null && !activeButton.getStyleClass().contains("sort-button-active")) {
+            activeButton.getStyleClass().add("sort-button-active");
+        }
     }
 
     private void displayCultures(List<Culture> cultures) {
@@ -502,7 +539,7 @@ public class CultureController {
         parcelleLabel.getStyleClass().add("form-label");
         ComboBox<String> parcelleComboBox = new ComboBox<>();
         parcelleComboBox.getStyleClass().add("form-field");
-        loadLibreParcelles(parcelleComboBox);
+        loadLibreParcellesForEdit(parcelleComboBox, culture.getParcelleId()); // Include current parcelle
 
         for (String item : parcelleComboBox.getItems()) {
             if (item.startsWith(culture.getParcelleId() + " - ")) {
@@ -806,6 +843,29 @@ public class CultureController {
                                         " (Restant: " + String.format("%.2f", remaining) + " m² / " + p.getSurface() + " m²)"
                         );
                     }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Load parcelles for edit - includes current parcelle even if full
+    private void loadLibreParcellesForEdit(ComboBox<String> comboBox, int currentParcelleId) {
+        try {
+            List<Parcelle> allParcelles = parcelleService.getAllParcelles();
+            comboBox.getItems().clear();
+
+            for (Parcelle p : allParcelles) {
+                double remaining = parcelleService.getRemainingParcelleSize(p.getId());
+
+                // Include if: (1) it's the current parcelle OR (2) it's libre with space
+                if (p.getId() == currentParcelleId ||
+                        ("Libre".equalsIgnoreCase(p.getStatut()) && remaining > 0.01)) {
+                    comboBox.getItems().add(
+                            p.getId() + " - " + p.getNom() +
+                                    " (Restant: " + String.format("%.2f", remaining) + " m² / " + p.getSurface() + " m²)"
+                    );
                 }
             }
         } catch (SQLException e) {
