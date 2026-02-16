@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.ParcelleController"
+            prefHeight="700.0" prefWidth="1200.0"
+            stylesheets="@../css/cards.css">
+
+    <top>
+        <VBox spacing="0">
+            <!-- Top Bar with Purple Gradient -->
+            <HBox alignment="CENTER_LEFT" spacing="15"
+                  style="-fx-background-color: linear-gradient(to right, #7B1FA2, #9C27B0); -fx-padding: 20;">
+                <Label text="🌍 Mes Parcelles"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Search Bar -->
+                <TextField fx:id="searchField" promptText="🔍 Rechercher par nom..."
+                           styleClass="search-field"/>
+
+                <Button text="➕ Ajouter Parcelle" onAction="#showAddPopup"
+                        styleClass="add-button"/>
+            </HBox>
+
+            <!-- Sort Buttons -->
+            <HBox alignment="CENTER" spacing="15"
+                  style="-fx-background-color: #8E24AA; -fx-padding: 15;">
+                <Label text="Trier par:"
+                       style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+                <Button text="Statut" onAction="#sortByStatut"
+                        styleClass="sort-button"/>
+                <Button text="Surface" onAction="#sortBySurface"
+                        styleClass="sort-button"/>
+                <Button text="Reset" onAction="#resetSort"
+                        styleClass="sort-button"/>
+            </HBox>
+
+            <!-- Retour Button with Green Style -->
+            <HBox alignment="CENTER" style="-fx-background-color: #8E24AA; -fx-padding: 15;">
+                <Button text="⬅️ Retour aux Cultures"
+                        onAction="#goBackToCulture"
+                        style="-fx-background-color: #2a5a3a; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 20px; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <!-- Light Purple Gradient Background -->
+        <ScrollPane fitToWidth="true" fitToHeight="true"
+                    style="-fx-background: linear-gradient(to bottom, #f3e5f5 0%, #f8f4f9 100%); -fx-background-color: transparent;">
+            <VBox style="-fx-background-color: transparent;">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                <GridPane fx:id="parcelleGrid" hgap="20" vgap="20">
+                </GridPane>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
