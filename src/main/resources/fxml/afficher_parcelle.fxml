@@ -30,11 +30,11 @@
                   style="-fx-background-color: #8E24AA; -fx-padding: 15;">
                 <Label text="Trier par:"
                        style="-fx-text-fill: white; -fx-font-weight: bold;"/>
-                <Button text="Statut" onAction="#sortByStatut"
+                <Button fx:id="statutButton" text="Statut" onAction="#sortByStatut"
                         styleClass="sort-button"/>
-                <Button text="Surface" onAction="#sortBySurface"
+                <Button fx:id="surfaceButton" text="Surface" onAction="#sortBySurface"
                         styleClass="sort-button"/>
-                <Button text="Reset" onAction="#resetSort"
+                <Button fx:id="resetButton" text="Reset" onAction="#resetSort"
                         styleClass="sort-button"/>
             </HBox>
 

@@ -1,6 +1,7 @@
 package controllers;
 
 import entity.Parcelle;
+import entity.Culture;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -8,11 +9,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import services.ParcelleService;
+import services.CultureService;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -22,9 +26,15 @@ import java.util.stream.Collectors;
 public class ParcelleController {
 
     private final ParcelleService service = new ParcelleService();
+    private final CultureService cultureService = new CultureService();
 
     @FXML private GridPane parcelleGrid;
     @FXML private TextField searchField;
+
+    // Sort buttons
+    @FXML private Button statutButton;
+    @FXML private Button surfaceButton;
+    @FXML private Button resetButton;
 
     private List<Parcelle> allParcelles = new ArrayList<>();
     private List<Parcelle> filteredParcelles = new ArrayList<>();
@@ -67,20 +77,40 @@ public class ParcelleController {
 
     @FXML
     private void sortByStatut() {
-        filteredParcelles.sort(Comparator.comparing(Parcelle::getStatut));
+        // Custom order: Libre first, then Occupée
+        Map<String, Integer> statutOrder = new HashMap<>();
+        statutOrder.put("Libre", 1);
+        statutOrder.put("Occupée", 2);
+
+        filteredParcelles.sort(Comparator.comparing(p -> statutOrder.getOrDefault(p.getStatut(), 999)));
         displayParcelles(filteredParcelles);
+        setActiveSortButton(statutButton);
     }
 
     @FXML
     private void sortBySurface() {
         filteredParcelles.sort(Comparator.comparing(Parcelle::getSurface).reversed());
         displayParcelles(filteredParcelles);
+        setActiveSortButton(surfaceButton);
     }
 
     @FXML
     private void resetSort() {
         filteredParcelles = new ArrayList<>(allParcelles);
         displayParcelles(filteredParcelles);
+        setActiveSortButton(null); // Remove active from all
+    }
+
+    // Helper method to manage active sort button styling
+    private void setActiveSortButton(Button activeButton) {
+        // Remove active class from all buttons
+        if (statutButton != null) statutButton.getStyleClass().remove("sort-button-active");
+        if (surfaceButton != null) surfaceButton.getStyleClass().remove("sort-button-active");
+
+        // Add active class to selected button
+        if (activeButton != null && !activeButton.getStyleClass().contains("sort-button-active")) {
+            activeButton.getStyleClass().add("sort-button-active");
+        }
     }
 
     private void displayParcelles(List<Parcelle> parcelles) {
@@ -173,6 +203,13 @@ public class ParcelleController {
 
         buttonBox.getChildren().addAll(editBtn, deleteBtn);
         card.getChildren().addAll(nameLabel, infoGrid, statutLabel, buttonBox);
+
+        // Add double-click event to show cultures in this parcelle
+        card.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                showCulturesInParcelle(parcelle);
+            }
+        });
 
         return card;
     }
@@ -539,5 +576,157 @@ public class ParcelleController {
         if (controller != null) {
             controller.navigateToCulture();
         }
+    }
+
+    // Show all cultures in this parcelle in a popup
+    private void showCulturesInParcelle(Parcelle parcelle) {
+        Stage popup = new Stage();
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.initStyle(StageStyle.TRANSPARENT);
+        popup.setTitle("Cultures de " + parcelle.getNom());
+
+        StackPane root = new StackPane();
+        root.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);");
+
+        VBox content = new VBox(15);
+        content.getStyleClass().add("popup-content");
+        content.setPrefWidth(900);
+        content.setMaxWidth(900);
+        content.setMaxHeight(600);
+        content.setPadding(new Insets(20));
+
+        // Header with close button
+        HBox header = new HBox();
+        header.setAlignment(Pos.CENTER_LEFT);
+        Label title = new Label("🌱 Cultures de la parcelle: " + parcelle.getNom());
+        title.getStyleClass().add("popup-title");
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        Button closeBtn = new Button("×");
+        closeBtn.getStyleClass().add("close-button");
+        closeBtn.setOnAction(e -> popup.close());
+        header.getChildren().addAll(title, spacer, closeBtn);
+
+        // Parcelle info summary
+        VBox parcelleInfo = new VBox(8);
+        parcelleInfo.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 12; -fx-background-radius: 8;");
+
+        try {
+            double remaining = service.getRemainingParcelleSize(parcelle.getId());
+            Label surfaceLabel = new Label("📏 Surface totale: " + parcelle.getSurface() + " m²");
+            Label restantLabel = new Label("📦 Surface restante: " + String.format("%.2f", remaining) + " m²");
+            Label usedLabel = new Label("🌾 Surface utilisée: " + String.format("%.2f", (parcelle.getSurface() - remaining)) + " m²");
+
+            surfaceLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: bold;");
+            restantLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #4CAF50; -fx-font-weight: bold;");
+            usedLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #FF9800; -fx-font-weight: bold;");
+
+            parcelleInfo.getChildren().addAll(surfaceLabel, usedLabel, restantLabel);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Scrollable culture cards
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
+        GridPane cultureGrid = new GridPane();
+        cultureGrid.setHgap(15);
+        cultureGrid.setVgap(15);
+        cultureGrid.setPadding(new Insets(10));
+
+        try {
+            List<Culture> allCultures = cultureService.getAllCultures();
+            List<Culture> parcelleCultures = allCultures.stream()
+                    .filter(c -> c.getParcelleId() == parcelle.getId())
+                    .collect(Collectors.toList());
+
+            if (parcelleCultures.isEmpty()) {
+                Label noCultures = new Label("🌾 Aucune culture dans cette parcelle");
+                noCultures.setStyle("-fx-font-size: 16px; -fx-text-fill: #888; -fx-padding: 30;");
+                cultureGrid.add(noCultures, 0, 0);
+            } else {
+                int col = 0;
+                int row = 0;
+                for (Culture culture : parcelleCultures) {
+                    VBox cultureCard = createCultureCardForPopup(culture);
+                    cultureGrid.add(cultureCard, col, row);
+                    col++;
+                    if (col == 3) { // 3 cards per row
+                        col = 0;
+                        row++;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        scrollPane.setContent(cultureGrid);
+        content.getChildren().addAll(header, parcelleInfo, scrollPane);
+
+        root.getChildren().add(content);
+        root.setOnMouseClicked(e -> {
+            if (e.getTarget() == root) popup.close();
+        });
+
+        Scene scene = new Scene(root, 950, 650);
+        scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        scene.getStylesheets().add(getClass().getResource("/css/cards.css").toExternalForm());
+
+        popup.setScene(scene);
+        popup.show();
+    }
+
+    // Create a culture card for the popup
+    private VBox createCultureCardForPopup(Culture culture) {
+        VBox card = new VBox(10);
+        card.getStyleClass().add("culture-card");
+        card.setPrefWidth(260);
+        card.setMaxWidth(260);
+        card.setPrefHeight(280);
+        card.setAlignment(Pos.TOP_CENTER);
+
+        // Culture image
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(220);
+        imageView.setFitHeight(150);
+        imageView.setPreserveRatio(false);
+        imageView.getStyleClass().add("culture-image");
+
+        if (culture.getImg() != null && !culture.getImg().isEmpty()) {
+            try {
+                Image img = new Image(getClass().getResourceAsStream("/images/cultures/" + culture.getImg()));
+                imageView.setImage(img);
+            } catch (Exception e) {
+                imageView.setImage(new Image(getClass().getResourceAsStream("/images/cultures/default.png")));
+            }
+        }
+
+        // Culture type
+        Label typeLabel = new Label(culture.getTypeCulture());
+        typeLabel.getStyleClass().add("culture-type");
+
+        // Culture name
+        Label nameLabel = new Label(culture.getNom());
+        nameLabel.getStyleClass().add("culture-name");
+
+        // État badge
+        Label etatLabel = new Label(culture.getEtat());
+        String etatClass = "etat-" + culture.getEtat()
+                .toLowerCase()
+                .replace("é", "e")
+                .replace("è", "e")
+                .replace("à", "a");
+        etatLabel.getStyleClass().addAll("culture-etat", etatClass);
+
+        // Surface info
+        Label surfaceLabel = new Label("📏 " + culture.getSurface() + " m²");
+        surfaceLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666; -fx-font-weight: bold;");
+
+        card.getChildren().addAll(imageView, typeLabel, nameLabel, etatLabel, surfaceLabel);
+        return card;
     }
 }
