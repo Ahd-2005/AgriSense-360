@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.AnimalController"
-      spacing="24" VBox.vgrow="ALWAYS">
+      spacing="24" VBox.vgrow="ALWAYS" >
     <padding>
         <Insets top="0" right="0" bottom="0" left="0"/>
     </padding>

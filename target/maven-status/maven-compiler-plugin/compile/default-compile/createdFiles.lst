@@ -1,11 +1,15 @@
 utils\AnimalListRefresh.class
 entity\Parcelle.class
 services\ServiceAnimal.class
+services\EvaluationPerformanceService.class
 entity\Animal$Gender.class
 services\ServiceAnimalHealthRecord.class
 services\ParcelleService.class
 com\example\agrisens360\HelloController.class
+services\AffectationTravailService.class
 utils\MyDataBase.class
+controllers\AffectationController.class
+controllers\EvaluationController$1.class
 controllers\HomeContentController.class
 controllers\ParcelleController.class
 controllers\MainLayoutController.class
@@ -15,8 +19,11 @@ entity\Animal.class
 entity\Culture.class
 entity\AnimalHealthRecord$ConditionStatus.class
 controllers\CultureController.class
+entity\EvaluationPerformance.class
+controllers\EvaluationController.class
 module-info.class
 entity\AnimalHealthRecord$Appetite.class
+entity\AffectationTravail.class
 com\example\agrisens360\HelloApplication.class
 services\IService.class
 controllers\AnimalController.class

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.EvaluationController"
+            fitToWidth="true" styleClass="content">
+
+    <VBox spacing="20" styleClass="content-inner">
+        <padding><Insets top="30" right="40" bottom="40" left="40"/></padding>
+
+        <Label text="Gestion des Évaluations de Performance" styleClass="topbar-title"/>
+
+        <!-- Form -->
+        <VBox styleClass="hero-banner" spacing="16">
+            <Label text="Formulaire" styleClass="hero-kicker"/>
+            <GridPane hgap="15" vgap="12">
+                <Label text="Affectation:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <ComboBox fx:id="cbAffectation" prefWidth="350" GridPane.columnIndex="1" GridPane.rowIndex="0" editable="false"/>
+
+                <Label text="Note (1-5):" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="tfNote" styleClass="form-field" prefWidth="80" promptText="1-5" maxWidth="80" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Qualité:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <ComboBox fx:id="cbQualite" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="2" editable="false"/>
+
+                <Label text="Commentaire:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <TextField fx:id="tfCommentaire" styleClass="form-field" prefWidth="350" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label text="Date évaluation:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <DatePicker fx:id="dpDateEvaluation" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            </GridPane>
+            <HBox spacing="10">
+                <Button fx:id="btnAdd" text="Ajouter" styleClass="add-button" onAction="#onAdd"/>
+                <Button fx:id="btnUpdate" text="Modifier" styleClass="edit-button" onAction="#onUpdate"/>
+                <Button fx:id="btnDelete" text="Supprimer" styleClass="delete-button" onAction="#onDelete"/>
+                <Button fx:id="btnClear" text="Vider" styleClass="ghost" onAction="#onClear"/>
+            </HBox>
+            <Label fx:id="lblAverageNote" style="-fx-text-fill: #5a9814; -fx-font-weight: bold;"/>
+        </VBox>
+
+        <!-- TableView -->
+        <VBox spacing="10">
+            <Label text="Liste des évaluations" styleClass="section-title-main"/>
+            <TableView fx:id="tvEvaluations" prefHeight="280" styleClass="table-view" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colIdEval" text="ID Eval" prefWidth="70"/>
+                    <TableColumn fx:id="colIdAffect" text="ID Affect." prefWidth="80"/>
+                    <TableColumn fx:id="colNote" text="Note" prefWidth="60"/>
+                    <TableColumn fx:id="colQualite" text="Qualité" prefWidth="90"/>
+                    <TableColumn fx:id="colCommentaire" text="Commentaire" prefWidth="200"/>
+                    <TableColumn fx:id="colDateEval" text="Date éval." prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </VBox>
+</ScrollPane>
