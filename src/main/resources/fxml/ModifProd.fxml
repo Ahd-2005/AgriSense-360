@@ -13,17 +13,14 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" pannable="true" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AjoutProduitController" VBox.vgrow="ALWAYS" prefWidth="1530" prefHeight="800">
+<ScrollPane fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" pannable="true" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.agrisens360.controllers.AjoutProduitController" VBox.vgrow="ALWAYS" prefWidth="1530" prefHeight="800">
     <VBox alignment="TOP_CENTER" spacing="30.0">
-        <!-- Padding généreux en bas + espace vide = fix du bug -->
         <padding>
             <Insets bottom="600.0" left="60.0" right="60.0" top="40.0" />
         </padding>
 
-        <!-- Titre -->
         <Label style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="✏ Modifier Produit et Stock" />
 
-        <!-- Formulaire Produit -->
         <VBox spacing="20.0" styleClass="card">
             <Label styleClass="card-title" text="Informations Produit" />
 
@@ -62,7 +59,6 @@
             <ImageView fx:id="imgPreview" fitHeight="160.0" fitWidth="220.0" preserveRatio="true" visible="false" />
         </VBox>
 
-        <!-- Formulaire Stock -->
         <VBox spacing="20.0" styleClass="card">
             <Label styleClass="card-title" text="Informations Stock" />
 
@@ -97,13 +93,11 @@
             </HBox>
         </VBox>
 
-        <!-- Boutons -->
         <HBox alignment="CENTER_RIGHT" spacing="20.0">
             <Button fx:id="btnAnnuler" onAction="#annuler" text="Annuler" styleClass="ghost" prefHeight="40.0" prefWidth="150.0" />
             <Button fx:id="btnEnregistrer" onAction="#enregistrer" prefHeight="48.0" prefWidth="180.0" styleClass="primary" text="Modifier Produit" />
         </HBox>
 
-        <!-- ESPACE VIDE TRÈS GRAND EN BAS – C’EST ÇA QUI RÈGLE LE BUG -->
         <Region prefHeight="800.0" VBox.vgrow="NEVER" />
 
         <stylesheets>

@@ -10,18 +10,16 @@
 
 <ScrollPane pannable="true" fitToWidth="true" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER"
             xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="tn.esprit.controllers.BackOfficeStockController">
+            fx:controller="com.example.agrisens360.controllers.BackOfficeStockController">
 
     <VBox spacing="40.0" alignment="TOP_CENTER">
         <padding>
             <Insets top="40.0" right="60.0" bottom="600.0" left="60.0"/>
         </padding>
 
-        <!-- Titre principal -->
         <Label text="🏢 Backoffice - Gestion Produits et Stocks"
                style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #22301b;"/>
 
-        <!-- Barre de recherche + bouton rafraîchir -->
         <HBox alignment="CENTER_LEFT" spacing="20.0">
             <TextField fx:id="txtRecherche" promptText="Rechercher un produit..." prefWidth="400.0" styleClass="input-field"/>
             <Button text="🔄 Rafraîchir" onAction="#rafraichir" styleClass="primary"/>
@@ -30,7 +28,6 @@
             <Button text="➕ Ajouter Stock" onAction="#goToAddStock" styleClass="primary" prefWidth="200.0"/>
         </HBox>
 
-        <!-- Statistiques (cartes) -->
         <GridPane hgap="30" vgap="30" alignment="CENTER">
             <columnConstraints>
                 <ColumnConstraints hgrow="ALWAYS"/>
@@ -39,32 +36,27 @@
                 <ColumnConstraints hgrow="ALWAYS"/>
             </columnConstraints>
 
-            <!-- Carte 1 : Total Produits -->
             <VBox alignment="CENTER" spacing="10.0" styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
                 <Label text="📦 Total Produits" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
                 <Label fx:id="statTotalProduits" text="0" style="-fx-font-size: 42px; -fx-text-fill: #4caf50;"/>
             </VBox>
 
-            <!-- Carte 2 : Stocks disponibles -->
             <VBox alignment="CENTER" spacing="10.0" styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
                 <Label text="📊 Stocks Disponibles" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
                 <Label fx:id="statStocksDisponibles" text="0" style="-fx-font-size: 42px; -fx-text-fill: #2196f3;"/>
             </VBox>
 
-            <!-- Carte 3 : En alerte critique -->
             <VBox alignment="CENTER" spacing="10.0" styleClass="stat-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
                 <Label text="🚨 Alertes Critique" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
                 <Label fx:id="statAlertesCritique" text="0" style="-fx-font-size: 42px; -fx-text-fill: #f44336;"/>
             </VBox>
 
-            <!-- Carte 4 : Valeur totale estimée -->
             <VBox alignment="CENTER" spacing="10.0" styleClass="stat-card" GridPane.columnIndex="3" GridPane.rowIndex="0">
                 <Label text="💰 Valeur Totale" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
                 <Label fx:id="statValeurTotale" text="0 DT" style="-fx-font-size: 42px; -fx-text-fill: #9c27b0;"/>
             </VBox>
         </GridPane>
 
-        <!-- Graphique : Répartition par catégorie -->
         <VBox spacing="20.0">
             <Label text="📈 Répartition par catégorie" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
             <BarChart fx:id="chartCategories" prefHeight="300.0" prefWidth="800.0" title="Nombre de produits par catégorie">
@@ -77,7 +69,6 @@
             </BarChart>
         </VBox>
 
-        <!-- Section Produits -->
         <VBox spacing="20.0" styleClass="card">
             <Label text="📦 Produits" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
             <GridPane fx:id="gridProduits" hgap="20.0" vgap="20.0">
@@ -85,11 +76,9 @@
                     <ColumnConstraints />
                     <ColumnConstraints />
                 </columnConstraints>
-                <!-- Les cartes seront ajoutées dynamiquement -->
             </GridPane>
         </VBox>
 
-        <!-- Section Stocks -->
         <VBox spacing="20.0" styleClass="card">
             <Label text="📊 Stocks" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
             <GridPane fx:id="gridStocks" hgap="20.0" vgap="20.0">
@@ -97,11 +86,9 @@
                     <ColumnConstraints />
                     <ColumnConstraints />
                 </columnConstraints>
-                <!-- Les cartes seront ajoutées dynamiquement -->
             </GridPane>
         </VBox>
 
-        <!-- Tableau des alertes récentes (produits en rupture ou bas stock) -->
         <VBox spacing="20.0">
             <Label text="🚨 Produits en alerte (stock bas)" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
             <TableView fx:id="tableAlertes" prefHeight="300.0">
@@ -122,7 +109,6 @@
             </TableView>
         </VBox>
 
-        <!-- Espace vide en bas pour scroll fluide -->
         <Region prefHeight="400.0"/>
 
         <stylesheets>

@@ -1,12 +1,12 @@
-package tn.esprit.controllers;
+package com.example.agrisens360.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import tn.esprit.entities.Stock;
-import tn.esprit.services.ServiceStock;
+import com.example.agrisens360.entity.Stock;
+import com.example.agrisens360.services.ServiceStock;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -106,7 +106,6 @@ public class StockListController {
         return card;
     }
 
-    // Méthode pour modifier un stock : utilise MainLayoutController pour préserver le layout
     /*private void modifierStock(Stock stock) {
         if (MainLayoutController.getInstance() != null) {
             MainLayoutController.getInstance().navigateToEditStock();
@@ -124,7 +123,6 @@ public class StockListController {
         }
     }
 
-    // Méthode pour supprimer un stock : confirmation puis suppression
     private void supprimerStock(Stock stock) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
@@ -136,7 +134,7 @@ public class StockListController {
                 try {
                     serviceStock.supprimer(stock.getId());
                     showAlert("Succès", "Stock supprimé avec succès.");
-                    refreshStockList(); // Rafraîchir la liste après suppression
+                    refreshStockList();
                 } catch (SQLException e) {
                     e.printStackTrace();
                     showAlert("Erreur", "Erreur lors de la suppression : " + e.getMessage());

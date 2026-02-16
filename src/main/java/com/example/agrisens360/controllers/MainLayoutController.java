@@ -1,17 +1,14 @@
-package tn.esprit.controllers;
+package com.example.agrisens360.controllers;
 
-import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
-import tn.esprit.entities.Produit;
-import tn.esprit.entities.Stock;
+import com.example.agrisens360.entity.Produit;
+import com.example.agrisens360.entity.Stock;
 
 import java.io.IOException;
 
@@ -160,7 +157,7 @@ public class MainLayoutController {
 
     @FXML
     public void navigateToStock() {
-        loadContent("/fxml/Home.fxml");
+        loadContent("/fxml/StockHome.fxml");
         setActiveButton(stockBtn);
     }
 
