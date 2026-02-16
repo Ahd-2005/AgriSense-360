@@ -7,7 +7,7 @@ public class Animal {
 
     private Integer id;
     private Integer earTag;
-    private String type;       // dynamic: from DB ENUM (e.g. sheep, cow, goat, chicken)
+    private String type;
     private Gender gender;
     private Double weight;
     private String healthStatus;
@@ -15,7 +15,7 @@ public class Animal {
     private LocalDate entryDate;
     private Origin origin;
     private Boolean vaccinated;
-    private String location;    // dynamic: from DB ENUM (e.g. barn1, chicken_coop1)
+    private String location;
 
     public enum Gender { MALE, FEMALE }
     public enum Origin { BORN_IN_FARM, OUTSIDE }
@@ -54,7 +54,7 @@ public class Animal {
         this.location = location;
     }
 
-    /** Backward-compatible: location is null. */
+
     public Animal(Integer earTag, String type, Gender gender, Double weight,
                   String healthStatus, LocalDate birthDate, LocalDate entryDate, Origin origin,
                   Boolean vaccinated) {
@@ -84,7 +84,7 @@ public class Animal {
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
 
-    /** Age in years from birthDate to today; interface only, not stored in DB. */
+
     public Integer getAge() {
         if (birthDate == null) return null;
         return Period.between(birthDate, LocalDate.now()).getYears();
