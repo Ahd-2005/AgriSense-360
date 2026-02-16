@@ -47,6 +47,8 @@
     <VBox styleClass="mgmt-table-card" VBox.vgrow="ALWAYS" spacing="12">
         <HBox alignment="CENTER_LEFT" spacing="16">
             <Label fx:id="recordsTitleLabel" text="Health records for selected animal" styleClass="mgmt-table-title"/>
+            <TextField fx:id="recordSearchField" promptText="Search records..." styleClass="mgmt-input" prefWidth="160"/>
+            <ComboBox fx:id="recordSortCombo" promptText="Sort by" styleClass="mgmt-combo" prefWidth="110"/>
             <Button text="Refresh" onAction="#onRefreshRecords" styleClass="mgmt-btn-ghost"/>
         </HBox>
         <TableView fx:id="recordTable" styleClass="mgmt-table" VBox.vgrow="ALWAYS" minHeight="200">
