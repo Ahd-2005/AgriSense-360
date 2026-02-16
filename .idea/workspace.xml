@@ -37,6 +37,7 @@
   "keyToString": {
     "Application.HelloApplication.executor": "Run",
     "Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
+    "Maven.agrisense [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
