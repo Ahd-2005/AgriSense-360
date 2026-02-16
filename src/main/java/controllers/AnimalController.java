@@ -7,6 +7,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -44,10 +46,14 @@ public class AnimalController implements Initializable {
     @FXML private ComboBox<String> locationCombo;
     @FXML private Button deleteAnimalBtn;
     @FXML private Button updateAnimalBtn;
+    @FXML private TextField searchField;
+    @FXML private ComboBox<String> searchFieldCombo;
 
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
     private final ServiceEnumManagement serviceEnum = new ServiceEnumManagement();
     private final ObservableList<Animal> animalList = FXCollections.observableArrayList();
+    private FilteredList<Animal> filteredAnimals;
+    private SortedList<Animal> sortedAnimals;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -66,7 +72,36 @@ public class AnimalController implements Initializable {
         colOrigin.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOrigin() != null ? c.getValue().getOrigin().name() : ""));
         colLocation.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLocation() != null ? c.getValue().getLocation() : ""));
 
-        animalTable.setItems(animalList);
+        // Setup search and sort functionality
+        filteredAnimals = new FilteredList<>(animalList, p -> true);
+        sortedAnimals = new SortedList<>(filteredAnimals);
+        sortedAnimals.comparatorProperty().bind(animalTable.comparatorProperty());
+        animalTable.setItems(sortedAnimals);
+
+        // Setup search field selector
+        if (searchFieldCombo != null) {
+            searchFieldCombo.setItems(FXCollections.observableArrayList(
+                "All Fields", "Ear Tag", "Type", "Gender", "Weight", "Health Status", 
+                "Birth Date", "Age", "Origin", "Location"
+            ));
+            searchFieldCombo.getSelectionModel().selectFirst();
+        }
+
+        // Search functionality
+        if (searchField != null) {
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+                filterAnimals(newValue);
+            });
+        }
+        if (searchFieldCombo != null) {
+            searchFieldCombo.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                filterAnimals(searchField.getText());
+            });
+        }
+
+        // Enable sorting on all columns
+        animalTable.getColumns().forEach(col -> col.setSortable(true));
+
         animalTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             boolean hasSelection = newVal != null;
             deleteAnimalBtn.setDisable(!hasSelection);
@@ -75,6 +110,71 @@ public class AnimalController implements Initializable {
         });
         AnimalListRefresh.addListener(this::refreshTypeAndLocationCombos);
         refreshTable();
+    }
+
+    private void filterAnimals(String searchText) {
+        if (searchText == null || searchText.trim().isEmpty()) {
+            filteredAnimals.setPredicate(animal -> true);
+            return;
+        }
+
+        String selectedField = searchFieldCombo != null && searchFieldCombo.getSelectionModel().getSelectedItem() != null
+                ? searchFieldCombo.getSelectionModel().getSelectedItem() : "All Fields";
+        String lowerSearch = searchText.toLowerCase();
+
+        filteredAnimals.setPredicate(animal -> {
+            switch (selectedField) {
+                case "Ear Tag":
+                    return animal.getEarTag() != null && String.valueOf(animal.getEarTag()).contains(lowerSearch);
+                case "Type":
+                    return animal.getType() != null && animal.getType().toLowerCase().contains(lowerSearch);
+                case "Gender":
+                    return animal.getGender() != null && animal.getGender().name().toLowerCase().contains(lowerSearch);
+                case "Weight":
+                    return animal.getWeight() != null && String.valueOf(animal.getWeight()).contains(lowerSearch);
+                case "Health Status":
+                    return animal.getHealthStatus() != null && animal.getHealthStatus().toLowerCase().contains(lowerSearch);
+                case "Birth Date":
+                    return animal.getBirthDate() != null && animal.getBirthDate().toString().contains(lowerSearch);
+                case "Age":
+                    return animal.getAge() != null && String.valueOf(animal.getAge()).contains(lowerSearch);
+                case "Origin":
+                    return animal.getOrigin() != null && animal.getOrigin().name().toLowerCase().contains(lowerSearch);
+                case "Location":
+                    return animal.getLocation() != null && animal.getLocation().toLowerCase().contains(lowerSearch);
+                case "All Fields":
+                default:
+                    // Search all fields
+                    if (animal.getEarTag() != null && String.valueOf(animal.getEarTag()).contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (animal.getType() != null && animal.getType().toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (animal.getGender() != null && animal.getGender().name().toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (animal.getWeight() != null && String.valueOf(animal.getWeight()).contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (animal.getLocation() != null && animal.getLocation().toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (animal.getOrigin() != null && animal.getOrigin().name().toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (animal.getHealthStatus() != null && animal.getHealthStatus().toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (animal.getBirthDate() != null && animal.getBirthDate().toString().contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (animal.getAge() != null && String.valueOf(animal.getAge()).contains(lowerSearch)) {
+                        return true;
+                    }
+                    return false;
+            }
+        });
     }
 
     private void refreshTypeAndLocationCombos() {
@@ -118,7 +218,14 @@ public class AnimalController implements Initializable {
             int earTag = Integer.parseInt(earTagField.getText().trim());
             String type = typeCombo.getSelectionModel().getSelectedItem();
             Animal.Gender gender = Animal.Gender.valueOf(genderCombo.getSelectionModel().getSelectedItem());
-            Double weight = weightField.getText().trim().isEmpty() ? null : Double.parseDouble(weightField.getText().trim());
+            Double weight = null;
+            if (!weightField.getText().trim().isEmpty()) {
+                weight = Double.parseDouble(weightField.getText().trim());
+                if (weight < 0) {
+                    showError("Weight cannot be negative. Please enter a value >= 0.");
+                    return;
+                }
+            }
             LocalDate birthDate = birthDatePicker.getValue();
             LocalDate entryDate = entryDatePicker.getValue();
             Animal.Origin origin = Animal.Origin.valueOf(originCombo.getSelectionModel().getSelectedItem());
@@ -156,7 +263,14 @@ public class AnimalController implements Initializable {
             int earTag = Integer.parseInt(earTagField.getText().trim());
             String type = typeCombo.getSelectionModel().getSelectedItem();
             Animal.Gender gender = Animal.Gender.valueOf(genderCombo.getSelectionModel().getSelectedItem());
-            Double weight = weightField.getText().trim().isEmpty() ? null : Double.parseDouble(weightField.getText().trim());
+            Double weight = null;
+            if (!weightField.getText().trim().isEmpty()) {
+                weight = Double.parseDouble(weightField.getText().trim());
+                if (weight < 0) {
+                    showError("Weight cannot be negative. Please enter a value >= 0.");
+                    return;
+                }
+            }
             LocalDate birthDate = birthDatePicker.getValue();
             LocalDate entryDate = entryDatePicker.getValue();
             Animal.Origin origin = Animal.Origin.valueOf(originCombo.getSelectionModel().getSelectedItem());
