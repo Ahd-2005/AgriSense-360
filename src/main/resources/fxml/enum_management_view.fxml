@@ -13,7 +13,7 @@
     <Label text="Manage animal types and locations (ENUM values in DB). Changes apply to the Animal table only." styleClass="mgmt-form-title" wrapText="true"/>
 
     <HBox spacing="32" HBox.hgrow="ALWAYS">
-        <!-- Animal Types -->
+
         <VBox styleClass="mgmt-form-card" spacing="12" HBox.hgrow="ALWAYS" maxWidth="400">
             <Label text="Animal types" styleClass="mgmt-form-title"/>
             <ListView fx:id="typesList" styleClass="mgmt-table" prefHeight="180" VBox.vgrow="NEVER"/>
@@ -24,7 +24,7 @@
             <Button text="Delete selected type" onAction="#onDeleteType" styleClass="mgmt-btn-ghost" fx:id="deleteTypeBtn" disable="true"/>
         </VBox>
 
-        <!-- Locations -->
+
         <VBox styleClass="mgmt-form-card" spacing="12" HBox.hgrow="ALWAYS" maxWidth="400">
             <Label text="Locations" styleClass="mgmt-form-title"/>
             <ListView fx:id="locationsList" styleClass="mgmt-table" prefHeight="180" VBox.vgrow="NEVER"/>
