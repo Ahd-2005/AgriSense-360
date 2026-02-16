@@ -1,7 +1,7 @@
 package services;
 
 import entity.EvaluationPerformance;
-import utils.MyConnection;
+import utils.MyDataBase;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ public class EvaluationPerformanceService {
             INSERT INTO evaluation_performance (id_affectation, note, qualite, commentaire, date_evaluation)
             VALUES (?, ?, ?, ?, ?)
             """;
-        Connection cnx = MyConnection.getInstance().getCnx();
+        Connection cnx = MyDataBase.getInstance().getCnx();
         if (cnx == null) throw new SQLException("No connection");
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setInt(1, e.getIdAffectation());
@@ -33,7 +33,7 @@ public class EvaluationPerformanceService {
             SET id_affectation = ?, note = ?, qualite = ?, commentaire = ?, date_evaluation = ?
             WHERE id_evaluation = ?
             """;
-        Connection cnx = MyConnection.getInstance().getCnx();
+        Connection cnx = MyDataBase.getInstance().getCnx();
         if (cnx == null) throw new SQLException("No connection");
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setInt(1, e.getIdAffectation());
@@ -48,7 +48,7 @@ public class EvaluationPerformanceService {
 
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM evaluation_performance WHERE id_evaluation = ?";
-        Connection cnx = MyConnection.getInstance().getCnx();
+        Connection cnx = MyDataBase.getInstance().getCnx();
         if (cnx == null) throw new SQLException("No connection");
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -59,7 +59,7 @@ public class EvaluationPerformanceService {
     public List<EvaluationPerformance> getAll() throws SQLException {
         String sql = "SELECT id_evaluation, id_affectation, note, qualite, commentaire, date_evaluation FROM evaluation_performance";
         List<EvaluationPerformance> list = new ArrayList<>();
-        Connection cnx = MyConnection.getInstance().getCnx();
+        Connection cnx = MyDataBase.getInstance().getCnx();
         if (cnx == null) throw new SQLException("No connection");
         try (PreparedStatement ps = cnx.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -72,7 +72,7 @@ public class EvaluationPerformanceService {
 
     public EvaluationPerformance getById(int id) throws SQLException {
         String sql = "SELECT id_evaluation, id_affectation, note, qualite, commentaire, date_evaluation FROM evaluation_performance WHERE id_evaluation = ?";
-        Connection cnx = MyConnection.getInstance().getCnx();
+        Connection cnx = MyDataBase.getInstance().getCnx();
         if (cnx == null) throw new SQLException("No connection");
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -88,7 +88,7 @@ public class EvaluationPerformanceService {
     public List<EvaluationPerformance> getByAffectation(int idAffectation) throws SQLException {
         String sql = "SELECT id_evaluation, id_affectation, note, qualite, commentaire, date_evaluation FROM evaluation_performance WHERE id_affectation = ?";
         List<EvaluationPerformance> list = new ArrayList<>();
-        Connection cnx = MyConnection.getInstance().getCnx();
+        Connection cnx = MyDataBase.getInstance().getCnx();
         if (cnx == null) throw new SQLException("No connection");
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setInt(1, idAffectation);
@@ -103,7 +103,7 @@ public class EvaluationPerformanceService {
 
     public double averageNoteByAffectation(int idAffectation) throws SQLException {
         String sql = "SELECT AVG(note) FROM evaluation_performance WHERE id_affectation = ?";
-        Connection cnx = MyConnection.getInstance().getCnx();
+        Connection cnx = MyDataBase.getInstance().getCnx();
         if (cnx == null) throw new SQLException("No connection");
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
             ps.setInt(1, idAffectation);
