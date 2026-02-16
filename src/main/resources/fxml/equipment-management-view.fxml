@@ -6,7 +6,7 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
-            fx:controller="com.example.agrisense360.controllers.EquipmentManagementController">
+            fx:controller="controllers.EquipmentManagementController">
     <content>
         <VBox spacing="20" styleClass="tab-content-area">
             <fx:include source="equipment-view.fxml"/>

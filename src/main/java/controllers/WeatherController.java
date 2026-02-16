@@ -1,4 +1,4 @@
-package com.example.agrisense360.controllers;
+package controllers;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

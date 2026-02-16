@@ -1,4 +1,4 @@
-package com.example.agrisense360.entity;
+package entity;
 
 import java.time.LocalDate;
 

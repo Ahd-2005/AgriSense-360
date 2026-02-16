@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.agrisense360.controllers.AnimalController"
+<SplitPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.AnimalController"
            dividerPositions="0.45" styleClass="tab-content-area">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>

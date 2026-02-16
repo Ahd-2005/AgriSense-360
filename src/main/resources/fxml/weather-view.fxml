@@ -16,7 +16,7 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
-            fx:controller="com.example.agrisense360.controllers.WeatherController">
+            fx:controller="controllers.WeatherController">
     <content>
         <VBox spacing="20" styleClass="weather-page">
             <padding>
