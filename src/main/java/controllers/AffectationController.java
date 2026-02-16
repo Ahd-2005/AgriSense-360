@@ -208,6 +208,9 @@ public class AffectationController implements Initializable {
         } else {
             showError("Navigation", "Main layout non disponible.");
         }
+
+
+
     }
 
 }
