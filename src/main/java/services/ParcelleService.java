@@ -11,15 +11,16 @@ public class ParcelleService {
 
     private final Connection cnx = MyDataBase.getInstance().getCnx();
 
-    // CREATE
+    // CREATE - Initialize surface_restant = surface
     public void addParcelle(Parcelle p) throws SQLException {
-        String sql = "INSERT INTO parcelle (nom, surface, localisation, type_sol, statut) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO parcelle (nom, surface, surface_restant, localisation, type_sol, statut) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, p.getNom());
         ps.setDouble(2, p.getSurface());
-        ps.setString(3, p.getLocalisation());
-        ps.setString(4, p.getTypeSol());
-        ps.setString(5, p.getStatut());
+        ps.setDouble(3, p.getSurface()); // surface_restant = surface initially
+        ps.setString(4, p.getLocalisation());
+        ps.setString(5, p.getTypeSol());
+        ps.setString(6, "Libre");
         ps.executeUpdate();
     }
 
@@ -55,6 +56,9 @@ public class ParcelleService {
         ps.setString(5, p.getStatut());
         ps.setInt(6, p.getId());
         ps.executeUpdate();
+
+        // Recalculate surface_restant after update
+        recalculateSurfaceRestant(p.getId());
     }
 
     // DELETE
@@ -65,30 +69,51 @@ public class ParcelleService {
         ps.executeUpdate();
     }
 
-    // Get remaining surface for a parcelle
+    // Get remaining surface from database
     public double getRemainingParcelleSize(int parcelleId) throws SQLException {
-        // Get total parcelle surface
-        String parcelleSql = "SELECT surface FROM parcelle WHERE id = ?";
-        PreparedStatement parcellePs = cnx.prepareStatement(parcelleSql);
-        parcellePs.setInt(1, parcelleId);
-        ResultSet parcelleRs = parcellePs.executeQuery();
+        String sql = "SELECT surface_restant FROM parcelle WHERE id = ?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, parcelleId);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return rs.getDouble("surface_restant");
+        }
+        return 0;
+    }
+
+    // Recalculate and update surface_restant
+    public void recalculateSurfaceRestant(int parcelleId) throws SQLException {
+        // Get total surface
+        String getTotalSql = "SELECT surface FROM parcelle WHERE id = ?";
+        PreparedStatement getTotal = cnx.prepareStatement(getTotalSql);
+        getTotal.setInt(1, parcelleId);
+        ResultSet totalRs = getTotal.executeQuery();
 
         double totalSurface = 0;
-        if (parcelleRs.next()) {
-            totalSurface = parcelleRs.getDouble("surface");
+        if (totalRs.next()) {
+            totalSurface = totalRs.getDouble("surface");
         }
 
         // Get used surface
-        String usedSql = "SELECT SUM(surface) as used_surface FROM culture WHERE parcelle_id = ?";
-        PreparedStatement usedPs = cnx.prepareStatement(usedSql);
-        usedPs.setInt(1, parcelleId);
-        ResultSet usedRs = usedPs.executeQuery();
+        String getUsedSql = "SELECT COALESCE(SUM(surface), 0) as used FROM culture WHERE parcelle_id = ?";
+        PreparedStatement getUsed = cnx.prepareStatement(getUsedSql);
+        getUsed.setInt(1, parcelleId);
+        ResultSet usedRs = getUsed.executeQuery();
 
         double usedSurface = 0;
         if (usedRs.next()) {
-            usedSurface = usedRs.getDouble("used_surface");
+            usedSurface = usedRs.getDouble("used");
         }
 
-        return totalSurface - usedSurface;
+        // Calculate restant
+        double restant = totalSurface - usedSurface;
+
+        // Update surface_restant in database
+        String updateSql = "UPDATE parcelle SET surface_restant = ? WHERE id = ?";
+        PreparedStatement updatePs = cnx.prepareStatement(updateSql);
+        updatePs.setDouble(1, restant);
+        updatePs.setInt(2, parcelleId);
+        updatePs.executeUpdate();
     }
 }

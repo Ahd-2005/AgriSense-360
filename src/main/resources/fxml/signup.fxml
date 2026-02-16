@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.signup"
+            style="-fx-background-color: #e8f5e9;">
+
+    <center>
+        <VBox alignment="CENTER" spacing="25" style="-fx-padding: 50;">
+
+            <Label text="🌱 AgriSense 360"
+                   style="-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;" />
+
+            <Label text="Créer votre compte"
+                   style="-fx-font-size: 18px; -fx-text-fill: #546e7a;" />
+
+            <VBox spacing="15" style="-fx-max-width: 450; -fx-alignment: center;">
+
+                <!-- NAME FIELD -->
+                <VBox spacing="5">
+                    <TextField fx:id="nameField"
+                               promptText="Nom complet"
+                               style="-fx-pref-height: 45; -fx-font-size: 16px;
+                                      -fx-background-radius: 10; -fx-border-radius: 10;" />
+                    <Label fx:id="nameError"
+                           style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"
+                           visible="false" />
+                </VBox>
+
+                <!-- EMAIL FIELD -->
+                <VBox spacing="5">
+                    <TextField fx:id="emailField"
+                               promptText="Email"
+                               style="-fx-pref-height: 45; -fx-font-size: 16px;
+                                      -fx-background-radius: 10; -fx-border-radius: 10;" />
+                    <Label fx:id="emailError"
+                           style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"
+                           visible="false" />
+                </VBox>
+
+                <!-- PASSWORD FIELD -->
+                <VBox spacing="5">
+                    <PasswordField fx:id="passwordField"
+                                   promptText="Mot de passe"
+                                   style="-fx-pref-height: 45; -fx-font-size: 16px;
+                                          -fx-background-radius: 10; -fx-border-radius: 10;" />
+                    <Label fx:id="passwordError"
+                           style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"
+                           visible="false" />
+                </VBox>
+
+                <!-- CONFIRM PASSWORD FIELD -->
+                <VBox spacing="5">
+                    <PasswordField fx:id="confirmPasswordField"
+                                   promptText="Confirmer le mot de passe"
+                                   style="-fx-pref-height: 45; -fx-font-size: 16px;
+                                          -fx-background-radius: 10; -fx-border-radius: 10;" />
+                    <Label fx:id="confirmPasswordError"
+                           style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"
+                           visible="false" />
+                </VBox>
+
+                <!-- PHONE FIELD -->
+                <VBox spacing="5">
+                    <TextField fx:id="phoneField"
+                               promptText="Numéro de téléphone (8 chiffres)"
+                               style="-fx-pref-height: 45; -fx-font-size: 16px;
+                                      -fx-background-radius: 10; -fx-border-radius: 10;" />
+                    <Label fx:id="phoneError"
+                           style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"
+                           visible="false" />
+                </VBox>
+
+                <!-- ROLE CHOICE -->
+                <VBox spacing="5">
+                    <Label text="Sélectionner le rôle:"
+                           style="-fx-font-size: 14px; -fx-text-fill: #546e7a; -fx-font-weight: bold;" />
+                    <ChoiceBox fx:id="roleChoice"
+                               style="-fx-pref-width: 450; -fx-pref-height: 45;
+                                      -fx-background-radius: 10; -fx-border-radius: 10;
+                                      -fx-font-size: 16px;" />
+                    <Label fx:id="roleError"
+                           style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"
+                           visible="false" />
+                </VBox>
+
+                <!-- SUBMIT BUTTON -->
+                <Button text="Créer le compte"
+                        onAction="#handleSignup"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;
+                               -fx-padding: 15 50; -fx-font-size: 16px; -fx-font-weight: bold;
+                               -fx-background-radius: 25; -fx-cursor: hand; -fx-pref-width: 450;" />
+
+                <!-- BACK BUTTON -->
+                <Button text="← Retour à la connexion"
+                        onAction="#goBack"
+                        style="-fx-background-color: transparent; -fx-text-fill: #4CAF50;
+                               -fx-padding: 10 50; -fx-font-size: 14px; -fx-font-weight: bold;
+                               -fx-border-color: #4CAF50; -fx-border-width: 2;
+                               -fx-background-radius: 25; -fx-border-radius: 25;
+                               -fx-cursor: hand; -fx-pref-width: 450;" />
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>

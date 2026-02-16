@@ -2,6 +2,8 @@ package controllers;
 
 import entity.Culture;
 import entity.Parcelle;
+import entity.user;
+import entity.user.Role;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -17,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import services.CultureService;
 import services.ParcelleService;
+import services.SessionManager;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -34,12 +37,21 @@ public class CultureController {
 
     @FXML private GridPane cultureGrid;
     @FXML private TextField searchField;
+    @FXML private Button addCultureBtn;
 
     private List<Culture> allCultures = new ArrayList<>();
     private List<Culture> filteredCultures = new ArrayList<>();
+    private user currentUser;
 
     @FXML
     public void initialize() {
+        // Get current user from session
+        SessionManager sessionManager = SessionManager.getInstance();
+        if (sessionManager.isLoggedIn()) {
+            this.currentUser = sessionManager.getCurrentUser();
+            configurePermissions();
+        }
+
         initializeCultureMap();
         initializeImageMap();
 
@@ -52,6 +64,17 @@ public class CultureController {
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filterCultures(newValue);
             });
+        }
+    }
+
+    private void configurePermissions() {
+        if (currentUser != null) {
+            Role userRole = currentUser.getRole();
+
+            // Workers (Ouvriers) have read-only access
+            if (userRole == Role.ROLE_OUVRIER && addCultureBtn != null) {
+                addCultureBtn.setDisable(true);
+            }
         }
     }
 
@@ -88,6 +111,13 @@ public class CultureController {
     private void loadCultureCards() {
         try {
             allCultures = service.getAllCultures();
+
+            // Filter by user if not admin
+            if (currentUser != null && currentUser.getRole() != Role.ROLE_ADMIN) {
+                // If you have user_id field in Culture entity, filter here
+                // For now, showing all cultures
+            }
+
             filteredCultures = new ArrayList<>(allCultures);
             displayCultures(filteredCultures);
         } catch (SQLException e) {
@@ -195,6 +225,12 @@ public class CultureController {
         deleteBtn.getStyleClass().addAll("card-button", "delete-button");
         deleteBtn.setOnAction(e -> handleDelete(culture));
 
+        // Disable edit/delete for workers
+        if (currentUser != null && currentUser.getRole() == Role.ROLE_OUVRIER) {
+            editBtn.setDisable(true);
+            deleteBtn.setDisable(true);
+        }
+
         buttonBox.getChildren().addAll(editBtn, deleteBtn);
         card.getChildren().addAll(imageView, typeLabel, nameLabel, etatLabel, buttonBox);
 
@@ -293,6 +329,15 @@ public class CultureController {
 
     @FXML
     private void showAddPopup() {
+        // Check permissions
+        if (currentUser != null && currentUser.getRole() == Role.ROLE_OUVRIER) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Permission Denied");
+            alert.setContentText("You don't have permission to add cultures.");
+            alert.showAndWait();
+            return;
+        }
+
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.initStyle(StageStyle.TRANSPARENT);
@@ -408,6 +453,15 @@ public class CultureController {
     }
 
     private void showUpdatePopup(Culture culture) {
+        // Check permissions
+        if (currentUser != null && currentUser.getRole() == Role.ROLE_OUVRIER) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Permission Denied");
+            alert.setContentText("You don't have permission to update cultures.");
+            alert.showAndWait();
+            return;
+        }
+
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.initStyle(StageStyle.TRANSPARENT);
@@ -763,6 +817,15 @@ public class CultureController {
     }
 
     private void handleDelete(Culture culture) {
+        // Check permissions
+        if (currentUser != null && currentUser.getRole() == Role.ROLE_OUVRIER) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Permission Denied");
+            alert.setContentText("You don't have permission to delete cultures.");
+            alert.showAndWait();
+            return;
+        }
+
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmAlert.setTitle("Confirmation de suppression");
         confirmAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cette culture ?");

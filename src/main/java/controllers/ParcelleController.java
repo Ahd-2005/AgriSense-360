@@ -120,7 +120,7 @@ public class ParcelleController {
         infoGrid.add(surfaceLabel, 0, 0);
         infoGrid.add(surfaceValue, 1, 0);
 
-        double remaining = 0;
+        double remaining = 0 ;
         try {
             remaining = service.getRemainingParcelleSize(parcelle.getId());
         } catch (SQLException e) {
