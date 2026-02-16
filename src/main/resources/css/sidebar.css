@@ -66,7 +66,18 @@
 .nav-link.active {
     -fx-background-color: #5a9814;
 }
+/* Logout button specific styling */
+.logout-btn {
+    -fx-background-color: rgba(244, 67, 54, 0.1);
+}
 
+.logout-btn:hover {
+    -fx-background-color: rgba(244, 67, 54, 0.2);
+}
+
+.logout-btn .nav-label {
+    -fx-text-fill: #f44336;
+}
 .nav-link.active .nav-label {
     -fx-text-fill: white;
     -fx-font-weight: bold;

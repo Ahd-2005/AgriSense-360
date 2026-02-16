@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.AdminDashboard"
+            fitToWidth="true"
+            style="-fx-background-color: transparent; -fx-background: transparent;">
+
+    <VBox spacing="25" style="-fx-padding: 40; -fx-background-color: #fbf7ef;">
+
+        <!-- TOP HEADER -->
+        <VBox spacing="8">
+            <Label text="Admin Dashboard"
+                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
+            <Label text="Manage all system users"
+                   style="-fx-font-size: 16px; -fx-text-fill: rgba(23, 35, 24, 0.72);" />
+        </VBox>
+
+        <!-- ACTIONS BAR -->
+        <HBox spacing="15" alignment="CENTER_LEFT"
+              style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(90, 152, 20, 0.15), rgba(90, 152, 20, 0.08));
+                     -fx-background-radius: 16px; -fx-padding: 20 25;">
+            <Label text="All Users"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="➕ Add User" onAction="#handleAddUser"
+                    style="-fx-background-color: #5a9814; -fx-text-fill: white;
+                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-font-weight: bold;
+                           -fx-background-radius: 25px; -fx-cursor: hand;
+                           -fx-effect: dropshadow(gaussian, rgba(90, 152, 20, 0.3), 10, 0, 0, 4);" />
+            <Button text="🔄 Refresh" onAction="#handleRefresh"
+                    style="-fx-background-color: transparent; -fx-text-fill: #22301b;
+                           -fx-border-color: rgba(43, 59, 31, 0.3); -fx-border-width: 2;
+                           -fx-border-radius: 25px; -fx-background-radius: 25px;
+                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-cursor: hand;" />
+        </HBox>
+
+        <!-- USERS CARD GRID -->
+        <VBox fx:id="userCardsContainer" spacing="15" style="-fx-padding: 5;">
+            <!-- User cards will be added here dynamically -->
+        </VBox>
+
+    </VBox>
+
+</ScrollPane>

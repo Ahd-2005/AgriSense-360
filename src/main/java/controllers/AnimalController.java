@@ -1,0 +1,289 @@
+package controllers;
+
+import entity.Animal;
+import entity.user;
+import entity.user.Role;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import services.ServiceAnimal;
+import services.ServiceEnumManagement;
+import services.SessionManager;
+import utils.AnimalListRefresh;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
+public class AnimalController implements Initializable {
+
+    @FXML private TextField earTagField;
+    @FXML private ComboBox<String> typeCombo;
+    @FXML private ComboBox<String> genderCombo;
+    @FXML private TextField weightField;
+    @FXML private DatePicker birthDatePicker;
+    @FXML private DatePicker entryDatePicker;
+    @FXML private ComboBox<String> originCombo;
+    @FXML private CheckBox vaccinatedCheck;
+    @FXML private TableView<Animal> animalTable;
+    @FXML private TableColumn<Animal, Integer> colId;
+    @FXML private TableColumn<Animal, Integer> colEarTag;
+    @FXML private TableColumn<Animal, String> colType;
+    @FXML private TableColumn<Animal, String> colGender;
+    @FXML private TableColumn<Animal, Double> colWeight;
+    @FXML private TableColumn<Animal, String> colHealthStatus;
+    @FXML private TableColumn<Animal, LocalDate> colBirthDate;
+    @FXML private TableColumn<Animal, Integer> colAge;
+    @FXML private TableColumn<Animal, String> colOrigin;
+    @FXML private TableColumn<Animal, String> colLocation;
+    @FXML private ComboBox<String> locationCombo;
+    @FXML private Button deleteAnimalBtn;
+    @FXML private Button updateAnimalBtn;
+    @FXML private Button addAnimalBtn;
+
+    private final ServiceAnimal serviceAnimal = new ServiceAnimal();
+    private final ServiceEnumManagement serviceEnum = new ServiceEnumManagement();
+    private final ObservableList<Animal> animalList = FXCollections.observableArrayList();
+
+    private user currentUser;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Get current user from session
+        SessionManager sessionManager = SessionManager.getInstance();
+        if (sessionManager.isLoggedIn()) {
+            this.currentUser = sessionManager.getCurrentUser();
+            configurePermissions();
+        }
+
+        genderCombo.setItems(FXCollections.observableArrayList("MALE", "FEMALE"));
+        originCombo.setItems(FXCollections.observableArrayList("BORN_IN_FARM", "OUTSIDE"));
+        refreshTypeAndLocationCombos();
+
+        colId.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getId()).asObject());
+        colEarTag.setCellValueFactory(c -> c.getValue().getEarTag() != null ? new SimpleIntegerProperty(c.getValue().getEarTag()).asObject() : new SimpleObjectProperty<>());
+        colType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType() != null ? c.getValue().getType() : ""));
+        colGender.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getGender() != null ? c.getValue().getGender().name() : ""));
+        colWeight.setCellValueFactory(c -> c.getValue().getWeight() != null ? new SimpleDoubleProperty(c.getValue().getWeight()).asObject() : new SimpleObjectProperty<>());
+        colHealthStatus.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getHealthStatus() != null ? c.getValue().getHealthStatus() : ""));
+        colBirthDate.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getBirthDate()));
+        colAge.setCellValueFactory(c -> c.getValue().getAge() != null ? new SimpleIntegerProperty(c.getValue().getAge()).asObject() : new SimpleObjectProperty<>());
+        colOrigin.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOrigin() != null ? c.getValue().getOrigin().name() : ""));
+        colLocation.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLocation() != null ? c.getValue().getLocation() : ""));
+
+        animalTable.setItems(animalList);
+        animalTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            boolean hasSelection = newVal != null;
+            deleteAnimalBtn.setDisable(!hasSelection);
+            updateAnimalBtn.setDisable(!hasSelection);
+            if (hasSelection) populateForm(newVal);
+        });
+        AnimalListRefresh.addListener(this::refreshTypeAndLocationCombos);
+        refreshTable();
+    }
+
+    private void configurePermissions() {
+        if (currentUser != null) {
+            Role userRole = currentUser.getRole();
+
+            // Workers (Ouvriers) have read-only access
+            if (userRole == Role.ROLE_OUVRIER) {
+                if (addAnimalBtn != null) addAnimalBtn.setDisable(true);
+                if (deleteAnimalBtn != null) deleteAnimalBtn.setDisable(true);
+                if (updateAnimalBtn != null) updateAnimalBtn.setDisable(true);
+
+                // Make form fields non-editable for workers
+                earTagField.setEditable(false);
+                typeCombo.setDisable(true);
+                genderCombo.setDisable(true);
+                weightField.setEditable(false);
+                birthDatePicker.setDisable(true);
+                entryDatePicker.setDisable(true);
+                originCombo.setDisable(true);
+                vaccinatedCheck.setDisable(true);
+                locationCombo.setDisable(true);
+            }
+        }
+    }
+
+    private void refreshTypeAndLocationCombos() {
+        try {
+            List<String> types = serviceEnum.getEnumValues("Animal", "type");
+            typeCombo.setItems(FXCollections.observableArrayList(types));
+            List<String> locations = serviceEnum.getEnumValues("Animal", "location");
+            locationCombo.setItems(FXCollections.observableArrayList(locations));
+        } catch (SQLException e) {
+            showError("Could not load types/locations: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onRefreshAnimals() {
+        refreshTable();
+    }
+
+    @FXML
+    private void onDeleteAnimal() {
+        Animal selected = animalTable.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        // Check permissions
+        if (currentUser != null && currentUser.getRole() == Role.ROLE_OUVRIER) {
+            showError("You don't have permission to delete animals.");
+            return;
+        }
+
+        try {
+            serviceAnimal.delete(selected.getId());
+            refreshTable();
+            clearForm();
+            deleteAnimalBtn.setDisable(true);
+            updateAnimalBtn.setDisable(true);
+            AnimalListRefresh.notifyAnimalChanged();
+            showInfo("Animal deleted.");
+        } catch (SQLException e) {
+            showError("Database error: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onUpdateAnimal() {
+        Animal selected = animalTable.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        // Check permissions
+        if (currentUser != null && currentUser.getRole() == Role.ROLE_OUVRIER) {
+            showError("You don't have permission to update animals.");
+            return;
+        }
+
+        try {
+            int earTag = Integer.parseInt(earTagField.getText().trim());
+            String type = typeCombo.getSelectionModel().getSelectedItem();
+            Animal.Gender gender = Animal.Gender.valueOf(genderCombo.getSelectionModel().getSelectedItem());
+            Double weight = weightField.getText().trim().isEmpty() ? null : Double.parseDouble(weightField.getText().trim());
+            LocalDate birthDate = birthDatePicker.getValue();
+            LocalDate entryDate = entryDatePicker.getValue();
+            Animal.Origin origin = Animal.Origin.valueOf(originCombo.getSelectionModel().getSelectedItem());
+            boolean vaccinated = vaccinatedCheck.isSelected();
+            String location = locationCombo.getSelectionModel().getSelectedItem();
+
+            selected.setEarTag(earTag);
+            selected.setType(type);
+            selected.setGender(gender);
+            selected.setWeight(weight);
+            selected.setBirthDate(birthDate);
+            selected.setEntryDate(entryDate);
+            selected.setOrigin(origin);
+            selected.setVaccinated(vaccinated);
+            selected.setLocation(location);
+            serviceAnimal.update(selected);
+            refreshTable();
+            clearForm();
+            updateAnimalBtn.setDisable(true);
+            AnimalListRefresh.notifyAnimalChanged();
+            deleteAnimalBtn.setDisable(true);
+            showInfo("Animal updated successfully.");
+        } catch (NumberFormatException e) {
+            showError("Invalid number for Ear Tag or Weight.");
+        } catch (SQLException e) {
+            showError("Database error: " + e.getMessage());
+        } catch (Exception e) {
+            showError("Please fill all required fields: Ear Tag, Type, Gender, Origin.");
+        }
+    }
+
+    @FXML
+    private void onAddAnimal() {
+        // Check permissions
+        if (currentUser != null && currentUser.getRole() == Role.ROLE_OUVRIER) {
+            showError("You don't have permission to add animals.");
+            return;
+        }
+
+        try {
+            int earTag = Integer.parseInt(earTagField.getText().trim());
+            String type = typeCombo.getSelectionModel().getSelectedItem();
+            Animal.Gender gender = Animal.Gender.valueOf(genderCombo.getSelectionModel().getSelectedItem());
+            Double weight = weightField.getText().trim().isEmpty() ? null : Double.parseDouble(weightField.getText().trim());
+            LocalDate birthDate = birthDatePicker.getValue();
+            LocalDate entryDate = entryDatePicker.getValue();
+            Animal.Origin origin = Animal.Origin.valueOf(originCombo.getSelectionModel().getSelectedItem());
+            boolean vaccinated = vaccinatedCheck.isSelected();
+            String location = locationCombo.getSelectionModel().getSelectedItem();
+
+            Animal a = new Animal(earTag, type, gender, weight, null, birthDate, entryDate, origin, vaccinated, location);
+            serviceAnimal.add(a);
+            refreshTable();
+            clearForm();
+            AnimalListRefresh.notifyAnimalChanged();
+            showInfo("Animal added successfully.");
+        } catch (NumberFormatException e) {
+            showError("Invalid number for Ear Tag or Weight.");
+        } catch (SQLException e) {
+            showError("Database error: " + e.getMessage());
+        } catch (Exception e) {
+            showError("Please fill all required fields: Ear Tag, Type, Gender, Origin.");
+        }
+    }
+
+    private void refreshTable() {
+        animalList.clear();
+        try {
+            List<Animal> allAnimals = serviceAnimal.getAll();
+
+            // Filter by user if not admin
+            if (currentUser != null && currentUser.getRole() != Role.ROLE_ADMIN) {
+                // If you have user_id field in Animal entity, filter here
+                // For now, showing all animals
+                animalList.addAll(allAnimals);
+            } else {
+                // Admin sees all
+                animalList.addAll(allAnimals);
+            }
+        } catch (SQLException e) {
+            showError("Could not load animals: " + e.getMessage());
+        }
+    }
+
+    private void populateForm(Animal a) {
+        earTagField.setText(a.getEarTag() != null ? String.valueOf(a.getEarTag()) : "");
+        typeCombo.getSelectionModel().select(a.getType());
+        genderCombo.getSelectionModel().select(a.getGender() != null ? a.getGender().name() : null);
+        weightField.setText(a.getWeight() != null ? String.valueOf(a.getWeight()) : "");
+        birthDatePicker.setValue(a.getBirthDate());
+        entryDatePicker.setValue(a.getEntryDate());
+        originCombo.getSelectionModel().select(a.getOrigin() != null ? a.getOrigin().name() : null);
+        vaccinatedCheck.setSelected(a.getVaccinated() != null && a.getVaccinated());
+        locationCombo.getSelectionModel().select(a.getLocation());
+    }
+
+    private void clearForm() {
+        earTagField.clear();
+        typeCombo.getSelectionModel().clearSelection();
+        genderCombo.getSelectionModel().clearSelection();
+        weightField.clear();
+        birthDatePicker.setValue(null);
+        entryDatePicker.setValue(null);
+        originCombo.getSelectionModel().clearSelection();
+        vaccinatedCheck.setSelected(false);
+        locationCombo.getSelectionModel().clearSelection();
+    }
+
+    private void showInfo(String msg) {
+        new Alert(Alert.AlertType.INFORMATION, msg).showAndWait();
+    }
+
+    private void showError(String msg) {
+        new Alert(Alert.AlertType.ERROR, msg).showAndWait();
+    }
+}
