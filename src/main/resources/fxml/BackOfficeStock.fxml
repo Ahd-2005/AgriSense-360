@@ -1,46 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.ScrollPane?>
+<ScrollPane pannable="true" fitToWidth="true" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.controllers.BackOfficeStockController">
 
-<ScrollPane pannable="true" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.controllers.BackOfficeStockController" VBox.vgrow="ALWAYS" prefWidth="1530" prefHeight="800">
-    <VBox alignment="TOP_CENTER" spacing="40.0">
+    <VBox spacing="40.0" alignment="TOP_CENTER">
         <padding>
-            <Insets bottom="600.0" left="60.0" right="60.0" top="40.0" />
+            <Insets top="40.0" right="60.0" bottom="600.0" left="60.0"/>
         </padding>
 
-        <Label style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="🏢 Backoffice Unifié - Gestion Produits et Stocks" />
+        <!-- Titre principal -->
+        <Label text="🏢 Backoffice - Gestion Produits et Stocks"
+               style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #22301b;"/>
 
-        <!-- Section des statistiques -->
-        <HBox alignment="CENTER" spacing="40.0" style="-fx-background-color: #f0f0f0; -fx-padding: 20px; -fx-border-radius: 10px;">
-            <VBox alignment="CENTER" spacing="10.0">
-                <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="Produits" />
-                <Label fx:id="statProduits" style="-fx-font-size: 32px; -fx-text-fill: #4caf50;" text="0" />
-            </VBox>
-            <VBox alignment="CENTER" spacing="10.0">
-                <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="Stocks" />
-                <Label fx:id="statStocks" style="-fx-font-size: 32px; -fx-text-fill: #2196f3;" text="0" />
-            </VBox>
-            <VBox alignment="CENTER" spacing="10.0">
-                <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="En alerte" />
-                <Label fx:id="statAlertes" style="-fx-font-size: 32px; -fx-text-fill: #f44336;" text="0" />
-            </VBox>
+        <!-- Barre de recherche + bouton rafraîchir -->
+        <HBox alignment="CENTER_LEFT" spacing="20.0">
+            <TextField fx:id="txtRecherche" promptText="Rechercher un produit..." prefWidth="400.0" styleClass="input-field"/>
+            <Button text="🔄 Rafraîchir" onAction="#rafraichir" styleClass="primary"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="➕ Ajouter Produit" onAction="#goToAddProduct" styleClass="primary" prefWidth="200.0"/>
+            <Button text="➕ Ajouter Stock" onAction="#goToAddStock" styleClass="primary" prefWidth="200.0"/>
         </HBox>
+
+        <!-- Statistiques (cartes) -->
+        <GridPane hgap="30" vgap="30" alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+
+            <!-- Carte 1 : Total Produits -->
+            <VBox alignment="CENTER" spacing="10.0" styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label text="📦 Total Produits" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Label fx:id="statTotalProduits" text="0" style="-fx-font-size: 42px; -fx-text-fill: #4caf50;"/>
+            </VBox>
+
+            <!-- Carte 2 : Stocks disponibles -->
+            <VBox alignment="CENTER" spacing="10.0" styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label text="📊 Stocks Disponibles" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Label fx:id="statStocksDisponibles" text="0" style="-fx-font-size: 42px; -fx-text-fill: #2196f3;"/>
+            </VBox>
+
+            <!-- Carte 3 : En alerte critique -->
+            <VBox alignment="CENTER" spacing="10.0" styleClass="stat-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                <Label text="🚨 Alertes Critique" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Label fx:id="statAlertesCritique" text="0" style="-fx-font-size: 42px; -fx-text-fill: #f44336;"/>
+            </VBox>
+
+            <!-- Carte 4 : Valeur totale estimée -->
+            <VBox alignment="CENTER" spacing="10.0" styleClass="stat-card" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                <Label text="💰 Valeur Totale" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Label fx:id="statValeurTotale" text="0 DT" style="-fx-font-size: 42px; -fx-text-fill: #9c27b0;"/>
+            </VBox>
+        </GridPane>
+
+        <!-- Graphique : Répartition par catégorie -->
+        <VBox spacing="20.0">
+            <Label text="📈 Répartition par catégorie" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <BarChart fx:id="chartCategories" prefHeight="300.0" prefWidth="800.0" title="Nombre de produits par catégorie">
+                <xAxis>
+                    <CategoryAxis label="Catégorie"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Nombre"/>
+                </yAxis>
+            </BarChart>
+        </VBox>
 
         <!-- Section Produits -->
         <VBox spacing="20.0" styleClass="card">
-            <HBox alignment="CENTER_LEFT" spacing="20.0">
-                <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="📦 Produits" />
-                <Button onAction="#addProduct" styleClass="primary" text="➕ Ajouter Produit" />
-            </HBox>
+            <Label text="📦 Produits" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
             <GridPane fx:id="gridProduits" hgap="20.0" vgap="20.0">
                 <columnConstraints>
                     <ColumnConstraints />
@@ -52,10 +91,7 @@
 
         <!-- Section Stocks -->
         <VBox spacing="20.0" styleClass="card">
-            <HBox alignment="CENTER_LEFT" spacing="20.0">
-                <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="📊 Stocks" />
-                <Button onAction="#addStock" styleClass="primary" text="➕ Ajouter Stock" />
-            </HBox>
+            <Label text="📊 Stocks" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
             <GridPane fx:id="gridStocks" hgap="20.0" vgap="20.0">
                 <columnConstraints>
                     <ColumnConstraints />
@@ -65,17 +101,32 @@
             </GridPane>
         </VBox>
 
-        <!-- Section des alertes récentes -->
-        <VBox alignment="TOP_LEFT" spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-padding: 20px; -fx-border-radius: 10px;" VBox.vgrow="ALWAYS">
-            <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="🚨 Alertes Récentes" />
-            <Label fx:id="alertesText" style="-fx-font-size: 16px; -fx-text-fill: #6b7b5a;" text="Aucune alerte pour le moment." />
+        <!-- Tableau des alertes récentes (produits en rupture ou bas stock) -->
+        <VBox spacing="20.0">
+            <Label text="🚨 Produits en alerte (stock bas)" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <TableView fx:id="tableAlertes" prefHeight="300.0">
+                <columns>
+                    <TableColumn text="Produit" prefWidth="250.0">
+                        <cellValueFactory><PropertyValueFactory property="nomProduit"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Stock actuel" prefWidth="120.0">
+                        <cellValueFactory><PropertyValueFactory property="quantiteActuelle"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Seuil" prefWidth="100.0">
+                        <cellValueFactory><PropertyValueFactory property="seuilAlerte"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Unité" prefWidth="100.0">
+                        <cellValueFactory><PropertyValueFactory property="unite"/></cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
         </VBox>
 
-        <!-- ESPACE VIDE EN BAS -->
-        <Region prefHeight="800.0" VBox.vgrow="NEVER" />
+        <!-- Espace vide en bas pour scroll fluide -->
+        <Region prefHeight="400.0"/>
 
         <stylesheets>
-            <URL value="file:///C:/Users/Super%20User/Documents/Esprit/3A/PI/Agritech/src/main/resources/css/home.css" />
+            <URL value="file:///C:/Users/Super%20User/Documents/Esprit/3A/PI/Agritech/src/main/resources/css/Stockhome.css" />
         </stylesheets>
     </VBox>
 </ScrollPane>

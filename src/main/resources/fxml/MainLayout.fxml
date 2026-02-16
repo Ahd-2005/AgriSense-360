@@ -91,6 +91,16 @@
                         </graphic>
                     </Button>
 
+                        <!-- Ajoutez ce bouton sub pour le backoffice -->
+                            <Button styleClass="nav-link" onAction="#navigateToBackOfficeStock">
+                                <graphic>
+                                    <HBox spacing="12" alignment="CENTER_LEFT">
+                                        <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="🏢" />
+                                        <Label text="Backoffice Stock" styleClass="nav-label" />
+                                    </HBox>
+                                </graphic>
+                            </Button>
+
                     <!-- Culture Management -->
                     <Button fx:id="cultureBtn" styleClass="nav-link" onAction="#navigateToCulture">
                         <graphic>
