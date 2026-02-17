@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/utils/AnimalListRefresh.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/AnimalListRefresh.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +153,7 @@
       <workItem from="1771265899574" duration="1861000" />
       <workItem from="1771267813932" duration="158000" />
       <workItem from="1771312142671" duration="456000" />
-      <workItem from="1771312995084" duration="3381000" />
+      <workItem from="1771312995084" duration="3588000" />
     </task>
     <task id="LOCAL-00001" summary="gestion culture +gestion animals+template">
       <option name="closed" value="true" />
