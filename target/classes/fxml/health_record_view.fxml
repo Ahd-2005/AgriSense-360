@@ -52,16 +52,8 @@
             <TextField fx:id="searchField" promptText="Search..." styleClass="mgmt-input" prefWidth="200"/>
             <Button text="Refresh" onAction="#onRefreshRecords" styleClass="mgmt-btn-ghost"/>
         </HBox>
-        <TableView fx:id="recordTable" styleClass="mgmt-table" VBox.vgrow="ALWAYS" minHeight="200">
-            <columns>
-                <TableColumn fx:id="colRecordId" text="ID" prefWidth="50"/>
-                <TableColumn fx:id="colRecordDate" text="Date" prefWidth="110"/>
-                <TableColumn fx:id="colWeight" text="Weight" prefWidth="80"/>
-                <TableColumn fx:id="colAppetite" text="Appetite" prefWidth="90"/>
-                <TableColumn fx:id="colCondition" text="Condition" prefWidth="90"/>
-                <TableColumn fx:id="colProduction" text="Production" prefWidth="90"/>
-                <TableColumn fx:id="colNotes" text="Notes" prefWidth="180"/>
-            </columns>
-        </TableView>
+        <ScrollPane fitToWidth="true" styleClass="mgmt-scroll" VBox.vgrow="ALWAYS" minHeight="200">
+            <GridPane fx:id="recordGrid" styleClass="mgmt-grid" hgap="16" vgap="16"/>
+        </ScrollPane>
     </VBox>
 </VBox>

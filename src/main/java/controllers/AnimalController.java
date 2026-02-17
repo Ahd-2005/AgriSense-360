@@ -1,17 +1,15 @@
 package controllers;
 
 import entity.Animal;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import services.ServiceAnimal;
 import services.ServiceEnumManagement;
 import utils.AnimalListRefresh;
@@ -32,17 +30,7 @@ public class AnimalController implements Initializable {
     @FXML private DatePicker entryDatePicker;
     @FXML private ComboBox<String> originCombo;
     @FXML private CheckBox vaccinatedCheck;
-    @FXML private TableView<Animal> animalTable;
-    @FXML private TableColumn<Animal, Integer> colId;
-    @FXML private TableColumn<Animal, Integer> colEarTag;
-    @FXML private TableColumn<Animal, String> colType;
-    @FXML private TableColumn<Animal, String> colGender;
-    @FXML private TableColumn<Animal, Double> colWeight;
-    @FXML private TableColumn<Animal, String> colHealthStatus;
-    @FXML private TableColumn<Animal, LocalDate> colBirthDate;
-    @FXML private TableColumn<Animal, Integer> colAge;
-    @FXML private TableColumn<Animal, String> colOrigin;
-    @FXML private TableColumn<Animal, String> colLocation;
+    @FXML private GridPane animalGrid;
     @FXML private ComboBox<String> locationCombo;
     @FXML private Button deleteAnimalBtn;
     @FXML private Button updateAnimalBtn;
@@ -53,7 +41,7 @@ public class AnimalController implements Initializable {
     private final ServiceEnumManagement serviceEnum = new ServiceEnumManagement();
     private final ObservableList<Animal> animalList = FXCollections.observableArrayList();
     private FilteredList<Animal> filteredAnimals;
-    private SortedList<Animal> sortedAnimals;
+    private Animal selectedAnimal;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -61,23 +49,7 @@ public class AnimalController implements Initializable {
         originCombo.setItems(FXCollections.observableArrayList("BORN_IN_FARM", "OUTSIDE"));
         refreshTypeAndLocationCombos();
 
-        colId.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getId()).asObject());
-        colEarTag.setCellValueFactory(c -> c.getValue().getEarTag() != null ? new SimpleIntegerProperty(c.getValue().getEarTag()).asObject() : new SimpleObjectProperty<>());
-        colType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType() != null ? c.getValue().getType() : ""));
-        colGender.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getGender() != null ? c.getValue().getGender().name() : ""));
-        colWeight.setCellValueFactory(c -> c.getValue().getWeight() != null ? new SimpleDoubleProperty(c.getValue().getWeight()).asObject() : new SimpleObjectProperty<>());
-        colHealthStatus.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getHealthStatus() != null ? c.getValue().getHealthStatus() : ""));
-        colBirthDate.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getBirthDate()));
-        colAge.setCellValueFactory(c -> c.getValue().getAge() != null ? new SimpleIntegerProperty(c.getValue().getAge()).asObject() : new SimpleObjectProperty<>());
-        colOrigin.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getOrigin() != null ? c.getValue().getOrigin().name() : ""));
-        colLocation.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLocation() != null ? c.getValue().getLocation() : ""));
-
-
         filteredAnimals = new FilteredList<>(animalList, p -> true);
-        sortedAnimals = new SortedList<>(filteredAnimals);
-        sortedAnimals.comparatorProperty().bind(animalTable.comparatorProperty());
-        animalTable.setItems(sortedAnimals);
-
 
         if (searchFieldCombo != null) {
             searchFieldCombo.setItems(FXCollections.observableArrayList(
@@ -91,6 +63,7 @@ public class AnimalController implements Initializable {
         if (searchField != null) {
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filterAnimals(newValue);
+                refreshGrid();
             });
         }
         if (searchFieldCombo != null) {
@@ -99,17 +72,65 @@ public class AnimalController implements Initializable {
             });
         }
 
-
-        animalTable.getColumns().forEach(col -> col.setSortable(true));
-
-        animalTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            boolean hasSelection = newVal != null;
-            deleteAnimalBtn.setDisable(!hasSelection);
-            updateAnimalBtn.setDisable(!hasSelection);
-            if (hasSelection) populateForm(newVal);
-        });
         AnimalListRefresh.addListener(this::refreshTypeAndLocationCombos);
         refreshTable();
+    }
+
+    private static final int ANIMAL_GRID_COLUMNS = 3;
+
+    private void refreshGrid() {
+        if (animalGrid == null) return;
+        animalGrid.getChildren().clear();
+        int col = 0, row = 0;
+        for (Animal a : filteredAnimals) {
+            VBox card = createAnimalCard(a);
+            animalGrid.add(card, col, row);
+            col++;
+            if (col >= ANIMAL_GRID_COLUMNS) {
+                col = 0;
+                row++;
+            }
+        }
+    }
+
+    private VBox createAnimalCard(Animal a) {
+        VBox card = new VBox(8);
+        card.getStyleClass().add("mgmt-grid-card");
+        if (selectedAnimal != null && selectedAnimal.getId() != null && selectedAnimal.getId().equals(a.getId())) {
+            card.getStyleClass().add("mgmt-grid-card-selected");
+        }
+        card.setPadding(new Insets(14));
+        card.setPrefWidth(240);
+        card.setMinWidth(200);
+
+        card.getChildren().addAll(
+            line("ID", a.getId() != null ? a.getId().toString() : "-"),
+            line("Ear Tag", a.getEarTag() != null ? a.getEarTag().toString() : "-"),
+            line("Type", a.getType() != null ? a.getType() : "-"),
+            line("Gender", a.getGender() != null ? a.getGender().name() : "-"),
+            line("Weight", a.getWeight() != null ? a.getWeight() + " kg" : "-"),
+            line("Health", a.getHealthStatus() != null ? a.getHealthStatus() : "-"),
+            line("Birth", a.getBirthDate() != null ? a.getBirthDate().toString() : "-"),
+            line("Age", a.getAge() != null ? a.getAge() + " yr" : "-"),
+            line("Origin", a.getOrigin() != null ? a.getOrigin().name() : "-"),
+            line("Location", a.getLocation() != null ? a.getLocation() : "-")
+        );
+
+        card.setOnMouseClicked(e -> {
+            selectedAnimal = a;
+            refreshGrid();
+            deleteAnimalBtn.setDisable(false);
+            updateAnimalBtn.setDisable(false);
+            populateForm(a);
+        });
+        return card;
+    }
+
+    private static Label line(String key, String value) {
+        Label l = new Label(key + ": " + value);
+        l.getStyleClass().add("mgmt-grid-card-line");
+        l.setWrapText(true);
+        return l;
     }
 
     private void filterAnimals(String searchText) {
@@ -175,6 +196,7 @@ public class AnimalController implements Initializable {
                     return false;
             }
         });
+        refreshGrid();
     }
 
     private void refreshTypeAndLocationCombos() {
@@ -195,10 +217,11 @@ public class AnimalController implements Initializable {
 
     @FXML
     private void onDeleteAnimal() {
-        Animal selected = animalTable.getSelectionModel().getSelectedItem();
+        Animal selected = selectedAnimal;
         if (selected == null) return;
         try {
             serviceAnimal.delete(selected.getId());
+            selectedAnimal = null;
             refreshTable();
             clearForm();
             deleteAnimalBtn.setDisable(true);
@@ -212,7 +235,7 @@ public class AnimalController implements Initializable {
 
     @FXML
     private void onUpdateAnimal() {
-        Animal selected = animalTable.getSelectionModel().getSelectedItem();
+        Animal selected = selectedAnimal;
         if (selected == null) return;
         try {
             int earTag = Integer.parseInt(earTagField.getText().trim());
@@ -242,6 +265,7 @@ public class AnimalController implements Initializable {
             selected.setVaccinated(vaccinated);
             selected.setLocation(location);
             serviceAnimal.update(selected);
+            selectedAnimal = null;
             refreshTable();
             clearForm();
             updateAnimalBtn.setDisable(true);
@@ -296,6 +320,7 @@ public class AnimalController implements Initializable {
         animalList.clear();
         try {
             animalList.addAll(serviceAnimal.getAll());
+            refreshGrid();
         } catch (SQLException e) {
             showError("Could not load animals: " + e.getMessage());
         }
