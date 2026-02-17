@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" stylesheets="@../css/Stockhome.css" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AjoutProduitController">
+
+    <VBox alignment="TOP_CENTER" spacing="35.0" styleClass="content">
+        <padding>
+            <Insets bottom="100.0" left="80.0" right="80.0" top="50.0" />
+        </padding>
+
+        <VBox alignment="CENTER" spacing="10.0">
+            <Label styleClass="page-title" text="🌱 Ajouter Produit et Stock" />
+            <Label style="-fx-font-size: 15px; -fx-text-fill: #6b7b6e;" text="Créez un nouveau produit et configurez son stock initial" />
+        </VBox>
+
+        <Region prefHeight="10.0" />
+
+        <VBox spacing="25.0" styleClass="form-card">
+            <Label styleClass="card-title" text="📦 Informations Produit" />
+
+            <VBox spacing="18.0">
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" styleClass="label-bold" text="Catégorie *" />
+                    <ComboBox fx:id="comboCategorie" maxWidth="Infinity" prefWidth="550.0" promptText="Sélectionner une catégorie..." styleClass="input-field" HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" styleClass="label-bold" text="Nom du produit *" />
+                    <TextField fx:id="txtNom" maxWidth="Infinity" prefWidth="550.0" promptText="Ex : Engrais NPK 15-15-15" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <HBox alignment="TOP_LEFT" spacing="20.0">
+                    <Label prefWidth="180" styleClass="label-bold" text="Description" />
+                    <TextArea fx:id="txtDescription" maxWidth="Infinity" prefHeight="120.0" prefWidth="550.0" promptText="Décrivez le produit en détail..." styleClass="input-field" wrapText="true" HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" styleClass="label-bold" text="Prix unitaire (DT) *" />
+                    <TextField fx:id="txtPrix" maxWidth="Infinity" prefWidth="550.0" promptText="Ex : 125.50" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <!-- Section Photo avec meilleur design -->
+                <VBox spacing="12.0">
+                    <HBox alignment="CENTER_LEFT" spacing="20.0">
+                        <Label prefWidth="180" styleClass="label-bold" text="Photo du produit" />
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                            <Button fx:id="btnChoisirPhoto" onAction="#choisirPhoto" prefHeight="40" prefWidth="180" styleClass="primary" text="📷 Choisir une photo" />
+                            <Label fx:id="lblPhotoStatus" style="-fx-text-fill: #6b7b6e; -fx-font-style: italic;" text="Aucune photo sélectionnée" />
+                        </HBox>
+                    </HBox>
+
+                    <!-- Conteneur pour l'aperçu de l'image -->
+                    <HBox fx:id="imagePreviewContainer" alignment="CENTER" prefHeight="220.0" styleClass="image-preview-container" visible="false">
+                        <ImageView fx:id="imgPreview" fitHeight="200.0" fitWidth="280.0" preserveRatio="true" visible="false" />
+                    </HBox>
+                </VBox>
+            </VBox>
+        </VBox>
+
+        <!-- Carte Informations Stock -->
+        <VBox spacing="25.0" styleClass="form-card">
+            <Label styleClass="card-title" text="📊 Informations Stock" />
+
+            <VBox spacing="18.0">
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" styleClass="label-bold" text="Quantité actuelle" />
+                    <TextField fx:id="txtQuantite" maxWidth="Infinity" prefWidth="550.0" promptText="Ex : 150.0" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" styleClass="label-bold" text="Seuil d'alerte" />
+                    <TextField fx:id="txtSeuil" maxWidth="Infinity" prefWidth="550.0" promptText="Ex : 20.0" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" styleClass="label-bold" text="Unité de mesure" />
+                    <ComboBox fx:id="comboUnite" maxWidth="Infinity" prefWidth="550.0" promptText="Sélectionner l'unité..." styleClass="input-field" HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" styleClass="label-bold" text="Date de réception" />
+                    <DatePicker fx:id="dateReception" maxWidth="Infinity" prefWidth="550.0" promptText="JJ/MM/AAAA" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" styleClass="label-bold" text="Date d'expiration" />
+                    <DatePicker fx:id="dateExpiration" maxWidth="Infinity" prefWidth="550.0" promptText="JJ/MM/AAAA" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" styleClass="label-bold" text="Emplacement" />
+                    <TextField fx:id="txtEmplacement" maxWidth="Infinity" prefWidth="550.0" promptText="Ex : Entrepôt A - Rayon 3 - Étagère 2" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                </HBox>
+            </VBox>
+        </VBox>
+
+        <!-- Boutons d'action -->
+        <VBox alignment="CENTER" spacing="20.0" styleClass="form-card">
+            <HBox alignment="CENTER" spacing="20.0">
+                <Button fx:id="btnAnnuler" onAction="#annuler" prefHeight="45.0" prefWidth="180.0" styleClass="ghost" text="Annuler" />
+                <Button fx:id="btnEnregistrer" onAction="#enregistrer" prefHeight="45.0" prefWidth="220.0" styleClass="primary" text="✓ Enregistrer Produit" />
+            </HBox>
+
+            <Label style="-fx-font-size: 12px; -fx-text-fill: #6b7b6e; -fx-font-style: italic;" text="* Champs obligatoires" />
+        </VBox>
+
+        <Region prefHeight="50.0" />
+    </VBox>
+</ScrollPane>
