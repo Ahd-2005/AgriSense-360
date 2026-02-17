@@ -13,10 +13,7 @@ public final class AnimalListRefresh {
             listeners.add(listener);
         }
     }
-
-    public static void removeListener(Runnable listener) {
-        listeners.remove(listener);
-    }
+    
 
     public static void notifyAnimalChanged() {
         for (Runnable r : listeners) {

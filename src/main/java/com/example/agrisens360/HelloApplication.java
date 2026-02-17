@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        // Load the main layout with sidebar
+
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainLayout.fxml"));
 
         Scene scene = new Scene(root, 1400, 800);
@@ -21,7 +21,7 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-        // Connect to database on startup
+
         utils.MyDataBase.getInstance();
         launch();
     }
