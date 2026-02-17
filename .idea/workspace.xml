@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="gestion culture &quot;crud+recherche+tri&quot;+gestion ouvrier +gestion aniamles">
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="update">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CultureController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CultureController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,82 +20,73 @@
   <component name="ComposerSettings">
     <execution />
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="main" />
-      </map>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="FxmlFile" />
+        <option value="Class" />
+      </list>
     </option>
+  </component>
+  <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;ahmed-habouba&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Ahd-2005/AgriSense-360.git&quot;,
-    &quot;accountId&quot;: &quot;d12e9602-95d0-4a74-a022-1b9524b17cac&quot;
-  }
-}</component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="$PROJECT_DIR$/../../../../../xampp/php/php.exe" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="39hY3WnNB8aBAJH3nKEko32WjpC" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;gestion__culture&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/fxml&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.JavaFX&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.HelloApplication.executor": "Run",
+    "Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "gestion__user",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/ahdbe/OneDrive/Documents/AgriSense-360gestion_culture/AgriSense-360-gestion_culture/src/main/java/services",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.JavaFX",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\fxml" />
-      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\java\services" />
-      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\java\entity" />
-      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\java\controllers" />
-      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\db" />
+      <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\services" />
+      <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\entity" />
+      <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\controllers" />
+      <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\resources\fxml" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="services" />
     </key>
   </component>
   <component name="RunManager">
     <configuration name="HelloApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.example.agrisens360.HelloApplication" />
-      <module name="agrisens360" />
+      <module name="AgriSense-360" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.example.agrisens360.*" />
@@ -107,10 +99,6 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.HelloApplication" />
-        <item itemvalue="Application.HelloApplication" />
-        <item itemvalue="Application.HelloApplication" />
-        <item itemvalue="Application.HelloApplication" />
         <item itemvalue="Application.HelloApplication" />
       </list>
     </recent_temporary>
@@ -135,69 +123,11 @@
       <workItem from="1771151368298" duration="49000" />
       <workItem from="1771172457982" duration="31000" />
       <workItem from="1771173290062" duration="617000" />
-      <workItem from="1771252916818" duration="8262000" />
-      <workItem from="1771278961484" duration="318000" />
-      <workItem from="1771279318103" duration="48000" />
-      <workItem from="1771279429452" duration="507000" />
-      <workItem from="1771279954134" duration="4460000" />
+      <workItem from="1771190624622" duration="33329000" />
+      <workItem from="1771281176412" duration="36000" />
+      <workItem from="1771281251304" duration="111000" />
+      <workItem from="1771285589457" duration="1813000" />
     </task>
-    <task id="LOCAL-00001" summary="gestion culture +gestion animals+template">
-      <option name="closed" value="true" />
-      <created>1771186335892</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1771186335892</updated>
-    </task>
-    <task id="LOCAL-00002" summary="gestion culture +gestion animals+template">
-      <option name="closed" value="true" />
-      <created>1771199824501</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1771199824501</updated>
-    </task>
-    <task id="LOCAL-00003" summary="css gestion ouvrier">
-      <option name="closed" value="true" />
-      <created>1771200069903</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1771200069903</updated>
-    </task>
-    <task id="LOCAL-00004" summary="update gestion ouvrier">
-      <option name="closed" value="true" />
-      <created>1771253224409</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1771253224409</updated>
-    </task>
-    <task id="LOCAL-00005" summary="gestion culture &quot;crud+recherche+tri&quot;+gestion ouvrier +gestion aniamles">
-      <option name="closed" value="true" />
-      <created>1771275200486</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1771275200486</updated>
-    </task>
-    <task id="LOCAL-00006" summary="gestion culture &quot;crud+recherche+tri&quot;+gestion ouvrier +gestion aniamles">
-      <option name="closed" value="true" />
-      <created>1771279008599</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1771279008599</updated>
-    </task>
-    <task id="LOCAL-00007" summary="gestion culture &quot;crud+recherche+tri&quot;+gestion ouvrier +gestion aniamles">
-      <option name="closed" value="true" />
-      <created>1771282328727</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1771282328727</updated>
-    </task>
-    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,7 +144,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/gestion_user" />
+                        <option value="origin/gestion_culture" />
                       </list>
                     </value>
                   </entry>
@@ -225,13 +155,6 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="gestion culture +gestion animals+template" />
-    <MESSAGE value="css gestion ouvrier" />
-    <MESSAGE value="update gestion ouvrier" />
-    <MESSAGE value="gestion culture &quot;crud+recherche+tri&quot;+gestion ouvrier +gestion aniamles" />
-    <option name="LAST_COMMIT_MESSAGE" value="gestion culture &quot;crud+recherche+tri&quot;+gestion ouvrier +gestion aniamles" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
