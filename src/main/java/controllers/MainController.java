@@ -66,25 +66,6 @@ public class MainController {
         }
     }
 
-    @FXML
-    private void navigateStock() {
-        showHome();
-    }
-
-    @FXML
-    private void navigateCulture() {
-        showHome();
-    }
-
-    @FXML
-    private void navigateUsers() {
-        showHome();
-    }
-
-    @FXML
-    private void navigateWorkers() {
-        showHome();
-    }
 
     public void showWeather() {
         try {
