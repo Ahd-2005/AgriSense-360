@@ -58,19 +58,8 @@
             <TextField fx:id="searchField" promptText="Search..." styleClass="mgmt-input" prefWidth="200"/>
             <Button text="Refresh" onAction="#onRefreshAnimals" styleClass="mgmt-btn-ghost"/>
         </HBox>
-        <TableView fx:id="animalTable" styleClass="mgmt-table" VBox.vgrow="ALWAYS" minHeight="200">
-            <columns>
-                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
-                <TableColumn fx:id="colEarTag" text="Ear Tag" prefWidth="80"/>
-                <TableColumn fx:id="colType" text="Type" prefWidth="90"/>
-                <TableColumn fx:id="colGender" text="Gender" prefWidth="80"/>
-                <TableColumn fx:id="colWeight" text="Weight" prefWidth="80"/>
-                <TableColumn fx:id="colHealthStatus" text="Health" prefWidth="90"/>
-                <TableColumn fx:id="colBirthDate" text="Birth Date" prefWidth="110"/>
-                <TableColumn fx:id="colAge" text="Age (yr)" prefWidth="70"/>
-                <TableColumn fx:id="colOrigin" text="Origin" prefWidth="110"/>
-                <TableColumn fx:id="colLocation" text="Location" prefWidth="120"/>
-            </columns>
-        </TableView>
+        <ScrollPane fitToWidth="true" styleClass="mgmt-scroll" VBox.vgrow="ALWAYS" minHeight="200">
+            <GridPane fx:id="animalGrid" styleClass="mgmt-grid" hgap="16" vgap="16"/>
+        </ScrollPane>
     </VBox>
 </VBox>
