@@ -3,8 +3,10 @@ package com.example.agrisens360.services;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.example.agrisens360.entity.Produit;
-import com.example.agrisens360.entity.Stock;
+import entity.Produit;
+import entity.Stock;
+import services.ServiceStockProduit;
+import services.ServiceStockStock;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -12,13 +14,13 @@ import java.util.List;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ServiceStockTest {
-    static ServiceStock serviceStock;  // Instance de la vraie classe ServiceStock
-    static ServiceProduit serviceProduit;  // Pour créer un produit lié
+    static ServiceStockStock serviceStock;  // Instance de la vraie classe ServiceStock
+    static ServiceStockProduit serviceProduit;  // Pour créer un produit lié
 
     @BeforeAll
     static void setup() {
-        serviceStock = new ServiceStock();  // Instancier la vraie classe
-        serviceProduit = new ServiceProduit();
+        serviceStock = new ServiceStockStock();  // Instancier la vraie classe
+        serviceProduit = new ServiceStockProduit();
     }
 
     static int idProduitTest;  // Produit lié au stock

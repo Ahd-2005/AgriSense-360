@@ -1,10 +1,11 @@
-package com.example.agrisens360.controllers;
+package controllers;
 
-import com.example.agrisens360.entity.Stock;
+import controllers.MainLayoutController;
+import entity.Stock;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import com.example.agrisens360.services.ServiceProduit;
-import com.example.agrisens360.services.ServiceStock;
+import services.ServiceStockProduit;
+import services.ServiceStockStock;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -16,8 +17,8 @@ public class FrontHomeController {
     @FXML private Label statAlertes;
     @FXML private Label alertesText;
 
-    private ServiceProduit serviceProduit = new ServiceProduit();
-    private ServiceStock serviceStock = new ServiceStock();
+    private ServiceStockProduit serviceProduit = new ServiceStockProduit();
+    private ServiceStockStock serviceStock = new ServiceStockStock();
 
     @FXML
     public void initialize() {
@@ -73,8 +74,8 @@ public class FrontHomeController {
 
     @FXML
     private void goToProductList() {
-        if (MainLayoutController.getInstance() != null) {
-            MainLayoutController.getInstance().navigateToProductList();
+        if (controllers.MainLayoutController.getInstance() != null) {
+            controllers.MainLayoutController.getInstance().navigateToProductList();
         } else {
             showAlert("Erreur", "Impossible de naviguer vers la liste des produits.");
         }
@@ -82,7 +83,7 @@ public class FrontHomeController {
 
     @FXML
     private void goToStockList() {
-        if (MainLayoutController.getInstance() != null) {
+        if (controllers.MainLayoutController.getInstance() != null) {
             MainLayoutController.getInstance().navigateToStockList();
         } else {
             showAlert("Erreur", "Impossible de naviguer vers la liste des stocks.");

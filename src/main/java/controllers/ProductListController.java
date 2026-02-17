@@ -1,6 +1,8 @@
-package com.example.agrisens360.controllers;
+package controllers;
 
+import controllers.MainLayoutController;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -8,8 +10,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import com.example.agrisens360.entity.Produit;
-import com.example.agrisens360.services.ServiceProduit;
+import entity.Produit;
+import services.ServiceStockProduit;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -22,7 +24,7 @@ public class ProductListController {
     @FXML
     private Button sidebarToggle;
 
-    private ServiceProduit produitService = new ServiceProduit();
+    private ServiceStockProduit produitService = new ServiceStockProduit();
 
     @FXML
     public void initialize() {
@@ -58,72 +60,64 @@ public class ProductListController {
     }
 
     private VBox createProductCard(Produit produit) {
-        VBox card = new VBox();
-        card.getStyleClass().add("card");
-        card.setSpacing(8.0);
-        card.setPrefWidth(350);
-        card.setPrefHeight(300);
-        card.setMaxWidth(350);
-        card.setMaxHeight(300);
-        card.setStyle("-fx-padding: 15px; -fx-background-color: white; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);");
+        VBox card = new VBox(20);
+        card.getStyleClass().add("product-card");
+        card.setAlignment(Pos.TOP_CENTER);
+        card.setPrefWidth(450);
+        card.setMinWidth(400);
 
         ImageView imageView = new ImageView();
-        imageView.setFitHeight(120.0);
-        imageView.setFitWidth(320.0);
+        imageView.setFitWidth(400);
         imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
 
         String photoUrl = produit.getPhotoUrl();
-        System.out.println("URL de l'image pour " + produit.getNom() + " : '" + photoUrl + "'");  // LOG POUR DÉBOGUER
+        System.out.println("URL de l'image pour " + produit.getNom() + " : '" + photoUrl + "'");
 
         if (photoUrl != null && !photoUrl.trim().isEmpty()) {
             try {
-                String finalUrl = photoUrl.startsWith("@") ? getClass().getResource(photoUrl.substring(1)).toExternalForm() : photoUrl;
-                Image image = new Image(finalUrl, 320, 120, true, true);
+                Image image = new Image(photoUrl.startsWith("file:") || photoUrl.startsWith("http") ? photoUrl : getClass().getResource(photoUrl).toExternalForm(), true);
                 imageView.setImage(image);
                 System.out.println("Image chargée avec succès pour " + produit.getNom());
             } catch (Exception e) {
-                System.out.println("Erreur de chargement d'image pour " + produit.getNom() + " (URL: " + photoUrl + ") : " + e.getMessage());
+                System.out.println("Erreur chargement image : " + e.getMessage());
                 loadDefaultImage(imageView);
             }
         } else {
-            System.out.println("URL de l'image null ou vide pour " + produit.getNom() + ", chargement image par défaut");
             loadDefaultImage(imageView);
         }
 
+        // Infos
         Label titleLabel = new Label(produit.getNom());
         titleLabel.getStyleClass().add("card-title");
-        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #22301b;");
 
-        Label categorieLabel = new Label("Catégorie: " + (produit.getCategorie() != null ? produit.getCategorie() : "N/A"));
-        categorieLabel.setStyle("-fx-font-size: 14px;");
+        Label categorieLabel = new Label("Catégorie : " + (produit.getCategorie() != null ? produit.getCategorie() : "N/A"));
+        categorieLabel.getStyleClass().add("product-info");
 
-        Label prixLabel = new Label("Prix: " + (produit.getPrixUnitaire() != null ? produit.getPrixUnitaire() + " DT" : "N/A"));
-        prixLabel.setStyle("-fx-font-size: 14px;");
+        Label prixLabel = new Label("Prix : " + (produit.getPrixUnitaire() != null ? produit.getPrixUnitaire() + " DT" : "N/A"));
+        prixLabel.getStyleClass().add("product-info");
 
-        Label descriptionLabel = new Label("Description: " + (produit.getDescription() != null && produit.getDescription().length() > 50 ?
-                produit.getDescription().substring(0, 47) + "..." : produit.getDescription()));
-        descriptionLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
+        Label descriptionLabel = new Label("Description : " + (produit.getDescription() != null ? produit.getDescription() : "Aucune"));
+        descriptionLabel.setWrapText(true);  // ← Texte long passe à la ligne
+        descriptionLabel.setMaxWidth(380);
+        descriptionLabel.getStyleClass().add("product-description");
 
-        Button editButton = new Button("✏️ Modifier");
-        editButton.getStyleClass().add("primary");
-        editButton.setPrefWidth(150.0);
-        editButton.setPrefHeight(40.0);
-        editButton.setOnAction(e -> modifierProduit(produit));
+        // Boutons
+        Button editBtn = new Button("✏️ Modifier");
+        editBtn.getStyleClass().add("primary");
+        editBtn.setOnAction(e -> modifierProduit(produit));
 
-        Button deleteButton = new Button("🗑️ Supprimer");
-        deleteButton.getStyleClass().add("ghost");
-        deleteButton.setPrefWidth(150.0);
-        deleteButton.setPrefHeight(40.0);
-        deleteButton.setOnAction(e -> supprimerProduit(produit));
+        Button deleteBtn = new Button("🗑️ Supprimer");
+        deleteBtn.getStyleClass().add("ghost");
+        deleteBtn.setOnAction(e -> supprimerProduit(produit));
 
-        HBox buttonsBox = new HBox(10.0, editButton, deleteButton);
-        buttonsBox.setAlignment(javafx.geometry.Pos.CENTER);
+        HBox buttons = new HBox(20, editBtn, deleteBtn);
+        buttons.setAlignment(Pos.CENTER);
 
-        card.getChildren().addAll(imageView, titleLabel, categorieLabel, prixLabel, descriptionLabel, buttonsBox);
+        card.getChildren().addAll(imageView, titleLabel, categorieLabel, prixLabel, descriptionLabel, buttons);
 
         return card;
     }
-
     private void loadDefaultImage(ImageView imageView) {
         try {
             String defaultUrl = getClass().getResource("/images/default_product.png").toExternalForm();
@@ -138,9 +132,9 @@ public class ProductListController {
 
 
     private void modifierProduit(Produit produit) {
-        if (MainLayoutController.getInstance() != null) {
-            MainLayoutController.setProduitToEdit(produit);  // Passer le produit
-            MainLayoutController.getInstance().navigateToEditProduct();
+        if (controllers.MainLayoutController.getInstance() != null) {
+            controllers.MainLayoutController.setProduitToEdit(produit);  // Passer le produit
+            controllers.MainLayoutController.getInstance().navigateToEditProduct();
         } else {
             showAlert("Erreur", "Impossible de naviguer vers la modification.");
         }
@@ -181,21 +175,21 @@ public class ProductListController {
 
     @FXML
     private void goToHome() {
-        if (MainLayoutController.getInstance() != null) {
-            MainLayoutController.getInstance().navigateToHome();
+        if (controllers.MainLayoutController.getInstance() != null) {
+            controllers.MainLayoutController.getInstance().navigateToHome();
         }
     }
 
     @FXML
     private void goToStockList() {
-        if (MainLayoutController.getInstance() != null) {
-            MainLayoutController.getInstance().navigateToStockList();
+        if (controllers.MainLayoutController.getInstance() != null) {
+            controllers.MainLayoutController.getInstance().navigateToStockList();
         }
     }
 
     @FXML
     private void ajouterProduit() {
-        if (MainLayoutController.getInstance() != null) {
+        if (controllers.MainLayoutController.getInstance() != null) {
             MainLayoutController.getInstance().navigateToAddProduct();
         }
     }

@@ -1,13 +1,14 @@
-package com.example.agrisens360.controllers;
+package controllers;
 
+import controllers.MainLayoutController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import com.example.agrisens360.entity.Produit;
-import com.example.agrisens360.entity.Stock;
-import com.example.agrisens360.services.ServiceProduit;
-import com.example.agrisens360.services.ServiceStock;
+import entity.Produit;
+import entity.Stock;
+import services.ServiceStockProduit;
+import services.ServiceStockStock;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -24,8 +25,8 @@ public class AddStockController {
     @FXML private TextField txtEmplacement;
     @FXML private Button btnEnregistrer;
 
-    private ServiceProduit serviceProduit = new ServiceProduit();
-    private ServiceStock serviceStock = new ServiceStock();
+    private ServiceStockProduit serviceProduit = new ServiceStockProduit();
+    private ServiceStockStock serviceStock = new ServiceStockStock();
     private ObservableList<Produit> produitsList = FXCollections.observableArrayList();
 
     @FXML
@@ -112,7 +113,7 @@ public class AddStockController {
 
     @FXML
     private void annuler() {
-        if (MainLayoutController.getInstance() != null) {
+        if (controllers.MainLayoutController.getInstance() != null) {
             MainLayoutController.getInstance().navigateToStockList();
         } else {
             showAlert("Erreur", "Impossible de revenir à la liste.");

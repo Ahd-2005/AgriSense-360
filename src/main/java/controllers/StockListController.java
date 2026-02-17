@@ -1,12 +1,13 @@
-package com.example.agrisens360.controllers;
+package controllers;
 
+import controllers.MainLayoutController;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import com.example.agrisens360.entity.Stock;
-import com.example.agrisens360.services.ServiceStock;
+import entity.Stock;
+import services.ServiceStockStock;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -16,7 +17,7 @@ public class StockListController {
     @FXML private FlowPane flowStocks;
     @FXML private Button btnAjouterStock;
 
-    private ServiceStock serviceStock = new ServiceStock();
+    private ServiceStockStock serviceStock = new ServiceStockStock();
 
     @FXML
     public void initialize() {
@@ -51,12 +52,10 @@ public class StockListController {
     // Méthode pour créer une carte stock
     private VBox createStockCard(Stock stock) {
         VBox card = new VBox();
-        card.getStyleClass().add("card");
+        card.getStyleClass().add("stock-card");
         card.setSpacing(8.0);
         card.setPrefWidth(400);
-        card.setPrefHeight(250);
-        card.setMaxWidth(400);
-        card.setMaxHeight(250);
+        card.setMinWidth(400);
         card.setStyle("-fx-padding: 15px; -fx-background-color: white; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);");
 
         // Informations du stock
@@ -115,9 +114,9 @@ public class StockListController {
         }
     }*/
     private void modifierStock(Stock stock) {
-        if (MainLayoutController.getInstance() != null) {
-            MainLayoutController.setStockToEdit(stock);  // Passer le stock
-            MainLayoutController.getInstance().navigateToEditStock();
+        if (controllers.MainLayoutController.getInstance() != null) {
+            controllers.MainLayoutController.setStockToEdit(stock);  // Passer le stock
+            controllers.MainLayoutController.getInstance().navigateToEditStock();
         } else {
             showAlert("Erreur", "Impossible de naviguer vers la modification.");
         }
@@ -153,21 +152,21 @@ public class StockListController {
 
     @FXML
     private void goToHome() {
-        if (MainLayoutController.getInstance() != null) {
-            MainLayoutController.getInstance().navigateToHome();
+        if (controllers.MainLayoutController.getInstance() != null) {
+            controllers.MainLayoutController.getInstance().navigateToHome();
         }
     }
 
     @FXML
     private void goToProductList() {
-        if (MainLayoutController.getInstance() != null) {
-            MainLayoutController.getInstance().navigateToProductList();
+        if (controllers.MainLayoutController.getInstance() != null) {
+            controllers.MainLayoutController.getInstance().navigateToProductList();
         }
     }
 
     @FXML
     private void ajouterStock() {
-        if (MainLayoutController.getInstance() != null) {
+        if (controllers.MainLayoutController.getInstance() != null) {
             MainLayoutController.getInstance().navigateToAddStock();
         }
     }

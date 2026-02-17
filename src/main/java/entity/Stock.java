@@ -1,4 +1,4 @@
-package com.example.agrisens360.entity;
+package entity;
 
 import java.math.BigDecimal;
 import java.sql.Date;

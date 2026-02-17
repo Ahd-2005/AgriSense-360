@@ -1,15 +1,15 @@
-package com.example.agrisens360.services;
+package services;
 
-import com.example.agrisens360.entity.Stock;
-import com.example.agrisens360.utils.MyDataBase;
+import entity.Stock;
+import utils.MyDataBase;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceStock implements IService<Stock> {
+public class ServiceStockStock implements IServiceStock<Stock> {
 
-    private final Connection cnx = MyDataBase.getInstance().getMyConnection();
+    private final Connection cnx = MyDataBase.getInstance().getCnx();
 
     @Override
     public int ajouter(Stock s) throws SQLException {
