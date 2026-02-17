@@ -1,65 +1,369 @@
-/* Root and Global */
+/* ============================================================================
+   STOCKHOME.CSS — Agrisens 360
+   Refondu pour correspondre exactement au BackOfficeStock.fxml
+   Compatible JavaFX 17 — sans @media ni -fx-transform
+   ============================================================================ */
+
+/* ============================================================================
+   1. RESET & BASE
+   ============================================================================ */
+
 .root {
-    -fx-font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+    -fx-font-family: "Segoe UI", "Plus Jakarta Sans", sans-serif;
     -fx-font-size: 14px;
-    -fx-background-color: linear-gradient(to bottom, #fbf7ef 0%, #eef5ee 100%);
+    -fx-background-color: #f4f6f0;
 }
 
-/* Topbar */
-.topbar {
+/* ============================================================================
+   2. SCROLL PANE
+   ============================================================================ */
+
+.scroll-pane {
     -fx-background-color: transparent;
-    -fx-padding: 48px 56px;
-    -fx-alignment: center-left;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
 }
 
-.topbar-title {
-    -fx-font-family: "Fraunces", "Georgia", serif;
-    -fx-font-size: 32px;
+.scroll-pane > .viewport {
+    -fx-background-color: #f4f6f0;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(90, 152, 20, 0.35);
+    -fx-background-radius: 6px;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(90, 152, 20, 0.6);
+}
+
+.scroll-bar:vertical .track,
+.scroll-bar:vertical .track-background {
+    -fx-background-color: transparent;
+}
+
+/* ============================================================================
+   3. CONTENT (VBox racine du ScrollPane)
+   ============================================================================ */
+
+.content {
+    -fx-background-color: transparent;
+    -fx-spacing: 35px;
+}
+
+/* ============================================================================
+   4. TITRES — page-title, section-title, card-title
+   ============================================================================ */
+
+.page-title {
+    -fx-font-size: 34px;
     -fx-font-weight: bold;
-    -fx-text-fill: #22301b;
-    -fx-wrap-text: true;
+    -fx-text-fill: #1e3c2c;
 }
 
-.topbar-sub {
-    -fx-font-size: 16px;
-    -fx-text-fill: rgba(23, 35, 24, 0.72);
-    -fx-wrap-text: true;
-}
-
-.topbar-right {
-    -fx-alignment: center;
-}
-
-.stat {
-    -fx-background-color: #fff;
-    -fx-padding: 16px 20px;
-    -fx-background-radius: 20px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
-    -fx-min-width: 120px;
-}
-
-.stat-value {
+.section-title {
     -fx-font-size: 22px;
     -fx-font-weight: bold;
     -fx-text-fill: #22301b;
+    -fx-padding: 0 0 8 0;
 }
 
-.stat-label {
+.card-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #22301b;
+    -fx-padding: 0 0 12 0;
+}
+
+/* ============================================================================
+   5. CARD — barre d'actions, graphique, sections produits/stocks/alertes
+   ============================================================================ */
+
+.card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-border-color: #e4ead8;
+    -fx-border-width: 1.5;
+    -fx-padding: 28px 30px;
+    -fx-effect: dropshadow(gaussian, rgba(30, 60, 44, 0.10), 16, 0, 0, 4);
+}
+
+.card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(30, 60, 44, 0.17), 22, 0, 0, 6);
+}
+
+/* ============================================================================
+   6. STAT-CARD — 4 cartes de statistiques en haut du BackOffice
+   ============================================================================ */
+
+.stat-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-border-color: #e4ead8;
+    -fx-border-width: 1.5;
+    -fx-padding: 30px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(30, 60, 44, 0.10), 14, 0, 0, 4);
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+}
+
+.stat-card:hover {
+    -fx-border-color: #a8c880;
+    -fx-effect: dropshadow(gaussian, rgba(90, 152, 20, 0.22), 20, 0, 0, 6);
+}
+
+/* ============================================================================
+   7. PRODUCT-CARD — cartes créées dynamiquement dans refreshProductList()
+   ============================================================================ */
+
+.product-card, .stock-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);
+    -fx-padding: 15px;
+}
+
+.product-card:hover, .stock-card:hover {
+    -fx-border-color: #5a9814;
+    -fx-effect: dropshadow(gaussian, rgba(90,152,20,0.15), 8, 0, 0, 3);
+}
+
+/* ============================================================================
+   9. FORM-CARD — AjoutProduit.fxml et ModifProduit.fxml
+   ============================================================================ */
+
+.form-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-border-color: #e4ead8;
+    -fx-border-width: 1.5;
+    -fx-padding: 35px 40px;
+    -fx-effect: dropshadow(gaussian, rgba(30, 60, 44, 0.10), 16, 0, 0, 4);
+}
+
+/* ============================================================================
+   10. BOUTONS — .primary et .ghost
+   ============================================================================ */
+
+.primary {
+    -fx-background-color: #5a9814;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-padding: 10px 22px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(90, 152, 20, 0.28), 10, 0, 0, 4);
+}
+
+.primary:hover {
+    -fx-background-color: #6ab01a;
+    -fx-effect: dropshadow(gaussian, rgba(90, 152, 20, 0.45), 14, 0, 0, 6);
+}
+
+.primary:pressed {
+    -fx-background-color: #4a8010;
+    -fx-effect: none;
+}
+
+.ghost {
+    -fx-background-color: transparent;
+    -fx-text-fill: #22301b;
+    -fx-font-weight: 600;
+    -fx-font-size: 14px;
+    -fx-border-color: #b0c890;
+    -fx-border-width: 2;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-padding: 10px 22px;
+    -fx-cursor: hand;
+}
+
+.ghost:hover {
+    -fx-background-color: rgba(90, 152, 20, 0.08);
+    -fx-border-color: #5a9814;
+    -fx-text-fill: #5a9814;
+}
+
+.ghost:pressed {
+    -fx-background-color: rgba(90, 152, 20, 0.18);
+}
+
+/* ============================================================================
+   11. INPUT-FIELD — TextField, TextArea, ComboBox, DatePicker
+   ============================================================================ */
+
+.input-field {
+    -fx-background-color: #fafdfa;
+    -fx-border-color: #c8d8b0;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px 14px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #22301b;
+    -fx-prompt-text-fill: #9aaa8a;
+}
+
+.input-field:focused {
+    -fx-border-color: #5a9814;
+    -fx-border-width: 2;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(90, 152, 20, 0.18), 8, 0, 0, 0);
+}
+
+.text-area .content {
+    -fx-background-color: transparent;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: rgba(90, 152, 20, 0.12);
+}
+
+/* ============================================================================
+   12. LABELS UTILITAIRES
+   ============================================================================ */
+
+.label-bold {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2b3b1f;
+    -fx-font-size: 14px;
+}
+
+/* ============================================================================
+   13. TABLE VIEW — tableAlertes (BackOffice)
+   ============================================================================ */
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #e4ead8;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-border-width: 1.5;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #f0f5e8;
+    -fx-background-radius: 10px 10px 0 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 12px 10px;
+}
+
+.table-view .column-header .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #22301b;
+    -fx-font-size: 13px;
+}
+
+.table-view .filler {
+    -fx-background-color: #f0f5e8;
+}
+
+.table-view .table-cell {
+    -fx-padding: 11px 10px;
+    -fx-border-color: transparent;
+    -fx-text-fill: #2b3b1f;
+    -fx-font-size: 13px;
+}
+
+.table-row-cell {
+    -fx-border-color: #f2f2f2;
+    -fx-border-width: 0 0 1 0;
+    -fx-background-color: #ffffff;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fafcf6;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: rgba(90, 152, 20, 0.07);
+}
+
+.table-row-cell:selected,
+.table-row-cell:selected:hover {
+    -fx-background-color: rgba(90, 152, 20, 0.18);
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: #22301b;
+}
+
+.table-view .placeholder .label {
+    -fx-text-fill: #9aaa8a;
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+}
+
+/* ============================================================================
+   14. BAR CHART — chartCategories (BackOffice)
+   ============================================================================ */
+
+.chart {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+}
+
+.chart-plot-background {
+    -fx-background-color: #f8faf3;
+    -fx-background-radius: 8px;
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: #e8eedc;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #e8eedc;
+}
+
+.chart-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #22301b;
+}
+
+.axis-label {
     -fx-font-size: 12px;
-    -fx-text-transform: uppercase;
-    -fx-letter-spacing: 1px;
-    -fx-text-fill: rgba(43, 59, 31, 0.6);
+    -fx-text-fill: #5a6c5d;
 }
 
-/* Sidebar - Remplacé par les nouveaux styles */
+.axis {
+    -fx-tick-label-fill: #5a6c5d;
+    -fx-font-size: 12px;
+}
+
+.default-color0.chart-bar {
+    -fx-bar-fill: #5a9814;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+}
+
+.chart-legend-item {
+    -fx-text-fill: #5a6c5d;
+    -fx-font-size: 12px;
+}
+
+/* ============================================================================
+   15. SIDEBAR
+   ============================================================================ */
+
 .sidebar {
     -fx-background-color: linear-gradient(to bottom, #1e3c2c, #2a5a3a);
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 2, 0);
-}
-
-.brand {
-    -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-border-width: 0 0 1 0;
 }
 
 .brand-name {
@@ -71,37 +375,6 @@
 .brand-tagline {
     -fx-font-size: 11px;
     -fx-text-fill: #a0d6a0;
-}
-
-.sidebar-toggle {
-    -fx-background-color: transparent;
-    -fx-background-radius: 0;
-    -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-border-width: 1 0;
-    -fx-padding: 15 20;
-    -fx-cursor: hand;
-}
-
-.sidebar-toggle:hover {
-    -fx-background-color: rgba(255, 215, 0, 0.1);
-}
-
-.toggle-icon {
-    -fx-min-width: 20px;
-    -fx-min-height: 2px;
-    -fx-background-color: #a0d6a0;
-}
-
-.toggle-text {
-    -fx-text-fill: #a0d6a0;
-    -fx-font-size: 14px;
-}
-
-.nav-title {
-    -fx-text-fill: #8f9bb3;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-padding: 0 0 10 0;
 }
 
 .nav-link {
@@ -121,31 +394,21 @@
     -fx-background-color: #5a9814;
 }
 
-.nav-link.active .nav-label {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-}
-
-.nav-icon {
-    -fx-min-width: 24px;
-    -fx-min-height: 24px;
-    -fx-max-width: 24px;
-    -fx-max-height: 24px;
-}
-
-.nav-icon SVGPath {
-    -fx-stroke: #e0e0e0;
-    -fx-stroke-width: 2;
-    -fx-fill: transparent;
-}
-
-.nav-link.active .nav-icon SVGPath {
-    -fx-stroke: white;
-}
-
 .nav-label {
     -fx-text-fill: #e0e0e0;
     -fx-font-size: 14px;
+}
+
+.nav-link.active .nav-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+.nav-title {
+    -fx-text-fill: #8f9bb3;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 8 0;
 }
 
 .sidebar-foot {
@@ -163,391 +426,15 @@
     -fx-effect: dropshadow(gaussian, #4caf50, 8, 0.5, 0, 0);
 }
 
-/* Content */
-.content {
-    -fx-background-color: transparent;
-    -fx-padding: 48px 56px 64px;
-}
+/* ============================================================================
+   16. HEADER
+   ============================================================================ */
 
-.content-inner {
-    -fx-spacing: 40px;
-}
-
-/* Hero Banner */
-.hero-banner {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.55));
-    -fx-background-radius: 28px;
-    -fx-padding: 32px 36px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
-    -fx-alignment: center-left;
-    -fx-spacing: 32px;
-}
-
-.hero-copy {
-    -fx-alignment: top-left;
-}
-
-.hero-kicker {
-    -fx-text-transform: uppercase;
-    -fx-letter-spacing: 2px;
-    -fx-font-size: 12px;
-    -fx-text-fill: rgba(43, 59, 31, 0.7);
-}
-
-.hero-title {
-    -fx-font-family: "Fraunces", "Georgia", serif;
-    -fx-font-size: 40px;
-    -fx-text-fill: #22301b;
-    -fx-wrap-text: true;
-}
-
-.hero-lead {
-    -fx-font-size: 16px;
-    -fx-line-height: 1.7;
-    -fx-max-width: 520px;
-    -fx-text-fill: #22301b;
-    -fx-wrap-text: true;
-}
-
-.hero-actions {
-    -fx-spacing: 16px;
-}
-
-.primary {
-    -fx-background-color: #5a9814;
-    -fx-text-fill: #0f1b0f;
-    -fx-background-radius: 999px;
-    -fx-padding: 12px 24px;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(96, 152, 16, 0.3), 12, 0, 0, 6);
-}
-
-.ghost {
-    -fx-background-color: transparent;
-    -fx-border-color: rgba(43, 59, 31, 0.2);
-    -fx-border-width: 1;
-    -fx-text-fill: #22301b;
-    -fx-background-radius: 999px;
-    -fx-padding: 12px 24px;
-    -fx-cursor: hand;
-}
-
-.hero-visual {
-    -fx-background-radius: 20px;
-    -fx-overflow: hidden;
-    -fx-min-height: 240px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
-    -fx-alignment: bottom-left;
-}
-
-.hero-badge {
-    -fx-background-color: rgba(21, 150, 214, 0.85);
-    -fx-text-fill: #fff;
-    -fx-padding: 10px 14px;
-    -fx-background-radius: 14px;
-    -fx-position: absolute;
-    -fx-bottom: 18px;
-    -fx-left: 18px;
-    -fx-font-size: 12px;
-    -fx-letter-spacing: 0.6px;
-}
-
-.hero-panel {
-    -fx-background-color: rgba(43, 59, 31, 0.9);
-    -fx-text-fill: #f6f4ec;
-    -fx-background-radius: 20px;
-    -fx-padding: 18px 20px;
-    -fx-spacing: 16px;
-}
-
-.panel-label {
-    -fx-text-fill: rgba(255, 255, 255, 0.7);
-}
-
-.panel-value {
-    -fx-font-weight: bold;
-    -fx-text-fill: #fff;
-}
-
-.panel-chart {
-    -fx-font-size: 12px;
-}
-
-.panel-note {
-    -fx-text-fill: rgba(255, 255, 255, 0.7);
-}
-
-/* About Band */
-.about-band {
-    -fx-background-color: rgba(96, 152, 16, 0.08);
-    -fx-background-radius: 28px;
-    -fx-padding: 28px 32px;
-    -fx-spacing: 28px;
-}
-
-.about-title {
-    -fx-font-family: "Fraunces", "Georgia", serif;
-    -fx-font-size: 30px;
-    -fx-text-fill: #22301b;
-    -fx-margin-bottom: 10px;
-}
-
-.about-band .text {
-    -fx-font-size: 15px;
-    -fx-line-height: 1.7;
-    -fx-text-fill: rgba(23, 35, 24, 0.75);
-    -fx-wrap-text: true;
-}
-
-.climate-card {
-    -fx-background-color: rgba(255, 255, 255, 0.7);
-    -fx-background-radius: 20px;
-    -fx-padding: 18px 20px;
-    -fx-spacing: 16px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
-}
-
-.climate-title {
-    -fx-font-family: "Fraunces", "Georgia", serif;
-    -fx-text-fill: #22301b;
-    -fx-margin-bottom: 6px;
-}
-
-.climate-graph {
-    -fx-spacing: 16px;
-    -fx-alignment: center-left;
-}
-
-.climate-stats {
-    -fx-spacing: 12px;
-}
-
-.stat-number {
-    -fx-font-size: 18px;
-    -fx-text-fill: #22301b;
-}
-
-.stat-text {
-    -fx-font-size: 11px;
-    -fx-text-transform: uppercase;
-    -fx-letter-spacing: 1px;
-    -fx-text-fill: rgba(43, 59, 31, 0.6);
-}
-
-.about-media {
-    -fx-background-radius: 20px;
-    -fx-overflow: hidden;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
-    -fx-min-height: 180px;
-}
-
-.about-card {
-    -fx-background-color: #fff;
-    -fx-background-radius: 20px;
-    -fx-padding: 18px 20px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
-    -fx-spacing: 8px;
-}
-
-.about-card-title {
-    -fx-text-fill: #22301b;
-    -fx-margin-bottom: 8px;
-}
-
-/* Services */
-.services {
-    -fx-spacing: 20px;
-}
-
-.section-title {
-    -fx-text-transform: uppercase;
-    -fx-letter-spacing: 2px;
-    -fx-font-size: 12px;
-    -fx-text-fill: rgba(43, 59, 31, 0.6);
-}
-
-.section-title-main {
-    -fx-font-family: "Fraunces", "Georgia", serif;
-    -fx-font-size: 32px;
-    -fx-text-fill: #22301b;
-    -fx-margin-top: 10px;
-}
-
-.grid {
-    -fx-hgap: 20px;
-    -fx-vgap: 20px;
-}
-
-.card {
-    -fx-background-color: #fff;
-    -fx-background-radius: 20px;
-    -fx-padding: 20px 22px 22px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
-    -fx-border-color: rgba(43, 59, 31, 0.06);
-    -fx-border-width: 1;
-    /*-fx-transform: translateY(10px);
-    -fx-opacity: 0;*/
-}
-
-.card:hover {
-    /* -fx-transform: translateY(0);
-     -fx-opacity: 1;*/
-}
-
-.card-title {
-    -fx-font-family: "Fraunces", "Georgia", serif;
-    -fx-font-size: 20px;
-    -fx-text-fill: #22301b;
-    -fx-margin-bottom: 8px;
-}
-
-.card .text {
-    -fx-font-size: 14px;
-    -fx-line-height: 1.6;
-    -fx-text-fill: rgba(23, 35, 24, 0.75);
-    -fx-wrap-text: true;
-}
-
-/* Stats Strip */
-.stats-strip {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(21, 150, 214, 0.32), rgba(96, 152, 16, 0.2));
-    -fx-background-radius: 28px;
-    -fx-padding: 22px 26px;
-    -fx-spacing: 18px;
-}
-
-.stat-block {
-    -fx-background-color: #fff;
-    -fx-background-radius: 20px;
-    -fx-padding: 16px 18px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 18, 0, 0, 8);
-    -fx-border-color: rgba(21, 150, 214, 0.2);
-    -fx-border-width: 1;
-    -fx-spacing: 6px;
-}
-
-/* Footer */
-.image-credits {
-    -fx-font-size: 12px;
-    -fx-text-fill: rgba(23, 35, 24, 0.6);
-    -fx-spacing: 10px;
-}
-
-.credit-links {
-    -fx-spacing: 12px;
-}
-
-/* Responsive (approximated; use Java code for full responsiveness) */
-@media (max-width: 1100px) {
-    .sidebar {
-        -fx-pref-width: 240px;
-    }
-    .content {
-        -fx-padding: 32px 24px 48px;
-    }
-}
-
-@media (max-width: 820px) {
-    .hero-banner, .about-band {
-        -fx-padding: 22px 20px;
-    }
-    .climate-graph {
-        -fx-orientation: vertical;
-    }
-}
-
-@media (max-width: 640px) {
-    .sidebar {
-        -fx-padding: 24px 20px;
-    }
-    .hero-banner, .about-band, .stats-strip {
-        -fx-padding: 22px 20px;
-    }
-}
-
-/* Additional styles for the form (from your FXML) */
-.input-field {
-    -fx-background-color: #fff;
-    -fx-border-color: rgba(43, 59, 31, 0.2);
-    -fx-border-width: 1;
-    -fx-background-radius: 8px;
-    -fx-padding: 8px 12px;
-}
-
-.input-field:focused {
-    -fx-border-color: #5a9814;
-}
-.card {
-    -fx-opacity: 1 !important;
-    -fx-transform: translateY(0) !important;
-}
-
-
-.card .primary {
-    -fx-pref-width: 80px;
-    -fx-font-size: 12px;
-}
-
-.card .ghost {
-    -fx-pref-width: 80px;
-    -fx-font-size: 12px;
-}
-
-/* Header styles - harmonisé avec la sidebar */
 .header {
-    -fx-background-color: white;
-    -fx-border-color: #e0e7d0;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dde8cc;
     -fx-border-width: 0 0 2 0;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
-}
-
-.header-brand {
-    -fx-background-color: transparent;
-}
-
-.header-logo {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
-}
-
-.header-title {
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-font-family: "System";
-}
-
-.header-subtitle {
-    -fx-font-size: 12px;
-    -fx-opacity: 0.8;
-}
-
-.header-stats {
-    -fx-background-color: #f8faf5;
-    -fx-background-radius: 12px;
-    -fx-padding: 8px 16px;
-    -fx-border-color: #e0e7d0;
-    -fx-border-radius: 12px;
-}
-
-.stat-item {
-    -fx-min-width: 60px;
-    -fx-spacing: 2px;
-}
-
-.stat-number {
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-}
-
-.stat-label-header {
-    -fx-font-size: 11px;
-    -fx-text-fill: #6b7b5a;
-}
-
-.header-separator {
-    -fx-min-width: 1px;
-    -fx-min-height: 30px;
-    -fx-background-color: #e0e7d0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 8, 0, 0, 2);
 }
 
 .user-profile {
@@ -557,37 +444,126 @@
 }
 
 .user-profile:hover {
-    -fx-background-color: #f0f5ea;
+    -fx-background-color: #eef5e8;
 }
 
-.user-name {
-    -fx-font-size: 14px;
+.notification-btn,
+.settings-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 50%;
+    -fx-min-width: 38px;
+    -fx-min-height: 38px;
+    -fx-cursor: hand;
+}
+
+.notification-btn:hover,
+.settings-btn:hover {
+    -fx-background-color: #eef5e8;
+}
+
+/* ============================================================================
+   17. IMAGE PREVIEW
+   ============================================================================ */
+
+.image-preview-container {
+    -fx-alignment: center;
+    -fx-padding: 15px;
+    -fx-background-color: #f4f8ee;
+    -fx-background-radius: 12px;
+    -fx-border-color: #b8d090;
+    -fx-border-width: 2;
+    -fx-border-style: dashed;
+    -fx-border-radius: 12px;
+}
+
+/* ============================================================================
+   18. BADGES & INDICATEURS
+   ============================================================================ */
+
+.badge {
+    -fx-background-color: #5a9814;
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-padding: 4px 12px;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
 
-.user-role {
-    -fx-font-size: 11px;
+.badge-danger  { -fx-background-color: #ef5350; }
+.badge-warning { -fx-background-color: #ffb300; }
+.badge-info    { -fx-background-color: #2196f3; }
+
+/* ============================================================================
+   19. UTILITAIRES GRILLE
+   ============================================================================ */
+
+.grid-2-columns {
+    -fx-hgap: 20px;
+    -fx-vgap: 20px;
+    -fx-alignment: center;
 }
 
-.user-avatar {
-    -fx-fill: linear-gradient(from 0% 0% to 100% 100%, #8aa87d, #5a7d4a);
-    -fx-stroke: #e0e7d0;
-    -fx-stroke-width: 2;
+.grid-container {
+    -fx-hgap: 20px;
+    -fx-vgap: 20px;
+    -fx-alignment: center;
 }
 
-.notification-btn, .settings-btn {
-    -fx-background-color: transparent;
-    -fx-background-radius: 50%;
-    -fx-min-width: 40px;
-    -fx-min-height: 40px;
+.divider {
+    -fx-min-height: 1.5px;
+    -fx-background-color: #e4ead8;
+}
+.small-primary:hover {
+    -fx-background-color: #1976d2;
+}
+
+.small-danger {
+    -fx-background-color: #f44336;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-radius: 6px;
     -fx-cursor: hand;
-    -fx-font-size: 16px;
 }
 
-.notification-btn:hover, .settings-btn:hover {
-    -fx-background-color: #f0f5ea;
+.small-danger:hover {
+    -fx-background-color: #d32f2f;
+}
+.small-primary {
+    -fx-background-color: #5a9814;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+/* Styles pour les grilles */
+.products-grid, .stocks-grid {
+    -fx-hgap: 20px;
+    -fx-vgap: 20px;
+    -fx-alignment: center;
+    -fx-padding: 10px 0;
 }
 
-.notification-btn:pressed, .settings-btn:pressed {
-    -fx-background-color: #e0e7d0;
+.products-grid {
+    -fx-pref-width: 100%;
+}
+
+.stocks-grid {
+    -fx-pref-width: 100%;
+}
+
+/* Ajustement pour que les cartes s'alignent correctement */
+.products-grid > *, .stocks-grid > * {
+    -fx-max-width: Infinity;
+}
+
+/* Correction des contraintes de colonnes */
+.grid-pane {
+    -fx-hgap: 20px;
+    -fx-vgap: 20px;
+}
+
+.grid-pane .columnConstraints {
+    -fx-percent-width: 50;
 }

@@ -11,7 +11,6 @@
             prefHeight="800.0" prefWidth="1400.0"
             stylesheets="@../css/sidebar.css,@../css/home.css,@../css/cards.css">
 
-    <!-- LEFT: Sidebar (Always visible) -->
     <left>
         <VBox fx:id="sidebar" styleClass="sidebar" spacing="0" prefWidth="280" maxWidth="280">
 
@@ -31,7 +30,6 @@
                 </VBox>
             </HBox>
 
-            <!-- Toggle Button -->
             <Button fx:id="toggleButton" styleClass="sidebar-toggle" onAction="#toggleSidebar">
                 <graphic>
                     <HBox spacing="10" alignment="CENTER_LEFT">
@@ -41,7 +39,6 @@
                 </graphic>
             </Button>
 
-            <!-- Navigation Menu -->
             <VBox styleClass="managements" VBox.vgrow="ALWAYS" spacing="5">
                 <padding>
                     <Insets top="20" right="15" bottom="20" left="15" />
@@ -92,11 +89,11 @@
                     </Button>
 
                         <!-- Ajoutez ce bouton sub pour le backoffice -->
-                            <Button styleClass="nav-link" onAction="#navigateToBackOfficeStock">
+                            <Button fx:id="btnBOS" styleClass="nav-link" onAction="#navigateToBackOfficeStock">
                                 <graphic>
                                     <HBox spacing="12" alignment="CENTER_LEFT">
                                         <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="🏢" />
-                                        <Label text="Backoffice Stock" styleClass="nav-label" />
+                                        <Label fx:id="BOStockLabel" text="Backoffice Stock" styleClass="nav-label" />
                                     </HBox>
                                 </graphic>
                             </Button>

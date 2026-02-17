@@ -8,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import entity.AffectationTravail;
 import services.AffectationTravailService;
-import controllers.MainLayoutController;
 
 import java.net.URL;
 import java.sql.SQLException;

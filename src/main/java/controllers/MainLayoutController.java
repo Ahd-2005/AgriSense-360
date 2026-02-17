@@ -1,5 +1,7 @@
 package controllers;
 
+import entity.Produit;
+import entity.Stock;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,6 +36,15 @@ public class MainLayoutController {
     @FXML private Button cultureBtn;
     @FXML private Button usersBtn;
     @FXML private Button workersBtn;
+    @FXML private Button ProdBtn;
+    @FXML private Button addstockBtn;
+    @FXML private Button adduserBtn;
+    @FXML private Button addprodBtn;
+    @FXML private Button liststockBtn;
+    @FXML private Button ModstockBtn;
+    @FXML private Button editprodBtn;
+    @FXML private Button btnBOS;
+
 
     // Labels to hide/show
     @FXML private Label homeLabel;
@@ -43,6 +54,7 @@ public class MainLayoutController {
     @FXML private Label cultureLabel;
     @FXML private Label usersLabel;
     @FXML private Label workersLabel;
+    @FXML private Label BOStockLabel;
 
     private boolean sidebarCollapsed = false;
 
@@ -91,6 +103,8 @@ public class MainLayoutController {
             usersLabel.setManaged(true);
             workersLabel.setVisible(true);
             workersLabel.setManaged(true);
+            BOStockLabel.setVisible(true);
+            BOStockLabel.setManaged(true);
 
             toggleIcon.setText("☰");
             sidebarCollapsed = false;
@@ -124,6 +138,8 @@ public class MainLayoutController {
             usersLabel.setManaged(false);
             workersLabel.setVisible(false);
             workersLabel.setManaged(false);
+            BOStockLabel.setVisible(false);
+            BOStockLabel.setManaged(false);
 
             toggleIcon.setText("»");
             sidebarCollapsed = true;
@@ -150,7 +166,7 @@ public class MainLayoutController {
 
     @FXML
     public void navigateToStock() {
-        loadContent("/fxml/afficher_stock.fxml");
+        loadContent("/fxml/StockHome.fxml");
         setActiveButton(stockBtn);
     }
 
@@ -181,6 +197,68 @@ public class MainLayoutController {
         loadContent("/fxml/evaluation_view.fxml");
         // optionnel : garder workersBtn actif
         setActiveButton(workersBtn);
+    }
+    @FXML
+    public void navigateToAddStock() {
+        loadContent("/fxml/addStock.fxml");
+        setActiveButton(addstockBtn);
+    }
+
+    @FXML
+    public void navigateToEditStock() {
+        loadContent("/fxml/editStock.fxml");
+        setActiveButton(ModstockBtn);
+    }
+
+
+    @FXML
+    public void navigateToProductList() {
+        loadContent("/fxml/ProductList.fxml");
+        setActiveButton(ProdBtn);
+    }
+    @FXML
+    public void navigateToStockList() {
+        loadContent("/fxml/StockList.fxml");
+        setActiveButton(liststockBtn);
+    }
+
+    @FXML
+    public void navigateToEditProduct() {
+        loadContent("/fxml/ModifProd.fxml");
+        setActiveButton(editprodBtn);
+    }
+
+    @FXML
+    public void navigateToAddProduct() {
+        loadContent("/fxml/AjoutPrduit.fxml");
+        setActiveButton(addprodBtn);
+    }
+
+    private static Stock stockToEdit;  // Variable temporaire pour passer le stock
+
+    public static void setStockToEdit(Stock stock) {
+        stockToEdit = stock;
+    }
+
+    public static Stock getStockToEdit() {
+        return stockToEdit;
+    }
+
+    // Dans MainLayoutController.java, ajoutez ces lignes après les autres champs
+
+    private static Produit produitToEdit;  // Variable temporaire pour passer le produit
+
+    public static void setProduitToEdit(Produit produit) {
+        produitToEdit = produit;
+    }
+
+    public static Produit getProduitToEdit() {
+        return produitToEdit;
+    }
+    @FXML
+    public void navigateToBackOfficeStock() {
+        loadContent("/fxml/BackOfficeStock.fxml");
+        setActiveButton(btnBOS);
     }
 
 
@@ -223,18 +301,22 @@ public class MainLayoutController {
     }
 
     private void setActiveButton(Button activeButton) {
+        if (activeButton == null) {
+            System.out.println("Attention : activeButton est null – bouton non trouvé");
+            return;  // ← Protection contre null (évite le crash)
+        }
+
         // Remove active class from all buttons
-        homeBtn.getStyleClass().remove("active");
-        animalsBtn.getStyleClass().remove("active");
-        equipmentBtn.getStyleClass().remove("active");
-        stockBtn.getStyleClass().remove("active");
-        cultureBtn.getStyleClass().remove("active");
-        usersBtn.getStyleClass().remove("active");
-        workersBtn.getStyleClass().remove("active");
+        if (homeBtn != null) homeBtn.getStyleClass().remove("active");
+        if (animalsBtn != null) animalsBtn.getStyleClass().remove("active");
+        if (equipmentBtn != null) equipmentBtn.getStyleClass().remove("active");
+        if (stockBtn != null) stockBtn.getStyleClass().remove("active");
+        if (cultureBtn != null) cultureBtn.getStyleClass().remove("active");
+        if (usersBtn != null) usersBtn.getStyleClass().remove("active");
+        if (workersBtn != null) workersBtn.getStyleClass().remove("active");
+        if (btnBOS != null) btnBOS.getStyleClass().remove("active");
 
         // Add active class to clicked button
-        if (!activeButton.getStyleClass().contains("active")) {
-            activeButton.getStyleClass().add("active");
-        }
+        activeButton.getStyleClass().add("active");
     }
 }

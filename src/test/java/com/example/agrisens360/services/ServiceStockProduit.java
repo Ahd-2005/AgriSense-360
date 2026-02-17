@@ -1,13 +1,14 @@
 package com.example.agrisens360.services;
 
-import com.example.agrisens360.entity.Produit;
+import entity.Produit;
 import com.example.agrisens360.utils.MyDataBase;
+import services.IServiceStock;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceProduit implements IService<Produit> {
+public class ServiceStockProduit implements IServiceStock<Produit> {
 
     private final Connection cnx = MyDataBase.getInstance().getMyConnection();
 
