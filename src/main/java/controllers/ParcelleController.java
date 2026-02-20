@@ -172,10 +172,13 @@ public class ParcelleController {
 
         Label typeSolLabel = new Label("Type de sol:");
         typeSolLabel.getStyleClass().add("parcelle-info-label");
-        Label typeSolValue = new Label(parcelle.getTypeSol());
-        typeSolValue.getStyleClass().add("parcelle-info");
+
+        // Create colored badge for type de sol
+        Label typeSolBadge = new Label(parcelle.getTypeSol());
+        typeSolBadge.setStyle(getTypeSolStyle(parcelle.getTypeSol()));
+
         infoGrid.add(typeSolLabel, 0, 3);
-        infoGrid.add(typeSolValue, 1, 3);
+        infoGrid.add(typeSolBadge, 1, 3);
 
         Label statutLabel = new Label(parcelle.getStatut());
         if ("Libre".equalsIgnoreCase(parcelle.getStatut())) {
@@ -212,6 +215,25 @@ public class ParcelleController {
         });
 
         return card;
+    }
+
+    /**
+     * Get style for type de sol badge
+     */
+    private String getTypeSolStyle(String typeSol) {
+        String baseStyle = "-fx-padding: 5 10; -fx-background-radius: 12px; " +
+                "-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;";
+
+        switch (typeSol) {
+            case "Sol Limoneux":
+                return baseStyle + " -fx-background-color: #8D6E63;"; // Brown
+            case "Sol Argileux":
+                return baseStyle + " -fx-background-color: #FF7043;"; // Deep Orange
+            case "Sol Sablonneux":
+                return baseStyle + " -fx-background-color: #FFB74D;"; // Orange/Yellow
+            default:
+                return baseStyle + " -fx-background-color: #9E9E9E;"; // Grey
+        }
     }
 
     @FXML
@@ -266,10 +288,12 @@ public class ParcelleController {
         VBox typeSolBox = new VBox(5);
         Label typeSolLabel = new Label("Type de sol:");
         typeSolLabel.getStyleClass().add("form-label");
-        TextField typeSolField = new TextField();
-        typeSolField.setPromptText("Ex: Argileux, Sableux");
-        typeSolField.setPrefWidth(400);
-        typeSolBox.getChildren().addAll(typeSolLabel, typeSolField);
+        ComboBox<String> typeSolComboBox = new ComboBox<>();
+        typeSolComboBox.setPromptText("Sélectionner le type de sol");
+        typeSolComboBox.setPrefWidth(400);
+        typeSolComboBox.getStyleClass().add("form-field");
+        typeSolComboBox.getItems().addAll("Sol Limoneux", "Sol Argileux", "Sol Sablonneux");
+        typeSolBox.getChildren().addAll(typeSolLabel, typeSolComboBox);
 
         VBox statutBox = new VBox(5);
         Label statutLabel = new Label("Statut:");
@@ -287,7 +311,7 @@ public class ParcelleController {
         saveBtn.setPrefWidth(150);
         saveBtn.setOnAction(e -> {
             if (handleAddParcelle(nomField, surfaceField, localisationField,
-                    typeSolField, statutComboBox, messageLabel)) {
+                    typeSolComboBox, statutComboBox, messageLabel)) {
                 popup.close();
                 loadParcelleCards();
             }
@@ -363,9 +387,12 @@ public class ParcelleController {
         VBox typeSolBox = new VBox(5);
         Label typeSolLabel = new Label("Type de sol:");
         typeSolLabel.getStyleClass().add("form-label");
-        TextField typeSolField = new TextField(parcelle.getTypeSol());
-        typeSolField.setPrefWidth(400);
-        typeSolBox.getChildren().addAll(typeSolLabel, typeSolField);
+        ComboBox<String> typeSolComboBox = new ComboBox<>();
+        typeSolComboBox.setPrefWidth(400);
+        typeSolComboBox.getStyleClass().add("form-field");
+        typeSolComboBox.getItems().addAll("Sol Limoneux", "Sol Argileux", "Sol Sablonneux");
+        typeSolComboBox.setValue(parcelle.getTypeSol());
+        typeSolBox.getChildren().addAll(typeSolLabel, typeSolComboBox);
 
         VBox statutBox = new VBox(5);
         Label statutLabel = new Label("Statut:");
@@ -383,7 +410,7 @@ public class ParcelleController {
         saveBtn.setPrefWidth(150);
         saveBtn.setOnAction(e -> {
             if (handleUpdateParcelle(idField, nomField, surfaceField, localisationField,
-                    typeSolField, statutComboBox, messageLabel)) {
+                    typeSolComboBox, statutComboBox, messageLabel)) {
                 popup.close();
                 loadParcelleCards();
             }
@@ -405,13 +432,13 @@ public class ParcelleController {
     }
 
     private boolean handleAddParcelle(TextField nomField, TextField surfaceField,
-                                      TextField localisationField, TextField typeSolField,
+                                      TextField localisationField, ComboBox<String> typeSolComboBox,
                                       ComboBox<String> statutComboBox, Label messageLabel) {
         try {
             String nom = nomField.getText();
             String surfaceText = surfaceField.getText();
             String localisation = localisationField.getText();
-            String typeSol = typeSolField.getText();
+            String typeSol = typeSolComboBox.getValue();
             String statut = statutComboBox.getValue();
 
             if (nom == null || nom.trim().isEmpty() || !nom.matches("[A-Za-zÀ-ÿ ]{3,}")) {
@@ -469,14 +496,14 @@ public class ParcelleController {
     }
 
     private boolean handleUpdateParcelle(TextField idField, TextField nomField, TextField surfaceField,
-                                         TextField localisationField, TextField typeSolField,
+                                         TextField localisationField, ComboBox<String> typeSolComboBox,
                                          ComboBox<String> statutComboBox, Label messageLabel) {
         try {
             int id = Integer.parseInt(idField.getText());
             String nom = nomField.getText();
             String surfaceText = surfaceField.getText();
             String localisation = localisationField.getText();
-            String typeSol = typeSolField.getText();
+            String typeSol = typeSolComboBox.getValue();
             String statut = statutComboBox.getValue();
 
             if (nom == null || nom.trim().isEmpty() || !nom.matches("[A-Za-zÀ-ÿ ]{3,}")) {

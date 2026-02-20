@@ -423,13 +423,22 @@ public class MainLayoutController {
         }
     }
 
-    @FXML
     public void navigateToCulture() {
+        loadContent("/fxml/dashboard_culture.fxml");
+        setActiveButton(cultureBtn);
+    }
+
+    /**
+     * Navigate to Afficher Culture page (called from dashboard)
+     */
+    public void navigateToAfficherCulture() {
         loadContent("/fxml/afficher_culture.fxml");
         setActiveButton(cultureBtn);
     }
 
-    @FXML
+    /**
+     * Navigate to Afficher Parcelle page (called from dashboard)
+     */
     public void navigateToParcelle() {
         loadContent("/fxml/afficher_parcelle.fxml");
         setActiveButton(cultureBtn);
