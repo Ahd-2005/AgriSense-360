@@ -38,6 +38,16 @@ public class AnimalController implements Initializable {
     @FXML private TextField searchField;
     @FXML private ComboBox<String> searchFieldCombo;
 
+    // Inline validation labels
+    @FXML private Label earTagError;
+    @FXML private Label typeError;
+    @FXML private Label genderError;
+    @FXML private Label weightError;
+    @FXML private Label birthDateError;
+    @FXML private Label entryDateError;
+    @FXML private Label originError;
+    @FXML private Label locationError;
+
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
     private final ServiceEnumManagement serviceEnum = new ServiceEnumManagement();
     private final ObservableList<Animal> animalList = FXCollections.observableArrayList();
@@ -77,6 +87,36 @@ public class AnimalController implements Initializable {
         }
 
         AnimalListRefresh.addListener(this::refreshTypeAndLocationCombos);
+
+
+        birthDatePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && newVal.isAfter(LocalDate.now())) {
+                setError(birthDateError, "Are you living in the future?");
+            } else {
+                setError(birthDateError, "");
+
+                LocalDate entry = entryDatePicker.getValue();
+                if (entry != null && newVal != null && entry.isBefore(newVal)) {
+                    setError(entryDateError, "Entry date cannot be before birth date.");
+                } else if (entry != null) {
+                    setError(entryDateError, "");
+                }
+            }
+        });
+        entryDatePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == null) { setError(entryDateError, ""); return; }
+            if (newVal.isAfter(LocalDate.now())) {
+                setError(entryDateError, "Entry date cannot be in the future.");
+            } else {
+                LocalDate birth = birthDatePicker.getValue();
+                if (birth != null && newVal.isBefore(birth)) {
+                    setError(entryDateError, "Entry date cannot be before birth date.");
+                } else {
+                    setError(entryDateError, "");
+                }
+            }
+        });
+
         refreshData();
     }
 
@@ -282,6 +322,111 @@ public class AnimalController implements Initializable {
         }
     }
 
+
+
+    private void setError(Label label, String msg) {
+        label.setText(msg);
+        boolean hasError = msg != null && !msg.isEmpty();
+        label.setVisible(hasError);
+        label.setManaged(hasError);
+    }
+
+    private void clearErrors() {
+        setError(earTagError,   "");
+        setError(typeError,     "");
+        setError(genderError,   "");
+        setError(weightError,   "");
+        setError(birthDateError,"");
+        setError(entryDateError,"");
+        setError(originError,   "");
+        setError(locationError, "");
+    }
+
+    private boolean validate() {
+        clearErrors();
+        boolean valid = true;
+
+
+        String earTagText = earTagField.getText().trim();
+        if (earTagText.isEmpty()) {
+            setError(earTagError, "Ear tag is required.");
+            valid = false;
+        } else {
+            try {
+                int tag = Integer.parseInt(earTagText);
+                if (tag <= 0) {
+                    setError(earTagError, "Ear tag must be a positive number.");
+                    valid = false;
+                }
+            } catch (NumberFormatException e) {
+                setError(earTagError, "Ear tag must be a whole number.");
+                valid = false;
+            }
+        }
+
+        // Type: required
+        if (typeCombo.getSelectionModel().isEmpty()) {
+            setError(typeError, "Please select a type.");
+            valid = false;
+        }
+
+        // Gender: required
+        if (genderCombo.getSelectionModel().isEmpty()) {
+            setError(genderError, "Please select a gender.");
+            valid = false;
+        }
+
+        // Weight: optional, must be non-negative if provided
+        String weightText = weightField.getText().trim();
+        if (!weightText.isEmpty()) {
+            try {
+                double w = Double.parseDouble(weightText);
+                if (w < 0) {
+                    setError(weightError, "Weight cannot be negative.");
+                    valid = false;
+                }
+            } catch (NumberFormatException e) {
+                setError(weightError, "Weight must be a valid number (e.g. 320.5).");
+                valid = false;
+            }
+        }
+
+        // Birth date: must not be in the future
+        LocalDate birthDate = birthDatePicker.getValue();
+        if (birthDate != null && birthDate.isAfter(LocalDate.now())) {
+            setError(birthDateError, "Birth date cannot be in the future.");
+            valid = false;
+        }
+
+        // Entry date: must not be before birth date; must not be in the future
+        LocalDate entryDate = entryDatePicker.getValue();
+        if (entryDate != null) {
+            if (entryDate.isAfter(LocalDate.now())) {
+                setError(entryDateError, "Entry date cannot be in the future.");
+                valid = false;
+            } else if (birthDate != null && entryDate.isBefore(birthDate)) {
+                setError(entryDateError, "Entry date cannot be before birth date.");
+                valid = false;
+            }
+        }
+
+        // Origin: required
+        if (originCombo.getSelectionModel().isEmpty()) {
+            setError(originError, "Please select an origin.");
+            valid = false;
+        }
+
+        // Location: required
+        if (locationCombo.getSelectionModel().isEmpty()) {
+            setError(locationError, "Please select a location.");
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    // ───────────────────────────────────────────────────────────
+
     @FXML
     private void onRefreshAnimals() {
         refreshData();
@@ -309,18 +454,13 @@ public class AnimalController implements Initializable {
     private void onUpdateAnimal() {
         Animal selected = selectedAnimal;
         if (selected == null) return;
+        if (!validate()) return;
         try {
             int earTag = Integer.parseInt(earTagField.getText().trim());
             String type = typeCombo.getSelectionModel().getSelectedItem();
             Animal.Gender gender = Animal.Gender.valueOf(genderCombo.getSelectionModel().getSelectedItem());
-            Double weight = null;
-            if (!weightField.getText().trim().isEmpty()) {
-                weight = Double.parseDouble(weightField.getText().trim());
-                if (weight < 0) {
-                    showError("Weight can't be negative.");
-                    return;
-                }
-            }
+            Double weight = weightField.getText().trim().isEmpty() ? null
+                    : Double.parseDouble(weightField.getText().trim());
             LocalDate birthDate = birthDatePicker.getValue();
             LocalDate entryDate = entryDatePicker.getValue();
             Animal.Origin origin = Animal.Origin.valueOf(originCombo.getSelectionModel().getSelectedItem());
@@ -344,29 +484,20 @@ public class AnimalController implements Initializable {
             AnimalListRefresh.notifyAnimalChanged();
             deleteAnimalBtn.setDisable(true);
             showInfo("Animal updated.");
-        } catch (NumberFormatException e) {
-            showError("Check animal ear tag and weight");
         } catch (SQLException e) {
             showError("Database error: " + e.getMessage());
-        } catch (Exception e) {
-            showError("Please fill all required fields");
         }
     }
 
     @FXML
     private void onAddAnimal() {
+        if (!validate()) return;
         try {
             int earTag = Integer.parseInt(earTagField.getText().trim());
             String type = typeCombo.getSelectionModel().getSelectedItem();
             Animal.Gender gender = Animal.Gender.valueOf(genderCombo.getSelectionModel().getSelectedItem());
-            Double weight = null;
-            if (!weightField.getText().trim().isEmpty()) {
-                weight = Double.parseDouble(weightField.getText().trim());
-                if (weight < 0) {
-                    showError("Weight Can't be negative.");
-                    return;
-                }
-            }
+            Double weight = weightField.getText().trim().isEmpty() ? null
+                    : Double.parseDouble(weightField.getText().trim());
             LocalDate birthDate = birthDatePicker.getValue();
             LocalDate entryDate = entryDatePicker.getValue();
             Animal.Origin origin = Animal.Origin.valueOf(originCombo.getSelectionModel().getSelectedItem());
@@ -379,12 +510,8 @@ public class AnimalController implements Initializable {
             clearForm();
             AnimalListRefresh.notifyAnimalChanged();
             showInfo("Animal added successfully.");
-        } catch (NumberFormatException e) {
-            showError("Check ear tag and weight again");
         } catch (SQLException e) {
             showError("Database error: " + e.getMessage());
-        } catch (Exception e) {
-            showError("Please fill all required fields");
         }
     }
 
@@ -420,6 +547,7 @@ public class AnimalController implements Initializable {
         originCombo.getSelectionModel().clearSelection();
         vaccinatedCheck.setSelected(false);
         locationCombo.getSelectionModel().clearSelection();
+        clearErrors();
     }
 
     private void showInfo(String msg) {

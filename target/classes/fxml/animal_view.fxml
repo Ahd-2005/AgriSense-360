@@ -10,56 +10,91 @@
         <Insets top="0" right="0" bottom="0" left="0"/>
     </padding>
 
-    <!-- Form Card -->
     <VBox styleClass="mgmt-form-card" spacing="0">
 
-        <!-- Card Header -->
         <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="12">
             <VBox spacing="3">
                 <Label text="Add / Edit Animal" styleClass="mgmt-form-title"/>
-                <Label text="Fill in the fields below, then click Add Animal or select a row to edit." styleClass="mgmt-form-subtitle"/>
+                <Label text="Required fields are marked with *" styleClass="mgmt-form-subtitle"/>
             </VBox>
         </HBox>
 
-        <!-- Card Body -->
         <VBox styleClass="mgmt-form-body" spacing="0">
-            <GridPane hgap="16" vgap="11">
+            <GridPane hgap="16" vgap="8">
 
-                <!-- Row 0: Ear Tag | Type -->
-                <Label text="Ear Tag" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
-                <TextField fx:id="earTagField" promptText="Number only" styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="140"/>
 
-                <Label text="Type" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
-                <ComboBox fx:id="typeCombo" promptText="Select type" styleClass="mgmt-combo" GridPane.columnIndex="3" GridPane.rowIndex="0" prefWidth="160"/>
+                <Label text="Ear Tag *" styleClass="mgmt-form-label"
+                       GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
+                <TextField fx:id="earTagField" promptText="Positive integer"
+                           styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="155"/>
+                <Label text="Type *" styleClass="mgmt-form-label"
+                       GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
+                <ComboBox fx:id="typeCombo" promptText="Select type"
+                          styleClass="mgmt-combo" GridPane.columnIndex="3" GridPane.rowIndex="0" prefWidth="170"/>
 
-                <!-- Row 1: Gender | Weight -->
-                <Label text="Gender" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
-                <ComboBox fx:id="genderCombo" promptText="Select gender" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="160"/>
 
-                <Label text="Weight (kg)" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
-                <TextField fx:id="weightField" promptText="e.g. 320.5" styleClass="mgmt-input" GridPane.columnIndex="3" GridPane.rowIndex="1" prefWidth="140"/>
+                <Label fx:id="earTagError" styleClass="mgmt-error-label"
+                       GridPane.columnIndex="1" GridPane.rowIndex="1" managed="false" visible="false" wrapText="true" maxWidth="155"/>
+                <Label fx:id="typeError" styleClass="mgmt-error-label"
+                       GridPane.columnIndex="3" GridPane.rowIndex="1" managed="false" visible="false" wrapText="true" maxWidth="170"/>
 
-                <!-- Row 2: Birth Date | Entry Date -->
-                <Label text="Birth Date" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
-                <DatePicker fx:id="birthDatePicker" styleClass="mgmt-datepicker" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="160"/>
 
-                <Label text="Entry Date" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
-                <DatePicker fx:id="entryDatePicker" styleClass="mgmt-datepicker" GridPane.columnIndex="3" GridPane.rowIndex="2" prefWidth="160"/>
+                <Label text="Gender *" styleClass="mgmt-form-label"
+                       GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
+                <ComboBox fx:id="genderCombo" promptText="Select gender"
+                          styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="170"/>
+                <Label text="Weight (kg)" styleClass="mgmt-form-label"
+                       GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
+                <TextField fx:id="weightField" promptText="e.g. 320.5  (optional)"
+                           styleClass="mgmt-input" GridPane.columnIndex="3" GridPane.rowIndex="2" prefWidth="155"/>
 
-                <!-- Row 3: Origin | Location -->
-                <Label text="Origin" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="CENTER"/>
-                <ComboBox fx:id="originCombo" promptText="Select origin" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="160"/>
 
-                <Label text="Location" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.valignment="CENTER"/>
-                <ComboBox fx:id="locationCombo" promptText="Select location" styleClass="mgmt-combo" GridPane.columnIndex="3" GridPane.rowIndex="3" prefWidth="160"/>
+                <Label fx:id="genderError" styleClass="mgmt-error-label"
+                       GridPane.columnIndex="1" GridPane.rowIndex="3" managed="false" visible="false" wrapText="true" maxWidth="170"/>
+                <Label fx:id="weightError" styleClass="mgmt-error-label"
+                       GridPane.columnIndex="3" GridPane.rowIndex="3" managed="false" visible="false" wrapText="true" maxWidth="155"/>
 
-                <!-- Row 4: Vaccinated -->
-                <Label text="Vaccinated" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="CENTER"/>
+
+                <Label text="Birth Date" styleClass="mgmt-form-label"
+                       GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="CENTER"/>
+                <DatePicker fx:id="birthDatePicker" styleClass="mgmt-datepicker"
+                            GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="170"/>
+                <Label text="Entry Date" styleClass="mgmt-form-label"
+                       GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.valignment="CENTER"/>
+                <DatePicker fx:id="entryDatePicker" styleClass="mgmt-datepicker"
+                            GridPane.columnIndex="3" GridPane.rowIndex="4" prefWidth="170"/>
+
+
+                <Label fx:id="birthDateError" styleClass="mgmt-error-label"
+                       GridPane.columnIndex="1" GridPane.rowIndex="5" managed="false" visible="false" wrapText="true" maxWidth="170"/>
+                <Label fx:id="entryDateError" styleClass="mgmt-error-label"
+                       GridPane.columnIndex="3" GridPane.rowIndex="5" managed="false" visible="false" wrapText="true" maxWidth="170"/>
+
+
+                <Label text="Origin *" styleClass="mgmt-form-label"
+                       GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.valignment="CENTER"/>
+                <ComboBox fx:id="originCombo" promptText="Select origin"
+                          styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="6" prefWidth="170"/>
+                <Label text="Location *" styleClass="mgmt-form-label"
+                       GridPane.columnIndex="2" GridPane.rowIndex="6" GridPane.valignment="CENTER"/>
+                <ComboBox fx:id="locationCombo" promptText="Select location"
+                          styleClass="mgmt-combo" GridPane.columnIndex="3" GridPane.rowIndex="6" prefWidth="170"/>
+
+
+                <Label fx:id="originError" styleClass="mgmt-error-label"
+                       GridPane.columnIndex="1" GridPane.rowIndex="7" managed="false" visible="false" wrapText="true" maxWidth="170"/>
+                <Label fx:id="locationError" styleClass="mgmt-error-label"
+                       GridPane.columnIndex="3" GridPane.rowIndex="7" managed="false" visible="false" wrapText="true" maxWidth="170"/>
+
+
+                <Label text="Vaccinated" styleClass="mgmt-form-label"
+                       GridPane.columnIndex="0" GridPane.rowIndex="8" GridPane.valignment="CENTER"/>
                 <CheckBox fx:id="vaccinatedCheck" text="Yes, this animal is vaccinated" styleClass="mgmt-check"
-                          GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.columnSpan="3"/>
+                          GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.columnSpan="3"/>
 
-                <!-- Row 5: Buttons -->
-                <HBox spacing="10" alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="4">
+
+                <HBox spacing="10" alignment="CENTER_LEFT"
+                      GridPane.columnIndex="0" GridPane.rowIndex="9" GridPane.columnSpan="4">
                     <padding><Insets top="6"/></padding>
                     <Button text="Add Animal" onAction="#onAddAnimal" styleClass="mgmt-btn-primary"/>
                     <Button text="Update" fx:id="updateAnimalBtn" onAction="#onUpdateAnimal" styleClass="mgmt-btn-ghost" disable="true"/>
@@ -69,7 +104,6 @@
         </VBox>
     </VBox>
 
-    <!-- Table Card -->
     <VBox styleClass="mgmt-table-card" VBox.vgrow="ALWAYS" spacing="12">
         <HBox alignment="CENTER_LEFT" spacing="12">
             <Label text="All Animals" styleClass="mgmt-table-title"/>
