@@ -20,6 +20,9 @@
             <Tab text="Types &amp; Locations" styleClass="mgmt-tab">
                 <fx:include source="enum_management_view.fxml"/>
             </Tab>
+            <Tab text="AI Predictor" styleClass="mgmt-tab">
+                <fx:include source="ai_prediction_view.fxml"/>
+            </Tab>
         </tabs>
     </TabPane>
 </VBox>
