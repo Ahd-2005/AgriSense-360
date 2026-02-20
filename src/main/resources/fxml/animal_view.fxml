@@ -59,7 +59,7 @@
             <Button text="Refresh" onAction="#onRefreshAnimals" styleClass="mgmt-btn-ghost"/>
         </HBox>
         <ScrollPane fitToWidth="true" styleClass="mgmt-scroll" VBox.vgrow="ALWAYS" minHeight="200">
-            <GridPane fx:id="animalGrid" styleClass="mgmt-grid" hgap="16" vgap="16"/>
+            <VBox fx:id="animalTableContainer" styleClass="mgmt-table-container"/>
         </ScrollPane>
     </VBox>
 </VBox>

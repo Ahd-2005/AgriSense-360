@@ -8,9 +8,10 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import java.util.Comparator;
 import javafx.util.StringConverter;
 import services.ServiceAnimal;
 import services.ServiceAnimalHealthRecord;
@@ -35,7 +36,7 @@ public class HealthRecordController implements Initializable {
     @FXML private Button updateBtn;
     @FXML private Button deleteBtn;
     @FXML private Label recordsTitleLabel;
-    @FXML private GridPane recordGrid;
+    @FXML private VBox recordTableContainer;
     @FXML private TextField searchField;
     @FXML private ComboBox<String> searchFieldCombo;
 
@@ -44,6 +45,8 @@ public class HealthRecordController implements Initializable {
     private final ObservableList<AnimalHealthRecord> recordList = FXCollections.observableArrayList();
     private FilteredList<AnimalHealthRecord> filteredRecords;
     private AnimalHealthRecord selectedRecord;
+    private String currentSortColumn = null;
+    private boolean sortAscending = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -63,13 +66,13 @@ public class HealthRecordController implements Initializable {
         if (searchField != null) {
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filterRecords(newValue);
-                refreshRecordGrid();
+                refreshRecordTable();
             });
         }
         if (searchFieldCombo != null) {
             searchFieldCombo.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 filterRecords(searchField.getText());
-                refreshRecordGrid();
+                refreshRecordTable();
             });
         }
 
@@ -79,63 +82,123 @@ public class HealthRecordController implements Initializable {
         AnimalListRefresh.addListener(this::loadAnimals);
     }
 
-    private static final int RECORD_GRID_COLUMNS = 3;
+    private void refreshRecordTable() {
+        if (recordTableContainer == null) return;
+        recordTableContainer.getChildren().clear();
+        
 
-    private void refreshRecordGrid() {
-        if (recordGrid == null) return;
-        recordGrid.getChildren().clear();
-        int col = 0, row = 0;
-        for (AnimalHealthRecord r : filteredRecords) {
-            VBox card = createRecordCard(r);
-            recordGrid.add(card, col, row);
-            col++;
-            if (col >= RECORD_GRID_COLUMNS) {
-                col = 0;
-                row++;
-            }
+        HBox headerRow = createRecordHeaderRow();
+        recordTableContainer.getChildren().add(headerRow);
+        
+
+        List<AnimalHealthRecord> sortedList = new java.util.ArrayList<>(filteredRecords);
+        if (currentSortColumn != null) {
+            sortedList.sort(getRecordComparator(currentSortColumn, sortAscending));
+        }
+        
+        for (AnimalHealthRecord r : sortedList) {
+            HBox row = createRecordDataRow(r);
+            recordTableContainer.getChildren().add(row);
         }
     }
 
-    private VBox createRecordCard(AnimalHealthRecord r) {
-        VBox card = new VBox(8);
-        card.getStyleClass().add("mgmt-grid-card");
+    private HBox createRecordHeaderRow() {
+        HBox header = new HBox();
+        header.getStyleClass().add("mgmt-table-header-row");
+        header.setAlignment(Pos.CENTER_LEFT);
+        
+        String[] headers = {"ID", "Date", "Weight", "Appetite", "Condition", "Production", "Notes"};
+        double[] widths = {50, 110, 80, 90, 90, 90, 180};
+        
+        for (int i = 0; i < headers.length; i++) {
+            Label headerLabel = new Label(headers[i]);
+            headerLabel.getStyleClass().add("mgmt-table-header-cell");
+            headerLabel.setPrefWidth(widths[i]);
+            headerLabel.setMinWidth(widths[i]);
+            headerLabel.setAlignment(Pos.CENTER_LEFT);
+            
+            final String column = headers[i];
+            headerLabel.setOnMouseClicked(e -> {
+                if (currentSortColumn != null && currentSortColumn.equals(column)) {
+                    sortAscending = !sortAscending;
+                } else {
+                    currentSortColumn = column;
+                    sortAscending = true;
+                }
+                refreshRecordTable();
+            });
+            
+            if (currentSortColumn != null && currentSortColumn.equals(column)) {
+                headerLabel.setText(headers[i] + (sortAscending ? " ▲" : " ▼"));
+            }
+            
+            header.getChildren().add(headerLabel);
+        }
+        return header;
+    }
+
+    private HBox createRecordDataRow(AnimalHealthRecord r) {
+        HBox row = new HBox();
+        row.getStyleClass().add("mgmt-table-row");
         if (selectedRecord != null && selectedRecord.getId() != null && selectedRecord.getId().equals(r.getId())) {
-            card.getStyleClass().add("mgmt-grid-card-selected");
+            row.getStyleClass().add("mgmt-table-row-selected");
         }
-        card.setPadding(new Insets(14));
-        card.setPrefWidth(220);
-        card.setMinWidth(180);
-
-        String notesShort = r.getNotes();
-        if (notesShort != null && notesShort.length() > 40) {
-            notesShort = notesShort.substring(0, 37) + "...";
+        row.setAlignment(Pos.CENTER_LEFT);
+        
+        double[] widths = {50, 110, 80, 90, 90, 90, 180};
+        String notes = r.getNotes();
+        if (notes != null && notes.length() > 30) {
+            notes = notes.substring(0, 27) + "...";
         }
-
-        card.getChildren().addAll(
-            recordLine("ID", r.getId() != null ? r.getId().toString() : "-"),
-            recordLine("Date", r.getRecordDate() != null ? r.getRecordDate().toString() : "-"),
-            recordLine("Weight", r.getWeight() != null ? r.getWeight() + " kg" : "-"),
-            recordLine("Appetite", r.getAppetite() != null ? r.getAppetite().name() : "-"),
-            recordLine("Condition", r.getConditionStatus() != null ? r.getConditionStatus().name() : "-"),
-            recordLine("Production", formatProduction(r)),
-            recordLine("Notes", notesShort != null ? notesShort : "-")
-        );
-
-        card.setOnMouseClicked(e -> {
+        String[] values = {
+            r.getId() != null ? r.getId().toString() : "-",
+            r.getRecordDate() != null ? r.getRecordDate().toString() : "-",
+            r.getWeight() != null ? r.getWeight() + " kg" : "-",
+            r.getAppetite() != null ? r.getAppetite().name() : "-",
+            r.getConditionStatus() != null ? r.getConditionStatus().name() : "-",
+            formatProduction(r),
+            notes != null ? notes : "-"
+        };
+        
+        for (int i = 0; i < values.length; i++) {
+            Label cell = new Label(values[i]);
+            cell.getStyleClass().add("mgmt-table-cell");
+            cell.setPrefWidth(widths[i]);
+            cell.setMinWidth(widths[i]);
+            cell.setAlignment(Pos.CENTER_LEFT);
+            row.getChildren().add(cell);
+        }
+        
+        row.setOnMouseClicked(e -> {
             selectedRecord = r;
-            refreshRecordGrid();
+            refreshRecordTable();
             updateBtn.setDisable(false);
             deleteBtn.setDisable(false);
             onTableRowSelected();
         });
-        return card;
+        
+        return row;
     }
 
-    private static Label recordLine(String key, String value) {
-        Label l = new Label(key + ": " + (value != null ? value : ""));
-        l.getStyleClass().add("mgmt-grid-card-line");
-        l.setWrapText(true);
-        return l;
+    private Comparator<AnimalHealthRecord> getRecordComparator(String column, boolean ascending) {
+        Comparator<AnimalHealthRecord> comp = switch (column) {
+            case "ID" -> Comparator.comparing(r -> r.getId() != null ? r.getId() : 0);
+            case "Date" -> Comparator.comparing(r -> r.getRecordDate() != null ? r.getRecordDate() : LocalDate.MIN);
+            case "Weight" -> Comparator.comparing(r -> r.getWeight() != null ? r.getWeight() : 0.0);
+            case "Appetite" -> Comparator.comparing(r -> r.getAppetite() != null ? r.getAppetite().name() : "");
+            case "Condition" -> Comparator.comparing(r -> r.getConditionStatus() != null ? r.getConditionStatus().name() : "");
+            case "Production" -> Comparator.comparing(r -> {
+                String prod = formatProduction(r);
+                try {
+                    return prod != null && !prod.isEmpty() ? Double.parseDouble(prod) : 0.0;
+                } catch (NumberFormatException e) {
+                    return 0.0;
+                }
+            });
+            case "Notes" -> Comparator.comparing(r -> r.getNotes() != null ? r.getNotes() : "");
+            default -> Comparator.comparing(r -> r.getId() != null ? r.getId() : 0);
+        };
+        return ascending ? comp : comp.reversed();
     }
 
     private void filterRecords(String searchText) {
@@ -188,7 +251,6 @@ public class HealthRecordController implements Initializable {
                     return false;
             }
         });
-        refreshRecordGrid();
     }
 
     private String formatProduction(AnimalHealthRecord r) {
@@ -264,7 +326,7 @@ public class HealthRecordController implements Initializable {
         recordList.clear();
         try {
             recordList.addAll(serviceRecord.getRecordsByAnimalId(animalId));
-            refreshRecordGrid();
+            refreshRecordTable();
         } catch (SQLException e) {
             showError(e.getMessage());
         }
