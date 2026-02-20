@@ -16,7 +16,10 @@ controllers\MainLayoutController.class
 controllers\EnumManagementController.class
 com\example\agrisens360\Launcher.class
 entity\Animal.class
+controllers\AIPredictionController$1.class
+controllers\AIPredictionController.class
 entity\Culture.class
+controllers\AIPredictionController$2.class
 entity\AnimalHealthRecord$ConditionStatus.class
 controllers\CultureController.class
 entity\EvaluationPerformance.class

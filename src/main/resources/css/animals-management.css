@@ -488,3 +488,62 @@
     -fx-border-color: #c62828;
     -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.18), 6, 0, 0, 0);
 }
+
+.ai-condition-badge {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 14 48;
+    -fx-background-radius: 30;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);
+}
+
+.ai-condition-badge-healthy {
+    -fx-background-color: linear-gradient(to right, #2e7d32, #43a047);
+}
+
+.ai-condition-badge-sick {
+    -fx-background-color: linear-gradient(to right, #e65100, #f57c00);
+}
+
+.ai-condition-badge-injured {
+    -fx-background-color: linear-gradient(to right, #1565c0, #1e88e5);
+}
+
+.ai-condition-badge-critical {
+    -fx-background-color: linear-gradient(to right, #b71c1c, #e53935);
+}
+
+.ai-confidence-bar {
+    -fx-pref-height: 13px;
+    -fx-background-radius: 7px;
+    -fx-border-radius: 7px;
+}
+
+.ai-confidence-bar > .bar {
+    -fx-background-radius: 7px;
+    -fx-background-color: linear-gradient(to right, #5a9814, #81c784);
+}
+
+.ai-confidence-bar > .track {
+    -fx-background-radius: 7px;
+    -fx-background-color: rgba(43, 59, 31, 0.10);
+}
+
+.ai-confidence-value {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3d6b0f;
+}
+
+.ai-detail-value {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e2d17;
+}
+
+.ai-section-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(35, 48, 27, 0.55);
+    -fx-font-weight: bold;
+}
