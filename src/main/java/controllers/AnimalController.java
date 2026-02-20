@@ -92,8 +92,9 @@ public class AnimalController implements Initializable {
             sortedList.sort(getComparator(currentSortColumn, sortAscending));
         }
         
+        int rowIdx = 0;
         for (Animal a : sortedList) {
-            HBox row = createDataRow(a);
+            HBox row = createDataRow(a, rowIdx++);
             animalTableContainer.getChildren().add(row);
         }
     }
@@ -133,14 +134,14 @@ public class AnimalController implements Initializable {
         return header;
     }
 
-    private HBox createDataRow(Animal a) {
+    private HBox createDataRow(Animal a, int rowIndex) {
         HBox row = new HBox();
-        row.getStyleClass().add("mgmt-table-row");
+        row.getStyleClass().add(rowIndex % 2 == 0 ? "mgmt-table-row" : "mgmt-table-row-alt");
         if (selectedAnimal != null && selectedAnimal.getId() != null && selectedAnimal.getId().equals(a.getId())) {
             row.getStyleClass().add("mgmt-table-row-selected");
         }
         row.setAlignment(Pos.CENTER_LEFT);
-        
+
         double[] widths = {50, 80, 90, 80, 80, 90, 110, 70, 110, 120};
         String[] values = {
             a.getId() != null ? a.getId().toString() : "-",
@@ -154,13 +155,26 @@ public class AnimalController implements Initializable {
             a.getOrigin() != null ? a.getOrigin().name() : "-",
             a.getLocation() != null ? a.getLocation() : "-"
         };
-        
+
         for (int i = 0; i < values.length; i++) {
             Label cell = new Label(values[i]);
-            cell.getStyleClass().add("mgmt-table-cell");
             cell.setPrefWidth(widths[i]);
             cell.setMinWidth(widths[i]);
             cell.setAlignment(Pos.CENTER_LEFT);
+            if (i == 5) {
+
+                String status = values[i].toLowerCase();
+                String badge = switch (status) {
+                    case "healthy"  -> "badge-healthy";
+                    case "sick"     -> "badge-sick";
+                    case "injured"  -> "badge-injured";
+                    case "critical" -> "badge-critical";
+                    default         -> "badge-neutral";
+                };
+                cell.getStyleClass().addAll("mgmt-table-cell", badge);
+            } else {
+                cell.getStyleClass().add("mgmt-table-cell");
+            }
             row.getChildren().add(cell);
         }
         

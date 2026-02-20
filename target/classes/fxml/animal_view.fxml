@@ -5,57 +5,77 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.AnimalController"
-      spacing="24" VBox.vgrow="ALWAYS" >
+      spacing="20" VBox.vgrow="ALWAYS">
     <padding>
         <Insets top="0" right="0" bottom="0" left="0"/>
     </padding>
 
+    <!-- Form Card -->
+    <VBox styleClass="mgmt-form-card" spacing="0">
 
-    <VBox styleClass="mgmt-form-card" spacing="16">
-        <Label text="Add or edit animal" styleClass="mgmt-form-title"/>
-        <GridPane hgap="20" vgap="12" styleClass="mgmt-form-grid">
-            <Label text="Ear Tag" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <TextField fx:id="earTagField" promptText="Number only" styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="140"/>
+        <!-- Card Header -->
+        <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="3">
+                <Label text="Add / Edit Animal" styleClass="mgmt-form-title"/>
+                <Label text="Fill in the fields below, then click Add Animal or select a row to edit." styleClass="mgmt-form-subtitle"/>
+            </VBox>
+        </HBox>
 
-            <Label text="Type" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <ComboBox fx:id="typeCombo" promptText="Select type" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="160"/>
+        <!-- Card Body -->
+        <VBox styleClass="mgmt-form-body" spacing="0">
+            <GridPane hgap="16" vgap="11">
 
-            <Label text="Gender" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <ComboBox fx:id="genderCombo" promptText="Select gender" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="160"/>
+                <!-- Row 0: Ear Tag | Type -->
+                <Label text="Ear Tag" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
+                <TextField fx:id="earTagField" promptText="Number only" styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="140"/>
 
-            <Label text="Weight (kg)" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-            <TextField fx:id="weightField" promptText="kg" styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="140"/>
+                <Label text="Type" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
+                <ComboBox fx:id="typeCombo" promptText="Select type" styleClass="mgmt-combo" GridPane.columnIndex="3" GridPane.rowIndex="0" prefWidth="160"/>
 
-            <Label text="Birth Date" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-            <DatePicker fx:id="birthDatePicker" styleClass="mgmt-datepicker" GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="160"/>
+                <!-- Row 1: Gender | Weight -->
+                <Label text="Gender" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
+                <ComboBox fx:id="genderCombo" promptText="Select gender" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="160"/>
 
-            <Label text="Entry Date" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-            <DatePicker fx:id="entryDatePicker" styleClass="mgmt-datepicker" GridPane.columnIndex="1" GridPane.rowIndex="5" prefWidth="160"/>
+                <Label text="Weight (kg)" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
+                <TextField fx:id="weightField" promptText="e.g. 320.5" styleClass="mgmt-input" GridPane.columnIndex="3" GridPane.rowIndex="1" prefWidth="140"/>
 
-            <Label text="Origin" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-            <ComboBox fx:id="originCombo" promptText="Select origin" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="6" prefWidth="160"/>
+                <!-- Row 2: Birth Date | Entry Date -->
+                <Label text="Birth Date" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
+                <DatePicker fx:id="birthDatePicker" styleClass="mgmt-datepicker" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="160"/>
 
-            <Label text="Location" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-            <ComboBox fx:id="locationCombo" promptText="Select location" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="7" prefWidth="160"/>
+                <Label text="Entry Date" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
+                <DatePicker fx:id="entryDatePicker" styleClass="mgmt-datepicker" GridPane.columnIndex="3" GridPane.rowIndex="2" prefWidth="160"/>
 
-            <Label text="Vaccinated" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-            <CheckBox fx:id="vaccinatedCheck" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+                <!-- Row 3: Origin | Location -->
+                <Label text="Origin" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="CENTER"/>
+                <ComboBox fx:id="originCombo" promptText="Select origin" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="160"/>
 
-            <HBox spacing="12" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="9">
-                <Button text="Add Animal" onAction="#onAddAnimal" styleClass="mgmt-btn-primary"/>
-                <Button text="Update" fx:id="updateAnimalBtn" onAction="#onUpdateAnimal" styleClass="mgmt-btn-ghost" disable="true"/>
-                <Button text="Delete" fx:id="deleteAnimalBtn" onAction="#onDeleteAnimal" styleClass="mgmt-btn-danger" disable="true"/>
-            </HBox>
-        </GridPane>
+                <Label text="Location" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.valignment="CENTER"/>
+                <ComboBox fx:id="locationCombo" promptText="Select location" styleClass="mgmt-combo" GridPane.columnIndex="3" GridPane.rowIndex="3" prefWidth="160"/>
+
+                <!-- Row 4: Vaccinated -->
+                <Label text="Vaccinated" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.valignment="CENTER"/>
+                <CheckBox fx:id="vaccinatedCheck" text="Yes, this animal is vaccinated" styleClass="mgmt-check"
+                          GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.columnSpan="3"/>
+
+                <!-- Row 5: Buttons -->
+                <HBox spacing="10" alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="4">
+                    <padding><Insets top="6"/></padding>
+                    <Button text="Add Animal" onAction="#onAddAnimal" styleClass="mgmt-btn-primary"/>
+                    <Button text="Update" fx:id="updateAnimalBtn" onAction="#onUpdateAnimal" styleClass="mgmt-btn-ghost" disable="true"/>
+                    <Button text="Delete" fx:id="deleteAnimalBtn" onAction="#onDeleteAnimal" styleClass="mgmt-btn-danger" disable="true"/>
+                </HBox>
+            </GridPane>
+        </VBox>
     </VBox>
 
-
+    <!-- Table Card -->
     <VBox styleClass="mgmt-table-card" VBox.vgrow="ALWAYS" spacing="12">
-        <HBox alignment="CENTER_LEFT" spacing="16">
-            <Label text="All animals" styleClass="mgmt-table-title"/>
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label text="All Animals" styleClass="mgmt-table-title"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <ComboBox fx:id="searchFieldCombo" promptText="Search by" styleClass="mgmt-combo" prefWidth="140"/>
-            <TextField fx:id="searchField" promptText="Search..." styleClass="mgmt-input" prefWidth="200"/>
+            <ComboBox fx:id="searchFieldCombo" promptText="Search by" styleClass="mgmt-combo" prefWidth="135"/>
+            <TextField fx:id="searchField" promptText="Search..." styleClass="mgmt-input" prefWidth="190"/>
             <Button text="Refresh" onAction="#onRefreshAnimals" styleClass="mgmt-btn-ghost"/>
         </HBox>
         <ScrollPane fitToWidth="true" styleClass="mgmt-scroll" VBox.vgrow="ALWAYS" minHeight="200">

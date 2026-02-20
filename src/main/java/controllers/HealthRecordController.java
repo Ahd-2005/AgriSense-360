@@ -96,8 +96,9 @@ public class HealthRecordController implements Initializable {
             sortedList.sort(getRecordComparator(currentSortColumn, sortAscending));
         }
         
+        int rowIdx = 0;
         for (AnimalHealthRecord r : sortedList) {
-            HBox row = createRecordDataRow(r);
+            HBox row = createRecordDataRow(r, rowIdx++);
             recordTableContainer.getChildren().add(row);
         }
     }
@@ -137,14 +138,14 @@ public class HealthRecordController implements Initializable {
         return header;
     }
 
-    private HBox createRecordDataRow(AnimalHealthRecord r) {
+    private HBox createRecordDataRow(AnimalHealthRecord r, int rowIndex) {
         HBox row = new HBox();
-        row.getStyleClass().add("mgmt-table-row");
+        row.getStyleClass().add(rowIndex % 2 == 0 ? "mgmt-table-row" : "mgmt-table-row-alt");
         if (selectedRecord != null && selectedRecord.getId() != null && selectedRecord.getId().equals(r.getId())) {
             row.getStyleClass().add("mgmt-table-row-selected");
         }
         row.setAlignment(Pos.CENTER_LEFT);
-        
+
         double[] widths = {50, 110, 80, 90, 90, 90, 180};
         String notes = r.getNotes();
         if (notes != null && notes.length() > 30) {
@@ -159,13 +160,26 @@ public class HealthRecordController implements Initializable {
             formatProduction(r),
             notes != null ? notes : "-"
         };
-        
+
         for (int i = 0; i < values.length; i++) {
             Label cell = new Label(values[i]);
-            cell.getStyleClass().add("mgmt-table-cell");
             cell.setPrefWidth(widths[i]);
             cell.setMinWidth(widths[i]);
             cell.setAlignment(Pos.CENTER_LEFT);
+            if (i == 4) {
+
+                String status = values[i].toLowerCase();
+                String badge = switch (status) {
+                    case "healthy"  -> "badge-healthy";
+                    case "sick"     -> "badge-sick";
+                    case "injured"  -> "badge-injured";
+                    case "critical" -> "badge-critical";
+                    default         -> "badge-neutral";
+                };
+                cell.getStyleClass().addAll("mgmt-table-cell", badge);
+            } else {
+                cell.getStyleClass().add("mgmt-table-cell");
+            }
             row.getChildren().add(cell);
         }
         

@@ -5,34 +5,59 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.EnumManagementController"
-      spacing="24" VBox.vgrow="ALWAYS">
+      spacing="20" VBox.vgrow="ALWAYS">
     <padding>
         <Insets top="0" right="0" bottom="0" left="0"/>
     </padding>
 
-    <Label text="Manage animal types and locations" styleClass="mgmt-form-title" wrapText="true"/>
+    <VBox spacing="2">
+        <Label text="Types &amp; Locations" styleClass="mgmt-form-title"/>
+        <Label text="Define the animal types and pen locations available when adding animals." styleClass="mgmt-form-subtitle"/>
+    </VBox>
 
-    <HBox spacing="32" HBox.hgrow="ALWAYS">
+    <HBox spacing="24" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
 
-        <VBox styleClass="mgmt-form-card" spacing="12" HBox.hgrow="ALWAYS" maxWidth="400">
-            <Label text="Animal types" styleClass="mgmt-form-title"/>
-            <ListView fx:id="typesList" styleClass="mgmt-table" prefHeight="180" VBox.vgrow="NEVER"/>
-            <HBox spacing="8" alignment="CENTER_LEFT">
-                <TextField fx:id="newTypeField" promptText="New type" styleClass="mgmt-input" prefWidth="160"/>
-                <Button text="Add type" onAction="#onAddType" styleClass="mgmt-btn-primary"/>
+        <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS">
+
+            <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
+                <Label text="Animal Types" styleClass="mgmt-form-title"/>
             </HBox>
-            <Button text="Delete selected type" onAction="#onDeleteType" styleClass="mgmt-btn-ghost" fx:id="deleteTypeBtn" disable="true"/>
+
+            <VBox styleClass="mgmt-form-body" spacing="14">
+                <Label text="Click a type to select it, then delete or add a new one below." styleClass="mgmt-form-subtitle"/>
+
+                <ListView fx:id="typesList" styleClass="mgmt-list-view" prefHeight="200" VBox.vgrow="ALWAYS"/>
+
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <TextField fx:id="newTypeField" promptText="New type name..." styleClass="mgmt-input" HBox.hgrow="ALWAYS"/>
+                    <Button text="Add" onAction="#onAddType" styleClass="mgmt-btn-primary"/>
+                </HBox>
+
+                <Button fx:id="deleteTypeBtn" text="Delete Selected Type" onAction="#onDeleteType"
+                        styleClass="mgmt-btn-danger" disable="true" maxWidth="Infinity"/>
+            </VBox>
         </VBox>
 
 
-        <VBox styleClass="mgmt-form-card" spacing="12" HBox.hgrow="ALWAYS" maxWidth="400">
-            <Label text="Locations" styleClass="mgmt-form-title"/>
-            <ListView fx:id="locationsList" styleClass="mgmt-table" prefHeight="180" VBox.vgrow="NEVER"/>
-            <HBox spacing="8" alignment="CENTER_LEFT">
-                <TextField fx:id="newLocationField" promptText="New location" styleClass="mgmt-input" prefWidth="160"/>
-                <Button text="Add location" onAction="#onAddLocation" styleClass="mgmt-btn-primary"/>
+        <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS">
+
+            <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
+                <Label text="Pen Locations" styleClass="mgmt-form-title"/>
             </HBox>
-            <Button text="Delete selected location" onAction="#onDeleteLocation" styleClass="mgmt-btn-ghost" fx:id="deleteLocationBtn" disable="true"/>
+
+            <VBox styleClass="mgmt-form-body" spacing="14">
+                <Label text="Click a location to select it, then delete or add a new one below." styleClass="mgmt-form-subtitle"/>
+
+                <ListView fx:id="locationsList" styleClass="mgmt-list-view" prefHeight="200" VBox.vgrow="ALWAYS"/>
+
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <TextField fx:id="newLocationField" promptText="New location name..." styleClass="mgmt-input" HBox.hgrow="ALWAYS"/>
+                    <Button text="Add" onAction="#onAddLocation" styleClass="mgmt-btn-primary"/>
+                </HBox>
+
+                <Button fx:id="deleteLocationBtn" text="Delete Selected Location" onAction="#onDeleteLocation"
+                        styleClass="mgmt-btn-danger" disable="true" maxWidth="Infinity"/>
+            </VBox>
         </VBox>
     </HBox>
 </VBox>
