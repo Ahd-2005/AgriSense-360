@@ -7,9 +7,10 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import java.util.Comparator;
 import services.ServiceAnimal;
 import services.ServiceEnumManagement;
 import utils.AnimalListRefresh;
@@ -30,7 +31,7 @@ public class AnimalController implements Initializable {
     @FXML private DatePicker entryDatePicker;
     @FXML private ComboBox<String> originCombo;
     @FXML private CheckBox vaccinatedCheck;
-    @FXML private GridPane animalGrid;
+    @FXML private VBox animalTableContainer;
     @FXML private ComboBox<String> locationCombo;
     @FXML private Button deleteAnimalBtn;
     @FXML private Button updateAnimalBtn;
@@ -42,6 +43,8 @@ public class AnimalController implements Initializable {
     private final ObservableList<Animal> animalList = FXCollections.observableArrayList();
     private FilteredList<Animal> filteredAnimals;
     private Animal selectedAnimal;
+    private String currentSortColumn = null;
+    private boolean sortAscending = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -63,74 +66,130 @@ public class AnimalController implements Initializable {
         if (searchField != null) {
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filterAnimals(newValue);
-                refreshGrid();
+                refreshTable();
             });
         }
         if (searchFieldCombo != null) {
             searchFieldCombo.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 filterAnimals(searchField.getText());
+                refreshTable();
             });
         }
 
         AnimalListRefresh.addListener(this::refreshTypeAndLocationCombos);
-        refreshTable();
+        refreshData();
     }
 
-    private static final int ANIMAL_GRID_COLUMNS = 3;
+    private void refreshTable() {
+        if (animalTableContainer == null) return;
+        animalTableContainer.getChildren().clear();
 
-    private void refreshGrid() {
-        if (animalGrid == null) return;
-        animalGrid.getChildren().clear();
-        int col = 0, row = 0;
-        for (Animal a : filteredAnimals) {
-            VBox card = createAnimalCard(a);
-            animalGrid.add(card, col, row);
-            col++;
-            if (col >= ANIMAL_GRID_COLUMNS) {
-                col = 0;
-                row++;
+        HBox headerRow = createHeaderRow();
+        animalTableContainer.getChildren().add(headerRow);
+
+        List<Animal> sortedList = new java.util.ArrayList<>(filteredAnimals);
+        if (currentSortColumn != null) {
+            sortedList.sort(getComparator(currentSortColumn, sortAscending));
+        }
+        
+        for (Animal a : sortedList) {
+            HBox row = createDataRow(a);
+            animalTableContainer.getChildren().add(row);
+        }
+    }
+
+    private HBox createHeaderRow() {
+        HBox header = new HBox();
+        header.getStyleClass().add("mgmt-table-header-row");
+        header.setAlignment(Pos.CENTER_LEFT);
+        
+        String[] headers = {"ID", "Ear Tag", "Type", "Gender", "Weight", "Health", "Birth Date", "Age", "Origin", "Location"};
+        double[] widths = {50, 80, 90, 80, 80, 90, 110, 70, 110, 120};
+        
+        for (int i = 0; i < headers.length; i++) {
+            Label headerLabel = new Label(headers[i]);
+            headerLabel.getStyleClass().add("mgmt-table-header-cell");
+            headerLabel.setPrefWidth(widths[i]);
+            headerLabel.setMinWidth(widths[i]);
+            headerLabel.setAlignment(Pos.CENTER_LEFT);
+            
+            final String column = headers[i];
+            headerLabel.setOnMouseClicked(e -> {
+                if (currentSortColumn != null && currentSortColumn.equals(column)) {
+                    sortAscending = !sortAscending;
+                } else {
+                    currentSortColumn = column;
+                    sortAscending = true;
+                }
+                refreshTable();
+            });
+            
+            if (currentSortColumn != null && currentSortColumn.equals(column)) {
+                headerLabel.setText(headers[i] + (sortAscending ? " ▲" : " ▼"));
             }
+            
+            header.getChildren().add(headerLabel);
         }
+        return header;
     }
 
-    private VBox createAnimalCard(Animal a) {
-        VBox card = new VBox(8);
-        card.getStyleClass().add("mgmt-grid-card");
+    private HBox createDataRow(Animal a) {
+        HBox row = new HBox();
+        row.getStyleClass().add("mgmt-table-row");
         if (selectedAnimal != null && selectedAnimal.getId() != null && selectedAnimal.getId().equals(a.getId())) {
-            card.getStyleClass().add("mgmt-grid-card-selected");
+            row.getStyleClass().add("mgmt-table-row-selected");
         }
-        card.setPadding(new Insets(14));
-        card.setPrefWidth(240);
-        card.setMinWidth(200);
-
-        card.getChildren().addAll(
-            line("ID", a.getId() != null ? a.getId().toString() : "-"),
-            line("Ear Tag", a.getEarTag() != null ? a.getEarTag().toString() : "-"),
-            line("Type", a.getType() != null ? a.getType() : "-"),
-            line("Gender", a.getGender() != null ? a.getGender().name() : "-"),
-            line("Weight", a.getWeight() != null ? a.getWeight() + " kg" : "-"),
-            line("Health", a.getHealthStatus() != null ? a.getHealthStatus() : "-"),
-            line("Birth", a.getBirthDate() != null ? a.getBirthDate().toString() : "-"),
-            line("Age", a.getAge() != null ? a.getAge() + " yr" : "-"),
-            line("Origin", a.getOrigin() != null ? a.getOrigin().name() : "-"),
-            line("Location", a.getLocation() != null ? a.getLocation() : "-")
-        );
-
-        card.setOnMouseClicked(e -> {
+        row.setAlignment(Pos.CENTER_LEFT);
+        
+        double[] widths = {50, 80, 90, 80, 80, 90, 110, 70, 110, 120};
+        String[] values = {
+            a.getId() != null ? a.getId().toString() : "-",
+            a.getEarTag() != null ? a.getEarTag().toString() : "-",
+            a.getType() != null ? a.getType() : "-",
+            a.getGender() != null ? a.getGender().name() : "-",
+            a.getWeight() != null ? a.getWeight() + " kg" : "-",
+            a.getHealthStatus() != null ? a.getHealthStatus() : "-",
+            a.getBirthDate() != null ? a.getBirthDate().toString() : "-",
+            a.getAge() != null ? a.getAge() + " yr" : "-",
+            a.getOrigin() != null ? a.getOrigin().name() : "-",
+            a.getLocation() != null ? a.getLocation() : "-"
+        };
+        
+        for (int i = 0; i < values.length; i++) {
+            Label cell = new Label(values[i]);
+            cell.getStyleClass().add("mgmt-table-cell");
+            cell.setPrefWidth(widths[i]);
+            cell.setMinWidth(widths[i]);
+            cell.setAlignment(Pos.CENTER_LEFT);
+            row.getChildren().add(cell);
+        }
+        
+        row.setOnMouseClicked(e -> {
             selectedAnimal = a;
-            refreshGrid();
+            refreshTable();
             deleteAnimalBtn.setDisable(false);
             updateAnimalBtn.setDisable(false);
             populateForm(a);
         });
-        return card;
+        
+        return row;
     }
 
-    private static Label line(String key, String value) {
-        Label l = new Label(key + ": " + value);
-        l.getStyleClass().add("mgmt-grid-card-line");
-        l.setWrapText(true);
-        return l;
+    private Comparator<Animal> getComparator(String column, boolean ascending) {
+        Comparator<Animal> comp = switch (column) {
+            case "ID" -> Comparator.comparing(a -> a.getId() != null ? a.getId() : 0);
+            case "Ear Tag" -> Comparator.comparing(a -> a.getEarTag() != null ? a.getEarTag() : 0);
+            case "Type" -> Comparator.comparing(a -> a.getType() != null ? a.getType() : "");
+            case "Gender" -> Comparator.comparing(a -> a.getGender() != null ? a.getGender().name() : "");
+            case "Weight" -> Comparator.comparing(a -> a.getWeight() != null ? a.getWeight() : 0.0);
+            case "Health" -> Comparator.comparing(a -> a.getHealthStatus() != null ? a.getHealthStatus() : "");
+            case "Birth Date" -> Comparator.comparing(a -> a.getBirthDate() != null ? a.getBirthDate() : LocalDate.MIN);
+            case "Age" -> Comparator.comparing(a -> a.getAge() != null ? a.getAge() : 0);
+            case "Origin" -> Comparator.comparing(a -> a.getOrigin() != null ? a.getOrigin().name() : "");
+            case "Location" -> Comparator.comparing(a -> a.getLocation() != null ? a.getLocation() : "");
+            default -> Comparator.comparing(a -> a.getId() != null ? a.getId() : 0);
+        };
+        return ascending ? comp : comp.reversed();
     }
 
     private void filterAnimals(String searchText) {
@@ -196,7 +255,6 @@ public class AnimalController implements Initializable {
                     return false;
             }
         });
-        refreshGrid();
     }
 
     private void refreshTypeAndLocationCombos() {
@@ -212,7 +270,7 @@ public class AnimalController implements Initializable {
 
     @FXML
     private void onRefreshAnimals() {
-        refreshTable();
+        refreshData();
     }
 
     @FXML
@@ -266,7 +324,7 @@ public class AnimalController implements Initializable {
             selected.setLocation(location);
             serviceAnimal.update(selected);
             selectedAnimal = null;
-            refreshTable();
+            refreshData();
             clearForm();
             updateAnimalBtn.setDisable(true);
             AnimalListRefresh.notifyAnimalChanged();
@@ -303,7 +361,7 @@ public class AnimalController implements Initializable {
 
             Animal a = new Animal(earTag, type, gender, weight, null, birthDate, entryDate, origin, vaccinated, location);
             serviceAnimal.add(a);
-            refreshTable();
+            refreshData();
             clearForm();
             AnimalListRefresh.notifyAnimalChanged();
             showInfo("Animal added successfully.");
@@ -316,11 +374,11 @@ public class AnimalController implements Initializable {
         }
     }
 
-    private void refreshTable() {
+    private void refreshData() {
         animalList.clear();
         try {
             animalList.addAll(serviceAnimal.getAll());
-            refreshGrid();
+            refreshTable();
         } catch (SQLException e) {
             showError("Could not load animals: " + e.getMessage());
         }

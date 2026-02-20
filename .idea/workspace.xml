@@ -6,6 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AnimalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AnimalController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/HealthRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/HealthRecordController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/css/animals-management.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/animals-management.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/animal_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/animal_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/health_record_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/health_record_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/animal_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/animal_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/health_record_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/health_record_view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,6 +161,8 @@
       <workItem from="1771267813932" duration="158000" />
       <workItem from="1771312142671" duration="456000" />
       <workItem from="1771312995084" duration="3588000" />
+      <workItem from="1771317836541" duration="4441000" />
+      <workItem from="1771602466065" duration="253000" />
     </task>
     <task id="LOCAL-00001" summary="gestion culture +gestion animals+template">
       <option name="closed" value="true" />
