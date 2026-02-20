@@ -259,3 +259,36 @@
     -fx-font-size: 14px;
     -fx-padding: 8;
 }
+
+/* ========== NOUVEAUX ÉTATS DE RÉCOLTE ========== */
+.etat-recolte-prevue {
+    -fx-background-color: #FF9800;
+    -fx-text-fill: white;
+    -fx-padding: 5 10;
+    -fx-background-radius: 12px;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.etat-recolte-en-retard {
+    -fx-background-color: #f44336;
+    -fx-text-fill: white;
+    -fx-padding: 5 10;
+    -fx-background-radius: 12px;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(244, 67, 54, 0.5), 8, 0, 0, 2);
+}
+
+/* ========== BOUTON RÉCOLTE ========== */
+.harvest-button {
+    -fx-background-color: linear-gradient(to bottom, #8BC34A, #7CB342);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(139, 195, 74, 0.4), 8, 0, 0, 2);
+}
+
+.harvest-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #7CB342, #689F38);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}

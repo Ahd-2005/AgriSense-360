@@ -1,14 +1,13 @@
 package controllers;
 
+import utils.CultureDurations;
 import entity.Culture;
 import entity.Parcelle;
 import entity.user;
 import entity.user.Role;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -21,11 +20,11 @@ import services.CultureService;
 import services.ParcelleService;
 import services.SessionManager;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class CultureController {
@@ -118,16 +117,36 @@ public class CultureController {
         try {
             allCultures = service.getAllCultures();
 
-            // Filter by user if not admin
-            if (currentUser != null && currentUser.getRole() != Role.ROLE_ADMIN) {
-                // If you have user_id field in Culture entity, filter here
-                // For now, showing all cultures
-            }
+            // Update all culture states automatically
+            updateAllCulturesStates();
 
             filteredCultures = new ArrayList<>(allCultures);
             displayCultures(filteredCultures);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    /**
+     * Update states of all cultures based on current date
+     */
+    private void updateAllCulturesStates() {
+        for (Culture culture : allCultures) {
+            LocalDate plantationDate = culture.getDatePlantation().toLocalDate();
+            LocalDate recolteDate = culture.getDateRecolte().toLocalDate();
+
+            String calculatedState = CultureDurations.calculateCurrentState(
+                    plantationDate, recolteDate, culture.getNom()
+            );
+
+            // Update if state has changed
+            if (!calculatedState.equals(culture.getEtat())) {
+                culture.setEtat(calculatedState);
+                try {
+                    service.updateCulture(culture);
+                } catch (SQLException e) {
+                    System.err.println("Error updating culture state: " + e.getMessage());
+                }
+            }
         }
     }
 
@@ -159,12 +178,14 @@ public class CultureController {
 
     @FXML
     private void sortByEtat() {
-        // Custom order: Semis, Croissance, Maturité, Récolte
+        // Custom order: Semis, Croissance, Maturité, Récolte, Récolte prévue, Récolte en retard
         Map<String, Integer> etatOrder = new HashMap<>();
         etatOrder.put("Semis", 1);
         etatOrder.put("Croissance", 2);
         etatOrder.put("Maturité", 3);
         etatOrder.put("Récolte", 4);
+        etatOrder.put("Récolte prévue", 5);
+        etatOrder.put("Récolte en retard", 6);
 
         filteredCultures.sort(Comparator.comparing(c -> etatOrder.getOrDefault(c.getEtat(), 999)));
         displayCultures(filteredCultures);
@@ -208,7 +229,7 @@ public class CultureController {
             cultureGrid.add(card, col, row);
 
             col++;
-            if (col == 5) {
+            if (col == 4) {
                 col = 0;
                 row++;
             }
@@ -242,35 +263,49 @@ public class CultureController {
         nameLabel.getStyleClass().add("culture-name");
 
         Label etatLabel = new Label(culture.getEtat());
-        String etatClass = "etat-" + culture.getEtat()
-                .toLowerCase()
-                .replace("é", "e")
-                .replace("è", "e")
-                .replace("à", "a");
+        String etatClass;
+        String etat = culture.getEtat().toLowerCase();
+
+        // Handle special cases for harvest states
+        if (etat.contains("récolte prévue") || etat.contains("recolte prevue")) {
+            etatClass = "etat-recolte-prevue";
+        } else if (etat.contains("récolte en retard") || etat.contains("recolte en retard")) {
+            etatClass = "etat-recolte-en-retard";
+        } else {
+            etatClass = "etat-" + etat
+                    .replace("é", "e")
+                    .replace("è", "e")
+                    .replace("à", "a");
+        }
         etatLabel.getStyleClass().addAll("culture-etat", etatClass);
 
-        HBox buttonBox = new HBox(10);
+        HBox buttonBox = new HBox(8);
         buttonBox.setAlignment(Pos.CENTER);
 
         Button editBtn = new Button("✏");
-        editBtn.setStyle("-fx-font-size: 16px;");
+        editBtn.setStyle("-fx-font-size: 14px;");
         editBtn.getStyleClass().addAll("card-button", "edit-button");
         editBtn.setOnAction(e -> showUpdatePopup(culture));
 
         Button deleteBtn = new Button("🗑");
-        deleteBtn.setStyle("-fx-font-size: 16px;");
+        deleteBtn.setStyle("-fx-font-size: 14px;");
         deleteBtn.getStyleClass().addAll("card-button", "delete-button");
         deleteBtn.setOnAction(e -> handleDelete(culture));
 
+        // Harvest button
+        Button harvestBtn = new Button("🌾 Récolter");
+        harvestBtn.setStyle("-fx-font-size: 14px;");
+        harvestBtn.getStyleClass().addAll("card-button", "harvest-button");
+        harvestBtn.setOnAction(e -> handleHarvest(culture));
+
+        buttonBox.getChildren().addAll(editBtn, deleteBtn, harvestBtn);
         // Disable edit/delete for workers
         if (currentUser != null && currentUser.getRole() == Role.ROLE_OUVRIER) {
             editBtn.setDisable(true);
             deleteBtn.setDisable(true);
         }
 
-        buttonBox.getChildren().addAll(editBtn, deleteBtn);
         card.getChildren().addAll(imageView, typeLabel, nameLabel, etatLabel, buttonBox);
-
         card.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 showDetailPopup(culture);
@@ -297,10 +332,23 @@ public class CultureController {
         HBox header = new HBox();
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        Button closeBtn = new Button("✕");
-        closeBtn.getStyleClass().add("close-button");
+        Button closeBtn = new Button("Fermer");
+        closeBtn.getStyleClass().addAll("card-button", "edit-button");
         closeBtn.setOnAction(e -> popup.close());
-        header.getChildren().addAll(spacer, closeBtn);
+
+        // Create harvest button FIRST before using it
+        Button harvestDetailBtn = new Button("🌾 Récolter cette culture");
+        harvestDetailBtn.getStyleClass().addAll("card-button", "harvest-button");
+        harvestDetailBtn.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30;");
+        harvestDetailBtn.setOnAction(e -> {
+            popup.close();
+            handleHarvest(culture);
+        });
+
+        HBox buttonBox = new HBox(10);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.getChildren().addAll(closeBtn, harvestDetailBtn);
+        header.getChildren().addAll(spacer, buttonBox);
 
         Label title = new Label("📋 Détails de la Culture");
         title.getStyleClass().add("popup-title");
@@ -439,14 +487,39 @@ public class CultureController {
         dateRecoltePicker.getStyleClass().add("form-field");
         drBox.getChildren().addAll(drLabel, dateRecoltePicker);
 
-        VBox etatBox = new VBox(5);
-        Label etatLabel = new Label("État:");
-        etatLabel.getStyleClass().add("form-label");
-        ComboBox<String> etatComboBox = new ComboBox<>();
-        etatComboBox.getStyleClass().add("form-field");
-        etatComboBox.getItems().addAll("Semis", "Croissance", "Maturité", "Récolte");
-        etatComboBox.setValue("Semis");
-        etatBox.getChildren().addAll(etatLabel, etatComboBox);
+        // Auto-calculate harvest date when culture and plantation date are selected
+        Label durationInfoLabel = new Label("");
+        durationInfoLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 12px; -fx-font-weight: bold;");
+        drBox.getChildren().add(durationInfoLabel);
+
+        // Update harvest date when culture name changes
+        nomComboBox.setOnAction(e -> {
+            String selectedNom = nomComboBox.getValue();
+            LocalDate plantation = datePlantationPicker.getValue();
+            if (selectedNom != null && plantation != null) {
+                LocalDate harvestDate = CultureDurations.calculateHarvestDate(plantation, selectedNom);
+                dateRecoltePicker.setValue(harvestDate);
+                int totalDays = CultureDurations.getTotalDuration(selectedNom);
+                durationInfoLabel.setText("📅 Durée estimée: " + totalDays + " jours");
+            }
+            // Also handle image selection
+            if (selectedNom != null) {
+                String img = imageMap.get(selectedNom);
+                // ... existing image code ...
+            }
+        });
+
+        // Update harvest date when plantation date changes
+        datePlantationPicker.setOnAction(e -> {
+            String selectedNom = nomComboBox.getValue();
+            LocalDate plantation = datePlantationPicker.getValue();
+            if (selectedNom != null && plantation != null) {
+                LocalDate harvestDate = CultureDurations.calculateHarvestDate(plantation, selectedNom);
+                dateRecoltePicker.setValue(harvestDate);
+                int totalDays = CultureDurations.getTotalDuration(selectedNom);
+                durationInfoLabel.setText("📅 Durée estimée: " + totalDays + " jours");
+            }
+        });
 
         VBox surfaceBox = new VBox(5);
         Label surfaceLabel = new Label("Surface (m²):");
@@ -470,7 +543,7 @@ public class CultureController {
         saveBtn.getStyleClass().addAll("card-button", "edit-button");
         saveBtn.setOnAction(e -> {
             if (handleAddCulture(typeComboBox, nomComboBox, datePlantationPicker,
-                    dateRecoltePicker, etatComboBox, surfaceField,
+                    dateRecoltePicker, surfaceField,
                     parcelleComboBox, messageLabel)) {
                 popup.close();
                 loadCultureCards();
@@ -478,7 +551,7 @@ public class CultureController {
         });
 
         content.getChildren().addAll(header, typeBox, nomBox, dpBox, drBox,
-                etatBox, surfaceBox, parcelleBox,
+                surfaceBox, parcelleBox,
                 messageLabel, saveBtn);
 
         root.getChildren().add(content);
@@ -527,6 +600,8 @@ public class CultureController {
         idLabel.getStyleClass().add("form-label");
         TextField idField = new TextField(String.valueOf(culture.getId()));
         idField.setEditable(false);
+        idField.setDisable(true);
+        idField.setStyle("-fx-opacity: 0.7; -fx-background-color: #f0f0f0;");
         idField.getStyleClass().add("form-field");
         idBox.getChildren().addAll(idLabel, idField);
 
@@ -577,9 +652,20 @@ public class CultureController {
         etatLabel.getStyleClass().add("form-label");
         ComboBox<String> etatComboBox = new ComboBox<>();
         etatComboBox.getStyleClass().add("form-field");
-        etatComboBox.getItems().addAll("Semis", "Croissance", "Maturité", "Récolte");
+        etatComboBox.getItems().addAll("Semis", "Croissance", "Maturité", "Récolte", "Récolte prévue", "Récolte en retard");
         etatComboBox.setValue(culture.getEtat());
         etatBox.getChildren().addAll(etatLabel, etatComboBox);
+
+        // Store original value for reference
+        AtomicReference<String> originalEtat = new AtomicReference<>(culture.getEtat());
+
+        etatComboBox.setOnAction(e -> {
+            String newEtat = etatComboBox.getValue();
+            if (!newEtat.equals(originalEtat)) {
+                showEtatChangeWarning(culture, newEtat, datePlantationPicker, dateRecoltePicker, nomComboBox);
+                originalEtat.set(newEtat); // Update for next change
+            }
+        });
 
         VBox surfaceBox = new VBox(5);
         Label surfaceLabel = new Label("Surface (m²):");
@@ -628,16 +714,85 @@ public class CultureController {
         popup.show();
     }
 
+    private void showEtatChangeWarning(Culture culture, String newEtat,
+                                       DatePicker datePlantationPicker,
+                                       DatePicker dateRecoltePicker,
+                                       ComboBox<String> nomComboBox) {
+        Alert warning = new Alert(Alert.AlertType.WARNING);
+        warning.setTitle("⚠️ Attention - Changement d'état");
+        warning.setHeaderText("Vous êtes sur le point de changer l'état de la culture");
+        warning.setContentText(
+                "État actuel: " + culture.getEtat() + "\n" +
+                        "Nouvel état: " + newEtat + "\n\n" +
+                        "La date de récolte sera recalculée en fonction du nouvel état.\n" +
+                        "Voulez-vous continuer?"
+        );
+
+        ButtonType btnConfirm = new ButtonType("Oui, continuer", ButtonBar.ButtonData.OK_DONE);
+        ButtonType btnCancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+        warning.getButtonTypes().setAll(btnConfirm, btnCancel);
+
+        Optional<ButtonType> result = warning.showAndWait();
+        if (result.isPresent() && result.get() == btnConfirm) {
+            // Recalculate dates based on new state
+            recalculateDatesFromEtat(newEtat, datePlantationPicker, dateRecoltePicker, nomComboBox);
+        }
+    }
+
+    private void recalculateDatesFromEtat(String etat, DatePicker datePlantationPicker,
+                                          DatePicker dateRecoltePicker,
+                                          ComboBox<String> nomComboBox) {
+        String selectedNom = nomComboBox.getValue();
+        LocalDate currentPlantation = datePlantationPicker.getValue();
+
+        if (selectedNom != null && currentPlantation != null) {
+            int totalDays = CultureDurations.getTotalDuration(selectedNom);
+            int daysPerState = totalDays / 4; // Approximate: Semis, Croissance, Maturité, Récolte
+
+            LocalDate newHarvestDate;
+
+            switch (etat) {
+                case "Semis":
+                    // Keep original dates
+                    newHarvestDate = currentPlantation.plusDays(totalDays);
+                    break;
+                case "Croissance":
+                    // Move plantation date forward to start of Croissance
+                    LocalDate croissanceStart = currentPlantation.plusDays(daysPerState);
+                    datePlantationPicker.setValue(croissanceStart);
+                    newHarvestDate = croissanceStart.plusDays(totalDays - daysPerState);
+                    break;
+                case "Maturité":
+                    // Move plantation date forward to start of Maturité
+                    LocalDate maturiteStart = currentPlantation.plusDays(daysPerState * 2);
+                    datePlantationPicker.setValue(maturiteStart);
+                    newHarvestDate = maturiteStart.plusDays(totalDays - (daysPerState * 2));
+                    break;
+                case "Récolte":
+                case "Récolte prévue":
+                case "Récolte en retard":
+                    // Move plantation date forward to start of Récolte
+                    LocalDate recolteStart = currentPlantation.plusDays(daysPerState * 3);
+                    datePlantationPicker.setValue(recolteStart);
+                    newHarvestDate = recolteStart;
+                    break;
+                default:
+                    newHarvestDate = CultureDurations.calculateHarvestDate(currentPlantation, selectedNom);
+            }
+
+            dateRecoltePicker.setValue(newHarvestDate);
+        }
+    }
+
     private boolean handleAddCulture(ComboBox<String> typeComboBox, ComboBox<String> nomComboBox,
                                      DatePicker datePlantationPicker, DatePicker dateRecoltePicker,
-                                     ComboBox<String> etatComboBox, TextField surfaceField,
+                                     TextField surfaceField,
                                      ComboBox<String> parcelleComboBox, Label messageLabel) {
         try {
             String type = typeComboBox.getValue();
             String nom = nomComboBox.getValue();
             LocalDate dp = datePlantationPicker.getValue();
             LocalDate dr = dateRecoltePicker.getValue();
-            String etat = etatComboBox.getValue();
             String parcelleSelection = parcelleComboBox.getValue();
 
             if (type == null || type.trim().isEmpty()) {
@@ -647,11 +802,6 @@ public class CultureController {
 
             if (nom == null || nom.trim().isEmpty()) {
                 showError(messageLabel, "❌ Veuillez sélectionner un nom de culture");
-                return false;
-            }
-
-            if (etat == null || etat.trim().isEmpty()) {
-                showError(messageLabel, "❌ Veuillez sélectionner un état");
                 return false;
             }
 
@@ -719,7 +869,13 @@ public class CultureController {
             c.setDatePlantation(Date.valueOf(dp));
             c.setDateRecolte(Date.valueOf(dr));
             c.setSurface(surface);
-            c.setEtat(etat.trim());
+
+            // Calculate initial state based on dates
+            String calculatedEtat = CultureDurations.calculateCurrentState(
+                    dp, dr, nom.trim()
+            );
+            c.setEtat(calculatedEtat);
+
             c.setParcelleId(parcelleId);
 
             String imagePath = imageMap.get(nom);
@@ -890,6 +1046,83 @@ public class CultureController {
                 }
             }
         });
+    }
+    /**
+     * Handle harvest action
+     */
+    private void handleHarvest(Culture culture) {
+        String etat = culture.getEtat();
+        boolean isReady = CultureDurations.isReadyToHarvest(etat);
+
+        if (!isReady) {
+            // Show warning for early harvest
+            Alert warning = new Alert(Alert.AlertType.WARNING);
+            warning.setTitle("⚠️ Attention - Récolte Prématurée");
+            warning.setHeaderText("Cette culture n'est pas encore prête!");
+            warning.setContentText(
+                    "État actuel: " + etat + "\n\n" +
+                            CultureDurations.getEarlyHarvestWarning(etat) + "\n\n" +
+                            "Voulez-vous quand même continuer la récolte?"
+            );
+
+            ButtonType btnConfirm = new ButtonType("Oui, récolter quand même", ButtonBar.ButtonData.OK_DONE);
+            ButtonType btnCancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+            warning.getButtonTypes().setAll(btnConfirm, btnCancel);
+
+            Optional<ButtonType> result = warning.showAndWait();
+            if (result.isEmpty() || result.get() != btnConfirm) {
+                return; // User cancelled
+            }
+        }
+
+        // Confirm harvest
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmer la récolte");
+        confirm.setHeaderText("Récolter: " + culture.getNom());
+        confirm.setContentText(
+                "Type: " + culture.getTypeCulture() + "\n" +
+                        "Surface: " + culture.getSurface() + " m²\n" +
+                        "État: " + culture.getEtat() + "\n\n" +
+                        "La parcelle sera libérée et cette culture sera supprimée.\n" +
+                        "Cette action est irréversible."
+        );
+
+        Optional<ButtonType> confirmResult = confirm.showAndWait();
+        if (confirmResult.isPresent() && confirmResult.get() == ButtonType.OK) {
+            performHarvest(culture);
+        }
+    }
+
+    /**
+     * Perform the actual harvest - delete culture and free parcelle space
+     */
+    private void performHarvest(Culture culture) {
+        try {
+            // Delete culture (this will automatically restore surface_restant in CultureService)
+            service.deleteCulture(culture.getId());
+
+            // Show success message
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("✅ Récolte Effectuée");
+            success.setHeaderText("Récolte réussie!");
+            success.setContentText(
+                    culture.getNom() + " a été récolté avec succès.\n\n" +
+                            "Surface libérée: " + culture.getSurface() + " m²\n" +
+                            "La parcelle est maintenant disponible pour une nouvelle plantation."
+            );
+            success.showAndWait();
+
+            // Reload cultures to refresh the view
+            loadCultureCards();
+
+        } catch (SQLException e) {
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setTitle("❌ Erreur");
+            error.setHeaderText("Erreur lors de la récolte");
+            error.setContentText("Impossible de récolter la culture: " + e.getMessage());
+            error.showAndWait();
+            e.printStackTrace();
+        }
     }
 
     private void loadLibreParcelles(ComboBox<String> comboBox) {

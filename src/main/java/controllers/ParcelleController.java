@@ -501,6 +501,23 @@ public class ParcelleController {
                 return false;
             }
 
+            // NEW VALIDATION: Check if trying to set to "Libre" but there are still cultures
+            if ("Libre".equalsIgnoreCase(statut)) {
+                try {
+                    double remainingSurface = service.getRemainingParcelleSize(id);
+                    double usedSurface = surface - remainingSurface;
+
+                    if (usedSurface > 0.01) { // If there are still cultures
+                        showError(messageLabel, "❌ Impossible de passer à 'Libre'! Il y a encore " +
+                                String.format("%.2f", usedSurface) + " m² de cultures dans cette parcelle.");
+                        return false;
+                    }
+                } catch (SQLException e) {
+                    showError(messageLabel, "❌ Erreur de vérification de la surface");
+                    return false;
+                }
+            }
+
             if (localisation == null || localisation.trim().isEmpty() || !localisation.matches("[A-Za-zÀ-ÿ0-9 ,]{3,}")) {
                 showError(messageLabel, "❌ Localisation invalide (min 3 caractères)");
                 return false;
@@ -525,6 +542,14 @@ public class ParcelleController {
             p.setStatut(statut.trim());
 
             service.updateParcelle(p);
+
+            // Show success message
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("Succès");
+            success.setHeaderText(null);
+            success.setContentText("✅ Parcelle modifiée avec succès!");
+            success.showAndWait();
+
             return true;
 
         } catch (Exception e) {
@@ -681,13 +706,15 @@ public class ParcelleController {
     }
 
     // Create a culture card for the popup
+    // Create a culture card for the popup
     private VBox createCultureCardForPopup(Culture culture) {
         VBox card = new VBox(10);
         card.getStyleClass().add("culture-card");
         card.setPrefWidth(260);
         card.setMaxWidth(260);
-        card.setPrefHeight(280);
+        card.setPrefHeight(300); // Increased height
         card.setAlignment(Pos.TOP_CENTER);
+        card.setPadding(new Insets(10));
 
         // Culture image
         ImageView imageView = new ImageView();
@@ -701,32 +728,88 @@ public class ParcelleController {
                 Image img = new Image(getClass().getResourceAsStream("/images/cultures/" + culture.getImg()));
                 imageView.setImage(img);
             } catch (Exception e) {
-                imageView.setImage(new Image(getClass().getResourceAsStream("/images/cultures/default.png")));
+                try {
+                    imageView.setImage(new Image(getClass().getResourceAsStream("/images/cultures/default.png")));
+                } catch (Exception ex) {
+                    imageView.setImage(null);
+                }
             }
         }
 
         // Culture type
         Label typeLabel = new Label(culture.getTypeCulture());
         typeLabel.getStyleClass().add("culture-type");
+        typeLabel.setWrapText(true);
+        typeLabel.setAlignment(Pos.CENTER);
 
         // Culture name
         Label nameLabel = new Label(culture.getNom());
         nameLabel.getStyleClass().add("culture-name");
+        nameLabel.setWrapText(true);
+        nameLabel.setAlignment(Pos.CENTER);
 
-        // État badge
+        // État badge - FIXED to handle harvest states
         Label etatLabel = new Label(culture.getEtat());
-        String etatClass = "etat-" + culture.getEtat()
-                .toLowerCase()
-                .replace("é", "e")
-                .replace("è", "e")
-                .replace("à", "a");
+        String etatClass;
+        String etat = culture.getEtat().toLowerCase();
+
+        // Handle special cases for harvest states
+        if (etat.contains("récolte prévue") || etat.contains("recolte prevue")) {
+            etatClass = "etat-recolte-prevue";
+        } else if (etat.contains("récolte en retard") || etat.contains("recolte en retard")) {
+            etatClass = "etat-recolte-en-retard";
+        } else {
+            etatClass = "etat-" + etat
+                    .replace("é", "e")
+                    .replace("è", "e")
+                    .replace("à", "a");
+        }
         etatLabel.getStyleClass().addAll("culture-etat", etatClass);
+        etatLabel.setWrapText(true);
+        etatLabel.setMaxWidth(200);
 
         // Surface info
         Label surfaceLabel = new Label("📏 " + culture.getSurface() + " m²");
         surfaceLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666; -fx-font-weight: bold;");
 
-        card.getChildren().addAll(imageView, typeLabel, nameLabel, etatLabel, surfaceLabel);
+        // Dates info (optional but helpful)
+        Label datesLabel = new Label("📅 " + culture.getDatePlantation() + " → " + culture.getDateRecolte());
+        datesLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #888;");
+        datesLabel.setWrapText(true);
+        datesLabel.setAlignment(Pos.CENTER);
+
+        card.getChildren().addAll(imageView, typeLabel, nameLabel, etatLabel, surfaceLabel, datesLabel);
+
+        // Add double-click to view full details
+        card.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                showCultureDetailFromParcelle(culture);
+            }
+        });
+
         return card;
+    }
+
+    // Helper method to show culture details from parcelle popup
+    private void showCultureDetailFromParcelle(Culture culture) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/culture_detail.fxml"));
+            if (loader.getLocation() == null) {
+                // If no detail view exists, show a simple alert
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Détails de la culture");
+                alert.setHeaderText(culture.getNom());
+                alert.setContentText(
+                        "Type: " + culture.getTypeCulture() + "\n" +
+                                "État: " + culture.getEtat() + "\n" +
+                                "Date plantation: " + culture.getDatePlantation() + "\n" +
+                                "Date récolte: " + culture.getDateRecolte() + "\n" +
+                                "Surface: " + culture.getSurface() + " m²"
+                );
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
