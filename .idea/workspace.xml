@@ -4,14 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="tous gestion + user">
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="&quot;gestion culture - automatise date recolte + optimiser l etat + function de recolte  &quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CultureController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CultureController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/css/cards.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/cards.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/cultures/pomme_de_terre.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ParcelleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ParcelleController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisense360/servicetests/ServiceAnimalHealthRecordTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/example/agrisense360/servicetests/ServiceAnimalHealthRecordTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/CultureController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CultureController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,8 +25,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="FxmlFile" />
         <option value="Class" />
+        <option value="CSS File" />
+        <option value="FxmlFile" />
       </list>
     </option>
   </component>
@@ -73,6 +75,7 @@
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/images/cultures",
+    "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -148,7 +151,8 @@
       <workItem from="1771281251304" duration="111000" />
       <workItem from="1771285589457" duration="1813000" />
       <workItem from="1771292030699" duration="283000" />
-      <workItem from="1771317165903" duration="14244000" />
+      <workItem from="1771317165903" duration="15083000" />
+      <workItem from="1771620640104" duration="4488000" />
     </task>
     <task id="LOCAL-00001" summary="tous gestion + user">
       <option name="closed" value="true" />
@@ -158,7 +162,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771318318455</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="&quot;gestion culture - automatise date recolte + optimiser l etat + function de recolte  &quot;">
+      <option name="closed" value="true" />
+      <created>1771550029628</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1771550029628</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -189,7 +201,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="tous gestion + user" />
-    <option name="LAST_COMMIT_MESSAGE" value="tous gestion + user" />
+    <MESSAGE value="&quot;gestion culture - automatise date recolte + optimiser l etat + function de recolte  &quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;gestion culture - automatise date recolte + optimiser l etat + function de recolte  &quot;" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

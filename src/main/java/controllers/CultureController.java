@@ -117,8 +117,11 @@ public class CultureController {
         try {
             allCultures = service.getAllCultures();
 
-            // Update all culture states automatically
-            updateAllCulturesStates();
+            // DISABLED: Automatic state update
+            // boolean statesUpdated = updateAllCulturesStates();
+            // if (statesUpdated) {
+            //     allCultures = service.getAllCultures();
+            // }
 
             filteredCultures = new ArrayList<>(allCultures);
             displayCultures(filteredCultures);
@@ -126,10 +129,10 @@ public class CultureController {
             e.printStackTrace();
         }
     }
-    /**
-     * Update states of all cultures based on current date
-     */
-    private void updateAllCulturesStates() {
+    /*
+    private boolean updateAllCulturesStates() {
+        boolean anyUpdated = false;
+
         for (Culture culture : allCultures) {
             LocalDate plantationDate = culture.getDatePlantation().toLocalDate();
             LocalDate recolteDate = culture.getDateRecolte().toLocalDate();
@@ -143,13 +146,18 @@ public class CultureController {
                 culture.setEtat(calculatedState);
                 try {
                     service.updateCulture(culture);
+                    anyUpdated = true;
+                    System.out.println("✅ État mis à jour: " + culture.getNom() + " -> " + calculatedState);
                 } catch (SQLException e) {
-                    System.err.println("Error updating culture state: " + e.getMessage());
+                    System.err.println("❌ Error updating culture state: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }
-    }
 
+        return anyUpdated;
+    }
+    */
     private void filterCultures(String searchText) {
         if (searchText == null || searchText.trim().isEmpty()) {
             filteredCultures = new ArrayList<>(allCultures);
@@ -654,16 +662,64 @@ public class CultureController {
         etatComboBox.getStyleClass().add("form-field");
         etatComboBox.getItems().addAll("Semis", "Croissance", "Maturité", "Récolte", "Récolte prévue", "Récolte en retard");
         etatComboBox.setValue(culture.getEtat());
+        etatComboBox.setDisable(true); // ✅ DÉSACTIVER LE COMBOBOX
+        etatComboBox.setStyle("-fx-opacity: 0.7;"); // Visual feedback qu'il est désactivé
         etatBox.getChildren().addAll(etatLabel, etatComboBox);
 
-        // Store original value for reference
-        AtomicReference<String> originalEtat = new AtomicReference<>(culture.getEtat());
+        // Info message
+        // Info message
+        Label etatInfoLabel = new Label("ℹ️ L'état est calculé automatiquement selon la date");
+        etatInfoLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #888; -fx-padding: 5 0 0 0;");
+        etatBox.getChildren().add(etatInfoLabel);
 
-        etatComboBox.setOnAction(e -> {
-            String newEtat = etatComboBox.getValue();
-            if (!newEtat.equals(originalEtat)) {
-                showEtatChangeWarning(culture, newEtat, datePlantationPicker, dateRecoltePicker, nomComboBox);
-                originalEtat.set(newEtat); // Update for next change
+        // ✅ NOUVEAU: Label pour afficher la durée estimée
+        Label durationInfoLabel = new Label("");
+        durationInfoLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 5 0 0 0;");
+        drBox.getChildren().add(durationInfoLabel); // Ajouter sous dateRecoltePicker
+
+        // ✅ NOUVEAU: Auto-update harvest date and state when plantation date changes
+        datePlantationPicker.setOnAction(e -> {
+            LocalDate newPlantationDate = datePlantationPicker.getValue();
+            String cultureName = nomComboBox.getValue();
+
+            if (newPlantationDate != null && cultureName != null) {
+                // Calculate new harvest date
+                LocalDate newHarvestDate = CultureDurations.calculateHarvestDate(newPlantationDate, cultureName);
+                dateRecoltePicker.setValue(newHarvestDate);
+
+                // Calculate new state
+                String newState = CultureDurations.calculateCurrentState(
+                        newPlantationDate, newHarvestDate, cultureName
+                );
+                etatComboBox.setValue(newState);
+
+                // Show duration info
+                int totalDays = CultureDurations.getTotalDuration(cultureName);
+                durationInfoLabel.setText("📅 Durée estimée: " + totalDays + " jours");
+
+                System.out.println("✅ Dates mises à jour automatiquement:");
+                System.out.println("   - Plantation: " + newPlantationDate);
+                System.out.println("   - Récolte: " + newHarvestDate);
+                System.out.println("   - État: " + newState);
+            }
+        });
+
+        // ✅ NOUVEAU: Also update when culture name changes (if user changes type/nom)
+        nomComboBox.setOnAction(e -> {
+            LocalDate plantationDate = datePlantationPicker.getValue();
+            String cultureName = nomComboBox.getValue();
+
+            if (plantationDate != null && cultureName != null) {
+                LocalDate newHarvestDate = CultureDurations.calculateHarvestDate(plantationDate, cultureName);
+                dateRecoltePicker.setValue(newHarvestDate);
+
+                String newState = CultureDurations.calculateCurrentState(
+                        plantationDate, newHarvestDate, cultureName
+                );
+                etatComboBox.setValue(newState);
+
+                int totalDays = CultureDurations.getTotalDuration(cultureName);
+                durationInfoLabel.setText("📅 Durée estimée: " + totalDays + " jours");
             }
         });
 
