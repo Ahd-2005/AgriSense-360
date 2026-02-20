@@ -470,3 +470,21 @@
 .form-section {
     -fx-background-color: transparent;
 }
+
+.mgmt-error-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #c62828;
+    -fx-padding: 1 0 0 2;
+    -fx-wrap-text: true;
+}
+
+.mgmt-input-invalid {
+    -fx-border-color: #c62828;
+    -fx-border-width: 1.5;
+    -fx-background-color: rgba(198, 40, 40, 0.04);
+}
+
+.mgmt-input-invalid:focused {
+    -fx-border-color: #c62828;
+    -fx-effect: dropshadow(gaussian, rgba(198,40,40,0.18), 6, 0, 0, 0);
+}

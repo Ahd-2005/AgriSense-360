@@ -12,7 +12,7 @@
 
     <VBox spacing="2">
         <Label text="Types &amp; Locations" styleClass="mgmt-form-title"/>
-        <Label text="Define the animal types and pen locations available when adding animals." styleClass="mgmt-form-subtitle"/>
+        <Label text="Here you can add animal types/locations" styleClass="mgmt-form-subtitle"/>
     </VBox>
 
     <HBox spacing="24" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
@@ -24,7 +24,7 @@
             </HBox>
 
             <VBox styleClass="mgmt-form-body" spacing="14">
-                <Label text="Click a type to select it, then delete or add a new one below." styleClass="mgmt-form-subtitle"/>
+                <Label text="" styleClass="mgmt-form-subtitle"/>
 
                 <ListView fx:id="typesList" styleClass="mgmt-list-view" prefHeight="200" VBox.vgrow="ALWAYS"/>
 
@@ -46,7 +46,7 @@
             </HBox>
 
             <VBox styleClass="mgmt-form-body" spacing="14">
-                <Label text="Click a location to select it, then delete or add a new one below." styleClass="mgmt-form-subtitle"/>
+                <Label text="" styleClass="mgmt-form-subtitle"/>
 
                 <ListView fx:id="locationsList" styleClass="mgmt-list-view" prefHeight="200" VBox.vgrow="ALWAYS"/>
 

@@ -242,7 +242,7 @@ public class HealthRecordController implements Initializable {
                     return record.getNotes() != null && record.getNotes().toLowerCase().contains(lowerSearch);
                 case "All Fields":
                 default:
-                    // Search all fields
+
                     if (record.getRecordDate() != null && record.getRecordDate().toString().contains(lowerSearch)) {
                         return true;
                     }

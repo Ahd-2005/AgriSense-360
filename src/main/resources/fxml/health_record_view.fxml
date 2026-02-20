@@ -10,18 +10,18 @@
         <Insets top="0" right="0" bottom="0" left="0"/>
     </padding>
 
-    <!-- Form Card -->
+
     <VBox styleClass="mgmt-form-card" spacing="0">
 
-        <!-- Card Header -->
+
         <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="12">
             <VBox spacing="3">
                 <Label text="Add / Edit Health Record" styleClass="mgmt-form-title"/>
-                <Label text="Select an animal first, fill in the fields, then click Add Record." styleClass="mgmt-form-subtitle"/>
+                <Label text="You can add or edit animal health records" styleClass="mgmt-form-subtitle"/>
             </VBox>
         </HBox>
 
-        <!-- Card Body -->
+
         <VBox styleClass="mgmt-form-body" spacing="0">
             <GridPane hgap="16" vgap="11">
 
