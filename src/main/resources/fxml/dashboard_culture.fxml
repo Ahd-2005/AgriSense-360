@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.DashboardCultureController"
+      stylesheets="@../css/dashboard.css"
+      spacing="0"
+      style="-fx-background-color: linear-gradient(to bottom, #e8f5e9, #f1f8f4);">
+
+    <!-- Top Bar with Title -->
+    <HBox alignment="CENTER_LEFT" spacing="20"
+          style="-fx-background-color: linear-gradient(to right, #1e3c2c, #2a5a3a); -fx-padding: 30 40;">
+        <Label text="🌾 Dashboard Culture - AgriSense 360"
+               style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+    </HBox>
+
+    <!-- Scrollable Content -->
+    <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+        <VBox spacing="30" style="-fx-padding: 30 40;">
+
+            <!-- Navigation Cards Section -->
+            <VBox spacing="15">
+                <Label text="🚀 Gestion Rapide"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
+
+                <HBox spacing="20" alignment="CENTER">
+                    <!-- Card 1: Gérer Culture -->
+                    <VBox fx:id="gererCultureCard" styleClass="nav-card"
+                          onMouseClicked="#goToGererCulture"
+                          prefWidth="400" prefHeight="200"
+                          style="-fx-cursor: hand;">
+                        <VBox alignment="CENTER" spacing="15" style="-fx-padding: 30;">
+                            <Label text="🌱" style="-fx-font-size: 60px;"/>
+                            <Label text="Gérer les Cultures"
+                                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
+                            <Text text="Ajouter, modifier et suivre vos cultures"
+                                  wrappingWidth="350"
+                                  style="-fx-text-alignment: center; -fx-fill: #666; -fx-font-size: 14px;"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Card 2: Gérer Parcelle -->
+                    <VBox fx:id="gererParcelleCard" styleClass="nav-card"
+                          onMouseClicked="#goToGererParcelle"
+                          prefWidth="400" prefHeight="200"
+                          style="-fx-cursor: hand;">
+                        <VBox alignment="CENTER" spacing="15" style="-fx-padding: 30;">
+                            <Label text="🌍" style="-fx-font-size: 60px;"/>
+                            <Label text="Gérer les Parcelles"
+                                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #7B1FA2;"/>
+                            <Text text="Gérer vos terrains et leur occupation"
+                                  wrappingWidth="350"
+                                  style="-fx-text-alignment: center; -fx-fill: #666; -fx-font-size: 14px;"/>
+                        </VBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Statistics Section -->
+            <VBox spacing="15">
+                <Label text="📊 Statistiques en Temps Réel"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
+
+                <!-- Stats Cards Row -->
+                <HBox spacing="20" alignment="CENTER">
+                    <!-- Total Cultures -->
+                    <VBox styleClass="stat-card" prefWidth="250" prefHeight="150" alignment="CENTER" spacing="10">
+                        <Label text="🌱" style="-fx-font-size: 40px;"/>
+                        <Label fx:id="totalCulturesLabel" text="0"
+                               style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #4CAF50;"/>
+                        <Label text="Cultures Totales"
+                               style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+                    </VBox>
+
+                    <!-- Total Parcelles -->
+                    <VBox styleClass="stat-card" prefWidth="250" prefHeight="150" alignment="CENTER" spacing="10">
+                        <Label text="🌍" style="-fx-font-size: 40px;"/>
+                        <Label fx:id="totalParcellesLabel" text="0"
+                               style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #9C27B0;"/>
+                        <Label text="Parcelles Totales"
+                               style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+                    </VBox>
+
+                    <!-- Surface Utilisée -->
+                    <VBox styleClass="stat-card" prefWidth="250" prefHeight="150" alignment="CENTER" spacing="10">
+                        <Label text="📏" style="-fx-font-size: 40px;"/>
+                        <Label fx:id="surfaceUtiliseeLabel" text="0 m²"
+                               style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #FF9800;"/>
+                        <Label text="Surface Utilisée"
+                               style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+                    </VBox>
+
+                    <!-- Surface Disponible -->
+                    <VBox styleClass="stat-card" prefWidth="250" prefHeight="150" alignment="CENTER" spacing="10">
+                        <Label text="📦" style="-fx-font-size: 40px;"/>
+                        <Label fx:id="surfaceDisponibleLabel" text="0 m²"
+                               style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #2196F3;"/>
+                        <Label text="Surface Disponible"
+                               style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Cultures par État -->
+            <VBox spacing="15">
+                <Label text="📈 Distribution par État"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
+
+                <HBox spacing="20" alignment="CENTER">
+                    <VBox styleClass="stat-card" prefWidth="180" prefHeight="120" alignment="CENTER" spacing="5">
+                        <Label text="🌱" style="-fx-font-size: 30px;"/>
+                        <Label fx:id="semisCountLabel" text="0"
+                               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4CAF50;"/>
+                        <Label text="Semis" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                    </VBox>
+
+                    <VBox styleClass="stat-card" prefWidth="180" prefHeight="120" alignment="CENTER" spacing="5">
+                        <Label text="🌿" style="-fx-font-size: 30px;"/>
+                        <Label fx:id="croissanceCountLabel" text="0"
+                               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #FF9800;"/>
+                        <Label text="Croissance" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                    </VBox>
+
+                    <VBox styleClass="stat-card" prefWidth="180" prefHeight="120" alignment="CENTER" spacing="5">
+                        <Label text="🌾" style="-fx-font-size: 30px;"/>
+                        <Label fx:id="maturiteCountLabel" text="0"
+                               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2196F3;"/>
+                        <Label text="Maturité" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                    </VBox>
+
+                    <VBox styleClass="stat-card" prefWidth="180" prefHeight="120" alignment="CENTER" spacing="5">
+                        <Label text="⏰" style="-fx-font-size: 30px;"/>
+                        <Label fx:id="recoltePrevueCountLabel" text="0"
+                               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #FF9800;"/>
+                        <Label text="Récolte Prévue" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                    </VBox>
+
+                    <VBox styleClass="stat-card" prefWidth="180" prefHeight="120" alignment="CENTER" spacing="5">
+                        <Label text="⚠️" style="-fx-font-size: 30px;"/>
+                        <Label fx:id="recolteRetardCountLabel" text="0"
+                               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #f44336;"/>
+                        <Label text="En Retard" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Top 3 Parcelles -->
+            <VBox spacing="15">
+                <Label text="🏆 Top 3 Parcelles les Plus Occupées"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
+                <VBox fx:id="topParcellesBox" spacing="10" style="-fx-padding: 10;"/>
+            </VBox>
+
+            <!-- Cultures à Récolter Bientôt -->
+            <VBox spacing="15">
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Label text="⏰ Récolte Prévue (7 jours)"
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #FF9800;"/>
+                    <Label fx:id="recoltePrevueCountBadge" text="0"
+                           style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-padding: 5 15; -fx-background-radius: 15px; -fx-font-weight: bold;"/>
+                </HBox>
+                <ScrollPane fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+                    <HBox fx:id="recoltePrevueBox" spacing="15" style="-fx-padding: 10;"/>
+                </ScrollPane>
+            </VBox>
+
+            <!-- Cultures en Retard -->
+            <VBox spacing="15">
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Label text="⚠️ Récolte en Retard"
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #f44336;"/>
+                    <Label fx:id="recolteRetardCountBadge" text="0"
+                           style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-padding: 5 15; -fx-background-radius: 15px; -fx-font-weight: bold;"/>
+                </HBox>
+                <ScrollPane fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+                    <HBox fx:id="recolteRetardBox" spacing="15" style="-fx-padding: 10;"/>
+                </ScrollPane>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+</VBox>
