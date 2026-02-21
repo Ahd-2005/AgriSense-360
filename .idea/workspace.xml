@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AIPredictionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AIPredictionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AnimalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AnimalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entity/Animal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/Animal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/services/ServiceAnimal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/ServiceAnimal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/animal.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/animal.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/healthRecord.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/healthRecord.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/animal_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/animal_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AnimalController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/AnimalController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/animal_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/animal_view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,7 +159,7 @@
       <workItem from="1771317836541" duration="4441000" />
       <workItem from="1771602466065" duration="2215000" />
       <workItem from="1771619901203" duration="1773000" />
-      <workItem from="1771667975766" duration="933000" />
+      <workItem from="1771667975766" duration="1498000" />
     </task>
     <task id="LOCAL-00001" summary="gestion culture +gestion animals+template">
       <option name="closed" value="true" />

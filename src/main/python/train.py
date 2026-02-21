@@ -18,7 +18,8 @@ BASE = Path(__file__).parent
 animals = pd.read_csv(BASE / "animal.csv")
 records = pd.read_csv(BASE / "healthRecord.csv")
 
-animals_sel = animals[["id", "type", "vaccinated"]]
+animals_sel = animals[["id", "type", "vaccinated"]].copy()
+animals_sel["id"] = range(1, len(animals_sel) + 1)
 records_sel = records[["animal", "weight", "appetite", "conditionStatus",
                         "recordDate", "milkYield", "eggCount", "woolLength"]]
 
