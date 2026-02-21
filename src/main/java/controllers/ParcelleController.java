@@ -529,20 +529,26 @@ public class ParcelleController {
             }
 
             // NEW VALIDATION: Check if trying to set to "Libre" but there are still cultures
-            if ("Libre".equalsIgnoreCase(statut)) {
-                try {
-                    double remainingSurface = service.getRemainingParcelleSize(id);
-                    double usedSurface = surface - remainingSurface;
+            // VALIDATION: Check status change rules
+            try {
+                double remainingSurface = service.getRemainingParcelleSize(id);
 
-                    if (usedSurface > 0.01) { // If there are still cultures
+                if ("Libre".equalsIgnoreCase(statut)) {
+                    // Can only set to Libre if remaining surface equals total surface (no cultures)
+                    if (Math.abs(remainingSurface - surface) > 0.01) { // If there are any cultures
+                        double usedSurface = surface - remainingSurface;
                         showError(messageLabel, "❌ Impossible de passer à 'Libre'! Il y a encore " +
-                                String.format("%.2f", usedSurface) + " m² de cultures dans cette parcelle.");
+                                String.format("%.2f", usedSurface) + " m² de cultures dans cette parcelle.\n" +
+                                "Vous devez d'abord supprimer toutes les cultures.");
                         return false;
                     }
-                } catch (SQLException e) {
-                    showError(messageLabel, "❌ Erreur de vérification de la surface");
-                    return false;
+                } else if ("Occupée".equalsIgnoreCase(statut)) {
+                    // Can always set to Occupée, even if fully occupied (remainingSurface = 0)
+                    // No validation needed - this is always allowed
                 }
+            } catch (SQLException e) {
+                showError(messageLabel, "❌ Erreur de vérification de la surface");
+                return false;
             }
 
             if (localisation == null || localisation.trim().isEmpty() || !localisation.matches("[A-Za-zÀ-ÿ0-9 ,]{3,}")) {
