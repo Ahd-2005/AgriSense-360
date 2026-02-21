@@ -17,10 +17,10 @@
             <Tab text="Health Records" styleClass="mgmt-tab">
                 <fx:include source="health_record_view.fxml"/>
             </Tab>
-            <Tab text="Types &amp; Locations" styleClass="mgmt-tab">
-                <fx:include source="enum_management_view.fxml"/>
+            <Tab text="Options" styleClass="mgmt-tab">
+                <fx:include source="options_view.fxml"/>
             </Tab>
-            <Tab text="AI Predictor" styleClass="mgmt-tab">
+            <Tab text="Condition Predictor" styleClass="mgmt-tab">
                 <fx:include source="ai_prediction_view.fxml"/>
             </Tab>
         </tabs>

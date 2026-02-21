@@ -8,6 +8,7 @@ com\example\agrisens360\HelloController.class
 services\AffectationTravailService.class
 utils\MyDataBase.class
 controllers\AffectationController.class
+controllers\OptionsController.class
 controllers\EvaluationController$1.class
 controllers\HomeContentController.class
 controllers\ParcelleController.class
