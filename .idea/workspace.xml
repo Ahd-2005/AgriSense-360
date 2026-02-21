@@ -7,11 +7,13 @@
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="tous gestion + user">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CultureController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CultureController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/css/cards.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/cards.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/cultures/pomme_de_terre.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisense360/servicetests/ServiceAnimalHealthRecordTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/example/agrisense360/servicetests/ServiceAnimalHealthRecordTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CultureController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CultureController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/services/userservice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/userservice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/css/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/home.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/login.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,11 +70,11 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "gestion__culture",
+    "git-widget-placeholder": "gestion__user",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/images/cultures",
+    "last_opened_file_path": "C:/Users/ahdbe/OneDrive/Desktop/AgriSense-360/src/main/java/controllers",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -88,11 +90,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ahdbe\OneDrive\Desktop\AgriSense-360\src\main\java\controllers" />
+      <recent name="C:\Users\ahdbe\OneDrive\Desktop\AgriSense-360\src\main\resources\fxml" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\images\cultures" />
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\services" />
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\entity" />
-      <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\controllers" />
-      <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\resources\fxml" />
@@ -106,7 +108,7 @@
       <option name="ALTERNATIVE_JRE_PATH" value="jbr-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.example.agrisens360.HelloApplication" />
-      <module name="agrisens360" />
+      <module name="AgriSense-360" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.example.agrisens360.*" />

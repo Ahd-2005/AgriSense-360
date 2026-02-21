@@ -1,5 +1,6 @@
 package controllers;
-
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.Dialog;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import entity.user;
+import services.GoogleAuthService;
 import services.userservice;
 import services.SessionManager;
 
@@ -174,6 +176,67 @@ public class login {
     private void handleForgotPassword() {
         showMessage(Alert.AlertType.INFORMATION, "Info",
                 "Fonctionnalité de récupération de mot de passe - À venir!");
+    }
+    @FXML
+    private void handleGoogleLogin() {
+        new Thread(() -> {
+            try {
+                GoogleAuthService googleAuth = new GoogleAuthService();
+                boolean success = googleAuth.authenticate();
+
+                if (success) {
+                    String email = googleAuth.getUserEmail();
+                    String name  = googleAuth.getUserName();
+
+                    userservice service = new userservice();
+                    user existingUser = service.findByEmail(email);
+
+                    if (existingUser != null) {
+                        // User existe → connexion directe
+                        if ("BLOCKED".equals(existingUser.getStatus())) {
+                            javafx.application.Platform.runLater(() ->
+                                    showError(loginError, "❌ Compte bloqué.")
+                            );
+                            return;
+                        }
+                        javafx.application.Platform.runLater(() -> {
+                            try { handleSuccessfulLogin(existingUser); }
+                            catch (Exception e) { showError(loginError, "❌ Erreur connexion"); }
+                        });
+
+                    } else {
+                        // Nouvel user → aller vers la page de choix de rôle
+                        javafx.application.Platform.runLater(() -> {
+                            try {
+                                FXMLLoader loader = new FXMLLoader(
+                                        getClass().getResource("/fxml/RoleChoice.fxml")
+                                );
+                                Parent root = loader.load();
+
+                                // Passer email + nom au controller
+                                RoleChoiceController controller = loader.getController();
+                                controller.initData(email, name);
+
+                                Stage stage = (Stage) emailField.getScene().getWindow();
+                                stage.setScene(new Scene(root, 1400, 800));
+                                stage.setTitle("Choisir votre rôle - AgriSense 360");
+                                stage.centerOnScreen();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                showError(loginError, "❌ Erreur: " + e.getMessage());
+                            }
+                        });
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                javafx.application.Platform.runLater(() ->
+                        showError(loginError, "❌ Erreur Google Auth: " + e.getMessage())
+                );
+            }
+        }).start();
     }
 
     private void showMessage(Alert.AlertType type, String title, String message) {

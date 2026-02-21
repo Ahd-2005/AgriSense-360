@@ -24,7 +24,6 @@ public class userservice {
     // ===============================
     public void ajouter(user user) throws SQLException {
         String sql = "INSERT INTO user (name, email, password, phone, roles, status) VALUES (?, ?, ?, ?, ?, ?)";
-
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, user.getName());
         ps.setString(2, user.getEmail());
@@ -214,5 +213,37 @@ public class userservice {
         }
 
         return null;
+    }
+
+
+
+    // ===============================
+// GOOGLE LOGIN - Find or Create
+// ===============================
+    public user findOrCreateGoogleUser(String email, String name) throws SQLException {
+        // 1. Chercher si l'email existe déjà
+        user existingUser = findByEmail(email);
+
+        if (existingUser != null) {
+            // User existe → vérifier s'il est bloqué
+            if ("BLOCKED".equals(existingUser.getStatus())) {
+                return null; // bloqué
+            }
+            return existingUser; // connexion normale
+        }
+
+        // 2. User n'existe pas → créer un nouveau compte automatiquement
+        user newUser = new user();
+        newUser.setName(name);
+        newUser.setEmail(email);
+        newUser.setPassword("GOOGLE_AUTH_" + System.currentTimeMillis()); // password fictif
+        newUser.setPhone("00000000"); // valeur par défaut
+        newUser.setRole(user.Role.ROLE_OUVRIER); // rôle par défaut
+        newUser.setStatus("ACTIVE");
+
+        ajouter(newUser);
+
+        // Récupérer l'user avec son ID
+        return findByEmail(email);
     }
 }
