@@ -1,28 +1,100 @@
-/* ========== NAVIGATION CARDS ========== */
-.nav-card {
+/* ========== NAVIGATION CARDS WITH IMAGES ========== */
+.nav-card-with-image {
     -fx-background-color: white;
     -fx-background-radius: 20px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 3);
     -fx-padding: 20;
 }
 
-.nav-card:hover {
+.nav-card-with-image:hover {
     -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.4), 20, 0, 0, 5);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
     -fx-cursor: hand;
 }
 
-/* ========== STAT CARDS ========== */
-.stat-card {
+/* ========== CHART CARDS - CLICKABLE ========== */
+.chart-card-clickable {
+    -fx-background-color: white;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 3);
+    -fx-padding: 15;
+    -fx-cursor: hand;
+}
+
+.chart-card-clickable:hover {
+    -fx-effect: dropshadow(gaussian, rgba(33, 150, 243, 0.4), 20, 0, 0, 5);
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
+}
+
+/* ========== PIE CHARTS ========== */
+.surface-pie-chart {
+    -fx-pie-color-0: #4CAF50; /* Surface Utilisée - Green */
+    -fx-pie-color-1: #2196F3; /* Surface Disponible - Blue */
+}
+
+.etat-pie-chart {
+    -fx-pie-color-0: #4CAF50; /* Semis - Green */
+    -fx-pie-color-1: #FF9800; /* Croissance - Orange */
+    -fx-pie-color-2: #2196F3; /* Maturité - Blue */
+    -fx-pie-color-3: #FFB300; /* Récolte Prévue - Amber */
+    -fx-pie-color-4: #f44336; /* Récolte en Retard - Red */
+}
+
+/* Make pie charts more aesthetic */
+.chart-pie-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-fill: white;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 5;
+}
+
+.chart-legend-item {
+    -fx-font-size: 11px;
+}
+
+.chart-legend-item-symbol {
+    -fx-padding: 8px;
+}
+
+/* ========== BAR CHART ========== */
+.bar-chart {
+    -fx-background-color: transparent;
+}
+
+.chart-bar {
+    -fx-background-color: #4CAF50;
+    -fx-background-radius: 5px;
+}
+
+.axis {
+    -fx-font-size: 11px;
+    -fx-tick-label-fill: #666;
+}
+
+.axis-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+/* ========== MINI STAT CARDS ========== */
+.stat-card-mini {
     -fx-background-color: white;
     -fx-background-radius: 15px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
-    -fx-padding: 20;
+    -fx-padding: 15;
 }
 
-.stat-card:hover {
+.stat-card-mini:hover {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
 }
 
 /* ========== DASHBOARD CULTURE CARDS ========== */
@@ -67,12 +139,12 @@
     -fx-background-color: #f44336;
 }
 
-/* ========== TOP PARCELLE CARD ========== */
+/* ========== TOP PARCELLE CARD - ENHANCED ========== */
 .top-parcelle-card {
     -fx-background-color: white;
     -fx-background-radius: 12px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
-    -fx-padding: 15 20;
+    -fx-padding: 20;
 }
 
 .top-parcelle-card:hover {
@@ -80,7 +152,7 @@
 }
 
 .medal-icon {
-    -fx-font-size: 30px;
+    -fx-font-size: 35px;
 }
 
 .parcelle-name-top {
@@ -90,8 +162,15 @@
 }
 
 .parcelle-stats {
-    -fx-font-size: 12px;
+    -fx-font-size: 13px;
     -fx-text-fill: #666;
+    -fx-padding: 2 0;
+}
+
+.parcelle-culture-count {
+    -fx-font-size: 12px;
+    -fx-text-fill: #4CAF50;
+    -fx-font-weight: bold;
 }
 
 /* ========== PROGRESS BAR ========== */
@@ -108,3 +187,18 @@
     -fx-background-color: #e0e0e0;
     -fx-background-radius: 10px;
 }
+
+/* ========== CHART SPECIFIC STYLING ========== */
+.chart-content {
+    -fx-padding: 10px;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+/* Custom colors for bar chart */
+.default-color0.chart-bar { -fx-bar-fill: #4CAF50; } /* Céréales */
+.default-color1.chart-bar { -fx-bar-fill: #FF9800; } /* Légumes */
+.default-color2.chart-bar { -fx-bar-fill: #2196F3; } /* Fruits */
+.default-color3.chart-bar { -fx-bar-fill: #9C27B0; } /* Ornementales */
