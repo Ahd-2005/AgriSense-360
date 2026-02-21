@@ -15,14 +15,12 @@ app = FastAPI(title="AgriSense Condition Predictor", version="1.0.0")
 bundle = joblib.load(MODEL_PATH)
 model       = bundle["model"]
 le_type     = bundle["le_type"]
-le_gender   = bundle["le_gender"]
 le_appetite = bundle["le_appetite"]
 le_condition= bundle["le_condition"]
 
 
 class PredictionRequest(BaseModel):
     animal_type: str
-    gender: str
     vaccinated: int
     weight: float
     appetite: str
@@ -35,14 +33,6 @@ class PredictionRequest(BaseModel):
         allowed = ["cow", "sheep", "goat"]
         if v.lower() not in allowed:
             raise ValueError(f"animal_type must be one of {allowed}")
-        return v.lower()
-
-    @field_validator("gender")
-    @classmethod
-    def validate_gender(cls, v):
-        allowed = ["male", "female"]
-        if v.lower() not in allowed:
-            raise ValueError(f"gender must be one of {allowed}")
         return v.lower()
 
     @field_validator("appetite")
@@ -70,7 +60,6 @@ class PredictionResponse(BaseModel):
 def predict(req: PredictionRequest):
     try:
         type_enc     = le_type.transform([req.animal_type])[0]
-        gender_enc   = le_gender.transform([req.gender])[0]
         appetite_enc = le_appetite.transform([req.appetite])[0]
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
@@ -79,7 +68,6 @@ def predict(req: PredictionRequest):
 
     X = np.array([[
         type_enc,
-        gender_enc,
         req.vaccinated,
         req.weight,
         appetite_enc,
@@ -109,6 +97,5 @@ def get_classes():
     return {
         "conditions": list(le_condition.classes_),
         "animal_types": list(le_type.classes_),
-        "genders": list(le_gender.classes_),
         "appetites": list(le_appetite.classes_),
     }

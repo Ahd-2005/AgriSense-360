@@ -18,7 +18,7 @@ BASE = Path(__file__).parent
 animals = pd.read_csv(BASE / "animal.csv")
 records = pd.read_csv(BASE / "healthRecord.csv")
 
-animals_sel = animals[["id", "type", "gender", "vaccinated"]]
+animals_sel = animals[["id", "type", "vaccinated"]]
 records_sel = records[["animal", "weight", "appetite", "conditionStatus",
                         "recordDate", "milkYield", "eggCount", "woolLength"]]
 
@@ -40,16 +40,14 @@ df["record_month"] = df["recordDate"].dt.month
 df["record_dayofyear"] = df["recordDate"].dt.dayofyear
 
 le_type      = LabelEncoder()
-le_gender    = LabelEncoder()
 le_appetite  = LabelEncoder()
 le_condition = LabelEncoder()
 
 df["type_enc"]      = le_type.fit_transform(df["type"])
-df["gender_enc"]    = le_gender.fit_transform(df["gender"])
 df["appetite_enc"]  = le_appetite.fit_transform(df["appetite"])
 df["condition_enc"] = le_condition.fit_transform(df["conditionStatus"])
 
-FEATURES = ["type_enc", "gender_enc", "vaccinated", "weight",
+FEATURES = ["type_enc", "vaccinated", "weight",
             "appetite_enc", "record_month", "record_dayofyear", "production"]
 
 X = df[FEATURES].values
@@ -74,7 +72,6 @@ for name, imp in sorted(zip(FEATURES, clf.feature_importances_), key=lambda x: -
 bundle = {
     "model": clf,
     "le_type": le_type,
-    "le_gender": le_gender,
     "le_appetite": le_appetite,
     "le_condition": le_condition,
     "feature_names": FEATURES,
