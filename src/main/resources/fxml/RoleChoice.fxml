@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.RoleChoiceController"
+            style="-fx-background-color: #e8f5e9;">
+
+    <center>
+        <VBox alignment="CENTER" spacing="30" style="-fx-padding: 50;">
+
+            <Label text="🌱 AgriSense 360"
+                   style="-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;" />
+
+            <Label text="Bienvenue ! Choisissez votre rôle"
+                   style="-fx-font-size: 20px; -fx-text-fill: #546e7a;" />
+
+            <!-- Nom de l'user Google -->
+            <Label fx:id="userNameLabel"
+                   text=""
+                   style="-fx-font-size: 16px; -fx-text-fill: #2e7d32; -fx-font-weight: bold;" />
+
+            <Label text="Quel est votre rôle dans l'exploitation ?"
+                   style="-fx-font-size: 15px; -fx-text-fill: #546e7a;" />
+
+            <!-- Les deux cartes de choix -->
+            <HBox alignment="CENTER" spacing="30">
+
+                <!-- Carte GÉRANT -->
+                <VBox alignment="CENTER" spacing="15"
+                      style="-fx-background-color: white;
+                             -fx-background-radius: 15;
+                             -fx-border-radius: 15;
+                             -fx-border-color: #4CAF50;
+                             -fx-border-width: 2;
+                             -fx-padding: 35 45;
+                             -fx-cursor: hand;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+
+                    <Label text="🏢"
+                           style="-fx-font-size: 50px;" />
+
+                    <Label text="Gérant"
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;" />
+
+                    <Label text="Gérer l'exploitation,&#10;les ouvriers et les tâches"
+                           style="-fx-font-size: 13px; -fx-text-fill: #546e7a; -fx-text-alignment: center;"
+                           wrapText="true" />
+
+                    <Button text="Choisir Gérant"
+                            fx:id="gerantBtn"
+                            onAction="#chooseGerant"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white;
+                                   -fx-padding: 12 30; -fx-font-size: 14px; -fx-font-weight: bold;
+                                   -fx-background-radius: 20; -fx-cursor: hand;" />
+                </VBox>
+
+                <!-- Carte OUVRIER -->
+                <VBox alignment="CENTER" spacing="15"
+                      style="-fx-background-color: white;
+                             -fx-background-radius: 15;
+                             -fx-border-radius: 15;
+                             -fx-border-color: #2196F3;
+                             -fx-border-width: 2;
+                             -fx-padding: 35 45;
+                             -fx-cursor: hand;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+
+                    <Label text="👷"
+                           style="-fx-font-size: 50px;" />
+
+                    <Label text="Ouvrier"
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1565C0;" />
+
+                    <Label text="Consulter vos tâches&#10;et pointer vos présences"
+                           style="-fx-font-size: 13px; -fx-text-fill: #546e7a; -fx-text-alignment: center;"
+                           wrapText="true" />
+
+                    <Button text="Choisir Ouvrier"
+                            fx:id="ouvrierBtn"
+                            onAction="#chooseOuvrier"
+                            style="-fx-background-color: #2196F3; -fx-text-fill: white;
+                                   -fx-padding: 12 30; -fx-font-size: 14px; -fx-font-weight: bold;
+                                   -fx-background-radius: 20; -fx-cursor: hand;" />
+                </VBox>
+            </HBox>
+
+            <!-- Message erreur -->
+            <Label fx:id="errorLabel" visible="false"
+                   style="-fx-text-fill: #d32f2f; -fx-font-size: 13px; -fx-font-weight: bold;" />
+
+        </VBox>
+    </center>
+
+</BorderPane>
