@@ -25,7 +25,6 @@ public class AnimalController implements Initializable {
 
     @FXML private TextField earTagField;
     @FXML private ComboBox<String> typeCombo;
-    @FXML private ComboBox<String> genderCombo;
     @FXML private TextField weightField;
     @FXML private DatePicker birthDatePicker;
     @FXML private DatePicker entryDatePicker;
@@ -41,7 +40,6 @@ public class AnimalController implements Initializable {
     // Inline validation labels
     @FXML private Label earTagError;
     @FXML private Label typeError;
-    @FXML private Label genderError;
     @FXML private Label weightError;
     @FXML private Label birthDateError;
     @FXML private Label entryDateError;
@@ -58,7 +56,6 @@ public class AnimalController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        genderCombo.setItems(FXCollections.observableArrayList("MALE", "FEMALE"));
         originCombo.setItems(FXCollections.observableArrayList("BORN_IN_FARM", "OUTSIDE"));
         refreshTypeAndLocationCombos();
 
@@ -66,7 +63,7 @@ public class AnimalController implements Initializable {
 
         if (searchFieldCombo != null) {
             searchFieldCombo.setItems(FXCollections.observableArrayList(
-                "All Fields", "Ear Tag", "Type", "Gender", "Weight", "Health Status", 
+                "All Fields", "Ear Tag", "Type", "Weight", "Health Status",
                 "Birth Date", "Age", "Origin", "Location"
             ));
             searchFieldCombo.getSelectionModel().selectFirst();
@@ -144,8 +141,8 @@ public class AnimalController implements Initializable {
         header.getStyleClass().add("mgmt-table-header-row");
         header.setAlignment(Pos.CENTER_LEFT);
         
-        String[] headers = {"ID", "Ear Tag", "Type", "Gender", "Weight", "Health", "Birth Date", "Age", "Origin", "Location"};
-        double[] widths = {50, 80, 90, 80, 80, 90, 110, 70, 110, 120};
+        String[] headers = {"ID", "Ear Tag", "Type", "Weight", "Health", "Birth Date", "Age", "Origin", "Location"};
+        double[] widths = {50, 80, 90, 80, 90, 110, 70, 120, 120};
         
         for (int i = 0; i < headers.length; i++) {
             Label headerLabel = new Label(headers[i]);
@@ -182,12 +179,11 @@ public class AnimalController implements Initializable {
         }
         row.setAlignment(Pos.CENTER_LEFT);
 
-        double[] widths = {50, 80, 90, 80, 80, 90, 110, 70, 110, 120};
+        double[] widths = {50, 80, 90, 80, 90, 110, 70, 120, 120};
         String[] values = {
             a.getId() != null ? a.getId().toString() : "-",
             a.getEarTag() != null ? a.getEarTag().toString() : "-",
             a.getType() != null ? a.getType() : "-",
-            a.getGender() != null ? a.getGender().name() : "-",
             a.getWeight() != null ? a.getWeight() + " kg" : "-",
             a.getHealthStatus() != null ? a.getHealthStatus() : "-",
             a.getBirthDate() != null ? a.getBirthDate().toString() : "-",
@@ -201,7 +197,7 @@ public class AnimalController implements Initializable {
             cell.setPrefWidth(widths[i]);
             cell.setMinWidth(widths[i]);
             cell.setAlignment(Pos.CENTER_LEFT);
-            if (i == 5) {
+            if (i == 4) {
 
                 String status = values[i].toLowerCase();
                 String badge = switch (status) {
@@ -234,7 +230,6 @@ public class AnimalController implements Initializable {
             case "ID" -> Comparator.comparing(a -> a.getId() != null ? a.getId() : 0);
             case "Ear Tag" -> Comparator.comparing(a -> a.getEarTag() != null ? a.getEarTag() : 0);
             case "Type" -> Comparator.comparing(a -> a.getType() != null ? a.getType() : "");
-            case "Gender" -> Comparator.comparing(a -> a.getGender() != null ? a.getGender().name() : "");
             case "Weight" -> Comparator.comparing(a -> a.getWeight() != null ? a.getWeight() : 0.0);
             case "Health" -> Comparator.comparing(a -> a.getHealthStatus() != null ? a.getHealthStatus() : "");
             case "Birth Date" -> Comparator.comparing(a -> a.getBirthDate() != null ? a.getBirthDate() : LocalDate.MIN);
@@ -262,8 +257,6 @@ public class AnimalController implements Initializable {
                     return animal.getEarTag() != null && String.valueOf(animal.getEarTag()).contains(lowerSearch);
                 case "Type":
                     return animal.getType() != null && animal.getType().toLowerCase().contains(lowerSearch);
-                case "Gender":
-                    return animal.getGender() != null && animal.getGender().name().toLowerCase().contains(lowerSearch);
                 case "Weight":
                     return animal.getWeight() != null && String.valueOf(animal.getWeight()).contains(lowerSearch);
                 case "Health Status":
@@ -283,9 +276,6 @@ public class AnimalController implements Initializable {
                         return true;
                     }
                     if (animal.getType() != null && animal.getType().toLowerCase().contains(lowerSearch)) {
-                        return true;
-                    }
-                    if (animal.getGender() != null && animal.getGender().name().toLowerCase().contains(lowerSearch)) {
                         return true;
                     }
                     if (animal.getWeight() != null && String.valueOf(animal.getWeight()).contains(lowerSearch)) {
@@ -334,7 +324,6 @@ public class AnimalController implements Initializable {
     private void clearErrors() {
         setError(earTagError,   "");
         setError(typeError,     "");
-        setError(genderError,   "");
         setError(weightError,   "");
         setError(birthDateError,"");
         setError(entryDateError,"");
@@ -367,12 +356,6 @@ public class AnimalController implements Initializable {
         // Type: required
         if (typeCombo.getSelectionModel().isEmpty()) {
             setError(typeError, "Please select a type.");
-            valid = false;
-        }
-
-        // Gender: required
-        if (genderCombo.getSelectionModel().isEmpty()) {
-            setError(genderError, "Please select a gender.");
             valid = false;
         }
 
@@ -458,7 +441,6 @@ public class AnimalController implements Initializable {
         try {
             int earTag = Integer.parseInt(earTagField.getText().trim());
             String type = typeCombo.getSelectionModel().getSelectedItem();
-            Animal.Gender gender = Animal.Gender.valueOf(genderCombo.getSelectionModel().getSelectedItem());
             Double weight = weightField.getText().trim().isEmpty() ? null
                     : Double.parseDouble(weightField.getText().trim());
             LocalDate birthDate = birthDatePicker.getValue();
@@ -469,7 +451,6 @@ public class AnimalController implements Initializable {
 
             selected.setEarTag(earTag);
             selected.setType(type);
-            selected.setGender(gender);
             selected.setWeight(weight);
             selected.setBirthDate(birthDate);
             selected.setEntryDate(entryDate);
@@ -495,7 +476,6 @@ public class AnimalController implements Initializable {
         try {
             int earTag = Integer.parseInt(earTagField.getText().trim());
             String type = typeCombo.getSelectionModel().getSelectedItem();
-            Animal.Gender gender = Animal.Gender.valueOf(genderCombo.getSelectionModel().getSelectedItem());
             Double weight = weightField.getText().trim().isEmpty() ? null
                     : Double.parseDouble(weightField.getText().trim());
             LocalDate birthDate = birthDatePicker.getValue();
@@ -504,7 +484,7 @@ public class AnimalController implements Initializable {
             boolean vaccinated = vaccinatedCheck.isSelected();
             String location = locationCombo.getSelectionModel().getSelectedItem();
 
-            Animal a = new Animal(earTag, type, gender, weight, null, birthDate, entryDate, origin, vaccinated, location);
+            Animal a = new Animal(earTag, type, weight, null, birthDate, entryDate, origin, vaccinated, location);
             serviceAnimal.add(a);
             refreshData();
             clearForm();
@@ -528,7 +508,6 @@ public class AnimalController implements Initializable {
     private void populateForm(Animal a) {
         earTagField.setText(a.getEarTag() != null ? String.valueOf(a.getEarTag()) : "");
         typeCombo.getSelectionModel().select(a.getType());
-        genderCombo.getSelectionModel().select(a.getGender() != null ? a.getGender().name() : null);
         weightField.setText(a.getWeight() != null ? String.valueOf(a.getWeight()) : "");
         birthDatePicker.setValue(a.getBirthDate());
         entryDatePicker.setValue(a.getEntryDate());
@@ -540,7 +519,6 @@ public class AnimalController implements Initializable {
     private void clearForm() {
         earTagField.clear();
         typeCombo.getSelectionModel().clearSelection();
-        genderCombo.getSelectionModel().clearSelection();
         weightField.clear();
         birthDatePicker.setValue(null);
         entryDatePicker.setValue(null);

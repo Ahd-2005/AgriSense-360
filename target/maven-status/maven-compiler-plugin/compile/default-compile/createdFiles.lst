@@ -2,7 +2,6 @@ utils\AnimalListRefresh.class
 entity\Parcelle.class
 services\ServiceAnimal.class
 services\EvaluationPerformanceService.class
-entity\Animal$Gender.class
 services\ServiceAnimalHealthRecord.class
 services\ParcelleService.class
 com\example\agrisens360\HelloController.class

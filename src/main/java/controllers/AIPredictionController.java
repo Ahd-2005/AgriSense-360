@@ -52,8 +52,7 @@ public class AIPredictionController implements Initializable {
                 @Override
                 public String toString(Animal a) {
                     if (a == null) return "";
-                    return "#" + a.getEarTag() + "  —  " + capitalize(a.getType())
-                            + " (" + capitalize(a.getGender().name()) + ")";
+                    return "#" + a.getEarTag() + "  —  " + capitalize(a.getType());
                 }
                 @Override
                 public Animal fromString(String s) { return null; }
@@ -120,7 +119,6 @@ public class AIPredictionController implements Initializable {
 
         String jsonBody = "{"
                 + "\"animal_type\":\"" + type + "\","
-                + "\"gender\":\"" + selectedAnimal.getGender().name().toLowerCase() + "\","
                 + "\"vaccinated\":" + vaccinated + ","
                 + "\"weight\":" + weight + ","
                 + "\"appetite\":\"" + appetite + "\","
