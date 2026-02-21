@@ -1,10 +1,10 @@
 package com.example.agrisense360.servicetests;
 
 import org.junit.jupiter.api.*;
-import com.example.agrisense360.entity.Animal;
-import com.example.agrisense360.entity.AnimalHealthRecord;
-import com.example.agrisense360.services.ServiceAnimal;
-import com.example.agrisense360.services.ServiceAnimalHealthRecord;
+import entity.Animal;
+import entity.AnimalHealthRecord;
+import services.ServiceAnimal;
+import services.ServiceAnimalHealthRecord;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
