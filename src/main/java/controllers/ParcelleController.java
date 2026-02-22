@@ -191,7 +191,13 @@ public class ParcelleController {
         Button editBtn = new Button("✏ Modifier");
         editBtn.setStyle("-fx-font-size: 13px;");
         editBtn.getStyleClass().addAll("card-button", "edit-button");
-        editBtn.setOnAction(e -> showUpdatePopup(parcelle));
+        editBtn.setOnAction(e -> {
+            try {
+                showUpdatePopup(parcelle);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         Button deleteBtn = new Button("🗑 Supprimer");
         deleteBtn.setStyle("-fx-font-size: 13px;");
@@ -335,7 +341,7 @@ public class ParcelleController {
     // ══════════════════════════════════════════════════════════════════════════
     // UPDATE POPUP — localisation replaced by ComboBox of 24 governorates
     // ══════════════════════════════════════════════════════════════════════════
-    private void showUpdatePopup(Parcelle parcelle) {
+    private void showUpdatePopup(Parcelle parcelle) throws SQLException {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.initStyle(StageStyle.TRANSPARENT);
@@ -365,6 +371,8 @@ public class ParcelleController {
         idLabel.getStyleClass().add("form-label");
         TextField idField = new TextField(String.valueOf(parcelle.getId()));
         idField.setEditable(false);
+        idField.setDisable(true);
+        idField.setStyle("-fx-opacity: 0.6;");
         idField.setPrefWidth(400);
         idBox.getChildren().addAll(idLabel, idField);
 
@@ -382,7 +390,27 @@ public class ParcelleController {
         surfaceLabel.getStyleClass().add("form-label");
         TextField surfaceField = new TextField(String.valueOf(parcelle.getSurface()));
         surfaceField.setPrefWidth(400);
-        surfaceBox.getChildren().addAll(surfaceLabel, surfaceField);
+        // Check if this specific parcelle has cultures linked to it
+        try {
+            List<Culture> parcelCultures = cultureService.getAllCultures().stream()
+                    .filter(c -> c.getParcelleId() == parcelle.getId())
+                    .collect(Collectors.toList());
+            if (!parcelCultures.isEmpty()) {
+                // Has cultures linked → disable surface field
+                surfaceField.setEditable(false);
+                surfaceField.setDisable(true);
+                surfaceField.setStyle("-fx-opacity: 0.6;");
+
+                Label warningLabel = new Label("⚠️ Surface non modifiable - cultures affectées");
+                warningLabel.setStyle("-fx-text-fill: #FF9800; -fx-font-size: 11px; -fx-font-style: italic;");
+                surfaceBox.getChildren().addAll(surfaceLabel, surfaceField, warningLabel);
+            } else {
+                // No cultures linked → surface is freely editable
+                surfaceBox.getChildren().addAll(surfaceLabel, surfaceField);
+            }
+        } catch (SQLException ex) {
+            surfaceBox.getChildren().addAll(surfaceLabel, surfaceField);
+        }
 
         // ── LOCALISATION — ComboBox pre-selected with current value ──────────
         VBox localisationBox = new VBox(5);
@@ -419,7 +447,19 @@ public class ParcelleController {
         ComboBox<String> statutComboBox = new ComboBox<>();
         statutComboBox.setPrefWidth(400);
         statutComboBox.getItems().addAll("Libre", "Occupée");
-        statutComboBox.setValue(parcelle.getStatut());
+        // Auto-set statut based on surface_restant
+        double surfaceRestant = service.getRemainingParcelleSize(parcelle.getId());
+        if (surfaceRestant > 0) {
+            // Surface restante > 0 → les deux options sont disponibles (Libre et Occupée)
+            statutComboBox.getItems().setAll("Libre", "Occupée");
+            statutComboBox.setValue(parcelle.getStatut());
+        } else {
+            // Surface = 0, can only be Occupée
+            statutComboBox.getItems().setAll("Occupée");
+            statutComboBox.setValue("Occupée");
+            statutComboBox.setDisable(true);
+            statutComboBox.setStyle("-fx-opacity: 0.7;");
+        }
         statutBox.getChildren().addAll(statutLabel, statutComboBox);
 
         Label messageLabel = new Label();
@@ -541,21 +581,22 @@ public class ParcelleController {
                 return false;
             }
 
-            // Statut validation
+            // ── Statut validation ─────────────────────────────────────────────
+            // On bloque "Libre" UNIQUEMENT si la surface restante est <= 0
+            // (toute la parcelle est occupée par des cultures).
+            // Si surface restante > 0, on autorise "Libre" même s'il y a des cultures.
             try {
                 double remainingSurface = service.getRemainingParcelleSize(id);
-                if ("Libre".equalsIgnoreCase(statut)) {
-                    if (Math.abs(remainingSurface - surface) > 0.01) {
-                        double usedSurface = surface - remainingSurface;
-                        showError(messageLabel, "❌ Impossible de passer à 'Libre'! Il y a encore " +
-                                String.format("%.2f", usedSurface) + " m² de cultures dans cette parcelle.");
-                        return false;
-                    }
+
+                if ("Libre".equalsIgnoreCase(statut) && remainingSurface <= 0) {
+                    showError(messageLabel, "❌ Impossible! Surface complètement occupée (0 m² restant)");
+                    return false;
                 }
             } catch (SQLException e) {
                 showError(messageLabel, "❌ Erreur de vérification de la surface");
                 return false;
             }
+            // ─────────────────────────────────────────────────────────────────
 
             if (localisation == null || localisation.trim().isEmpty()) {
                 showError(messageLabel, "❌ Veuillez sélectionner un gouvernorat");
