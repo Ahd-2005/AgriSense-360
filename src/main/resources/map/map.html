@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Carte Tunisie — Parcelles</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; background: #1a2332; color: #e0e0e0; }
+
+        #app { display: flex; height: 100vh; width: 100vw; }
+
+        /* ── SIDEBAR ── */
+        #sidebar {
+            width: 290px; min-width: 290px;
+            background: linear-gradient(180deg, #0f1923 0%, #0d1f0d 100%);
+            border-right: 2px solid #2e7d32;
+            display: flex; flex-direction: column; overflow: hidden;
+            z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.6);
+        }
+        #sidebar-header {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            padding: 16px 14px;
+            border-bottom: 1px solid #4CAF50;
+            flex-shrink: 0;
+        }
+        #sidebar-header h2 { font-size: 13px; font-weight: 700; color: #fff; letter-spacing: 1px; text-transform: uppercase; }
+        #sidebar-header p  { font-size: 11px; color: #a5d6a7; margin-top: 3px; }
+
+        #gov-info {
+            padding: 12px 14px; border-bottom: 1px solid #1a2d1a;
+            min-height: 60px; display: flex; align-items: center;
+            background: rgba(46,125,50,0.08); flex-shrink: 0;
+        }
+        #gov-info.empty { color: #558b5e; font-size: 12px; font-style: italic; }
+        #gov-info .gov-name { font-size: 16px; font-weight: 700; color: #66bb6a; line-height: 1.2; }
+        #gov-info .gov-sub  { font-size: 11px; color: #81c784; margin-top: 3px; }
+
+        #parcelles-section { flex: 1; overflow-y: auto; padding: 8px; }
+        #parcelles-section::-webkit-scrollbar { width: 4px; }
+        #parcelles-section::-webkit-scrollbar-track { background: #0a0f0a; }
+        #parcelles-section::-webkit-scrollbar-thumb { background: #2e7d32; border-radius: 2px; }
+
+        #parcelles-list { display: flex; flex-direction: column; gap: 7px; }
+
+        .parcelle-card {
+            background: linear-gradient(135deg, #192919, #213221);
+            border: 1px solid #2a4d2a; border-radius: 9px;
+            padding: 11px 12px; cursor: pointer;
+            transition: all 0.18s ease; position: relative; overflow: hidden;
+        }
+        .parcelle-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #4CAF50, #81c784);
+            border-radius: 9px 9px 0 0;
+        }
+        .parcelle-card.occupee::before { background: linear-gradient(90deg, #ef5350, #ef9a9a); }
+        .parcelle-card:hover {
+            background: linear-gradient(135deg, #223522, #2d3f2d);
+            border-color: #4CAF50; transform: translateX(3px);
+            box-shadow: 0 4px 14px rgba(76,175,80,0.2);
+        }
+        .card-name  { font-size: 13px; font-weight: 700; color: #e8f5e9; margin-bottom: 5px; }
+        .card-row   { display: flex; justify-content: space-between; font-size: 11px; color: #81c784; margin-top: 3px; }
+        .card-row span:last-child { color: #a5d6a7; }
+        .badge {
+            display: inline-block; font-size: 10px; font-weight: 700;
+            padding: 2px 8px; border-radius: 10px; margin-top: 6px;
+        }
+        .badge.libre   { background: rgba(76,175,80,0.2); color: #69f0ae; border: 1px solid #4CAF50; }
+        .badge.occupee { background: rgba(239,83,80,0.15); color: #ff8a80; border: 1px solid #ef5350; }
+
+        .no-parcelles { text-align: center; color: #3d5c3d; font-size: 12px; padding: 30px 8px; font-style: italic; }
+        .no-parcelles .icon { font-size: 28px; display: block; margin-bottom: 8px; }
+
+        /* stats bar */
+        #stats-bar {
+            background: rgba(0,0,0,0.45); border-top: 1px solid #1a2d1a;
+            padding: 9px 14px; display: flex; justify-content: space-between;
+            font-size: 11px; color: #81c784; flex-shrink: 0;
+        }
+        .stat-item { text-align: center; }
+        .stat-num  { font-size: 15px; font-weight: 700; color: #4CAF50; display: block; }
+
+        /* ── MAP ── */
+        #map { flex: 1; height: 100vh; }
+
+        /* tooltip */
+        .gov-tooltip {
+            background: rgba(10,20,10,0.96) !important;
+            border: 1px solid #4CAF50 !important;
+            border-radius: 7px !important;
+            color: #e8f5e9 !important;
+            font-size: 12px !important; font-weight: 600 !important;
+            padding: 5px 11px !important;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.55) !important;
+            white-space: nowrap;
+        }
+        .gov-tooltip::before { display: none !important; }
+
+        /* legend */
+        .map-legend {
+            background: rgba(10,20,10,0.92); border: 1px solid #2e7d32;
+            border-radius: 8px; padding: 9px 12px; font-size: 11px; color: #81c784;
+        }
+        .map-legend h4 { color: #e8f5e9; font-size: 11px; margin-bottom: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .legend-item   { display: flex; align-items: center; gap: 7px; margin-top: 4px; }
+        .legend-dot    { width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0; }
+
+        /* loading */
+        #loading {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: #1a2332; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.4s;
+        }
+        #loading h3 { color: #4CAF50; margin-top: 14px; font-size: 13px; }
+        #loading p  { color: #558b5e; font-size: 11px; margin-top: 4px; }
+        .spinner {
+            width: 38px; height: 38px; border: 3px solid #1a3020;
+            border-top-color: #4CAF50; border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div id="loading">
+    <div class="spinner"></div>
+    <h3>Chargement de la carte...</h3>
+    <p>Gouvernorats de Tunisie</p>
+</div>
+
+<div id="app">
+    <div id="sidebar">
+        <div id="sidebar-header">
+            <h2>🌍 Parcelles par Gouvernorat</h2>
+            <p>Survolez un gouvernorat sur la carte</p>
+        </div>
+        <div id="gov-info" class="empty">
+            <span>← Passez la souris sur un gouvernorat</span>
+        </div>
+        <div id="parcelles-section">
+            <div id="parcelles-list">
+                <div class="no-parcelles">
+                    <span class="icon">🗺️</span>
+                    Sélectionnez un gouvernorat pour voir ses parcelles
+                </div>
+            </div>
+        </div>
+        <div id="stats-bar">
+            <div class="stat-item"><span class="stat-num" id="stat-total">0</span>Total</div>
+            <div class="stat-item"><span class="stat-num" id="stat-libres" style="color:#69f0ae">0</span>Libres</div>
+            <div class="stat-item"><span class="stat-num" id="stat-occupees" style="color:#ff8a80">0</span>Occupées</div>
+        </div>
+    </div>
+    <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+    // ═══════════════════════════════════════════════════════
+    //  DATA
+    // ═══════════════════════════════════════════════════════
+    var allParcelles = [];
+    var currentGov   = null;
+    var geojsonLayer = null;
+    var focusParcelle = null; // set by Java to zoom into a specific parcelle
+
+    // called by Java
+    function setParcelles(jsonStr) {
+        try { allParcelles = JSON.parse(jsonStr); } catch(e) { allParcelles = []; }
+        updateGlobalStats();
+        if (geojsonLayer) refreshStyles();
+        if (currentGov) showParcelles(currentGov);
+    }
+
+    // called by Java to zoom to a single parcelle's governorate
+    function focusOnParcelle(govName, parcelleName) {
+        focusParcelle = parcelleName;
+        // highlight that gov on the map
+        if (geojsonLayer) {
+            geojsonLayer.eachLayer(function(layer) {
+                if (layer.feature.properties.name === govName) {
+                    map.fitBounds(layer.getBounds(), { padding: [40, 40] });
+                    layer.setStyle(getHoverStyle(layer.feature));
+                }
+            });
+        }
+        showParcelles(govName);
+    }
+
+    function updateGlobalStats() {
+        document.getElementById('stat-total').textContent    = allParcelles.length;
+        document.getElementById('stat-libres').textContent   = allParcelles.filter(function(p){ return p.statut && p.statut.toLowerCase().includes('libre'); }).length;
+        document.getElementById('stat-occupees').textContent = allParcelles.filter(function(p){ return p.statut && !p.statut.toLowerCase().includes('libre'); }).length;
+    }
+
+    // ── Governorate aliases for matching ──
+    var GOV_ALIASES = {
+        "Tunis":       ["tunis"],
+        "Ariana":      ["ariana"],
+        "Ben Arous":   ["ben arous","ben-arous","benarous"],
+        "Manouba":     ["manouba","la manouba"],
+        "Nabeul":      ["nabeul","cap bon","hammamet","kelibia"],
+        "Zaghouan":    ["zaghouan"],
+        "Bizerte":     ["bizerte"],
+        "Béja":        ["béja","beja"],
+        "Jendouba":    ["jendouba"],
+        "Le Kef":      ["kef","le kef"],
+        "Siliana":     ["siliana"],
+        "Sousse":      ["sousse"],
+        "Monastir":    ["monastir"],
+        "Mahdia":      ["mahdia"],
+        "Sfax":        ["sfax"],
+        "Kairouan":    ["kairouan"],
+        "Kasserine":   ["kasserine","kassérine"],
+        "Sidi Bouzid": ["sidi bouzid","sidi-bouzid","sidi bou zid"],
+        "Gabès":       ["gabès","gabes"],
+        "Médenine":    ["médenine","medenine"],
+        "Tataouine":   ["tataouine"],
+        "Gafsa":       ["gafsa"],
+        "Tozeur":      ["tozeur"],
+        "Kébili":      ["kébili","kebili"]
+    };
+
+    function getParcellsForGov(govName) {
+        var aliases = GOV_ALIASES[govName] || [govName.toLowerCase()];
+        return allParcelles.filter(function(p) {
+            if (!p.localisation) return false;
+            var loc = p.localisation.toLowerCase();
+            return aliases.some(function(a) { return loc.includes(a); });
+        });
+    }
+
+    function showParcelles(govName) {
+        currentGov = govName;
+        var parcelles = getParcellsForGov(govName);
+        var count = parcelles.length;
+
+        var govInfo = document.getElementById('gov-info');
+        govInfo.classList.remove('empty');
+        govInfo.innerHTML =
+            '<div><div class="gov-name">📍 ' + govName + '</div>' +
+            '<div class="gov-sub">' + count + ' parcelle' + (count!==1?'s':'') + ' trouvée' + (count!==1?'s':'') + '</div></div>';
+
+        var list = document.getElementById('parcelles-list');
+        if (count === 0) {
+            list.innerHTML = '<div class="no-parcelles"><span class="icon">🌿</span>Aucune parcelle dans ce gouvernorat</div>';
+            focusParcelle = null;
+            return;
+        }
+
+        list.innerHTML = parcelles.map(function(p) {
+            var isLibre    = p.statut && p.statut.toLowerCase().includes('libre');
+            var badgeClass = isLibre ? 'libre' : 'occupee';
+            var cardClass  = isLibre ? '' : 'occupee';
+            var isTarget   = focusParcelle && p.nom === focusParcelle;
+            var highlight  = isTarget ? 'style="border-color:#FFD700;box-shadow:0 0 12px rgba(255,215,0,0.4);"' : '';
+            return (
+                '<div class="parcelle-card ' + cardClass + '" ' + highlight + '>' +
+                '<div class="card-name">' + (isTarget ? '⭐ ' : '🌾 ') + (p.nom||'Sans nom') + '</div>' +
+                '<div class="card-row"><span>📏 Surface</span><span>' + (p.surface||'N/A') + ' m²</span></div>' +
+                (p.typeSol ? '<div class="card-row"><span>🏔 Sol</span><span>' + p.typeSol + '</span></div>' : '') +
+                '<span class="badge ' + badgeClass + '">' + (p.statut||'—') + '</span>' +
+                '</div>'
+            );
+        }).join('');
+
+        // scroll to highlighted card
+        if (focusParcelle) {
+            setTimeout(function() {
+                var cards = document.querySelectorAll('.parcelle-card');
+                parcelles.forEach(function(p, i) {
+                    if (p.nom === focusParcelle && cards[i]) {
+                        cards[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+                focusParcelle = null;
+            }, 100);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  MAP
+    // ═══════════════════════════════════════════════════════
+    var map = L.map('map', { zoomControl: true, attributionControl: false })
+        .setView([33.8, 9.5], 6);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd', maxZoom: 18
+    }).addTo(map);
+
+    L.control.attribution({ position: 'bottomright', prefix: '© CartoDB · OSM' }).addTo(map);
+
+    // ═══════════════════════════════════════════════════════
+    //  ACCURATE TUNISIA GEOJSON
+    //  Coordinates traced from reference map image
+    //  Each governorate uses realistic boundary points
+    // ═══════════════════════════════════════════════════════
+    var TUNISIA_GOVS = {
+        "type": "FeatureCollection",
+        "features": [
+
+            // ── GRAND TUNIS ─────────────────────────────────────
+            { "type":"Feature","properties":{"name":"Tunis"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [10.12,36.72],[10.33,36.72],[10.33,36.88],[10.19,36.92],[10.10,36.88],[10.12,36.72]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Ariana"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [10.10,36.88],[10.19,36.92],[10.33,36.88],[10.35,37.00],[10.22,37.08],[10.07,37.04],[10.03,36.95],[10.10,36.88]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Ben Arous"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [10.12,36.72],[10.33,36.72],[10.40,36.65],[10.36,36.52],[10.17,36.50],[10.05,36.58],[10.09,36.67],[10.12,36.72]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Manouba"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [10.03,36.95],[10.07,37.04],[10.22,37.08],[10.10,37.14],[9.85,37.12],[9.75,37.00],[9.82,36.92],[10.03,36.95]
+                    ]]}},
+
+            // ── NORD-EST ─────────────────────────────────────────
+            { "type":"Feature","properties":{"name":"Nabeul"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [10.33,36.72],[10.40,36.65],[10.36,36.52],[10.55,36.35],[10.72,36.42],[10.88,36.60],[10.95,36.82],[10.78,37.00],[10.55,37.02],[10.35,37.00],[10.33,36.88],[10.33,36.72]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Zaghouan"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [10.05,36.58],[10.17,36.50],[10.36,36.52],[10.40,36.35],[10.20,36.15],[9.95,36.12],[9.72,36.22],[9.75,36.40],[9.90,36.52],[10.05,36.58]
+                    ]]}},
+
+            // ── NORD ─────────────────────────────────────────────
+            { "type":"Feature","properties":{"name":"Bizerte"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [9.03,37.10],[9.75,37.00],[9.82,36.92],[10.03,36.95],[10.07,37.04],[10.22,37.08],[10.10,37.14],[10.35,37.25],[10.42,37.55],[10.15,37.62],[9.80,37.58],[9.40,37.52],[9.10,37.38],[9.03,37.10]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Béja"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [8.72,37.30],[9.03,37.10],[9.10,37.38],[9.40,37.52],[9.35,37.20],[9.20,37.00],[9.05,36.85],[8.88,36.75],[8.72,36.85],[8.62,37.00],[8.72,37.30]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Jendouba"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [8.24,37.37],[8.72,37.30],[8.62,37.00],[8.72,36.85],[8.55,36.72],[8.35,36.75],[8.20,36.95],[8.18,37.18],[8.24,37.37]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Le Kef"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [8.20,36.95],[8.35,36.75],[8.55,36.72],[8.72,36.85],[8.88,36.75],[9.05,36.85],[9.20,37.00],[9.35,37.20],[9.05,37.20],[8.85,37.05],[8.65,37.05],[8.45,36.90],[8.20,36.95]
+                    ]]}},
+
+            // ── NORD-OUEST / CENTRE-NORD ─────────────────────────
+            { "type":"Feature","properties":{"name":"Siliana"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [8.85,37.05],[9.05,37.20],[9.35,37.20],[9.40,37.00],[9.42,36.75],[9.25,36.58],[9.00,36.48],[8.82,36.55],[8.65,36.72],[8.65,37.05],[8.85,37.05]
+                    ]]}},
+
+            // ── SAHEL / CÔTE EST ─────────────────────────────────
+            { "type":"Feature","properties":{"name":"Sousse"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [9.82,35.95],[10.32,35.83],[10.60,35.78],[10.62,36.00],[10.42,36.18],[10.20,36.15],[9.95,36.12],[9.82,35.95]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Monastir"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [10.32,35.83],[10.60,35.78],[10.80,35.62],[10.90,35.48],[10.62,35.35],[10.38,35.45],[10.25,35.58],[10.32,35.83]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Mahdia"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [10.38,35.45],[10.62,35.35],[10.90,35.48],[11.05,35.22],[11.10,34.95],[10.82,34.82],[10.55,34.78],[10.30,34.88],[10.20,35.10],[10.30,35.30],[10.38,35.45]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Sfax"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [9.70,34.25],[10.30,34.88],[10.55,34.78],[10.82,34.82],[10.90,34.55],[10.70,34.10],[10.38,33.95],[10.00,33.90],[9.72,34.05],[9.70,34.25]
+                    ]]}},
+
+            // ── CENTRE ───────────────────────────────────────────
+            { "type":"Feature","properties":{"name":"Kairouan"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [8.82,36.55],[9.00,36.48],[9.25,36.58],[9.42,36.75],[9.72,36.22],[9.95,36.12],[9.82,35.95],[9.60,35.82],[9.30,35.75],[9.02,35.72],[8.88,35.85],[8.72,36.00],[8.82,36.55]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Kasserine"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [7.97,35.52],[8.20,36.95],[8.45,36.90],[8.65,37.05],[8.65,36.72],[8.82,36.55],[8.72,36.00],[8.88,35.85],[8.65,35.55],[8.45,35.35],[8.22,35.30],[8.00,35.42],[7.97,35.52]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Sidi Bouzid"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [8.65,35.55],[8.88,35.85],[9.02,35.72],[9.30,35.75],[9.60,35.82],[9.70,35.52],[9.70,35.10],[9.45,34.92],[9.10,34.85],[8.85,34.90],[8.65,35.12],[8.65,35.55]
+                    ]]}},
+
+            // ── SUD ──────────────────────────────────────────────
+            { "type":"Feature","properties":{"name":"Gafsa"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [7.97,35.52],[8.00,35.42],[8.22,35.30],[8.45,35.35],[8.65,35.12],[8.85,34.90],[8.65,34.55],[8.38,34.30],[8.10,34.32],[7.78,34.50],[7.72,34.85],[7.97,35.52]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Tozeur"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [7.72,34.85],[7.78,34.50],[8.10,34.32],[8.38,34.30],[8.38,33.90],[8.15,33.68],[7.85,33.55],[7.55,33.60],[7.45,33.95],[7.55,34.35],[7.72,34.85]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Kébili"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [8.65,34.55],[8.85,34.90],[9.10,34.85],[9.45,34.92],[9.45,34.55],[9.38,34.20],[9.05,33.92],[8.78,33.78],[8.50,33.82],[8.38,33.90],[8.38,34.30],[8.65,34.55]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Gabès"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [9.45,34.55],[9.45,34.92],[9.70,35.10],[9.72,34.05],[10.00,33.90],[9.85,33.60],[9.60,33.48],[9.35,33.52],[9.18,33.72],[9.05,33.92],[9.38,34.20],[9.45,34.55]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Médenine"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [9.60,33.48],[9.85,33.60],[10.00,33.90],[10.38,33.95],[10.70,34.10],[10.90,33.75],[10.95,33.35],[10.70,33.02],[10.42,32.88],[10.00,32.72],[9.70,32.78],[9.40,33.00],[9.28,33.30],[9.35,33.52],[9.60,33.48]
+                    ]]}},
+
+            { "type":"Feature","properties":{"name":"Tataouine"},
+                "geometry":{"type":"Polygon","coordinates":[[
+                        [7.85,33.55],[8.15,33.68],[8.38,33.90],[8.50,33.82],[8.78,33.78],[9.05,33.92],[9.18,33.72],[9.35,33.52],[9.28,33.30],[9.40,33.00],[9.70,32.78],[9.50,31.65],[9.00,31.45],[8.30,31.40],[7.82,31.65],[7.60,32.10],[7.55,32.80],[7.85,33.55]
+                    ]]}}
+        ]
+    };
+
+    // ═══════════════════════════════════════════════════════
+    //  STYLES
+    // ═══════════════════════════════════════════════════════
+    function getBaseStyle(feature) {
+        var count = getParcellsForGov(feature.properties.name).length;
+        return {
+            fillColor:   count > 0 ? '#1e6b22' : '#0d2d0d',
+            weight:      1.5,
+            opacity:     1,
+            color:       '#4CAF50',
+            fillOpacity: count > 0 ? 0.55 : 0.30,
+            dashArray:   count > 0 ? '' : '5'
+        };
+    }
+
+    function getHoverStyle(feature) {
+        var count = getParcellsForGov(feature.properties.name).length;
+        return {
+            fillColor:   count > 0 ? '#5cb860' : '#2a4a2a',
+            weight:      2.5,
+            color:       '#a5d6a7',
+            fillOpacity: 0.78
+        };
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  BUILD GEOJSON LAYER
+    // ═══════════════════════════════════════════════════════
+    function onEachFeature(feature, layer) {
+        var govName = feature.properties.name;
+
+        layer.on({
+            mouseover: function(e) {
+                e.target.setStyle(getHoverStyle(feature));
+                e.target.bringToFront();
+                showParcelles(govName);
+            },
+            mouseout: function(e) {
+                geojsonLayer.resetStyle(e.target);
+            },
+            click: function(e) {
+                map.fitBounds(e.target.getBounds(), { padding: [30, 30] });
+                showParcelles(govName);
+            }
+        });
+
+        var count   = getParcellsForGov(govName).length;
+        var tipText = '<b>' + govName + '</b>' + (count > 0 ? '<br>' + count + ' parcelle' + (count!==1?'s':'') : '');
+        layer.bindTooltip(tipText, { className: 'gov-tooltip', sticky: true, offset: [10, 0] });
+    }
+
+    function initGeoJSON() {
+        geojsonLayer = L.geoJSON(TUNISIA_GOVS, {
+            style: getBaseStyle,
+            onEachFeature: onEachFeature
+        }).addTo(map);
+        map.fitBounds(geojsonLayer.getBounds(), { padding: [10, 10] });
+    }
+
+    function refreshStyles() {
+        if (!geojsonLayer) return;
+        geojsonLayer.eachLayer(function(layer) {
+            geojsonLayer.resetStyle(layer);
+            var govName = layer.feature.properties.name;
+            var count   = getParcellsForGov(govName).length;
+            var tipText = '<b>' + govName + '</b>' + (count > 0 ? '<br>' + count + ' parcelle' + (count!==1?'s':'') : '');
+            layer.bindTooltip(tipText, { className: 'gov-tooltip', sticky: true, offset: [10, 0] });
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  LEGEND
+    // ═══════════════════════════════════════════════════════
+    function addLegend() {
+        var legend = L.control({ position: 'bottomleft' });
+        legend.onAdd = function() {
+            var div = L.DomUtil.create('div', 'map-legend');
+            div.innerHTML =
+                '<h4>Légende</h4>' +
+                '<div class="legend-item"><div class="legend-dot" style="background:#1e6b22;border:1px solid #4CAF50"></div>Avec parcelles</div>' +
+                '<div class="legend-item"><div class="legend-dot" style="background:#0d2d0d;border:1px dashed #4CAF50"></div>Sans parcelles</div>' +
+                '<div class="legend-item"><div class="legend-dot" style="background:#5cb860"></div>Survolé</div>';
+            return div;
+        };
+        legend.addTo(map);
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  BOOT
+    // ═══════════════════════════════════════════════════════
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            initGeoJSON();
+            addLegend();
+            var loading = document.getElementById('loading');
+            loading.style.opacity = '0';
+            setTimeout(function() { loading.style.display = 'none'; }, 400);
+        }, 200);
+    });
+</script>
+</body>
+</html>

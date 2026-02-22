@@ -17,6 +17,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import services.ParcelleService;
 import services.CultureService;
+import javafx.scene.web.WebView;
+import javafx.scene.web.WebEngine;
+import javafx.concurrent.Worker;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -31,7 +34,6 @@ public class ParcelleController {
     @FXML private GridPane parcelleGrid;
     @FXML private TextField searchField;
 
-    // Sort buttons
     @FXML private Button statutButton;
     @FXML private Button surfaceButton;
     @FXML private Button resetButton;
@@ -39,13 +41,20 @@ public class ParcelleController {
     private List<Parcelle> allParcelles = new ArrayList<>();
     private List<Parcelle> filteredParcelles = new ArrayList<>();
 
+    // ── List of all 24 Tunisian governorates ──────────────────────────────────
+    private static final List<String> GOUVERNORATS = Arrays.asList(
+            "Ariana", "Béja", "Ben Arous", "Bizerte", "Gabès",
+            "Gafsa", "Jendouba", "Kairouan", "Kasserine", "Kébili",
+            "Le Kef", "Mahdia", "Manouba", "Médenine", "Monastir",
+            "Nabeul", "Sfax", "Sidi Bouzid", "Siliana", "Sousse",
+            "Tataouine", "Tozeur", "Tunis", "Zaghouan"
+    );
+
     @FXML
     public void initialize() {
         if (parcelleGrid != null) {
             loadParcelleCards();
         }
-
-        // Add search listener
         if (searchField != null) {
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filterParcelles(newValue);
@@ -77,11 +86,9 @@ public class ParcelleController {
 
     @FXML
     private void sortByStatut() {
-        // Custom order: Libre first, then Occupée
         Map<String, Integer> statutOrder = new HashMap<>();
         statutOrder.put("Libre", 1);
         statutOrder.put("Occupée", 2);
-
         filteredParcelles.sort(Comparator.comparing(p -> statutOrder.getOrDefault(p.getStatut(), 999)));
         displayParcelles(filteredParcelles);
         setActiveSortButton(statutButton);
@@ -98,16 +105,12 @@ public class ParcelleController {
     private void resetSort() {
         filteredParcelles = new ArrayList<>(allParcelles);
         displayParcelles(filteredParcelles);
-        setActiveSortButton(null); // Remove active from all
+        setActiveSortButton(null);
     }
 
-    // Helper method to manage active sort button styling
     private void setActiveSortButton(Button activeButton) {
-        // Remove active class from all buttons
-        if (statutButton != null) statutButton.getStyleClass().remove("sort-button-active");
+        if (statutButton != null)  statutButton.getStyleClass().remove("sort-button-active");
         if (surfaceButton != null) surfaceButton.getStyleClass().remove("sort-button-active");
-
-        // Add active class to selected button
         if (activeButton != null && !activeButton.getStyleClass().contains("sort-button-active")) {
             activeButton.getStyleClass().add("sort-button-active");
         }
@@ -115,21 +118,18 @@ public class ParcelleController {
 
     private void displayParcelles(List<Parcelle> parcelles) {
         parcelleGrid.getChildren().clear();
-        int col = 0;
-        int row = 0;
-
+        int col = 0, row = 0;
         for (Parcelle parcelle : parcelles) {
             VBox card = createParcelleCard(parcelle);
             parcelleGrid.add(card, col, row);
-
             col++;
-            if (col == 3) {
-                col = 0;
-                row++;
-            }
+            if (col == 3) { col = 0; row++; }
         }
     }
 
+    // ══════════════════════════════════════════════════════════════════════════
+    // CARD — with "📍 Carte" button that zooms directly to THIS parcelle
+    // ══════════════════════════════════════════════════════════════════════════
     private VBox createParcelleCard(Parcelle parcelle) {
         VBox card = new VBox(12);
         card.getStyleClass().add("parcelle-card");
@@ -150,12 +150,10 @@ public class ParcelleController {
         infoGrid.add(surfaceLabel, 0, 0);
         infoGrid.add(surfaceValue, 1, 0);
 
-        double remaining = 0 ;
-        try {
-            remaining = service.getRemainingParcelleSize(parcelle.getId());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        double remaining = 0;
+        try { remaining = service.getRemainingParcelleSize(parcelle.getId()); }
+        catch (SQLException e) { e.printStackTrace(); }
+
         Label remainingLabel = new Label("Restant:");
         remainingLabel.getStyleClass().add("parcelle-info-label");
         Label remainingValue = new Label(String.format("%.2f", remaining) + " m²");
@@ -172,11 +170,8 @@ public class ParcelleController {
 
         Label typeSolLabel = new Label("Type de sol:");
         typeSolLabel.getStyleClass().add("parcelle-info-label");
-
-        // Create colored badge for type de sol
         Label typeSolBadge = new Label(parcelle.getTypeSol());
         typeSolBadge.setStyle(getTypeSolStyle(parcelle.getTypeSol()));
-
         infoGrid.add(typeSolLabel, 0, 3);
         infoGrid.add(typeSolBadge, 1, 3);
 
@@ -184,30 +179,34 @@ public class ParcelleController {
         if ("Libre".equalsIgnoreCase(parcelle.getStatut())) {
             statutLabel.getStyleClass().add("statut-libre");
         } else {
-            // Handle both spellings
             statutLabel.getStyleClass().add("statut-occupee");
             statutLabel.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; " +
                     "-fx-padding: 5 10; -fx-background-radius: 12px; " +
                     "-fx-font-size: 12px; -fx-font-weight: bold;");
         }
 
-        HBox buttonBox = new HBox(10);
+        HBox buttonBox = new HBox(8);
         buttonBox.setAlignment(Pos.CENTER);
 
         Button editBtn = new Button("✏ Modifier");
-        editBtn.setStyle("-fx-font-size: 14px;");
+        editBtn.setStyle("-fx-font-size: 13px;");
         editBtn.getStyleClass().addAll("card-button", "edit-button");
         editBtn.setOnAction(e -> showUpdatePopup(parcelle));
 
         Button deleteBtn = new Button("🗑 Supprimer");
-        deleteBtn.setStyle("-fx-font-size: 14px;");
+        deleteBtn.setStyle("-fx-font-size: 13px;");
         deleteBtn.getStyleClass().addAll("card-button", "delete-button");
         deleteBtn.setOnAction(e -> handleDelete(parcelle));
 
-        buttonBox.getChildren().addAll(editBtn, deleteBtn);
+        // ── Map button — opens Tunisia map zoomed to THIS parcelle's governorate ──
+        Button mapBtn = new Button("📍 Carte");
+        mapBtn.setStyle("-fx-font-size: 13px;");
+        mapBtn.getStyleClass().addAll("card-button", "map-button");
+        mapBtn.setOnAction(e -> showTunisiaMap(parcelle));  // pass the parcelle directly
+
+        buttonBox.getChildren().addAll(editBtn, deleteBtn, mapBtn);
         card.getChildren().addAll(nameLabel, infoGrid, statutLabel, buttonBox);
 
-        // Add double-click event to show cultures in this parcelle
         card.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 showCulturesInParcelle(parcelle);
@@ -217,25 +216,20 @@ public class ParcelleController {
         return card;
     }
 
-    /**
-     * Get style for type de sol badge
-     */
     private String getTypeSolStyle(String typeSol) {
         String baseStyle = "-fx-padding: 5 10; -fx-background-radius: 12px; " +
                 "-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: white;";
-
         switch (typeSol) {
-            case "Sol Limoneux":
-                return baseStyle + " -fx-background-color: #8D6E63;"; // Brown
-            case "Sol Argileux":
-                return baseStyle + " -fx-background-color: #FF7043;"; // Deep Orange
-            case "Sol Sablonneux":
-                return baseStyle + " -fx-background-color: #FFB74D;"; // Orange/Yellow
-            default:
-                return baseStyle + " -fx-background-color: #9E9E9E;"; // Grey
+            case "Sol Limoneux":    return baseStyle + " -fx-background-color: #8D6E63;";
+            case "Sol Argileux":   return baseStyle + " -fx-background-color: #FF7043;";
+            case "Sol Sablonneux": return baseStyle + " -fx-background-color: #FFB74D;";
+            default:               return baseStyle + " -fx-background-color: #9E9E9E;";
         }
     }
 
+    // ══════════════════════════════════════════════════════════════════════════
+    // ADD POPUP — localisation replaced by ComboBox of 24 governorates
+    // ══════════════════════════════════════════════════════════════════════════
     @FXML
     private void showAddPopup() {
         Stage popup = new Stage();
@@ -261,6 +255,7 @@ public class ParcelleController {
         closeBtn.setOnAction(e -> popup.close());
         header.getChildren().addAll(title, spacer, closeBtn);
 
+        // Nom
         VBox nomBox = new VBox(5);
         Label nomLabel = new Label("Nom de la parcelle:");
         nomLabel.getStyleClass().add("form-label");
@@ -269,6 +264,7 @@ public class ParcelleController {
         nomField.setPrefWidth(400);
         nomBox.getChildren().addAll(nomLabel, nomField);
 
+        // Surface
         VBox surfaceBox = new VBox(5);
         Label surfaceLabel = new Label("Surface (m²):");
         surfaceLabel.getStyleClass().add("form-label");
@@ -277,14 +273,18 @@ public class ParcelleController {
         surfaceField.setPrefWidth(400);
         surfaceBox.getChildren().addAll(surfaceLabel, surfaceField);
 
+        // ── LOCALISATION — ComboBox with 24 governorates ──────────────────────
         VBox localisationBox = new VBox(5);
-        Label localisationLabel = new Label("Localisation:");
+        Label localisationLabel = new Label("Gouvernorat (Localisation):");
         localisationLabel.getStyleClass().add("form-label");
-        TextField localisationField = new TextField();
-        localisationField.setPromptText("Ex: Zone A, Secteur 3");
-        localisationField.setPrefWidth(400);
-        localisationBox.getChildren().addAll(localisationLabel, localisationField);
+        ComboBox<String> localisationCombo = new ComboBox<>();
+        localisationCombo.setPromptText("Sélectionner le gouvernorat");
+        localisationCombo.setPrefWidth(400);
+        localisationCombo.getStyleClass().add("form-field");
+        localisationCombo.getItems().addAll(GOUVERNORATS);
+        localisationBox.getChildren().addAll(localisationLabel, localisationCombo);
 
+        // Type de sol
         VBox typeSolBox = new VBox(5);
         Label typeSolLabel = new Label("Type de sol:");
         typeSolLabel.getStyleClass().add("form-label");
@@ -295,6 +295,7 @@ public class ParcelleController {
         typeSolComboBox.getItems().addAll("Sol Limoneux", "Sol Argileux", "Sol Sablonneux");
         typeSolBox.getChildren().addAll(typeSolLabel, typeSolComboBox);
 
+        // Statut
         VBox statutBox = new VBox(5);
         Label statutLabel = new Label("Statut:");
         statutLabel.getStyleClass().add("form-label");
@@ -310,7 +311,7 @@ public class ParcelleController {
         saveBtn.getStyleClass().addAll("card-button", "edit-button");
         saveBtn.setPrefWidth(150);
         saveBtn.setOnAction(e -> {
-            if (handleAddParcelle(nomField, surfaceField, localisationField,
+            if (handleAddParcelle(nomField, surfaceField, localisationCombo,
                     typeSolComboBox, statutComboBox, messageLabel)) {
                 popup.close();
                 loadParcelleCards();
@@ -331,6 +332,9 @@ public class ParcelleController {
         popup.show();
     }
 
+    // ══════════════════════════════════════════════════════════════════════════
+    // UPDATE POPUP — localisation replaced by ComboBox of 24 governorates
+    // ══════════════════════════════════════════════════════════════════════════
     private void showUpdatePopup(Parcelle parcelle) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
@@ -355,6 +359,7 @@ public class ParcelleController {
         closeBtn.setOnAction(e -> popup.close());
         header.getChildren().addAll(title, spacer, closeBtn);
 
+        // ID (read-only)
         VBox idBox = new VBox(5);
         Label idLabel = new Label("ID:");
         idLabel.getStyleClass().add("form-label");
@@ -363,6 +368,7 @@ public class ParcelleController {
         idField.setPrefWidth(400);
         idBox.getChildren().addAll(idLabel, idField);
 
+        // Nom
         VBox nomBox = new VBox(5);
         Label nomLabel = new Label("Nom de la parcelle:");
         nomLabel.getStyleClass().add("form-label");
@@ -370,6 +376,7 @@ public class ParcelleController {
         nomField.setPrefWidth(400);
         nomBox.getChildren().addAll(nomLabel, nomField);
 
+        // Surface
         VBox surfaceBox = new VBox(5);
         Label surfaceLabel = new Label("Surface (m²):");
         surfaceLabel.getStyleClass().add("form-label");
@@ -377,13 +384,24 @@ public class ParcelleController {
         surfaceField.setPrefWidth(400);
         surfaceBox.getChildren().addAll(surfaceLabel, surfaceField);
 
+        // ── LOCALISATION — ComboBox pre-selected with current value ──────────
         VBox localisationBox = new VBox(5);
-        Label localisationLabel = new Label("Localisation:");
+        Label localisationLabel = new Label("Gouvernorat (Localisation):");
         localisationLabel.getStyleClass().add("form-label");
-        TextField localisationField = new TextField(parcelle.getLocalisation());
-        localisationField.setPrefWidth(400);
-        localisationBox.getChildren().addAll(localisationLabel, localisationField);
+        ComboBox<String> localisationCombo = new ComboBox<>();
+        localisationCombo.setPrefWidth(400);
+        localisationCombo.getStyleClass().add("form-field");
+        localisationCombo.getItems().addAll(GOUVERNORATS);
+        // Pre-select the current value if it matches a governorate
+        String currentLoc = parcelle.getLocalisation();
+        if (currentLoc != null && GOUVERNORATS.contains(currentLoc)) {
+            localisationCombo.setValue(currentLoc);
+        } else {
+            localisationCombo.setPromptText("Sélectionner le gouvernorat");
+        }
+        localisationBox.getChildren().addAll(localisationLabel, localisationCombo);
 
+        // Type de sol
         VBox typeSolBox = new VBox(5);
         Label typeSolLabel = new Label("Type de sol:");
         typeSolLabel.getStyleClass().add("form-label");
@@ -394,6 +412,7 @@ public class ParcelleController {
         typeSolComboBox.setValue(parcelle.getTypeSol());
         typeSolBox.getChildren().addAll(typeSolLabel, typeSolComboBox);
 
+        // Statut
         VBox statutBox = new VBox(5);
         Label statutLabel = new Label("Statut:");
         statutLabel.getStyleClass().add("form-label");
@@ -409,7 +428,7 @@ public class ParcelleController {
         saveBtn.getStyleClass().addAll("card-button", "edit-button");
         saveBtn.setPrefWidth(150);
         saveBtn.setOnAction(e -> {
-            if (handleUpdateParcelle(idField, nomField, surfaceField, localisationField,
+            if (handleUpdateParcelle(idField, nomField, surfaceField, localisationCombo,
                     typeSolComboBox, statutComboBox, messageLabel)) {
                 popup.close();
                 loadParcelleCards();
@@ -420,8 +439,7 @@ public class ParcelleController {
         buttonContainer.setAlignment(Pos.CENTER);
 
         content.getChildren().addAll(header, idBox, nomBox, surfaceBox,
-                localisationBox, typeSolBox, statutBox,
-                messageLabel, buttonContainer);
+                localisationBox, typeSolBox, statutBox, messageLabel, buttonContainer);
 
         root.getChildren().add(content);
         Scene scene = new Scene(root);
@@ -431,48 +449,44 @@ public class ParcelleController {
         popup.show();
     }
 
+    // ══════════════════════════════════════════════════════════════════════════
+    // handleAddParcelle — now receives ComboBox<String> for localisation
+    // ══════════════════════════════════════════════════════════════════════════
     private boolean handleAddParcelle(TextField nomField, TextField surfaceField,
-                                      TextField localisationField, ComboBox<String> typeSolComboBox,
+                                      ComboBox<String> localisationCombo,
+                                      ComboBox<String> typeSolComboBox,
                                       ComboBox<String> statutComboBox, Label messageLabel) {
         try {
-            String nom = nomField.getText();
+            String nom         = nomField.getText();
             String surfaceText = surfaceField.getText();
-            String localisation = localisationField.getText();
-            String typeSol = typeSolComboBox.getValue();
-            String statut = statutComboBox.getValue();
+            String localisation = localisationCombo.getValue();
+            String typeSol     = typeSolComboBox.getValue();
+            String statut      = statutComboBox.getValue();
 
             if (nom == null || nom.trim().isEmpty() || !nom.matches("[A-Za-zÀ-ÿ ]{3,}")) {
                 showError(messageLabel, "❌ Nom invalide (min 3 caractères)");
                 return false;
             }
-
             if (surfaceText == null || surfaceText.trim().isEmpty()) {
                 showError(messageLabel, "❌ Surface requise");
                 return false;
             }
-
             double surface;
             try {
                 surface = Double.parseDouble(surfaceText);
-                if (surface <= 0) {
-                    showError(messageLabel, "❌ Surface doit être positive");
-                    return false;
-                }
+                if (surface <= 0) { showError(messageLabel, "❌ Surface doit être positive"); return false; }
             } catch (NumberFormatException e) {
                 showError(messageLabel, "❌ Surface doit être un nombre");
                 return false;
             }
-
-            if (localisation == null || localisation.trim().isEmpty() || !localisation.matches("[A-Za-zÀ-ÿ0-9 ,]{3,}")) {
-                showError(messageLabel, "❌ Localisation invalide (min 3 caractères)");
+            if (localisation == null || localisation.trim().isEmpty()) {
+                showError(messageLabel, "❌ Veuillez sélectionner un gouvernorat");
                 return false;
             }
-
-            if (typeSol == null || typeSol.trim().isEmpty() || !typeSol.matches("[A-Za-zÀ-ÿ ]{3,}")) {
-                showError(messageLabel, "❌ Type de sol invalide (min 3 lettres)");
+            if (typeSol == null || typeSol.trim().isEmpty()) {
+                showError(messageLabel, "❌ Veuillez sélectionner le type de sol");
                 return false;
             }
-
             if (statut == null || statut.trim().isEmpty()) {
                 showError(messageLabel, "❌ Veuillez sélectionner un statut");
                 return false;
@@ -495,72 +509,62 @@ public class ParcelleController {
         }
     }
 
+    // ══════════════════════════════════════════════════════════════════════════
+    // handleUpdateParcelle — now receives ComboBox<String> for localisation
+    // ══════════════════════════════════════════════════════════════════════════
     private boolean handleUpdateParcelle(TextField idField, TextField nomField, TextField surfaceField,
-                                         TextField localisationField, ComboBox<String> typeSolComboBox,
+                                         ComboBox<String> localisationCombo,
+                                         ComboBox<String> typeSolComboBox,
                                          ComboBox<String> statutComboBox, Label messageLabel) {
         try {
-            int id = Integer.parseInt(idField.getText());
-            String nom = nomField.getText();
+            int    id          = Integer.parseInt(idField.getText());
+            String nom         = nomField.getText();
             String surfaceText = surfaceField.getText();
-            String localisation = localisationField.getText();
-            String typeSol = typeSolComboBox.getValue();
-            String statut = statutComboBox.getValue();
+            String localisation = localisationCombo.getValue();
+            String typeSol     = typeSolComboBox.getValue();
+            String statut      = statutComboBox.getValue();
 
             if (nom == null || nom.trim().isEmpty() || !nom.matches("[A-Za-zÀ-ÿ ]{3,}")) {
                 showError(messageLabel, "❌ Nom invalide (min 3 caractères)");
                 return false;
             }
-
             if (surfaceText == null || surfaceText.trim().isEmpty()) {
                 showError(messageLabel, "❌ Surface requise");
                 return false;
             }
-
             double surface;
             try {
                 surface = Double.parseDouble(surfaceText);
-                if (surface <= 0) {
-                    showError(messageLabel, "❌ Surface doit être positive");
-                    return false;
-                }
+                if (surface <= 0) { showError(messageLabel, "❌ Surface doit être positive"); return false; }
             } catch (NumberFormatException e) {
                 showError(messageLabel, "❌ Surface doit être un nombre");
                 return false;
             }
 
-            // NEW VALIDATION: Check if trying to set to "Libre" but there are still cultures
-            // VALIDATION: Check status change rules
+            // Statut validation
             try {
                 double remainingSurface = service.getRemainingParcelleSize(id);
-
                 if ("Libre".equalsIgnoreCase(statut)) {
-                    // Can only set to Libre if remaining surface equals total surface (no cultures)
-                    if (Math.abs(remainingSurface - surface) > 0.01) { // If there are any cultures
+                    if (Math.abs(remainingSurface - surface) > 0.01) {
                         double usedSurface = surface - remainingSurface;
                         showError(messageLabel, "❌ Impossible de passer à 'Libre'! Il y a encore " +
-                                String.format("%.2f", usedSurface) + " m² de cultures dans cette parcelle.\n" +
-                                "Vous devez d'abord supprimer toutes les cultures.");
+                                String.format("%.2f", usedSurface) + " m² de cultures dans cette parcelle.");
                         return false;
                     }
-                } else if ("Occupée".equalsIgnoreCase(statut)) {
-                    // Can always set to Occupée, even if fully occupied (remainingSurface = 0)
-                    // No validation needed - this is always allowed
                 }
             } catch (SQLException e) {
                 showError(messageLabel, "❌ Erreur de vérification de la surface");
                 return false;
             }
 
-            if (localisation == null || localisation.trim().isEmpty() || !localisation.matches("[A-Za-zÀ-ÿ0-9 ,]{3,}")) {
-                showError(messageLabel, "❌ Localisation invalide (min 3 caractères)");
+            if (localisation == null || localisation.trim().isEmpty()) {
+                showError(messageLabel, "❌ Veuillez sélectionner un gouvernorat");
                 return false;
             }
-
-            if (typeSol == null || typeSol.trim().isEmpty() || !typeSol.matches("[A-Za-zÀ-ÿ ]{3,}")) {
-                showError(messageLabel, "❌ Type de sol invalide (min 3 lettres)");
+            if (typeSol == null || typeSol.trim().isEmpty()) {
+                showError(messageLabel, "❌ Veuillez sélectionner le type de sol");
                 return false;
             }
-
             if (statut == null || statut.trim().isEmpty()) {
                 showError(messageLabel, "❌ Veuillez sélectionner un statut");
                 return false;
@@ -576,7 +580,6 @@ public class ParcelleController {
 
             service.updateParcelle(p);
 
-            // Show success message
             Alert success = new Alert(Alert.AlertType.INFORMATION);
             success.setTitle("Succès");
             success.setHeaderText(null);
@@ -603,13 +606,11 @@ public class ParcelleController {
                 try {
                     service.deleteParcelle(parcelle.getId());
                     loadParcelleCards();
-
                     Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
                     successAlert.setTitle("Succès");
                     successAlert.setHeaderText(null);
                     successAlert.setContentText("✅ Parcelle supprimée avec succès!");
                     successAlert.showAndWait();
-
                 } catch (SQLException e) {
                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                     errorAlert.setTitle("Erreur");
@@ -629,14 +630,15 @@ public class ParcelleController {
 
     @FXML
     void goBackToCulture() {
-        // Get the MainLayoutController instance and navigate back to culture
         MainLayoutController controller = MainLayoutController.getInstance();
         if (controller != null) {
             controller.navigateToCulture();
         }
     }
 
-    // Show all cultures in this parcelle in a popup
+    // ══════════════════════════════════════════════════════════════════════════
+    // SHOW CULTURES POPUP
+    // ══════════════════════════════════════════════════════════════════════════
     private void showCulturesInParcelle(Parcelle parcelle) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
@@ -653,7 +655,6 @@ public class ParcelleController {
         content.setMaxHeight(600);
         content.setPadding(new Insets(20));
 
-        // Header with close button
         HBox header = new HBox();
         header.setAlignment(Pos.CENTER_LEFT);
         Label title = new Label("🌱 Cultures de la parcelle: " + parcelle.getNom());
@@ -665,7 +666,6 @@ public class ParcelleController {
         closeBtn.setOnAction(e -> popup.close());
         header.getChildren().addAll(title, spacer, closeBtn);
 
-        // Parcelle info summary
         VBox parcelleInfo = new VBox(8);
         parcelleInfo.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 12; -fx-background-radius: 8;");
 
@@ -673,18 +673,13 @@ public class ParcelleController {
             double remaining = service.getRemainingParcelleSize(parcelle.getId());
             Label surfaceLabel = new Label("📏 Surface totale: " + parcelle.getSurface() + " m²");
             Label restantLabel = new Label("📦 Surface restante: " + String.format("%.2f", remaining) + " m²");
-            Label usedLabel = new Label("🌾 Surface utilisée: " + String.format("%.2f", (parcelle.getSurface() - remaining)) + " m²");
-
+            Label usedLabel    = new Label("🌾 Surface utilisée: " + String.format("%.2f", (parcelle.getSurface() - remaining)) + " m²");
             surfaceLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: bold;");
             restantLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #4CAF50; -fx-font-weight: bold;");
             usedLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #FF9800; -fx-font-weight: bold;");
-
             parcelleInfo.getChildren().addAll(surfaceLabel, usedLabel, restantLabel);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (SQLException e) { e.printStackTrace(); }
 
-        // Scrollable culture cards
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
@@ -706,50 +701,38 @@ public class ParcelleController {
                 noCultures.setStyle("-fx-font-size: 16px; -fx-text-fill: #888; -fx-padding: 30;");
                 cultureGrid.add(noCultures, 0, 0);
             } else {
-                int col = 0;
-                int row = 0;
+                int col = 0, row = 0;
                 for (Culture culture : parcelleCultures) {
                     VBox cultureCard = createCultureCardForPopup(culture);
                     cultureGrid.add(cultureCard, col, row);
                     col++;
-                    if (col == 3) { // 3 cards per row
-                        col = 0;
-                        row++;
-                    }
+                    if (col == 3) { col = 0; row++; }
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (SQLException e) { e.printStackTrace(); }
 
         scrollPane.setContent(cultureGrid);
         content.getChildren().addAll(header, parcelleInfo, scrollPane);
 
         root.getChildren().add(content);
-        root.setOnMouseClicked(e -> {
-            if (e.getTarget() == root) popup.close();
-        });
+        root.setOnMouseClicked(e -> { if (e.getTarget() == root) popup.close(); });
 
         Scene scene = new Scene(root, 950, 650);
         scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getResource("/css/cards.css").toExternalForm());
-
         popup.setScene(scene);
         popup.show();
     }
 
-    // Create a culture card for the popup
-    // Create a culture card for the popup
     private VBox createCultureCardForPopup(Culture culture) {
         VBox card = new VBox(10);
         card.getStyleClass().add("culture-card");
         card.setPrefWidth(260);
         card.setMaxWidth(260);
-        card.setPrefHeight(300); // Increased height
+        card.setPrefHeight(300);
         card.setAlignment(Pos.TOP_CENTER);
         card.setPadding(new Insets(10));
 
-        // Culture image
         ImageView imageView = new ImageView();
         imageView.setFitWidth(220);
         imageView.setFitHeight(150);
@@ -761,51 +744,38 @@ public class ParcelleController {
                 Image img = new Image(getClass().getResourceAsStream("/images/cultures/" + culture.getImg()));
                 imageView.setImage(img);
             } catch (Exception e) {
-                try {
-                    imageView.setImage(new Image(getClass().getResourceAsStream("/images/cultures/default.png")));
-                } catch (Exception ex) {
-                    imageView.setImage(null);
-                }
+                try { imageView.setImage(new Image(getClass().getResourceAsStream("/images/cultures/default.png"))); }
+                catch (Exception ex) { imageView.setImage(null); }
             }
         }
 
-        // Culture type
         Label typeLabel = new Label(culture.getTypeCulture());
         typeLabel.getStyleClass().add("culture-type");
         typeLabel.setWrapText(true);
         typeLabel.setAlignment(Pos.CENTER);
 
-        // Culture name
         Label nameLabel = new Label(culture.getNom());
         nameLabel.getStyleClass().add("culture-name");
         nameLabel.setWrapText(true);
         nameLabel.setAlignment(Pos.CENTER);
 
-        // État badge - FIXED to handle harvest states
         Label etatLabel = new Label(culture.getEtat());
         String etatClass;
         String etat = culture.getEtat().toLowerCase();
-
-        // Handle special cases for harvest states
         if (etat.contains("récolte prévue") || etat.contains("recolte prevue")) {
             etatClass = "etat-recolte-prevue";
         } else if (etat.contains("récolte en retard") || etat.contains("recolte en retard")) {
             etatClass = "etat-recolte-en-retard";
         } else {
-            etatClass = "etat-" + etat
-                    .replace("é", "e")
-                    .replace("è", "e")
-                    .replace("à", "a");
+            etatClass = "etat-" + etat.replace("é","e").replace("è","e").replace("à","a");
         }
         etatLabel.getStyleClass().addAll("culture-etat", etatClass);
         etatLabel.setWrapText(true);
         etatLabel.setMaxWidth(200);
 
-        // Surface info
         Label surfaceLabel = new Label("📏 " + culture.getSurface() + " m²");
         surfaceLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666; -fx-font-weight: bold;");
 
-        // Dates info (optional but helpful)
         Label datesLabel = new Label("📅 " + culture.getDatePlantation() + " → " + culture.getDateRecolte());
         datesLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #888;");
         datesLabel.setWrapText(true);
@@ -813,7 +783,6 @@ public class ParcelleController {
 
         card.getChildren().addAll(imageView, typeLabel, nameLabel, etatLabel, surfaceLabel, datesLabel);
 
-        // Add double-click to view full details
         card.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 showCultureDetailFromParcelle(culture);
@@ -823,12 +792,10 @@ public class ParcelleController {
         return card;
     }
 
-    // Helper method to show culture details from parcelle popup
     private void showCultureDetailFromParcelle(Culture culture) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/culture_detail.fxml"));
             if (loader.getLocation() == null) {
-                // If no detail view exists, show a simple alert
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Détails de la culture");
                 alert.setHeaderText(culture.getNom());
@@ -841,8 +808,78 @@ public class ParcelleController {
                 );
                 alert.showAndWait();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // SHOW TUNISIA MAP — opens and zooms directly to the parcelle's governorate
+    // ══════════════════════════════════════════════════════════════════════════
+    private void showTunisiaMap(Parcelle targetParcelle) {
+        Stage mapStage = new Stage();
+        mapStage.initModality(Modality.APPLICATION_MODAL);
+        mapStage.setTitle("🗺️ Carte des Parcelles — Tunisie");
+
+        WebView webView = new WebView();
+        WebEngine engine = webView.getEngine();
+
+        java.net.URL mapUrl = getClass().getResource("/map/map.html");
+        if (mapUrl == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Fichier carte introuvable");
+            alert.setContentText("Assurez-vous que map/map.html est dans src/main/resources/map/");
+            alert.showAndWait();
+            return;
         }
+        engine.load(mapUrl.toExternalForm());
+
+        engine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+            if (newState == Worker.State.SUCCEEDED) {
+                try {
+                    // 1) Send all parcelles to JS
+                    StringBuilder json = new StringBuilder("[");
+                    boolean first = true;
+                    for (Parcelle p : allParcelles) {
+                        if (!first) json.append(",");
+                        first = false;
+                        json.append("{")
+                                .append("\"nom\":\"").append(escapeJson(p.getNom())).append("\",")
+                                .append("\"localisation\":\"").append(escapeJson(p.getLocalisation() != null ? p.getLocalisation() : "")).append("\",")
+                                .append("\"statut\":\"").append(escapeJson(p.getStatut() != null ? p.getStatut() : "")).append("\",")
+                                .append("\"typeSol\":\"").append(escapeJson(p.getTypeSol() != null ? p.getTypeSol() : "")).append("\",")
+                                .append("\"surface\":").append(p.getSurface())
+                                .append("}");
+                    }
+                    json.append("]");
+                    engine.executeScript("setParcelles('" + json.toString().replace("'", "\\'") + "')");
+
+                    // 2) If a specific parcelle was clicked, zoom to its governorate
+                    if (targetParcelle != null && targetParcelle.getLocalisation() != null
+                            && !targetParcelle.getLocalisation().isEmpty()) {
+                        String govName     = escapeJson(targetParcelle.getLocalisation());
+                        String parcelleName = escapeJson(targetParcelle.getNom());
+                        engine.executeScript("focusOnParcelle('" + govName + "', '" + parcelleName + "')");
+                    }
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        StackPane root = new StackPane(webView);
+        Scene scene = new Scene(root, 1150, 700);
+        mapStage.setScene(scene);
+        mapStage.show();
+    }
+
+    private String escapeJson(String s) {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("'", "\\'")
+                .replace("\n", "\\n")
+                .replace("\r", "")
+                .replace("\t", " ");
     }
 }

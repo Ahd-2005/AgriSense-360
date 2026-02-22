@@ -13,40 +13,39 @@
     -fx-cursor: hand;
 }
 
-/* ========== CHART CARDS - CLICKABLE ========== */
+/* ========== CHART CARDS - CLICKABLE (clean placeholders) ========== */
 .chart-card-clickable {
     -fx-background-color: white;
     -fx-background-radius: 20px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 3);
-    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 12, 0, 0, 2);
+    -fx-padding: 24 20 20 20;
     -fx-cursor: hand;
 }
 
 .chart-card-clickable:hover {
-    -fx-effect: dropshadow(gaussian, rgba(33, 150, 243, 0.4), 20, 0, 0, 5);
-    -fx-scale-x: 1.01;
-    -fx-scale-y: 1.01;
+    -fx-effect: dropshadow(gaussian, rgba(42, 90, 58, 0.25), 18, 0, 0, 5);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-background-color: #fafffe;
 }
 
-/* ========== PIE CHARTS ========== */
+/* ========== PIE CHARTS (in-popup) ========== */
 .surface-pie-chart {
-    -fx-pie-color-0: #4CAF50; /* Surface Utilisée - Green */
-    -fx-pie-color-1: #2196F3; /* Surface Disponible - Blue */
+    -fx-pie-color-0: #4CAF50;
+    -fx-pie-color-1: #2196F3;
 }
 
 .etat-pie-chart {
-    -fx-pie-color-0: #4CAF50; /* Semis - Green */
-    -fx-pie-color-1: #FF9800; /* Croissance - Orange */
-    -fx-pie-color-2: #2196F3; /* Maturité - Blue */
-    -fx-pie-color-3: #FFB300; /* Récolte Prévue - Amber */
-    -fx-pie-color-4: #f44336; /* Récolte en Retard - Red */
+    -fx-pie-color-0: #4CAF50;
+    -fx-pie-color-1: #FF9800;
+    -fx-pie-color-2: #2196F3;
+    -fx-pie-color-3: #FFB300;
+    -fx-pie-color-4: #f44336;
 }
 
-/* Make pie charts more aesthetic */
 .chart-pie-label {
     -fx-font-size: 12px;
     -fx-font-weight: bold;
-    -fx-fill: white;
 }
 
 .chart-legend {
@@ -69,7 +68,11 @@
 
 .chart-bar {
     -fx-background-color: #4CAF50;
-    -fx-background-radius: 5px;
+    -fx-background-radius: 6px;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
 }
 
 .axis {
@@ -83,11 +86,17 @@
     -fx-text-fill: #333;
 }
 
+/* Bar chart custom colors */
+.default-color0.chart-bar { -fx-bar-fill: #4CAF50; }
+.default-color1.chart-bar { -fx-bar-fill: #FF9800; }
+.default-color2.chart-bar { -fx-bar-fill: #2196F3; }
+.default-color3.chart-bar { -fx-bar-fill: #9C27B0; }
+
 /* ========== MINI STAT CARDS ========== */
 .stat-card-mini {
     -fx-background-color: white;
     -fx-background-radius: 15px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 10, 0, 0, 2);
     -fx-padding: 15;
 }
 
@@ -130,7 +139,6 @@
     -fx-font-weight: bold;
 }
 
-/* État colors */
 .etat-recolte-prevue {
     -fx-background-color: #FF9800;
 }
@@ -139,7 +147,7 @@
     -fx-background-color: #f44336;
 }
 
-/* ========== TOP PARCELLE CARD - ENHANCED ========== */
+/* ========== TOP PARCELLE CARD ========== */
 .top-parcelle-card {
     -fx-background-color: white;
     -fx-background-radius: 12px;
@@ -187,18 +195,3 @@
     -fx-background-color: #e0e0e0;
     -fx-background-radius: 10px;
 }
-
-/* ========== CHART SPECIFIC STYLING ========== */
-.chart-content {
-    -fx-padding: 10px;
-}
-
-.chart-plot-background {
-    -fx-background-color: transparent;
-}
-
-/* Custom colors for bar chart */
-.default-color0.chart-bar { -fx-bar-fill: #4CAF50; } /* Céréales */
-.default-color1.chart-bar { -fx-bar-fill: #FF9800; } /* Légumes */
-.default-color2.chart-bar { -fx-bar-fill: #2196F3; } /* Fruits */
-.default-color3.chart-bar { -fx-bar-fill: #9C27B0; } /* Ornementales */
