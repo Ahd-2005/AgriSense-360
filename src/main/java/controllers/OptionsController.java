@@ -1,6 +1,7 @@
 package controllers;
 
 import entity.Animal;
+import entity.AnimalHealthRecord;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,24 +9,32 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import services.ServiceAnimal;
+import services.ServiceAnimalHealthRecord;
 import services.ServiceEnumManagement;
 import utils.AnimalListRefresh;
 
+import java.io.BufferedWriter;
 import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class OptionsController implements Initializable {
 
-    private static final String BREVO_API_KEY = "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";
+    private static final String BREVO_API_KEY = "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";
     private static final String FROM_EMAIL     = "rinmo7620@gmail.com";
+    private static final int    TRAIN_THRESHOLD = 1000;
 
     @FXML private ListView<String> typesList;
     @FXML private ListView<String> locationsList;
@@ -38,8 +47,14 @@ public class OptionsController implements Initializable {
     @FXML private TextArea notesArea;
     @FXML private Label emailStatusLabel;
 
+    @FXML private Label recordCountLabel;
+    @FXML private Label trainInfoLabel;
+    @FXML private Button trainModelBtn;
+    @FXML private Label trainStatusLabel;
+
     private final ServiceEnumManagement serviceEnum = new ServiceEnumManagement();
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
+    private final ServiceAnimalHealthRecord serviceAnimalHealthRecord = new ServiceAnimalHealthRecord();
     private final ObservableList<String> typesItems = FXCollections.observableArrayList();
     private final ObservableList<String> locationsItems = FXCollections.observableArrayList();
 
@@ -52,6 +67,26 @@ public class OptionsController implements Initializable {
         locationsList.getSelectionModel().selectedItemProperty()
                 .addListener((o, old, val) -> deleteLocationBtn.setDisable(val == null));
         refreshLists();
+        loadRecordCount();
+    }
+
+    private void loadRecordCount() {
+        try {
+            int count = serviceAnimalHealthRecord.getAll().size();
+            recordCountLabel.setText(count + " record" + (count == 1 ? "" : "s"));
+            if (count >= TRAIN_THRESHOLD) {
+                trainModelBtn.setDisable(false);
+                trainInfoLabel.setText("You have enough records to train a custom model.");
+                trainInfoLabel.setStyle("-fx-text-fill: #2e7d32;");
+            } else {
+                trainModelBtn.setDisable(true);
+                trainInfoLabel.setText("You need at least " + TRAIN_THRESHOLD + " health records to train a custom model. "
+                        +  (TRAIN_THRESHOLD - count) + " more needed.");
+                trainInfoLabel.setStyle("-fx-text-fill: #888888;");
+            }
+        } catch (SQLException e) {
+            recordCountLabel.setText("Error loading count");
+        }
     }
 
     private void refreshLists() {
@@ -149,6 +184,89 @@ public class OptionsController implements Initializable {
         t.start();
     }
 
+    @FXML
+    private void onTrainModel() {
+        trainModelBtn.setDisable(true);
+        setTrainStatus("Exporting data...", null);
+
+        Thread t = new Thread(() -> {
+            try {
+                Path pythonDir = Paths.get(System.getProperty("user.dir"), "src", "main", "python");
+
+                List<Animal> animals = serviceAnimal.getAll();
+                List<AnimalHealthRecord> records = serviceAnimalHealthRecord.getAll();
+
+                Map<Integer, Integer> idMap = new HashMap<>();
+                for (int i = 0; i < animals.size(); i++) {
+                    idMap.put(animals.get(i).getId(), i + 1);
+                }
+
+                exportAnimalCsv(pythonDir, animals);
+                exportHealthRecordCsv(pythonDir, records, idMap);
+
+                Platform.runLater(() -> setTrainStatus("Data exported. Training model...", null));
+
+                ProcessBuilder pb = new ProcessBuilder("python", "train.py");
+                pb.directory(pythonDir.toFile());
+                pb.redirectErrorStream(true);
+                Process process = pb.start();
+                String output = new String(process.getInputStream().readAllBytes());
+                int exitCode = process.waitFor();
+
+                if (exitCode != 0) {
+                    Platform.runLater(() -> setTrainStatus("Training failed. Check that Python and dependencies are installed.", false));
+                } else {
+                    Platform.runLater(() -> {
+                        setTrainStatus("Model trained and saved. Restart the AI server (api.py) to apply it.", true);
+                        trainModelBtn.setDisable(false);
+                    });
+                }
+            } catch (Exception ex) {
+                Platform.runLater(() -> {
+                    setTrainStatus("Error: " + ex.getMessage(), false);
+                    trainModelBtn.setDisable(false);
+                });
+            }
+        });
+        t.setDaemon(true);
+        t.start();
+    }
+
+    private void exportAnimalCsv(Path pythonDir, List<Animal> animals) throws Exception {
+        Path csv = pythonDir.resolve("animal.csv");
+        try (BufferedWriter w = Files.newBufferedWriter(csv)) {
+            w.write("id,type,vaccinated,weight\n");
+            for (int i = 0; i < animals.size(); i++) {
+                Animal a = animals.get(i);
+                w.write((i + 1) + ","
+                        + (a.getType() != null ? a.getType().toLowerCase() : "") + ","
+                        + (Boolean.TRUE.equals(a.getVaccinated()) ? 1 : 0) + ","
+                        + (a.getWeight() != null ? a.getWeight() : 200.0) + "\n");
+            }
+        }
+    }
+
+    private void exportHealthRecordCsv(Path pythonDir, List<AnimalHealthRecord> records,
+                                        Map<Integer, Integer> idMap) throws Exception {
+        Path csv = pythonDir.resolve("healthRecord.csv");
+        try (BufferedWriter w = Files.newBufferedWriter(csv)) {
+            w.write("id,animal,recordDate,weight,appetite,conditionStatus,milkYield,eggCount,woolLength\n");
+            for (AnimalHealthRecord r : records) {
+                Integer seqId = idMap.get(r.getAnimalId());
+                if (seqId == null) continue;
+                w.write(r.getId() + ","
+                        + seqId + ","
+                        + (r.getRecordDate() != null ? r.getRecordDate() : "") + ","
+                        + (r.getWeight() != null ? r.getWeight() : "") + ","
+                        + (r.getAppetite() != null ? r.getAppetite().name().toLowerCase() : "") + ","
+                        + (r.getConditionStatus() != null ? r.getConditionStatus().name().toLowerCase() : "") + ","
+                        + (r.getMilkYield() != null ? r.getMilkYield() : "") + ","
+                        + (r.getEggCount() != null ? r.getEggCount() : "") + ","
+                        + (r.getWoolLength() != null ? r.getWoolLength() : "") + "\n");
+            }
+        }
+    }
+
     private String buildEmailBody(List<Animal> atRisk, String notes) {
         StringBuilder sb = new StringBuilder();
         sb.append("Animal Health Report\n");
@@ -215,6 +333,17 @@ public class OptionsController implements Initializable {
             emailStatusLabel.setStyle("-fx-text-fill: #2e7d32;");
         } else {
             emailStatusLabel.setStyle("-fx-text-fill: #e53935;");
+        }
+    }
+
+    private void setTrainStatus(String msg, Boolean success) {
+        trainStatusLabel.setText(msg);
+        if (success == null) {
+            trainStatusLabel.setStyle("-fx-text-fill: #888888;");
+        } else if (success) {
+            trainStatusLabel.setStyle("-fx-text-fill: #2e7d32;");
+        } else {
+            trainStatusLabel.setStyle("-fx-text-fill: #e53935;");
         }
     }
 
