@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class OptionsController implements Initializable {
 
-    private static final String BREVO_API_KEY = "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";
+    private static final String BREVO_API_KEY = "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";
     private static final String FROM_EMAIL     = "rinmo7620@gmail.com";
 
     @FXML private ListView<String> typesList;

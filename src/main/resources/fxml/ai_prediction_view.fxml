@@ -12,8 +12,8 @@
     <VBox styleClass="mgmt-form-card" spacing="0">
         <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="12">
             <VBox spacing="3">
-                <Label text="AI Condition Predictor" styleClass="mgmt-form-title"/>
-                <Label text="Powered by RandomForest · Automatically uses the latest health record" styleClass="mgmt-form-subtitle"/>
+                <Label text="Condition Predictor" styleClass="mgmt-form-title"/>
+                <Label text="Uses up to the latest 10 health records (averages numeric values)" styleClass="mgmt-form-subtitle"/>
             </VBox>
         </HBox>
         <VBox styleClass="mgmt-form-body" spacing="12">
@@ -47,29 +47,15 @@
                 <ProgressBar fx:id="confidenceBar" progress="0" maxWidth="Infinity" styleClass="ai-confidence-bar"/>
             </VBox>
 
-            <VBox spacing="10">
+            <VBox spacing="8">
                 <Label text="DATA USED FOR PREDICTION" styleClass="ai-section-label"/>
-                <GridPane hgap="32" vgap="10">
-                    <Label text="Record Date" styleClass="mgmt-form-label"
-                           GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                    <Label fx:id="detailDate" text="-" styleClass="ai-detail-value"
-                           GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-
-                    <Label text="Weight" styleClass="mgmt-form-label"
-                           GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                    <Label fx:id="detailWeight" text="-" styleClass="ai-detail-value"
-                           GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-
-                    <Label text="Appetite" styleClass="mgmt-form-label"
-                           GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                    <Label fx:id="detailAppetite" text="-" styleClass="ai-detail-value"
-                           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-
-                    <Label fx:id="detailProdLabel" text="Production" styleClass="mgmt-form-label"
-                           GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                    <Label fx:id="detailProd" text="-" styleClass="ai-detail-value"
-                           GridPane.columnIndex="3" GridPane.rowIndex="1"/>
-                </GridPane>
+                <HBox spacing="0" styleClass="mgmt-form-label">
+                    <Label text="Date"       prefWidth="140" styleClass="mgmt-form-label"/>
+                    <Label text="Weight"     prefWidth="120" styleClass="mgmt-form-label"/>
+                    <Label text="Appetite"   prefWidth="110" styleClass="mgmt-form-label"/>
+                    <Label fx:id="prodHeaderLabel" text="Production" prefWidth="130" styleClass="mgmt-form-label"/>
+                </HBox>
+                <VBox fx:id="recordsContainer" spacing="4"/>
             </VBox>
 
         </VBox>
