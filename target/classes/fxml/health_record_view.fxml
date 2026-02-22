@@ -17,7 +17,7 @@
         <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="12">
             <VBox spacing="3">
                 <Label text="Add / Edit Health Record" styleClass="mgmt-form-title"/>
-                <Label text="You can add or edit animal health records" styleClass="mgmt-form-subtitle"/>
+                <Label text="There is no required field except the date" styleClass="mgmt-form-subtitle"/>
             </VBox>
         </HBox>
 
@@ -34,7 +34,7 @@
                 <DatePicker fx:id="recordDatePicker" styleClass="mgmt-datepicker" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="160"/>
 
                 <Label text="Weight (kg)" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
-                <TextField fx:id="weightField" promptText="e.g. 250.0" styleClass="mgmt-input" GridPane.columnIndex="3" GridPane.rowIndex="1" prefWidth="140"/>
+                <TextField fx:id="weightField" promptText="" styleClass="mgmt-input" GridPane.columnIndex="3" GridPane.rowIndex="1" prefWidth="140"/>
 
                 <Label text="Appetite" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
                 <ComboBox fx:id="appetiteCombo" promptText="Select" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="160"/>
@@ -44,10 +44,10 @@
 
 
                 <Label fx:id="productionLabel" text="Production" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="CENTER"/>
-                <TextField fx:id="productionField" promptText="value" styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="140"/>
+                <TextField fx:id="productionField" promptText="" styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="140"/>
 
                 <Label text="Notes" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.valignment="CENTER"/>
-                <TextField fx:id="notesField" promptText="Optional notes" styleClass="mgmt-input" GridPane.columnIndex="3" GridPane.rowIndex="3" prefWidth="200"/>
+                <TextField fx:id="notesField" promptText="" styleClass="mgmt-input" GridPane.columnIndex="3" GridPane.rowIndex="3" prefWidth="200"/>
 
 
                 <HBox spacing="10" alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4">
