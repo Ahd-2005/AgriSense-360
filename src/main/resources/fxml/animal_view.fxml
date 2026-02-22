@@ -24,7 +24,7 @@
 
                 <Label text="Ear Tag *" styleClass="mgmt-form-label"
                        GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
-                <TextField fx:id="earTagField" promptText="Positive integer"
+                <TextField fx:id="earTagField" promptText=""
                            styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="155"/>
                 <Label text="Type *" styleClass="mgmt-form-label"
                        GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
@@ -38,7 +38,7 @@
 
                 <Label text="Weight (kg)" styleClass="mgmt-form-label"
                        GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
-                <TextField fx:id="weightField" promptText="e.g. 320.5  (optional)"
+                <TextField fx:id="weightField" promptText=""
                            styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="155"/>
 
                 <Label fx:id="weightError" styleClass="mgmt-error-label"

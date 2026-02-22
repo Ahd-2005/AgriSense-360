@@ -56,7 +56,7 @@
             <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
                 <VBox spacing="3">
                     <Label text="Vet Email Report" styleClass="mgmt-form-title"/>
-                    <Label text="Send a health status report (sick / injured / critical animals) to your veterinarian via Brevo" styleClass="mgmt-form-subtitle"/>
+                    <Label text="Send a health status report to your veterinarian" styleClass="mgmt-form-subtitle"/>
                 </VBox>
             </HBox>
             <VBox styleClass="mgmt-form-body" spacing="14">
@@ -64,18 +64,43 @@
                 <GridPane hgap="16" vgap="10">
                     <Label text="Vet Email" styleClass="mgmt-form-label"
                            GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
-                    <TextField fx:id="vetEmailField" promptText="vet@clinic.com"
+                    <TextField fx:id="vetEmailField" promptText=""
                                styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="280"/>
                 </GridPane>
 
                 <Label text="Additional Notes" styleClass="mgmt-form-label"/>
                 <TextArea fx:id="notesArea"
-                          promptText="Any additional notes for the vet (medications given, observations, etc.)..."
+                          promptText="Any other observations or comments you want to add?"
                           styleClass="mgmt-input" prefHeight="100" wrapText="true"/>
 
                 <HBox spacing="14" alignment="CENTER_LEFT">
                     <Button text="Send Report" onAction="#onSendVetReport" styleClass="mgmt-btn-primary"/>
                     <Label fx:id="emailStatusLabel" styleClass="mgmt-form-subtitle"/>
+                </HBox>
+
+            </VBox>
+        </VBox>
+
+        <VBox styleClass="mgmt-form-card" spacing="0">
+            <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
+                <VBox spacing="3">
+                    <Label text="Custom Model Training" styleClass="mgmt-form-title"/>
+                    <Label text="You can use your own data to make a better predictions for your own farm" styleClass="mgmt-form-subtitle"/>
+                </VBox>
+            </HBox>
+            <VBox styleClass="mgmt-form-body" spacing="14">
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Health records in database:" styleClass="mgmt-form-label"/>
+                    <Label fx:id="recordCountLabel" text="..." styleClass="ai-detail-value"/>
+                </HBox>
+
+                <Label fx:id="trainInfoLabel" text="" styleClass="mgmt-form-subtitle" wrapText="true"/>
+
+                <HBox spacing="14" alignment="CENTER_LEFT">
+                    <Button fx:id="trainModelBtn" text="Export Data &amp; Retrain Model"
+                            onAction="#onTrainModel" styleClass="mgmt-btn-primary" disable="true"/>
+                    <Label fx:id="trainStatusLabel" text="" styleClass="mgmt-form-subtitle" wrapText="true"/>
                 </HBox>
 
             </VBox>
