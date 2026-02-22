@@ -42,4 +42,3 @@ build/
 
 # IntelliJ local files
 .idea/workspace.xml
-src/main/resources/google-config.properties
