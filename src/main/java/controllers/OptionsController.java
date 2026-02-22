@@ -24,6 +24,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class OptionsController implements Initializable {
 
     @FXML private ListView<String> typesList;
     @FXML private ListView<String> locationsList;
-    @FXML private TextField newTypeField;
+    @FXML private ComboBox<String> animalTypeCombo;
     @FXML private TextField newLocationField;
     @FXML private Button deleteTypeBtn;
     @FXML private Button deleteLocationBtn;
@@ -68,6 +70,7 @@ public class OptionsController implements Initializable {
                 .addListener((o, old, val) -> deleteLocationBtn.setDisable(val == null));
         refreshLists();
         loadRecordCount();
+        loadAnimalTypesFromApi();
     }
 
     private void loadRecordCount() {
@@ -98,13 +101,77 @@ public class OptionsController implements Initializable {
         }
     }
 
+    private void loadAnimalTypesFromApi() {
+        Thread t = new Thread(() -> {
+            List<String> animals = fetchFarmAnimalsFromWikipedia();
+            if (animals.isEmpty()) animals = defaultFarmAnimals();
+            List<String> sorted = animals.stream().sorted().collect(Collectors.toList());
+            Platform.runLater(() -> {
+                animalTypeCombo.getItems().setAll(sorted);
+                animalTypeCombo.setPromptText("Select a farm animal...");
+            });
+        });
+        t.setDaemon(true);
+        t.start();
+    }
+
+    private List<String> fetchFarmAnimalsFromWikipedia() {
+        try {
+            String url = "https://en.wikipedia.org/w/api.php?action=query&list=categorymembers"
+                    + "&cmtitle=Category:Livestock&format=json&cmlimit=200&cmtype=page";
+            HttpRequest req = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("User-Agent", "AgriSense360/1.0")
+                    .GET()
+                    .build();
+            HttpResponse<String> resp = HttpClient.newHttpClient().send(req, HttpResponse.BodyHandlers.ofString());
+            String body = resp.body();
+
+            List<String> result = new ArrayList<>();
+            int idx = 0;
+            while ((idx = body.indexOf("\"title\":\"", idx)) != -1) {
+                idx += 9;
+                int end = body.indexOf("\"", idx);
+                String title = body.substring(idx, end);
+                if (isValidFarmAnimalName(title)) result.add(title);
+            }
+            return result.isEmpty() ? defaultFarmAnimals() : result;
+        } catch (Exception e) {
+            return defaultFarmAnimals();
+        }
+    }
+
+    private boolean isValidFarmAnimalName(String name) {
+        if (name.length() > 28) return false;
+        String lower = name.toLowerCase();
+        String[] skip = {
+            "history", "list", "industry", "production", "farm", "management",
+            "breed", "breeding", "feed", "food", "market", "trade", "husbandry",
+            "slaughter", "welfare", "disease", "agriculture", " in ", " of ", " and ",
+            "environmental", "impact", "economic", "category", "portal"
+        };
+        for (String s : skip) {
+            if (lower.contains(s)) return false;
+        }
+        return true;
+    }
+
+    private List<String> defaultFarmAnimals() {
+        return new ArrayList<>(Arrays.asList(
+            "Alpaca", "Buffalo", "Camel", "Cattle", "Chicken", "Cow",
+            "Donkey", "Duck", "Emu", "Goat", "Goose", "Guinea Fowl",
+            "Horse", "Llama", "Mule", "Ostrich", "Pig", "Pigeon",
+            "Quail", "Rabbit", "Sheep", "Turkey", "Yak"
+        ));
+    }
+
     @FXML
     private void onAddType() {
-        String v = newTypeField.getText();
-        if (v == null || v.trim().isEmpty()) { showError("Enter a type name."); return; }
+        String v = animalTypeCombo.getValue();
+        if (v == null || v.trim().isEmpty()) { showError("Select an animal type first."); return; }
         try {
             serviceEnum.addEnumValue("Animal", "type", v.trim());
-            newTypeField.clear();
+            animalTypeCombo.setValue(null);
             refreshLists();
             AnimalListRefresh.notifyAnimalChanged();
             showInfo("Type added.");
