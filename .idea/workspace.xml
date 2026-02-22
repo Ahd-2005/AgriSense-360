@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="gestion user (api auth google)">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/services/SessionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/SessionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/login.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
-    </list>
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="gestion user (api auth google + reset password by mail)" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -184,7 +174,23 @@
       <option name="project" value="LOCAL" />
       <updated>1771635593177</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="gestion user (api auth google + reset password by mail)">
+      <option name="closed" value="true" />
+      <created>1771723901593</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1771723901593</updated>
+    </task>
+    <task id="LOCAL-00006" summary="gestion user (api auth google + reset password by mail)">
+      <option name="closed" value="true" />
+      <created>1771723930860</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1771723930860</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -216,7 +222,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="tous gestion + user" />
     <MESSAGE value="gestion user (api auth google)" />
-    <option name="LAST_COMMIT_MESSAGE" value="gestion user (api auth google)" />
+    <MESSAGE value="gestion user (api auth google + reset password by mail)" />
+    <option name="LAST_COMMIT_MESSAGE" value="gestion user (api auth google + reset password by mail)" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
