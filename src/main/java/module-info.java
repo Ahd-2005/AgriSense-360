@@ -14,6 +14,7 @@ module com.example.agrisens360{
     requires javafx.graphics;
     requires org.json;
     requires java.net.http;
+    requires jakarta.mail;
     requires java.desktop;
     requires com.google.api.client.auth;
     requires com.google.api.client;

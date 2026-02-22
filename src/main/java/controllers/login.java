@@ -1,4 +1,5 @@
 package controllers;
+
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Dialog;
 import javafx.event.ActionEvent;
@@ -45,12 +46,10 @@ public class login {
         hideAllErrors();
         boolean isValid = true;
 
-        // Validate email
         if (!validateEmail()) {
             isValid = false;
         }
 
-        // Validate password
         if (!validatePassword()) {
             isValid = false;
         }
@@ -67,12 +66,10 @@ public class login {
             user loggedInUser = service.login(email, password);
 
             if (loggedInUser != null) {
-                // Check if user is blocked
                 if ("BLOCKED".equals(loggedInUser.getStatus())) {
                     showError(loginError, "❌ Votre compte a été bloqué. Contactez l'administrateur.");
                     return;
                 }
-
                 handleSuccessfulLogin(loggedInUser);
             } else {
                 showError(loginError, "❌ Email ou mot de passe incorrect!");
@@ -128,20 +125,16 @@ public class login {
 
     private void handleSuccessfulLogin(user loggedInUser) {
         try {
-            // Create session for the user
             SessionManager sessionManager = SessionManager.getInstance();
             sessionManager.createSession(loggedInUser);
 
-            // Load the main layout
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainLayout.fxml"));
             Parent root = loader.load();
 
-            // Get the controller and configure it for the user's role
             MainLayoutController mainController = loader.getController();
             mainController.configureForUserRole(loggedInUser.getRole());
             mainController.setCurrentUser(loggedInUser);
 
-            // Switch to main layout scene
             Stage stage = (Stage) emailField.getScene().getWindow();
             Scene scene = new Scene(root, 1400, 800);
             stage.setScene(scene);
@@ -172,11 +165,24 @@ public class login {
         }
     }
 
+    // ✅ MODIFIÉ : navigue vers ForgotPassword.fxml au lieu d'afficher une alerte
     @FXML
     private void handleForgotPassword() {
-        showMessage(Alert.AlertType.INFORMATION, "Info",
-                "Fonctionnalité de récupération de mot de passe - À venir!");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ForgotPassword.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(new Scene(root, 1400, 800));
+            stage.setTitle("Mot de passe oublié - AgriSense 360");
+            stage.centerOnScreen();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError(loginError, "❌ Impossible d'ouvrir la page de réinitialisation");
+        }
     }
+
     @FXML
     private void handleGoogleLogin() {
         new Thread(() -> {
@@ -192,7 +198,6 @@ public class login {
                     user existingUser = service.findByEmail(email);
 
                     if (existingUser != null) {
-                        // User existe → connexion directe
                         if ("BLOCKED".equals(existingUser.getStatus())) {
                             javafx.application.Platform.runLater(() ->
                                     showError(loginError, "❌ Compte bloqué.")
@@ -205,7 +210,6 @@ public class login {
                         });
 
                     } else {
-                        // Nouvel user → aller vers la page de choix de rôle
                         javafx.application.Platform.runLater(() -> {
                             try {
                                 FXMLLoader loader = new FXMLLoader(
@@ -213,7 +217,6 @@ public class login {
                                 );
                                 Parent root = loader.load();
 
-                                // Passer email + nom au controller
                                 RoleChoiceController controller = loader.getController();
                                 controller.initData(email, name);
 

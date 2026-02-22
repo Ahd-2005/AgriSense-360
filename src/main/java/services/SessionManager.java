@@ -14,7 +14,7 @@ import java.util.UUID;
 public class SessionManager {
     private static SessionManager instance;
     private static final String SESSION_FILE = "agrisense_session.dat";
-    private static final long SESSION_DURATION = 30L * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+    private static final long SESSION_DURATION = 30L * 60 * 1000; // 30 days in milliseconds
 
     private UserSession currentSession;
     private user currentUser;
@@ -112,7 +112,7 @@ public class SessionManager {
                 currentUser.setStatus(rs.getString("status"));
 
                 // Convert String to Role enum
-                String roleString = rs.getString("role");
+                String roleString = rs.getString("roles");
                 currentUser.setRoleFromString(roleString);
 
                 // Update last activity
