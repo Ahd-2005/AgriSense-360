@@ -26,19 +26,18 @@
     <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
         <VBox spacing="30" style="-fx-padding: 30 40;">
 
-            <!-- Navigation Cards Section with FIXED Images -->
+            <!-- Navigation Cards Section -->
             <VBox spacing="15">
                 <Label text="🚀 Gestion Rapide"
                        style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
 
                 <HBox spacing="20" alignment="CENTER">
-                    <!-- Card 1: Gérer Culture with FIXED Image -->
                     <VBox fx:id="gererCultureCard" styleClass="nav-card-with-image"
                           onMouseClicked="#goToGererCulture"
                           prefWidth="400" prefHeight="220"
                           style="-fx-cursor: hand;">
                         <VBox alignment="CENTER" spacing="8" style="-fx-padding: 20;">
-                            <ImageView fx:id="cultureImage" fitWidth="80" fitHeight="80" preserveRatio="true" style="-fx-background-radius: 40px;">
+                            <ImageView fx:id="cultureImage" fitWidth="80" fitHeight="80" preserveRatio="true">
                                 <image>
                                     <Image url="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=200&amp;h=200&amp;fit=crop" backgroundLoading="true"/>
                                 </image>
@@ -51,13 +50,12 @@
                         </VBox>
                     </VBox>
 
-                    <!-- Card 2: Gérer Parcelle with FIXED Image -->
                     <VBox fx:id="gererParcelleCard" styleClass="nav-card-with-image"
                           onMouseClicked="#goToGererParcelle"
                           prefWidth="400" prefHeight="220"
                           style="-fx-cursor: hand;">
                         <VBox alignment="CENTER" spacing="8" style="-fx-padding: 20;">
-                            <ImageView fx:id="parcelleImage" fitWidth="80" fitHeight="80" preserveRatio="true" style="-fx-background-radius: 40px;">
+                            <ImageView fx:id="parcelleImage" fitWidth="80" fitHeight="80" preserveRatio="true">
                                 <image>
                                     <Image url="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=200&amp;h=200&amp;fit=crop" backgroundLoading="true"/>
                                 </image>
@@ -72,68 +70,132 @@
                 </HBox>
             </VBox>
 
-            <!-- Charts Section with FIXED Legend Side -->
+            <!-- ===== STATISTICS SECTION ===== -->
             <VBox spacing="15">
                 <Label text="📊 Statistiques Visuelles"
                        style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
 
                 <HBox spacing="20" alignment="CENTER">
 
-                    <!-- Chart 1: Surface Distribution (Pie Chart) - FIXED LEGEND SIDE -->
-                    <VBox styleClass="chart-card-clickable" prefWidth="380" prefHeight="380" alignment="TOP_CENTER" spacing="10"
+                    <!-- Card 1: Surface -->
+                    <VBox styleClass="chart-card-clickable" prefWidth="370" prefHeight="220"
+                          alignment="CENTER" spacing="12"
                           onMouseClicked="#showSurfaceChartDetails">
-                        <Label text="🌍 Répartition des Surfaces"
-                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a; -fx-padding: 10 0 0 0;"/>
+
+                        <!-- Hidden real chart (used only in popup) -->
                         <PieChart fx:id="surfaceChart"
-                                  legendVisible="true"
-                                  legendSide="RIGHT"
-                                  prefWidth="360"
-                                  prefHeight="300"
-                                  animated="true"
-                                  startAngle="90"
-                                  styleClass="surface-pie-chart"/>
-                        <Label text="💡 Double-cliquez pour détails"
-                               style="-fx-font-size: 11px; -fx-text-fill: #888; -fx-font-style: italic;"/>
-                    </VBox>
-
-                    <!-- Chart 2: Cultures by Type (Bar Chart) -->
-                    <VBox styleClass="chart-card-clickable" prefWidth="380" prefHeight="380" alignment="TOP_CENTER" spacing="10"
-                          onMouseClicked="#showCultureTypeChartDetails">
-                        <Label text="🌱 Cultures par Type"
-                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a; -fx-padding: 10 0 0 0;"/>
-                        <BarChart fx:id="cultureTypeChart"
-                                  prefWidth="360"
-                                  prefHeight="300"
-                                  animated="true"
                                   legendVisible="false"
-                                  categoryGap="20"
-                                  barGap="8">
-                            <xAxis>
-                                <CategoryAxis side="BOTTOM" />
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis side="LEFT" label="Nombre" />
-                            </yAxis>
-                        </BarChart>
-                        <Label text="💡 Double-cliquez pour détails"
-                               style="-fx-font-size: 11px; -fx-text-fill: #888; -fx-font-style: italic;"/>
+                                  labelsVisible="false"
+                                  prefWidth="0" prefHeight="0"
+                                  maxWidth="0" maxHeight="0"
+                                  animated="true"
+                                  managed="false"
+                                  visible="false"
+                                  styleClass="surface-pie-chart"/>
+
+                        <!-- Visual placeholder -->
+                        <Label text="🌍" style="-fx-font-size: 48px;"/>
+                        <Label text="Répartition des Surfaces"
+                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
+                        <Label text="Surface utilisée vs disponible"
+                               style="-fx-font-size: 12px; -fx-text-fill: #888;"/>
+                        <HBox alignment="CENTER" spacing="12" style="-fx-padding: 6 0 0 0;">
+                            <HBox alignment="CENTER_LEFT" spacing="6">
+                                <Label text="●" style="-fx-text-fill: #4CAF50; -fx-font-size: 16px;"/>
+                                <Label text="Utilisée" style="-fx-font-size: 11px; -fx-text-fill: #555; -fx-font-weight: bold;"/>
+                            </HBox>
+                            <HBox alignment="CENTER_LEFT" spacing="6">
+                                <Label text="●" style="-fx-text-fill: #2196F3; -fx-font-size: 16px;"/>
+                                <Label text="Disponible" style="-fx-font-size: 11px; -fx-text-fill: #555; -fx-font-weight: bold;"/>
+                            </HBox>
+                        </HBox>
+                        <Label text="💡 Double-cliquez pour voir le graphique"
+                               style="-fx-font-size: 11px; -fx-text-fill: #aaa; -fx-font-style: italic; -fx-padding: 6 0 0 0;"/>
                     </VBox>
 
-                    <!-- Chart 3: État Distribution (Donut/Pie Chart) - FIXED LEGEND SIDE -->
-                    <VBox styleClass="chart-card-clickable" prefWidth="380" prefHeight="380" alignment="TOP_CENTER" spacing="10"
-                          onMouseClicked="#showEtatChartDetails">
-                        <Label text="📈 Répartition par État"
-                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a; -fx-padding: 10 0 0 0;"/>
-                        <PieChart fx:id="etatChart"
-                                  legendVisible="true"
-                                  legendSide="RIGHT"
-                                  prefWidth="360"
-                                  prefHeight="300"
+                    <!-- Card 2: Cultures par Type -->
+                    <VBox styleClass="chart-card-clickable" prefWidth="370" prefHeight="220"
+                          alignment="CENTER" spacing="12"
+                          onMouseClicked="#showCultureTypeChartDetails">
+
+                        <!-- Hidden real chart -->
+                        <BarChart fx:id="cultureTypeChart"
+                                  prefWidth="0" prefHeight="0"
+                                  maxWidth="0" maxHeight="0"
                                   animated="true"
-                                  startAngle="90"
+                                  managed="false"
+                                  visible="false"
+                                  legendVisible="false">
+                            <xAxis><CategoryAxis side="BOTTOM"/></xAxis>
+                            <yAxis><NumberAxis side="LEFT" label="Nombre"/></yAxis>
+                        </BarChart>
+
+                        <!-- Visual placeholder -->
+                        <Label text="🌱" style="-fx-font-size: 48px;"/>
+                        <Label text="Cultures par Type"
+                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
+                        <Label text="Répartition par catégorie de culture"
+                               style="-fx-font-size: 12px; -fx-text-fill: #888;"/>
+                        <HBox alignment="CENTER" spacing="10" style="-fx-padding: 6 0 0 0;">
+                            <HBox spacing="4" alignment="CENTER_LEFT">
+                                <Label text="●" style="-fx-text-fill: #4CAF50; -fx-font-size: 14px;"/>
+                                <Label text="Céréales" style="-fx-font-size: 10px; -fx-text-fill: #555; -fx-font-weight: bold;"/>
+                            </HBox>
+                            <HBox spacing="4" alignment="CENTER_LEFT">
+                                <Label text="●" style="-fx-text-fill: #FF9800; -fx-font-size: 14px;"/>
+                                <Label text="Légumes" style="-fx-font-size: 10px; -fx-text-fill: #555; -fx-font-weight: bold;"/>
+                            </HBox>
+                            <HBox spacing="4" alignment="CENTER_LEFT">
+                                <Label text="●" style="-fx-text-fill: #2196F3; -fx-font-size: 14px;"/>
+                                <Label text="Fruits" style="-fx-font-size: 10px; -fx-text-fill: #555; -fx-font-weight: bold;"/>
+                            </HBox>
+                            <HBox spacing="4" alignment="CENTER_LEFT">
+                                <Label text="●" style="-fx-text-fill: #9C27B0; -fx-font-size: 14px;"/>
+                                <Label text="Ornementales" style="-fx-font-size: 10px; -fx-text-fill: #555; -fx-font-weight: bold;"/>
+                            </HBox>
+                        </HBox>
+                        <Label text="💡 Double-cliquez pour voir le graphique"
+                               style="-fx-font-size: 11px; -fx-text-fill: #aaa; -fx-font-style: italic; -fx-padding: 6 0 0 0;"/>
+                    </VBox>
+
+                    <!-- Card 3: Répartition par État -->
+                    <VBox styleClass="chart-card-clickable" prefWidth="370" prefHeight="220"
+                          alignment="CENTER" spacing="12"
+                          onMouseClicked="#showEtatChartDetails">
+
+                        <!-- Hidden real chart -->
+                        <PieChart fx:id="etatChart"
+                                  legendVisible="false"
+                                  labelsVisible="false"
+                                  prefWidth="0" prefHeight="0"
+                                  maxWidth="0" maxHeight="0"
+                                  animated="true"
+                                  managed="false"
+                                  visible="false"
                                   styleClass="etat-pie-chart"/>
-                        <Label text="💡 Double-cliquez pour détails"
-                               style="-fx-font-size: 11px; -fx-text-fill: #888; -fx-font-style: italic;"/>
+
+                        <!-- Visual placeholder -->
+                        <Label text="📈" style="-fx-font-size: 48px;"/>
+                        <Label text="Répartition par État"
+                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
+                        <Label text="Semis · Croissance · Maturité · Récolte"
+                               style="-fx-font-size: 12px; -fx-text-fill: #888;"/>
+                        <HBox alignment="CENTER" spacing="8" style="-fx-padding: 6 0 0 0;">
+                            <HBox spacing="4" alignment="CENTER_LEFT">
+                                <Label text="●" style="-fx-text-fill: #4CAF50; -fx-font-size: 14px;"/>
+                                <Label text="Semis" style="-fx-font-size: 10px; -fx-text-fill: #555; -fx-font-weight: bold;"/>
+                            </HBox>
+                            <HBox spacing="4" alignment="CENTER_LEFT">
+                                <Label text="●" style="-fx-text-fill: #FF9800; -fx-font-size: 14px;"/>
+                                <Label text="Croissance" style="-fx-font-size: 10px; -fx-text-fill: #555; -fx-font-weight: bold;"/>
+                            </HBox>
+                            <HBox spacing="4" alignment="CENTER_LEFT">
+                                <Label text="●" style="-fx-text-fill: #f44336; -fx-font-size: 14px;"/>
+                                <Label text="Retard" style="-fx-font-size: 10px; -fx-text-fill: #555; -fx-font-weight: bold;"/>
+                            </HBox>
+                        </HBox>
+                        <Label text="💡 Double-cliquez pour voir le graphique"
+                               style="-fx-font-size: 11px; -fx-text-fill: #aaa; -fx-font-style: italic; -fx-padding: 6 0 0 0;"/>
                     </VBox>
 
                 </HBox>
@@ -145,7 +207,6 @@
                        style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
 
                 <HBox spacing="20" alignment="CENTER">
-                    <!-- Total Cultures -->
                     <VBox styleClass="stat-card-mini" prefWidth="180" prefHeight="100" alignment="CENTER" spacing="5">
                         <Label text="🌱" style="-fx-font-size: 30px;"/>
                         <Label fx:id="totalCulturesLabel" text="0"
@@ -153,7 +214,6 @@
                         <Label text="Cultures" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
                     </VBox>
 
-                    <!-- Total Parcelles -->
                     <VBox styleClass="stat-card-mini" prefWidth="180" prefHeight="100" alignment="CENTER" spacing="5">
                         <Label text="🌍" style="-fx-font-size: 30px;"/>
                         <Label fx:id="totalParcellesLabel" text="0"
@@ -161,15 +221,13 @@
                         <Label text="Parcelles" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
                     </VBox>
 
-                    <!-- Surface Totale -->
                     <VBox styleClass="stat-card-mini" prefWidth="180" prefHeight="100" alignment="CENTER" spacing="5">
                         <Label text="📏" style="-fx-font-size: 30px;"/>
                         <Label fx:id="surfaceTotaleLabel" text="0 m²"
-                               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2196F3;"/>
+                               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2196F3;"/>
                         <Label text="Surface Totale" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
                     </VBox>
 
-                    <!-- Taux d'Occupation -->
                     <VBox styleClass="stat-card-mini" prefWidth="180" prefHeight="100" alignment="CENTER" spacing="5">
                         <Label text="📊" style="-fx-font-size: 30px;"/>
                         <Label fx:id="tauxOccupationLabel" text="0%"
@@ -177,7 +235,6 @@
                         <Label text="Taux d'Occupation" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
                     </VBox>
 
-                    <!-- Cultures Prêtes -->
                     <VBox styleClass="stat-card-mini" prefWidth="180" prefHeight="100" alignment="CENTER" spacing="5">
                         <Label text="🌾" style="-fx-font-size: 30px;"/>
                         <Label fx:id="culturesRetesLabel" text="0"
@@ -185,7 +242,6 @@
                         <Label text="Prêtes à Récolter" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
                     </VBox>
 
-                    <!-- En Retard -->
                     <VBox styleClass="stat-card-mini" prefWidth="180" prefHeight="100" alignment="CENTER" spacing="5">
                         <Label text="⚠️" style="-fx-font-size: 30px;"/>
                         <Label fx:id="culturesRetardLabel" text="0"
@@ -195,10 +251,12 @@
                 </HBox>
             </VBox>
 
-            <!-- Top 3 Parcelles - ENHANCED WITH CULTURE COUNT -->
+            <!-- Top 3 Parcelles -->
             <VBox spacing="15">
-                <Label text="🏆 Top 3 Parcelles les Plus Occupées"
+                <Label text="🏆 Top 3 Parcelles les Plus Grandes"
                        style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
+                <Label text="Classées par surface totale, puis par nombre de cultures actives"
+                       style="-fx-font-size: 12px; -fx-text-fill: #888; -fx-font-style: italic;"/>
                 <VBox fx:id="topParcellesBox" spacing="10" style="-fx-padding: 10;"/>
             </VBox>
 

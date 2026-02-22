@@ -292,3 +292,15 @@
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
+
+.map-button {
+    -fx-background-color: #1976D2;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.map-button:hover {
+    -fx-background-color: #1565C0;
+}
