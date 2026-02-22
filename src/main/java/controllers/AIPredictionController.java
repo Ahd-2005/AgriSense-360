@@ -7,6 +7,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import services.ServiceAnimal;
@@ -31,17 +32,14 @@ public class AIPredictionController implements Initializable {
     @FXML private Label conditionBadge;
     @FXML private ProgressBar confidenceBar;
     @FXML private Label confidenceLabel;
-    @FXML private Label detailDate;
-    @FXML private Label detailWeight;
-    @FXML private Label detailAppetite;
-    @FXML private Label detailProdLabel;
-    @FXML private Label detailProd;
+    @FXML private Label prodHeaderLabel;
+    @FXML private VBox recordsContainer;
 
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
     private final ServiceAnimalHealthRecord serviceRecord = new ServiceAnimalHealthRecord();
 
     private Animal selectedAnimal;
-    private AnimalHealthRecord lastRecord;
+    private List<AnimalHealthRecord> lastRecords;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -65,7 +63,7 @@ public class AIPredictionController implements Initializable {
     @FXML
     private void onAnimalSelected() {
         selectedAnimal = animalCombo.getValue();
-        lastRecord = null;
+        lastRecords = null;
         clearStatus();
         hideResults();
         if (selectedAnimal == null) return;
@@ -74,7 +72,7 @@ public class AIPredictionController implements Initializable {
             if (records.isEmpty()) {
                 setStatus("No health records found for this animal.");
             } else {
-                lastRecord = records.get(0);
+                lastRecords = records.subList(0, Math.min(10, records.size()));
             }
         } catch (SQLException e) {
             setStatus("Error loading records: " + e.getMessage());
@@ -87,7 +85,7 @@ public class AIPredictionController implements Initializable {
             setStatus("Please select an animal first.");
             return;
         }
-        if (lastRecord == null) {
+        if (lastRecords == null || lastRecords.isEmpty()) {
             setStatus("No health record available to base the prediction on.");
             return;
         }
@@ -97,24 +95,31 @@ public class AIPredictionController implements Initializable {
         statusLabel.setText("Analyzing...");
 
         String type = selectedAnimal.getType().toLowerCase();
-        double production = 0.0;
-        if (type.equals("cow") && lastRecord.getMilkYield() != null) {
-            production = lastRecord.getMilkYield();
-        } else if ((type.equals("sheep") || type.equals("goat")) && lastRecord.getWoolLength() != null) {
-            production = lastRecord.getWoolLength();
-        } else if (lastRecord.getEggCount() != null) {
-            production = lastRecord.getEggCount();
-        }
+        AnimalHealthRecord latest = lastRecords.get(0);
+        int recordCount = lastRecords.size();
 
-        String recordDate = lastRecord.getRecordDate() != null
-                ? lastRecord.getRecordDate().toString()
-                : LocalDate.now().toString();
-        String appetite = lastRecord.getAppetite() != null
-                ? lastRecord.getAppetite().name().toLowerCase()
+        double weight = lastRecords.stream()
+                .mapToDouble(r -> r.getWeight() != null ? r.getWeight()
+                        : (selectedAnimal.getWeight() != null ? selectedAnimal.getWeight() : 200.0))
+                .average()
+                .orElse(selectedAnimal.getWeight() != null ? selectedAnimal.getWeight() : 200.0);
+
+        double production = lastRecords.stream()
+                .mapToDouble(r -> {
+                    if (type.equals("cow") && r.getMilkYield() != null) return r.getMilkYield();
+                    if ((type.equals("sheep") || type.equals("goat")) && r.getWoolLength() != null) return r.getWoolLength();
+                    if (r.getEggCount() != null) return r.getEggCount();
+                    return 0.0;
+                })
+                .average()
+                .orElse(0.0);
+
+        String appetite = latest.getAppetite() != null
+                ? latest.getAppetite().name().toLowerCase()
                 : "normal";
-        double weight = lastRecord.getWeight() != null
-                ? lastRecord.getWeight()
-                : (selectedAnimal.getWeight() != null ? selectedAnimal.getWeight() : 200.0);
+        String recordDate = latest.getRecordDate() != null
+                ? latest.getRecordDate().toString()
+                : LocalDate.now().toString();
         int vaccinated = Boolean.TRUE.equals(selectedAnimal.getVaccinated()) ? 1 : 0;
 
         String jsonBody = "{"
@@ -127,8 +132,7 @@ public class AIPredictionController implements Initializable {
                 + "}";
 
         Animal animal = selectedAnimal;
-        AnimalHealthRecord rec = lastRecord;
-        double finalProduction = production;
+        List<AnimalHealthRecord> records = lastRecords;
 
         Task<String> task = new Task<>() {
             @Override
@@ -144,7 +148,7 @@ public class AIPredictionController implements Initializable {
             }
         };
 
-        task.setOnSucceeded(e -> handleResponse(task.getValue(), animal, rec, finalProduction));
+        task.setOnSucceeded(e -> handleResponse(task.getValue(), animal, records));
         task.setOnFailed(e -> setStatus("Could not reach the AI server. Make sure it is running on port 8000."));
 
         Thread t = new Thread(task);
@@ -152,7 +156,7 @@ public class AIPredictionController implements Initializable {
         t.start();
     }
 
-    private void handleResponse(String response, Animal animal, AnimalHealthRecord rec, double production) {
+    private void handleResponse(String response, Animal animal, List<AnimalHealthRecord> records) {
         try {
             int condStart = response.indexOf("\"condition\":\"") + 13;
             int condEnd = response.indexOf("\"", condStart);
@@ -175,23 +179,40 @@ public class AIPredictionController implements Initializable {
             confidenceBar.setProgress(displayedConfidence);
             confidenceLabel.setText(String.format("%.1f%%", displayedConfidence * 100));
 
-            String lastRecordDate = rec.getRecordDate() != null ? rec.getRecordDate().toString() : "N/A";
-            animalInfoLabel.setText("Animal #" + animal.getEarTag() + "  ·  Last record: " + lastRecordDate);
-
-            detailDate.setText(rec.getRecordDate() != null ? rec.getRecordDate().toString() : "N/A");
-            detailWeight.setText(rec.getWeight() != null ? rec.getWeight() + " kg" : "N/A");
-            detailAppetite.setText(rec.getAppetite() != null ? capitalize(rec.getAppetite().name()) : "N/A");
+            animalInfoLabel.setText("Animal #" + animal.getEarTag()
+                    + "  ·  Based on " + records.size() + " record" + (records.size() == 1 ? "" : "s"));
 
             String type = animal.getType().toLowerCase();
             if (type.equals("cow")) {
-                detailProdLabel.setText("Milk Yield");
-                detailProd.setText(rec.getMilkYield() != null ? rec.getMilkYield() + " L" : "N/A");
+                prodHeaderLabel.setText("Milk Yield");
             } else if (type.equals("sheep") || type.equals("goat")) {
-                detailProdLabel.setText("Wool Length");
-                detailProd.setText(rec.getWoolLength() != null ? rec.getWoolLength() + " cm" : "N/A");
+                prodHeaderLabel.setText("Wool Length");
             } else {
-                detailProdLabel.setText("Egg Count");
-                detailProd.setText(rec.getEggCount() != null ? rec.getEggCount().toString() : "N/A");
+                prodHeaderLabel.setText("Egg Count");
+            }
+
+            recordsContainer.getChildren().clear();
+            for (AnimalHealthRecord r : records) {
+                String dateStr   = r.getRecordDate() != null ? r.getRecordDate().toString() : "N/A";
+                String weightStr = r.getWeight() != null ? String.format("%.1f kg", r.getWeight()) : "N/A";
+                String appStr    = r.getAppetite() != null ? capitalize(r.getAppetite().name()) : "N/A";
+
+                double prod = 0.0;
+                if (type.equals("cow") && r.getMilkYield() != null) prod = r.getMilkYield();
+                else if ((type.equals("sheep") || type.equals("goat")) && r.getWoolLength() != null) prod = r.getWoolLength();
+                else if (r.getEggCount() != null) prod = r.getEggCount();
+                String prodStr = type.equals("cow") ? String.format("%.1f L", prod)
+                        : (type.equals("sheep") || type.equals("goat")) ? String.format("%.1f cm", prod)
+                        : String.format("%.0f", prod);
+
+                Label lDate   = new Label(dateStr);   lDate.setPrefWidth(140);   lDate.getStyleClass().add("ai-detail-value");
+                Label lWeight = new Label(weightStr); lWeight.setPrefWidth(120); lWeight.getStyleClass().add("ai-detail-value");
+                Label lApp    = new Label(appStr);    lApp.setPrefWidth(110);    lApp.getStyleClass().add("ai-detail-value");
+                Label lProd   = new Label(prodStr);   lProd.setPrefWidth(130);   lProd.getStyleClass().add("ai-detail-value");
+
+                HBox row = new HBox(lDate, lWeight, lApp, lProd);
+                row.setSpacing(0);
+                recordsContainer.getChildren().add(row);
             }
 
             clearStatus();
@@ -208,13 +229,8 @@ public class AIPredictionController implements Initializable {
         resultsCard.setManaged(false);
     }
 
-    private void setStatus(String msg) {
-        statusLabel.setText(msg);
-    }
-
-    private void clearStatus() {
-        statusLabel.setText("");
-    }
+    private void setStatus(String msg) { statusLabel.setText(msg); }
+    private void clearStatus()         { statusLabel.setText(""); }
 
     private String capitalize(String s) {
         if (s == null || s.isEmpty()) return s;
