@@ -351,14 +351,19 @@
         </div>
     </div>
 </div>
+<script src="config.js"></script>
 
 <script>
     // ════════════════════════════════════════════════════════════════
-    //  🔑 REMPLACEZ ICI VOTRE CLÉ API ANTHROPIC
-    //  Obtenez-la sur : https://console.anthropic.com → API Keys
+    //  🔑 CLÉ API GROQ — 100% GRATUIT, SANS CARTE DE CRÉDIT
+    //  1. Allez sur : https://console.groq.com
+    //  2. Créez un compte gratuit (email suffit)
+    //  3. Cliquez sur "API Keys" → "Create API Key"
+    //  4. Copiez la clé (commence par gsk_...)
+    //  5. Collez-la entre les guillemets ci-dessous
     // ════════════════════════════════════════════════════════════════
-    const ANTHROPIC_API_KEY = "VOTRE_CLE_API_ICI";
-    // Exemple: const ANTHROPIC_API_KEY = "sk-ant-api03-xxxxxx";
+    //const GROQ_API_KEY = "VOTRE_CLE_GROQ_ICI";
+    // Exemple: const GROQ_API_KEY = "gsk_xxxxxxxxxxxxxxxxxxxx";
     // ════════════════════════════════════════════════════════════════
 
     const STORAGE_KEY = 'agenda_cultures_v2';
@@ -656,9 +661,9 @@
 
     // ─── CONSEIL IA ──────────────────────────────────────────────
     async function askAI(idx) {
-        const apiKey = ANTHROPIC_API_KEY;
-        if (!apiKey || apiKey === "VOTRE_CLE_API_ICI" || !apiKey.trim()) {
-            toast('🔑 Ajoutez votre clé API dans AgendaCulture.html (ligne ANTHROPIC_API_KEY)', true);
+        const apiKey = GROQ_API_KEY;
+        if (!apiKey || apiKey === "VOTRE_CLE_GROQ_ICI" || !apiKey.trim()) {
+            toast('🔑 Ajoutez votre clé Groq gratuite dans AgendaCulture.html (ligne GROQ_API_KEY)', true);
             return;
         }
         const c   = cultures[idx];
@@ -686,28 +691,30 @@ Fournis en français (5-7 phrases) :
 **⚠️ À surveiller** : risques spécifiques à cette phase`;
 
         try {
-            const res = await fetch("https://api.anthropic.com/v1/messages", {
+            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json",
-                    "x-api-key":apiKey,
-                    "anthropic-version":"2023-06-01",
-                    "anthropic-dangerous-direct-browser-access":"true"
+                    "Authorization":`Bearer ${apiKey}`
                 },
                 body:JSON.stringify({
-                    model:"claude-sonnet-4-20250514",
+                    model:"llama-3.3-70b-versatile",
                     max_tokens:600,
-                    messages:[{role:"user",content:prompt}]
+                    temperature:0.7,
+                    messages:[
+                        {role:"system",content:"Tu es un expert agronome francophone. Tu donnes des conseils pratiques et adaptés."},
+                        {role:"user",content:prompt}
+                    ]
                 })
             });
             if (!res.ok) {
                 const e2 = await res.json().catch(()=>({}));
-                if (res.status===401) throw new Error('Clé API invalide ou expirée');
+                if (res.status===401) throw new Error('Clé Groq invalide — vérifiez sur console.groq.com');
                 if (res.status===429) throw new Error('Trop de requêtes, réessayez dans 30s');
                 throw new Error(e2.error?.message||`Erreur HTTP ${res.status}`);
             }
             const data = await res.json();
-            const raw  = data.content?.[0]?.text || 'Aucune réponse.';
+            const raw  = data.choices?.[0]?.message?.content || 'Aucune réponse.';
             const html = raw.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
             box.innerHTML = `<div class="ai-header">✨ Conseil IA — <em>${c.nom}</em> · Phase : ${tl.etat}</div><div class="ai-content">${html}</div>`;
         } catch(e) {
