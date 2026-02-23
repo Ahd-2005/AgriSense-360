@@ -11,6 +11,7 @@ module com.example.agrisens360 {
     //requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.sql;
+    requires com.google.gson;
 
     opens com.example.agrisens360 to javafx.fxml;
     opens controllers to javafx.fxml;

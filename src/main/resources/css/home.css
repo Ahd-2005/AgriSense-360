@@ -169,7 +169,7 @@
 }
 
 .card-clickable:hover .card {
-    -fx-transform: translateY(-8px);
+    -fx-translate-y: -8px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 10);
 }
 

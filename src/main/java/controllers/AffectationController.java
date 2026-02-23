@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import entity.AffectationTravail;
 import services.AffectationTravailService;
+import services.DiscordWebhookService;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -88,6 +89,7 @@ public class AffectationController implements Initializable {
         try {
             service.add(a);
             showInfo("Succès", "Affectation ajoutée.");
+            DiscordWebhookService.sendAffectationNotification("created", a.getTypeTravail(), a.getZoneTravail(), a.getStatut(), "Nouvelle affectation ajoutée");
             loadAll();
             clearForm();
         } catch (SQLException e) {
@@ -107,6 +109,7 @@ public class AffectationController implements Initializable {
         try {
             service.update(a);
             showInfo("Succès", "Affectation modifiée.");
+            DiscordWebhookService.sendAffectationNotification("updated", a.getTypeTravail(), a.getZoneTravail(), a.getStatut(), "Affectation modifiée avec succès");
             loadAll();
             clearForm();
             selectedAffectation = null;
@@ -123,6 +126,7 @@ public class AffectationController implements Initializable {
             return;
         }
         try {
+            DiscordWebhookService.sendAffectationNotification("deleted", selectedAffectation.getTypeTravail(), selectedAffectation.getZoneTravail(), selectedAffectation.getStatut(), "Affectation supprimée");
             service.delete(selectedAffectation.getIdAffectation());
             showInfo("Succès", "Affectation supprimée.");
             loadAll();
