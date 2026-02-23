@@ -704,6 +704,8 @@ Fournis en français (5-7 phrases) :
                         {role:"user",content:prompt}
                     ]
                 })
+
+
             });
             if (!res.ok) {
                 const e2 = await res.json().catch(()=>({}));
