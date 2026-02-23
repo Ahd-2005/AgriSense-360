@@ -7,11 +7,20 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 import joblib
 
+'''
+bech tsob libraries a3ml :  pip install -r requirements.txt
+f cmd baed ma todkhel lel folder python,
+baed python train.py w stana chwaya taw yetsna3lek l model
+condition_model.pkl , baed a3ml uvicorn api:app bech tlanci l API
+l API key ta3 l mail yetna7a fl site wahdou maghyr sbab lezem
+tes2elni bech na3tik l key f wa9tou
 
-#https://cgspace.cgiar.org/collections/171897ee-d131-4087-9edb-2713dece100a
-#https://www.sciencedirect.com/science/article/pii/S2352340924001768
-#https://www.kaggle.com/datasets/gracehephzibahm/animal-disease
-#https://openreview.net/forum?id=X4nq0W2qZX#discussion
+Datasets sources :
+https://cgspace.cgiar.org/collections/171897ee-d131-4087-9edb-2713dece100a
+https://www.sciencedirect.com/science/article/pii/S2352340924001768
+https://www.kaggle.com/datasets/gracehephzibahm/animal-disease
+https://openreview.net/forum?id=X4nq0W2qZX#discussion
+'''
 
 BASE = Path(__file__).parent
 
