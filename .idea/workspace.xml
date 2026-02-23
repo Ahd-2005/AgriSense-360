@@ -5,13 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="gestion culture +gestion animals+template">
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ParcelleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ParcelleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/update_culture.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/update_parcelle.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/css/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/home.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AnimalController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CultureController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/HealthRecordController$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/HealthRecordController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/HomeContentController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/MainLayoutController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/css/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/css/home.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +30,24 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="McpProjectServerCommands">
-    <commands />
-    <urls />
+    <McpServerCommand sourceId="UserConfigurationSource">
+      <option name="allowedToolsNames" />
+      <option name="enabled" value="true" />
+      <option name="name" value="" />
+      <option name="programPath" value="" />
+      <option name="arguments" value="" />
+      <option name="workingDirectory" value="" />
+      <envs />
+    </McpServerCommand>
+    <McpServerCommand sourceId="UserConfigurationSource">
+      <option name="allowedToolsNames" />
+      <option name="enabled" value="true" />
+      <option name="name" value="" />
+      <option name="programPath" value="" />
+      <option name="arguments" value="" />
+      <option name="workingDirectory" value="" />
+      <envs />
+    </McpServerCommand>
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -48,7 +69,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "gestion__culture",
+    "git-widget-placeholder": "gestion-ouvrier",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/fxml",
     "node.js.detected.package.eslint": "true",
