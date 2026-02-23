@@ -14,8 +14,7 @@ module com.example.agrisens360{
     requires javafx.graphics;
     requires org.json;
     requires java.net.http;
-
-
+    requires jakarta.mail;
 
     opens com.example.agrisens360 to javafx.fxml;
     opens controllers to javafx.fxml;
