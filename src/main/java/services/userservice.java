@@ -23,7 +23,7 @@ public class userservice {
     // SIGN UP
     // ===============================
     public void ajouter(user user) throws SQLException {
-        String sql = "INSERT INTO user (name, email, password, phone, roles, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO user (name, email, password, phone, roles, status,profile_picture) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, user.getName());
         ps.setString(2, user.getEmail());
@@ -31,11 +31,19 @@ public class userservice {
         ps.setString(4, user.getPhone());
         ps.setString(5, user.getRole().name());
         ps.setString(6, "ACTIVE"); // default status
-
+        ps.setString(7, user.getProfilePicture());
         ps.executeUpdate();
         System.out.println("✅ User inserted into database");
     }
 
+    public void updateProfilePicture(int userId, String pictureUrl) throws SQLException {
+        String sql = "UPDATE user SET profile_picture = ? WHERE id = ?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setString(1, pictureUrl);
+        ps.setInt(2, userId);
+        ps.executeUpdate();
+        System.out.println("✅ Profile picture updated");
+    }
     // ===============================
     // LOGIN (Check status)
     // ===============================
@@ -64,7 +72,8 @@ public class userservice {
                         rs.getString("password"),
                         rs.getString("phone"),
                         Role.valueOf(rs.getString("roles")),
-                        rs.getString("status")
+                        rs.getString("status"),
+                        rs.getString("profile_picture")
                 );
             }
 
@@ -93,7 +102,8 @@ public class userservice {
                     rs.getString("password"),
                     rs.getString("phone"),
                     user.Role.valueOf(rs.getString("roles")),
-                    rs.getString("status")
+                    rs.getString("status"),
+                    rs.getString("profile_picture")
             );
             list.add(u);
         }
@@ -119,7 +129,8 @@ public class userservice {
                     rs.getString("password"),
                     rs.getString("phone"),
                     user.Role.valueOf(rs.getString("roles")),
-                    rs.getString("status")
+                    rs.getString("status"),
+                    rs.getString("profile_picture")
             );
             list.add(u);
         }
@@ -204,7 +215,8 @@ public class userservice {
                         rs.getString("password"),
                         rs.getString("phone"),
                         Role.valueOf(rs.getString("roles")),
-                        rs.getString("status")
+                        rs.getString("status"),
+                        rs.getString("profile_picture")
                 );
             }
 

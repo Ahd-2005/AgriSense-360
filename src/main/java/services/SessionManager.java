@@ -14,7 +14,9 @@ import java.util.UUID;
 public class SessionManager {
     private static SessionManager instance;
     private static final String SESSION_FILE = "agrisense_session.dat";
-    private static final long SESSION_DURATION = 30L * 60 * 1000; // 30 days in milliseconds
+
+    // ✅ 7 jours — session persiste après fermeture de l'app
+    private static final long SESSION_DURATION = 7L * 24 * 60 * 60 * 1000;
 
     private UserSession currentSession;
     private user currentUser;
@@ -28,9 +30,9 @@ public class SessionManager {
         return instance;
     }
 
-    /**
-     * Create a new session for a user after successful login
-     */
+    // ============================================================
+    // CRÉER UNE SESSION après login réussi
+    // ============================================================
     public UserSession createSession(user user) throws SQLException {
         String sessionToken = generateSessionToken();
         Timestamp expiresAt = new Timestamp(System.currentTimeMillis() + SESSION_DURATION);
@@ -38,34 +40,40 @@ public class SessionManager {
         UserSession session = new UserSession(user.getId(), sessionToken, expiresAt);
         session.setDeviceInfo(getDeviceInfo());
 
-        // Save to database
         saveSessionToDatabase(session);
-
-        // Save to local file
         saveSessionToFile(session);
 
-        // Set current session
         this.currentSession = session;
         this.currentUser = user;
 
+        System.out.println("✅ Session créée pour: " + user.getName() +
+                " | Expire: " + expiresAt);
         return session;
     }
 
-    /**
-     * Load session from local file on app startup
-     */
+    // ============================================================
+    // ✅ CHARGER LA SESSION AU DÉMARRAGE
+    // Si le token est valide → restaure l'user → retourne true
+    // Si expiré ou inexistant → retourne false → landing page
+    // ============================================================
     public boolean loadSavedSession() {
         try {
             File sessionFile = new File(SESSION_FILE);
             if (!sessionFile.exists()) {
+                System.out.println("No active session. Loading landing page...");
                 return false;
             }
 
-            // Read session token from file
             try (BufferedReader reader = new BufferedReader(new FileReader(sessionFile))) {
                 String sessionToken = reader.readLine();
                 if (sessionToken != null && !sessionToken.isEmpty()) {
-                    return validateAndLoadSession(sessionToken);
+                    boolean valid = validateAndLoadSession(sessionToken);
+                    if (!valid) {
+                        // Token expiré → nettoyer le fichier
+                        Files.deleteIfExists(Paths.get(SESSION_FILE));
+                        System.out.println("Session expirée. Redirection vers login.");
+                    }
+                    return valid;
                 }
             }
         } catch (IOException e) {
@@ -74,26 +82,25 @@ public class SessionManager {
         return false;
     }
 
-    /**
-     * Validate session token and load user data
-     */
+    // ============================================================
+    // VALIDER LE TOKEN EN DB ET CHARGER L'USER
+    // ============================================================
     private boolean validateAndLoadSession(String sessionToken) {
         String query = "SELECT s.*, u.* FROM user_sessions s " +
                 "JOIN user u ON s.user_id = u.id " +
                 "WHERE s.session_token = ? AND s.is_active = TRUE AND s.expires_at > NOW()";
 
-        Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try {
-            conn = MyDataBase.getInstance().getCnx();
+            Connection conn = MyDataBase.getInstance().getCnx();
             stmt = conn.prepareStatement(query);
             stmt.setString(1, sessionToken);
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // Load session
+                // ✅ Charger la session
                 currentSession = new UserSession();
                 currentSession.setSessionId(rs.getInt("session_id"));
                 currentSession.setUserId(rs.getInt("user_id"));
@@ -103,7 +110,7 @@ public class SessionManager {
                 currentSession.setExpiresAt(rs.getTimestamp("expires_at"));
                 currentSession.setActive(rs.getBoolean("is_active"));
 
-                // Load user with Role enum
+                // ✅ Charger l'user
                 currentUser = new user();
                 currentUser.setId(rs.getInt("id"));
                 currentUser.setName(rs.getString("name"));
@@ -111,19 +118,20 @@ public class SessionManager {
                 currentUser.setPhone(rs.getString("phone"));
                 currentUser.setStatus(rs.getString("status"));
 
-                // Convert String to Role enum
                 String roleString = rs.getString("roles");
                 currentUser.setRoleFromString(roleString);
 
-                // Update last activity
+                // ✅ Mettre à jour last_activity
                 updateLastActivity(sessionToken);
 
+                System.out.println("✅ Session restaurée pour: " + currentUser.getName()
+                        + " (" + currentUser.getRole() + ")");
                 return true;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // Don't close connection - it's managed by MyDataBase singleton
             try {
                 if (rs != null) rs.close();
                 if (stmt != null) stmt.close();
@@ -134,27 +142,24 @@ public class SessionManager {
         return false;
     }
 
-    /**
-     * Save session to database
-     */
+    // ============================================================
+    // SAUVEGARDER EN DB
+    // ============================================================
     private void saveSessionToDatabase(UserSession session) throws SQLException {
         String query = "INSERT INTO user_sessions (user_id, session_token, expires_at, device_info, ip_address, is_active) " +
                 "VALUES (?, ?, ?, ?, ?, TRUE)";
 
-        Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try {
-            conn = MyDataBase.getInstance().getCnx();
+            Connection conn = MyDataBase.getInstance().getCnx();
             stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-
             stmt.setInt(1, session.getUserId());
             stmt.setString(2, session.getSessionToken());
             stmt.setTimestamp(3, session.getExpiresAt());
             stmt.setString(4, session.getDeviceInfo());
             stmt.setString(5, getLocalIPAddress());
-
             stmt.executeUpdate();
 
             rs = stmt.getGeneratedKeys();
@@ -162,7 +167,6 @@ public class SessionManager {
                 session.setSessionId(rs.getInt(1));
             }
         } finally {
-            // Don't close connection - it's managed by MyDataBase singleton
             try {
                 if (rs != null) rs.close();
                 if (stmt != null) stmt.close();
@@ -172,9 +176,9 @@ public class SessionManager {
         }
     }
 
-    /**
-     * Save session token to local file
-     */
+    // ============================================================
+    // SAUVEGARDER LE TOKEN DANS UN FICHIER LOCAL
+    // ============================================================
     private void saveSessionToFile(UserSession session) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(SESSION_FILE))) {
             writer.write(session.getSessionToken());
@@ -183,146 +187,98 @@ public class SessionManager {
         }
     }
 
-    /**
-     * Update last activity timestamp
-     */
+    // ============================================================
+    // METTRE À JOUR last_activity
+    // ============================================================
     private void updateLastActivity(String sessionToken) {
         String query = "UPDATE user_sessions SET last_activity = NOW() WHERE session_token = ?";
-
-        Connection conn = null;
         PreparedStatement stmt = null;
-
         try {
-            conn = MyDataBase.getInstance().getCnx();
+            Connection conn = MyDataBase.getInstance().getCnx();
             stmt = conn.prepareStatement(query);
             stmt.setString(1, sessionToken);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // Don't close connection - it's managed by MyDataBase singleton
-            try {
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
     }
 
-    /**
-     * Logout - Invalidate session
-     */
+    // ============================================================
+    // LOGOUT — invalide la session et supprime le fichier local
+    // ============================================================
     public void logout() {
         if (currentSession != null) {
-            // Invalidate in database
             String query = "UPDATE user_sessions SET is_active = FALSE WHERE session_token = ?";
-
-            Connection conn = null;
             PreparedStatement stmt = null;
-
             try {
-                conn = MyDataBase.getInstance().getCnx();
+                Connection conn = MyDataBase.getInstance().getCnx();
                 stmt = conn.prepareStatement(query);
                 stmt.setString(1, currentSession.getSessionToken());
                 stmt.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
-                // Don't close connection - it's managed by MyDataBase singleton
-                try {
-                    if (stmt != null) stmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                try { if (stmt != null) stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
             }
         }
 
-        // Delete local session file
+        // ✅ Supprimer le fichier → prochain démarrage → landing page
         try {
             Files.deleteIfExists(Paths.get(SESSION_FILE));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Clear current session
         currentSession = null;
         currentUser = null;
+        System.out.println("✅ Déconnecté. Session supprimée.");
     }
 
-    /**
-     * Get current logged-in user
-     */
-    public user getCurrentUser() {
-        return currentUser;
-    }
+    // ============================================================
+    // GETTERS
+    // ============================================================
+    public user getCurrentUser()           { return currentUser; }
+    public UserSession getCurrentSession() { return currentSession; }
+    public boolean isLoggedIn()            { return currentSession != null && currentUser != null; }
 
-    /**
-     * Get current session
-     */
-    public UserSession getCurrentSession() {
-        return currentSession;
-    }
-
-    /**
-     * Check if user is logged in
-     */
-    public boolean isLoggedIn() {
-        return currentSession != null && currentUser != null;
-    }
-
-    /**
-     * Generate unique session token
-     */
+    // ============================================================
+    // HELPERS
+    // ============================================================
     private String generateSessionToken() {
         return UUID.randomUUID().toString() + "-" + System.currentTimeMillis();
     }
 
-    /**
-     * Get device info (OS name and version)
-     */
     private String getDeviceInfo() {
         return System.getProperty("os.name") + " " + System.getProperty("os.version");
     }
 
-    /**
-     * Get local IP address
-     */
     private String getLocalIPAddress() {
         try {
-            java.net.InetAddress localHost = java.net.InetAddress.getLocalHost();
-            return localHost.getHostAddress();
+            return java.net.InetAddress.getLocalHost().getHostAddress();
         } catch (Exception e) {
-            return "127.0.0.1"; // Default fallback
+            return "127.0.0.1";
         }
     }
 
-    /**
-     * Clean up expired sessions (run periodically)
-     */
+    // ============================================================
+    // NETTOYER LES SESSIONS EXPIRÉES (appelé à la fermeture)
+    // ============================================================
     public void cleanupExpiredSessions() {
         String query = "UPDATE user_sessions SET is_active = FALSE WHERE expires_at < NOW()";
-
-        Connection conn = null;
         PreparedStatement stmt = null;
-
         try {
-            conn = MyDataBase.getInstance().getCnx();
-            // Check if connection is still valid
+            Connection conn = MyDataBase.getInstance().getCnx();
             if (conn != null && !conn.isClosed()) {
                 stmt = conn.prepareStatement(query);
                 stmt.executeUpdate();
-                System.out.println("Expired sessions cleaned up.");
+                System.out.println("Sessions expirées nettoyées.");
             }
         } catch (SQLException e) {
-            // Silently fail if database is already closed on app shutdown
-            System.err.println("Could not cleanup sessions (connection may be closed): " + e.getMessage());
+            System.err.println("Cleanup sessions: " + e.getMessage());
         } finally {
-            // Don't close connection - it's managed by MyDataBase singleton
-            try {
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                // Ignore errors on shutdown
-            }
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) { /* ignore */ }
         }
     }
 }
