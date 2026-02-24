@@ -1,5 +1,4 @@
 package entity;
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -14,12 +13,14 @@ public class Produit {
     private String photoUrl;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private String barcodeUrl;
+
 
 
     public Produit() {
     }
 
-    public Produit(int id, int agriculteurId, String categorie, String nom, String description, BigDecimal prixUnitaire, String photoUrl, Timestamp createdAt, Timestamp updatedAt) {
+    public Produit(int id, int agriculteurId, String categorie, String nom, String description, BigDecimal prixUnitaire, String photoUrl, Timestamp createdAt, Timestamp updatedAt, String barcodeUrl) {
         this.id = id;
         this.agriculteurId = agriculteurId;
         this.categorie = categorie;
@@ -29,6 +30,7 @@ public class Produit {
         this.photoUrl = photoUrl;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.barcodeUrl = barcodeUrl;
     }
 
     public int getId() {
@@ -67,6 +69,8 @@ public class Produit {
     public Timestamp getUpdatedAt() {
         return updatedAt;
     }
+    public String getBarcodeUrl() { return barcodeUrl; }
+
 
     public void setId(int id) {
         this.id = id;
@@ -98,6 +102,7 @@ public class Produit {
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
+    public void setBarcodeUrl(String barcodeUrl) { this.barcodeUrl = barcodeUrl; }
 
     @Override
     public String toString() {
@@ -111,6 +116,7 @@ public class Produit {
                 ", photoUrl='" + photoUrl + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", barcodeUrl=" + barcodeUrl +
                 '}';
     }
 

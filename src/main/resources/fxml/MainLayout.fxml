@@ -79,11 +79,30 @@
                     </Button>
 
                     <!-- Stock Management -->
-                    <Button fx:id="stockBtn" styleClass="nav-link" onAction="#navigateToStock">
+                    <StackPane>
+                        <Button fx:id="stockBtn" styleClass="nav-link" onAction="#navigateToStock" maxWidth="Infinity">
+                            <graphic>
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="📦"/>
+                                    <Label fx:id="stockLabel" text="Stock Management" styleClass="nav-label"/>
+                                </HBox>
+                            </graphic>
+                        </Button>
+                        <!-- Badge rouge -->
+                        <Label fx:id="stockAlertBadge" text="0" visible="false" managed="false"
+                               style="-fx-background-color: #e53935; -fx-text-fill: white; -fx-font-size: 11px;
+                                      -fx-font-weight: bold; -fx-background-radius: 10px;
+                                      -fx-padding: 2px 6px; -fx-min-width: 20px;"
+                               StackPane.alignment="TOP_RIGHT">
+                            <StackPane.margin><Insets top="4" right="8"/></StackPane.margin>
+                        </Label>
+                    </StackPane>
+                    <!-- Exchange Rate -->
+                    <Button fx:id="exchangeRateBtn" styleClass="nav-link" onAction="#navigateToExchangeRate">
                         <graphic>
                             <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="📦" />
-                                <Label fx:id="stockLabel" text="Stock Management" styleClass="nav-label" />
+                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="💱" />
+                                <Label fx:id="exchangeRateLabel" text="Taux de Change" styleClass="nav-label" />
                             </HBox>
                         </graphic>
                     </Button>

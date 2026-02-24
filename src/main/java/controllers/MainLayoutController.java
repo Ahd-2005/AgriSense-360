@@ -2,16 +2,16 @@ package controllers;
 
 import entity.Produit;
 import entity.Stock;
-import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
+import services.NotificationService;
+import services.StockAlertService;
+
 
 import java.io.IOException;
 
@@ -44,6 +44,7 @@ public class MainLayoutController {
     @FXML private Button ModstockBtn;
     @FXML private Button editprodBtn;
     @FXML private Button btnBOS;
+    @FXML private Button exchangeRateBtn;
 
 
     // Labels to hide/show
@@ -55,8 +56,11 @@ public class MainLayoutController {
     @FXML private Label usersLabel;
     @FXML private Label workersLabel;
     @FXML private Label BOStockLabel;
+    @FXML private Label exchangeRateLabel;
 
+    @FXML private Label stockAlertBadge;
     private boolean sidebarCollapsed = false;
+
 
     // Store reference to self for access from child controllers
     private static MainLayoutController instance;
@@ -64,12 +68,31 @@ public class MainLayoutController {
     @FXML
     public void initialize() {
         instance = this;
-        // Load home page by default
+
+        NotificationService.getInstance().init(contentArea);
+
         navigateToHome();
+        demarrerAlertes();
     }
 
     public static MainLayoutController getInstance() {
         return instance;
+    }
+
+    private void demarrerAlertes() {
+        StockAlertService.getInstance().setAlertCallback(alerts -> {
+            if (stockAlertBadge != null) {
+                if (alerts.isEmpty()) {
+                    stockAlertBadge.setVisible(false);
+                    stockAlertBadge.setManaged(false);
+                } else {
+                    stockAlertBadge.setText(String.valueOf(alerts.size()));
+                    stockAlertBadge.setVisible(true);
+                    stockAlertBadge.setManaged(true);
+                }
+            }
+        });
+        StockAlertService.getInstance().demarrer();
     }
 
     @FXML
@@ -105,6 +128,8 @@ public class MainLayoutController {
             workersLabel.setManaged(true);
             BOStockLabel.setVisible(true);
             BOStockLabel.setManaged(true);
+            exchangeRateLabel.setVisible(true);
+            exchangeRateLabel.setManaged(true);
 
             toggleIcon.setText("☰");
             sidebarCollapsed = false;
@@ -215,6 +240,7 @@ public class MainLayoutController {
     public void navigateToProductList() {
         loadContent("/fxml/ProductList.fxml");
         setActiveButton(ProdBtn);
+
     }
     @FXML
     public void navigateToStockList() {
@@ -318,5 +344,9 @@ public class MainLayoutController {
 
         // Add active class to clicked button
         activeButton.getStyleClass().add("active");
+    }
+    public void navigateToExchangeRate() {
+        loadContent("/fxml/ExchangeRate.fxml");
+        setActiveButton(exchangeRateBtn);
     }
 }

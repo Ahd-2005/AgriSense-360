@@ -20,6 +20,7 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
+
     public static void main(String[] args) {
         // Connect to database on startup
         utils.MyDataBase.getInstance();

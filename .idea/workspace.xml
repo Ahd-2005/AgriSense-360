@@ -6,37 +6,22 @@
   <component name="ChangeListManager">
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="css gestion ouvrier">
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/cssdialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cssdialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/controllers/AddStockController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AddStockController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/controllers/AjoutProduitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AjoutProduitController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/controllers/BackOfficeStockController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/BackOfficeStockController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/controllers/EditStockController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/EditStockController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/controllers/FrontHomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/FrontHomeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/controllers/MainLayoutController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/controllers/ProductListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ProductListController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/controllers/StockListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/StockListController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/entity/Produit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/Produit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/entity/Stock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/Stock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/services/IService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/IServiceStock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/services/ServiceProduit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/ServiceStockProduit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/services/ServiceStock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/ServiceStockStock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/utils/MyDataBase.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AffectationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AffectationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/agrisens360/HelloApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AjoutProduitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AjoutProduitController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ProductListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ProductListController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/StockListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/StockListController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entity/Produit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/Produit.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/AjoutPrduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/AjoutPrduit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/css/Stockhome.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/Stockhome.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/services/ServiceStockProduit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/ServiceStockProduit.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/AjoutPrduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/AjoutPrduit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/BackOfficeStock.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/BackOfficeStock.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/ModifProd.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/ModifProd.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/ProductList.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/ProductList.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/StockHome.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/StockHome.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/StockList.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/StockList.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/addStock.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/addStock.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/editStock.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/editStock.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceProduit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceStockProduit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceProduitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceProduitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceStockProduit.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceStockTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceStockTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -50,6 +35,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="FxmlFile" />
         <option value="Class" />
       </list>
     </option>
@@ -92,6 +78,9 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.HelloApplication.executor": "Run",
+    "JUnit.ServiceProduitTest.executor": "Run",
+    "JUnit.ServiceProduitTest.testModifierProduit.executor": "Run",
+    "JUnit.ServiceStockTest.executor": "Run",
     "Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -121,8 +110,12 @@
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\java\controllers" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\db" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="services" />
+      <recent name="controllers" />
+    </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.HelloApplication">
     <configuration name="HelloApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="jbr-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -138,6 +131,52 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ServiceProduitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Agritech" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.agrisens360.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.agrisens360.services" />
+      <option name="MAIN_CLASS_NAME" value="com.example.agrisens360.services.ServiceProduitTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServiceProduitTest.testModifierProduit" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Agritech" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.agrisens360.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.agrisens360.services" />
+      <option name="MAIN_CLASS_NAME" value="com.example.agrisens360.services.ServiceProduitTest" />
+      <option name="METHOD_NAME" value="testModifierProduit" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServiceStockTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Agritech" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.agrisens360.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.agrisens360.services" />
+      <option name="MAIN_CLASS_NAME" value="com.example.agrisens360.services.ServiceStockTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <method v="2">
         <option name="Make" enabled="true" />
@@ -147,12 +186,18 @@
       <option name="filePath" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Application.HelloApplication" />
+      <item itemvalue="JUnit.ServiceProduitTest" />
+      <item itemvalue="JUnit.ServiceProduitTest.testModifierProduit" />
+      <item itemvalue="JUnit.ServiceStockTest" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.HelloApplication" />
-        <item itemvalue="Application.HelloApplication" />
-        <item itemvalue="Application.HelloApplication" />
-        <item itemvalue="Application.HelloApplication" />
+        <item itemvalue="JUnit.ServiceStockTest" />
+        <item itemvalue="JUnit.ServiceProduitTest" />
+        <item itemvalue="JUnit.ServiceProduitTest.testModifierProduit" />
         <item itemvalue="Application.HelloApplication" />
       </list>
     </recent_temporary>

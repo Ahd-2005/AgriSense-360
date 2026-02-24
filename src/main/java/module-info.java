@@ -11,15 +11,21 @@ module com.example.agrisens360 {
     //requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.sql;
-   // requires com.example.agrisens360;
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
+    requires jdk.internal.le;
+    requires json.simple;
+    // requires com.example.agrisens360;
 
     opens com.example.agrisens360 to javafx.fxml;
     opens controllers to javafx.fxml;
     exports com.example.agrisens360;
     opens entity to javafx.base;
     exports controllers;
+    exports services;
+    opens services to javafx.fxml;
 
-   // opens com.example.agrisens360.controllers to javafx.fxml;
+    // opens com.example.agrisens360.controllers to javafx.fxml;
 
 }
 
