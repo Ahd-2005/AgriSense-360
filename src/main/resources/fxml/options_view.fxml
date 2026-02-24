@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.OptionsController"
+            fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="mgmt-scroll">
+
+    <VBox spacing="20">
+        <padding>
+            <Insets top="0" right="0" bottom="24" left="0"/>
+        </padding>
+
+        <VBox spacing="2">
+            <Label text="Types &amp; Locations" styleClass="mgmt-form-title"/>
+            <Label text="Add or remove animal types and locations" styleClass="mgmt-form-subtitle"/>
+        </VBox>
+
+        <HBox spacing="24">
+
+            <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS">
+                <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
+                    <Label text="Animal Types" styleClass="mgmt-form-title"/>
+                </HBox>
+                <VBox styleClass="mgmt-form-body" spacing="14">
+                    <ListView fx:id="typesList" styleClass="mgmt-list-view" prefHeight="180"/>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="animalTypeCombo" promptText="Loading farm animals..."
+                                  styleClass="mgmt-combo" HBox.hgrow="ALWAYS" maxWidth="Infinity" visibleRowCount="10"/>
+                        <Button text="Add" onAction="#onAddType" styleClass="mgmt-btn-primary"/>
+                    </HBox>
+                    <Button fx:id="deleteTypeBtn" text="Delete Selected Type" onAction="#onDeleteType"
+                            styleClass="mgmt-btn-danger" disable="true" maxWidth="Infinity"/>
+                </VBox>
+            </VBox>
+
+            <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS">
+                <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
+                    <Label text="Locations" styleClass="mgmt-form-title"/>
+                </HBox>
+                <VBox styleClass="mgmt-form-body" spacing="14">
+                    <ListView fx:id="locationsList" styleClass="mgmt-list-view" prefHeight="180"/>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <TextField fx:id="newLocationField" promptText="New location name..." styleClass="mgmt-input" HBox.hgrow="ALWAYS"/>
+                        <Button text="Add" onAction="#onAddLocation" styleClass="mgmt-btn-primary"/>
+                    </HBox>
+                    <Button fx:id="deleteLocationBtn" text="Delete Selected Location" onAction="#onDeleteLocation"
+                            styleClass="mgmt-btn-danger" disable="true" maxWidth="Infinity"/>
+                </VBox>
+            </VBox>
+
+        </HBox>
+
+        <VBox styleClass="mgmt-form-card" spacing="0">
+            <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
+                <VBox spacing="3">
+                    <Label text="Vet Email Report" styleClass="mgmt-form-title"/>
+                    <Label text="Send a health status report to your veterinarian" styleClass="mgmt-form-subtitle"/>
+                </VBox>
+            </HBox>
+            <VBox styleClass="mgmt-form-body" spacing="14">
+
+                <GridPane hgap="16" vgap="10">
+                    <Label text="Vet Email" styleClass="mgmt-form-label"
+                           GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
+                    <TextField fx:id="vetEmailField" promptText=""
+                               styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="280"/>
+                </GridPane>
+
+                <Label text="Additional Notes" styleClass="mgmt-form-label"/>
+                <TextArea fx:id="notesArea"
+                          promptText="Any other observations or comments you want to add?"
+                          styleClass="mgmt-input" prefHeight="100" wrapText="true"/>
+
+                <HBox spacing="14" alignment="CENTER_LEFT">
+                    <Button text="Send Report" onAction="#onSendVetReport" styleClass="mgmt-btn-primary"/>
+                    <Label fx:id="emailStatusLabel" styleClass="mgmt-form-subtitle"/>
+                </HBox>
+
+            </VBox>
+        </VBox>
+
+        <VBox styleClass="mgmt-form-card" spacing="0">
+            <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
+                <VBox spacing="3">
+                    <Label text="Custom Model Training" styleClass="mgmt-form-title"/>
+                    <Label text="You can use your own data to make a better predictions for your own farm" styleClass="mgmt-form-subtitle"/>
+                </VBox>
+            </HBox>
+            <VBox styleClass="mgmt-form-body" spacing="14">
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Health records in database:" styleClass="mgmt-form-label"/>
+                    <Label fx:id="recordCountLabel" text="..." styleClass="ai-detail-value"/>
+                </HBox>
+
+                <Label fx:id="trainInfoLabel" text="" styleClass="mgmt-form-subtitle" wrapText="true"/>
+
+                <HBox spacing="14" alignment="CENTER_LEFT">
+                    <Button fx:id="trainModelBtn" text="Export Data &amp; Retrain Model"
+                            onAction="#onTrainModel" styleClass="mgmt-btn-primary" disable="true"/>
+                    <Label fx:id="trainStatusLabel" text="" styleClass="mgmt-form-subtitle" wrapText="true"/>
+                </HBox>
+
+            </VBox>
+        </VBox>
+
+    </VBox>
+</ScrollPane>
