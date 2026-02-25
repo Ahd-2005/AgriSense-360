@@ -13,10 +13,14 @@ import java.util.UUID;
 
 public class SessionManager {
     private static SessionManager instance;
-    private static final String SESSION_FILE = "agrisense_session.dat";
+    private static final String SESSION_FILE  = "agrisense_session.dat";
+    private static final String CLOSE_TIME_FILE = "agrisense_close_time.dat"; // ← NEW
 
-    // ✅ 7 jours — session persiste après fermeture de l'app
+    // Full session duration in DB: 7 days
     private static final long SESSION_DURATION = 7L * 24 * 60 * 60 * 1000;
+
+    // ✅ If app was closed MORE than 10 min ago → force re-login
+    private static final long MAX_IDLE_MS = 10L * 60 * 1000; // 10 minutes
 
     private UserSession currentSession;
     private user currentUser;
@@ -52,31 +56,52 @@ public class SessionManager {
     }
 
     // ============================================================
-    // ✅ CHARGER LA SESSION AU DÉMARRAGE
-    // Si le token est valide → restaure l'user → retourne true
-    // Si expiré ou inexistant → retourne false → landing page
+    // CHARGER LA SESSION AU DÉMARRAGE
+    // Extra check: if app was closed > 10 min ago → force login
     // ============================================================
     public boolean loadSavedSession() {
         try {
+            // ── 1. Check if app was closed more than 10 min ago ──
+            File closeTimeFile = new File(CLOSE_TIME_FILE);
+            if (closeTimeFile.exists()) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(closeTimeFile))) {
+                    String line = reader.readLine();
+                    if (line != null) {
+                        long closeTime = Long.parseLong(line.trim());
+                        long idleMs    = System.currentTimeMillis() - closeTime;
+
+                        if (idleMs > MAX_IDLE_MS) {
+                            System.out.println("⏱ App fermée il y a "
+                                    + (idleMs / 1000 / 60) + " min → session expirée. Re-login requis.");
+                            clearAllSessionFiles();
+                            return false;
+                        }
+                        System.out.println("✅ Idle time: " + (idleMs / 1000) + "s — OK");
+                    }
+                }
+            }
+
+            // ── 2. Check if session file exists ──────────────────
             File sessionFile = new File(SESSION_FILE);
             if (!sessionFile.exists()) {
                 System.out.println("No active session. Loading landing page...");
                 return false;
             }
 
+            // ── 3. Validate token in DB ───────────────────────────
             try (BufferedReader reader = new BufferedReader(new FileReader(sessionFile))) {
                 String sessionToken = reader.readLine();
                 if (sessionToken != null && !sessionToken.isEmpty()) {
                     boolean valid = validateAndLoadSession(sessionToken);
                     if (!valid) {
-                        // Token expiré → nettoyer le fichier
-                        Files.deleteIfExists(Paths.get(SESSION_FILE));
-                        System.out.println("Session expirée. Redirection vers login.");
+                        clearAllSessionFiles();
+                        System.out.println("Session invalide ou expirée. Redirection vers login.");
                     }
                     return valid;
                 }
             }
-        } catch (IOException e) {
+
+        } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
         }
         return false;
@@ -100,7 +125,6 @@ public class SessionManager {
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // ✅ Charger la session
                 currentSession = new UserSession();
                 currentSession.setSessionId(rs.getInt("session_id"));
                 currentSession.setUserId(rs.getInt("user_id"));
@@ -110,18 +134,18 @@ public class SessionManager {
                 currentSession.setExpiresAt(rs.getTimestamp("expires_at"));
                 currentSession.setActive(rs.getBoolean("is_active"));
 
-                // ✅ Charger l'user
                 currentUser = new user();
                 currentUser.setId(rs.getInt("id"));
                 currentUser.setName(rs.getString("name"));
                 currentUser.setEmail(rs.getString("email"));
                 currentUser.setPhone(rs.getString("phone"));
                 currentUser.setStatus(rs.getString("status"));
+                currentUser.setRoleFromString(rs.getString("roles"));
 
-                String roleString = rs.getString("roles");
-                currentUser.setRoleFromString(roleString);
+                // ✅ Load profile picture too
+                String profilePic = rs.getString("profile_picture");
+                if (profilePic != null) currentUser.setProfilePicture(profilePic);
 
-                // ✅ Mettre à jour last_activity
                 updateLastActivity(sessionToken);
 
                 System.out.println("✅ Session restaurée pour: " + currentUser.getName()
@@ -188,6 +212,18 @@ public class SessionManager {
     }
 
     // ============================================================
+    // ✅ SAVE CLOSE TIMESTAMP — called from HelloApplication.stop()
+    // ============================================================
+    public void saveCloseTimestamp() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CLOSE_TIME_FILE))) {
+            writer.write(String.valueOf(System.currentTimeMillis()));
+            System.out.println("⏱ Close timestamp saved.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ============================================================
     // METTRE À JOUR last_activity
     // ============================================================
     private void updateLastActivity(String sessionToken) {
@@ -206,7 +242,7 @@ public class SessionManager {
     }
 
     // ============================================================
-    // LOGOUT — invalide la session et supprime le fichier local
+    // LOGOUT — invalide la session et supprime les fichiers locaux
     // ============================================================
     public void logout() {
         if (currentSession != null) {
@@ -224,16 +260,22 @@ public class SessionManager {
             }
         }
 
-        // ✅ Supprimer le fichier → prochain démarrage → landing page
+        clearAllSessionFiles();
+        currentSession = null;
+        currentUser    = null;
+        System.out.println("✅ Déconnecté. Session supprimée.");
+    }
+
+    // ============================================================
+    // DELETE both session files
+    // ============================================================
+    private void clearAllSessionFiles() {
         try {
             Files.deleteIfExists(Paths.get(SESSION_FILE));
+            Files.deleteIfExists(Paths.get(CLOSE_TIME_FILE));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        currentSession = null;
-        currentUser = null;
-        System.out.println("✅ Déconnecté. Session supprimée.");
     }
 
     // ============================================================
@@ -263,7 +305,7 @@ public class SessionManager {
     }
 
     // ============================================================
-    // NETTOYER LES SESSIONS EXPIRÉES (appelé à la fermeture)
+    // NETTOYER LES SESSIONS EXPIRÉES
     // ============================================================
     public void cleanupExpiredSessions() {
         String query = "UPDATE user_sessions SET is_active = FALSE WHERE expires_at < NOW()";
