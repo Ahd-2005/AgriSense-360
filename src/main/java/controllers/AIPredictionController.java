@@ -18,6 +18,7 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,12 +35,20 @@ public class AIPredictionController implements Initializable {
     @FXML private Label confidenceLabel;
     @FXML private Label prodHeaderLabel;
     @FXML private VBox recordsContainer;
+    @FXML private RadioButton generalModelRadio;
+    @FXML private RadioButton customModelRadio;
+    @FXML private Label customModelStatusLabel;
 
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
     private final ServiceAnimalHealthRecord serviceRecord = new ServiceAnimalHealthRecord();
 
     private Animal selectedAnimal;
     private List<AnimalHealthRecord> lastRecords;
+    private static Runnable onModelTrained;
+
+    public static void notifyModelTrained() {
+        if (onModelTrained != null) javafx.application.Platform.runLater(onModelTrained);
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -57,6 +66,23 @@ public class AIPredictionController implements Initializable {
             });
         } catch (SQLException e) {
             setStatus("Failed to load animals: " + e.getMessage());
+        }
+
+        onModelTrained = this::refreshModelAvailability;
+        refreshModelAvailability();
+    }
+
+    private void refreshModelAvailability() {
+        boolean customExists = Paths.get(System.getProperty("user.dir"),
+                "src", "main", "python", "custom_model.pkl").toFile().exists();
+        if (customExists) {
+            customModelRadio.setDisable(false);
+            customModelStatusLabel.setText("(available)");
+            customModelStatusLabel.setStyle("-fx-text-fill: #2e7d32;");
+        } else {
+            customModelRadio.setDisable(true);
+            customModelStatusLabel.setText("(not trained yet)");
+            customModelStatusLabel.setStyle("-fx-text-fill: #888888;");
         }
     }
 
@@ -94,9 +120,9 @@ public class AIPredictionController implements Initializable {
         hideResults();
         statusLabel.setText("Analyzing...");
 
+        String modelParam = customModelRadio.isSelected() ? "custom" : "general";
         String type = selectedAnimal.getType().toLowerCase();
         AnimalHealthRecord latest = lastRecords.get(0);
-        int recordCount = lastRecords.size();
 
         double weight = lastRecords.stream()
                 .mapToDouble(r -> r.getWeight() != null ? r.getWeight()
@@ -139,17 +165,22 @@ public class AIPredictionController implements Initializable {
             protected String call() throws Exception {
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create("http://localhost:8000/predict"))
+                        .uri(URI.create("http://localhost:8000/predict?model=" + modelParam))
                         .header("Content-Type", "application/json")
                         .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                         .build();
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() == 404) {
+                    throw new RuntimeException("Custom model not found on server. Restart api.py after training.");
+                }
                 return response.body();
             }
         };
 
         task.setOnSucceeded(e -> handleResponse(task.getValue(), animal, records));
-        task.setOnFailed(e -> setStatus("Could not reach the AI server. Make sure it is running on port 8000."));
+        task.setOnFailed(e -> setStatus(task.getException().getMessage() != null
+                ? task.getException().getMessage()
+                : "Could not reach the AI server. Make sure it is running on port 8000."));
 
         Thread t = new Thread(task);
         t.setDaemon(true);
@@ -179,8 +210,10 @@ public class AIPredictionController implements Initializable {
             confidenceBar.setProgress(displayedConfidence);
             confidenceLabel.setText(String.format("%.1f%%", displayedConfidence * 100));
 
+            String modelLabel = customModelRadio.isSelected() ? "Custom Model" : "General Model";
             animalInfoLabel.setText("Animal #" + animal.getEarTag()
-                    + "  ·  Based on " + records.size() + " record" + (records.size() == 1 ? "" : "s"));
+                    + "  ·  Based on " + records.size() + " record" + (records.size() == 1 ? "" : "s")
+                    + "  ·  " + modelLabel);
 
             String type = animal.getType().toLowerCase();
             if (type.equals("cow")) {

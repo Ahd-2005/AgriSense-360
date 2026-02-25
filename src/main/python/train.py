@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
@@ -87,6 +88,6 @@ bundle = {
     "feature_names": FEATURES,
 }
 
-model_path = BASE / "condition_model.pkl"
+model_path = BASE / ("custom_model.pkl" if "--custom" in sys.argv else "condition_model.pkl")
 joblib.dump(bundle, model_path)
 print(f"\nModel saved to {model_path}")

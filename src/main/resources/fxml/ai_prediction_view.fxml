@@ -9,6 +9,10 @@
       spacing="20" VBox.vgrow="ALWAYS">
     <padding><Insets top="0"/></padding>
 
+    <fx:define>
+        <ToggleGroup fx:id="modelToggle"/>
+    </fx:define>
+
     <VBox styleClass="mgmt-form-card" spacing="0">
         <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="12">
             <VBox spacing="3">
@@ -17,6 +21,15 @@
             </VBox>
         </HBox>
         <VBox styleClass="mgmt-form-body" spacing="12">
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label text="Model:" styleClass="mgmt-form-label"/>
+                <RadioButton fx:id="generalModelRadio" text="General Model"
+                             toggleGroup="$modelToggle" selected="true" styleClass="mgmt-form-label"/>
+                <RadioButton fx:id="customModelRadio" text="My Custom Model"
+                             toggleGroup="$modelToggle" disable="true" styleClass="mgmt-form-label"/>
+                <Label fx:id="customModelStatusLabel" text="(not trained yet)"
+                       styleClass="mgmt-form-subtitle"/>
+            </HBox>
             <HBox spacing="12" alignment="CENTER_LEFT">
                 <ComboBox fx:id="animalCombo" promptText="Select an animal..." styleClass="mgmt-combo"
                           HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#onAnimalSelected"/>

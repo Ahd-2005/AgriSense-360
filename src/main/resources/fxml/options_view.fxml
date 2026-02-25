@@ -20,14 +20,15 @@
 
         <HBox spacing="24">
 
-            <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS">
+            <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS" maxHeight="Infinity">
                 <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
                     <Label text="Animal Types" styleClass="mgmt-form-title"/>
                 </HBox>
-                <VBox styleClass="mgmt-form-body" spacing="14">
-                    <ListView fx:id="typesList" styleClass="mgmt-list-view" prefHeight="180"/>
+                <VBox styleClass="mgmt-form-body" spacing="14" VBox.vgrow="ALWAYS">
+                    <ListView fx:id="typesList" styleClass="mgmt-list-view" prefHeight="180" VBox.vgrow="ALWAYS"/>
                     <HBox spacing="8" alignment="CENTER_LEFT">
-                        <ComboBox fx:id="animalTypeCombo" promptText="Loading farm animals..."
+                        <ComboBox fx:id="animalTypeCombo" promptText="Select or type a type..."
+                                  editable="true"
                                   styleClass="mgmt-combo" HBox.hgrow="ALWAYS" maxWidth="Infinity" visibleRowCount="10"/>
                         <Button text="Add" onAction="#onAddType" styleClass="mgmt-btn-primary"/>
                     </HBox>
@@ -36,12 +37,12 @@
                 </VBox>
             </VBox>
 
-            <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS">
+            <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS" maxHeight="Infinity">
                 <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
                     <Label text="Locations" styleClass="mgmt-form-title"/>
                 </HBox>
-                <VBox styleClass="mgmt-form-body" spacing="14">
-                    <ListView fx:id="locationsList" styleClass="mgmt-list-view" prefHeight="180"/>
+                <VBox styleClass="mgmt-form-body" spacing="14" VBox.vgrow="ALWAYS">
+                    <ListView fx:id="locationsList" styleClass="mgmt-list-view" prefHeight="180" VBox.vgrow="ALWAYS"/>
                     <HBox spacing="8" alignment="CENTER_LEFT">
                         <TextField fx:id="newLocationField" promptText="New location name..." styleClass="mgmt-input" HBox.hgrow="ALWAYS"/>
                         <Button text="Add" onAction="#onAddLocation" styleClass="mgmt-btn-primary"/>

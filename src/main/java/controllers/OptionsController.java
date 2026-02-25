@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 public class OptionsController implements Initializable {
 
-    private static final String BREVO_API_KEY = "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";
+    private static final String BREVO_API_KEY = "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";
     private static final String FROM_EMAIL     = "rinmo7620@gmail.com";
     private static final int    TRAIN_THRESHOLD = 1000;
 
@@ -70,7 +70,8 @@ public class OptionsController implements Initializable {
                 .addListener((o, old, val) -> deleteLocationBtn.setDisable(val == null));
         refreshLists();
         loadRecordCount();
-        loadAnimalTypesFromApi();
+        List<String> sorted = defaultFarmAnimals().stream().sorted().collect(Collectors.toList());
+        animalTypeCombo.getItems().setAll(sorted);
     }
 
     private void loadRecordCount() {
@@ -101,61 +102,6 @@ public class OptionsController implements Initializable {
         }
     }
 
-    private void loadAnimalTypesFromApi() {
-        Thread t = new Thread(() -> {
-            List<String> animals = fetchFarmAnimalsFromWikipedia();
-            if (animals.isEmpty()) animals = defaultFarmAnimals();
-            List<String> sorted = animals.stream().sorted().collect(Collectors.toList());
-            Platform.runLater(() -> {
-                animalTypeCombo.getItems().setAll(sorted);
-                animalTypeCombo.setPromptText("Select a farm animal...");
-            });
-        });
-        t.setDaemon(true);
-        t.start();
-    }
-
-    private List<String> fetchFarmAnimalsFromWikipedia() {
-        try {
-            String url = "https://en.wikipedia.org/w/api.php?action=query&list=categorymembers"
-                    + "&cmtitle=Category:Livestock&format=json&cmlimit=200&cmtype=page";
-            HttpRequest req = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("User-Agent", "AgriSense360/1.0")
-                    .GET()
-                    .build();
-            HttpResponse<String> resp = HttpClient.newHttpClient().send(req, HttpResponse.BodyHandlers.ofString());
-            String body = resp.body();
-
-            List<String> result = new ArrayList<>();
-            int idx = 0;
-            while ((idx = body.indexOf("\"title\":\"", idx)) != -1) {
-                idx += 9;
-                int end = body.indexOf("\"", idx);
-                String title = body.substring(idx, end);
-                if (isValidFarmAnimalName(title)) result.add(title);
-            }
-            return result.isEmpty() ? defaultFarmAnimals() : result;
-        } catch (Exception e) {
-            return defaultFarmAnimals();
-        }
-    }
-
-    private boolean isValidFarmAnimalName(String name) {
-        if (name.length() > 28) return false;
-        String lower = name.toLowerCase();
-        String[] skip = {
-            "history", "list", "industry", "production", "farm", "management",
-            "breed", "breeding", "feed", "food", "market", "trade", "husbandry",
-            "slaughter", "welfare", "disease", "agriculture", " in ", " of ", " and ",
-            "environmental", "impact", "economic", "category", "portal"
-        };
-        for (String s : skip) {
-            if (lower.contains(s)) return false;
-        }
-        return true;
-    }
-
     private List<String> defaultFarmAnimals() {
         return new ArrayList<>(Arrays.asList(
             "Alpaca", "Buffalo", "Camel", "Cattle", "Chicken", "Cow",
@@ -167,10 +113,11 @@ public class OptionsController implements Initializable {
 
     @FXML
     private void onAddType() {
-        String v = animalTypeCombo.getValue();
-        if (v == null || v.trim().isEmpty()) { showError("Select an animal type first."); return; }
+        String v = animalTypeCombo.getEditor().getText();
+        if (v == null || v.trim().isEmpty()) { showError("Select or type an animal type first."); return; }
         try {
             serviceEnum.addEnumValue("Animal", "type", v.trim());
+            animalTypeCombo.getEditor().clear();
             animalTypeCombo.setValue(null);
             refreshLists();
             AnimalListRefresh.notifyAnimalChanged();
@@ -273,7 +220,7 @@ public class OptionsController implements Initializable {
 
                 Platform.runLater(() -> setTrainStatus("Data exported. Training model...", null));
 
-                ProcessBuilder pb = new ProcessBuilder("python", "train.py");
+                ProcessBuilder pb = new ProcessBuilder("python", "train.py", "--custom");
                 pb.directory(pythonDir.toFile());
                 pb.redirectErrorStream(true);
                 Process process = pb.start();
@@ -286,6 +233,7 @@ public class OptionsController implements Initializable {
                     Platform.runLater(() -> {
                         setTrainStatus("Model trained and saved. Restart the AI server (api.py) to apply it.", true);
                         trainModelBtn.setDisable(false);
+                        AIPredictionController.notifyModelTrained();
                     });
                 }
             } catch (Exception ex) {

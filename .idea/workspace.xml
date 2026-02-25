@@ -6,7 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AIPredictionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AIPredictionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/OptionsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/OptionsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/animal.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/animal.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/condition_model.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/condition_model.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/healthRecord.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/healthRecord.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/ai_prediction_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/ai_prediction_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/options_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/options_view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,7 +168,11 @@
       <workItem from="1771619901203" duration="1773000" />
       <workItem from="1771667975766" duration="3256000" />
       <workItem from="1771757592531" duration="3179000" />
-      <workItem from="1771835453454" duration="195000" />
+      <workItem from="1771835453454" duration="735000" />
+      <workItem from="1771919003483" duration="1674000" />
+      <workItem from="1771927687029" duration="744000" />
+      <workItem from="1771928780952" duration="15000" />
+      <workItem from="1772021669762" duration="1844000" />
     </task>
     <task id="LOCAL-00001" summary="gestion culture +gestion animals+template">
       <option name="closed" value="true" />
