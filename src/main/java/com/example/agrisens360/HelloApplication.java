@@ -14,13 +14,12 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         try {
-            // Connexion à la base de données au démarrage
             utils.MyDataBase.getInstance();
 
             SessionManager sessionManager = SessionManager.getInstance();
 
             if (sessionManager.loadSavedSession()) {
-                // ✅ Session valide trouvée → Dashboard directement
+                // ✅ Session valide + idle < 10 min → Dashboard directement
                 user currentUser = sessionManager.getCurrentUser();
                 System.out.println("✅ Session restaurée pour: " + currentUser.getName()
                         + " (" + currentUser.getRole() + ")");
@@ -28,9 +27,6 @@ public class HelloApplication extends Application {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainLayout.fxml"));
                 Parent root = loader.load();
 
-                // NE PAS appeler configureForUserRole ici —
-                // initialize() dans MainLayoutController le fait déjà via SessionManager
-                // On appelle juste setCurrentUser pour mettre à jour l'affichage nom/rôle
                 MainLayoutController controller = loader.getController();
                 controller.setCurrentUser(currentUser);
 
@@ -39,7 +35,7 @@ public class HelloApplication extends Application {
                 stage.setTitle("AgriSense 360 - Dashboard");
 
             } else {
-                // ❌ Pas de session → Landing page
+                // ❌ Pas de session ou idle > 10 min → Landing page
                 System.out.println("No active session. Loading landing page...");
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Landingpage.fxml"));
@@ -58,7 +54,6 @@ public class HelloApplication extends Application {
             e.printStackTrace();
             System.err.println("❌ Erreur démarrage: " + e.getMessage());
 
-            // Fallback → landing page
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/fxml/Landingpage.fxml"));
                 Scene scene = new Scene(root, 1400, 800);
@@ -76,8 +71,16 @@ public class HelloApplication extends Application {
     @Override
     public void stop() {
         try {
-            SessionManager.getInstance().cleanupExpiredSessions();
-            System.out.println("Application fermée. Sessions nettoyées.");
+            SessionManager sessionManager = SessionManager.getInstance();
+
+            // ✅ Save the exact moment the app was closed
+            // On next startup, if > 10 min passed → force re-login
+            if (sessionManager.isLoggedIn()) {
+                sessionManager.saveCloseTimestamp();
+            }
+
+            sessionManager.cleanupExpiredSessions();
+            System.out.println("Application fermée. Close timestamp saved.");
         } catch (Exception e) {
             e.printStackTrace();
         }
