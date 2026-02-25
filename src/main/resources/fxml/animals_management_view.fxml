@@ -23,6 +23,9 @@
             <Tab text="Condition Predictor" styleClass="mgmt-tab">
                 <fx:include source="ai_prediction_view.fxml"/>
             </Tab>
+            <Tab text="Analytics" styleClass="mgmt-tab">
+                <fx:include source="stats_view.fxml"/>
+            </Tab>
         </tabs>
     </TabPane>
 </VBox>

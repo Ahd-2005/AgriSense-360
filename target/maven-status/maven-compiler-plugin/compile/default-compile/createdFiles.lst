@@ -23,6 +23,7 @@ controllers\AIPredictionController$2.class
 entity\AnimalHealthRecord$ConditionStatus.class
 controllers\CultureController.class
 entity\EvaluationPerformance.class
+controllers\StatsController.class
 controllers\EvaluationController.class
 module-info.class
 entity\AnimalHealthRecord$Appetite.class

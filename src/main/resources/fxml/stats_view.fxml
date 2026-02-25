@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.StatsController"
+            fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="mgmt-scroll">
+
+    <VBox spacing="20">
+        <padding>
+            <Insets top="0" right="0" bottom="24" left="0"/>
+        </padding>
+
+        <VBox spacing="2">
+            <Label text="Farm Analytics" styleClass="mgmt-form-title"/>
+            <Label text="Overview of your herd health, records, and performance" styleClass="mgmt-form-subtitle"/>
+        </VBox>
+
+        <HBox spacing="16">
+            <VBox styleClass="stats-kpi-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="6">
+                <Label fx:id="totalAnimalsLabel" text="..." styleClass="stats-kpi-value"/>
+                <Label text="Total Animals" styleClass="stats-kpi-label"/>
+            </VBox>
+            <VBox styleClass="stats-kpi-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="6">
+                <Label fx:id="totalRecordsLabel" text="..." styleClass="stats-kpi-value"/>
+                <Label text="Health Records" styleClass="stats-kpi-label"/>
+            </VBox>
+            <VBox styleClass="stats-kpi-card" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="6">
+                <Label fx:id="vacRateLabel" text="..." styleClass="stats-kpi-value"/>
+                <Label text="Vaccination Rate" styleClass="stats-kpi-label"/>
+            </VBox>
+            <VBox styleClass="stats-kpi-card-danger" HBox.hgrow="ALWAYS" alignment="CENTER" spacing="6">
+                <Label fx:id="atRiskLabel" text="..." styleClass="stats-kpi-value-danger"/>
+                <Label text="Animals at Risk" styleClass="stats-kpi-label"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="16">
+            <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS">
+                <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT">
+                    <Label text="Condition Distribution" styleClass="mgmt-form-title"/>
+                </HBox>
+                <PieChart fx:id="conditionPie" prefHeight="290" legendVisible="true" legendSide="BOTTOM"/>
+            </VBox>
+            <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS">
+                <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT">
+                    <Label text="Animals by Type" styleClass="mgmt-form-title"/>
+                </HBox>
+                <BarChart fx:id="typeBarChart" prefHeight="290" legendVisible="false" animated="false">
+                    <xAxis><CategoryAxis/></xAxis>
+                    <yAxis><NumberAxis label="Count" minorTickVisible="false"/></yAxis>
+                </BarChart>
+            </VBox>
+        </HBox>
+
+    </VBox>
+</ScrollPane>

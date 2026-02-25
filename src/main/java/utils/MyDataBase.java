@@ -32,6 +32,13 @@ public class MyDataBase {
     }
 
     public Connection getCnx() {
+        try {
+            if (cnx == null || cnx.isClosed()) {
+                cnx = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return cnx;
     }
 }
