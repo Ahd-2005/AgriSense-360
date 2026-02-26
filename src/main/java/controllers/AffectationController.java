@@ -33,9 +33,6 @@ public class AffectationController implements Initializable {
     @FXML private Button btnUpdate;
     @FXML private Button btnDelete;
     @FXML private Button btnClear;
-    @FXML
-    private Button btnGoEvaluation;
-
 
     private final AffectationTravailService service = new AffectationTravailService();
     private final ObservableList<AffectationTravail> affectationList = FXCollections.observableArrayList();
@@ -197,19 +194,4 @@ public class AffectationController implements Initializable {
         a.setContentText(message);
         a.showAndWait();
     }
-    @FXML
-    private void goToEvaluation() {
-        MainLayoutController mainLayout =
-                MainLayoutController.getInstance();
-
-        if (mainLayout != null) {
-            mainLayout.navigateToEvaluation();
-        } else {
-            showError("Navigation", "Main layout non disponible.");
-        }
-
-
-
-    }
-
 }

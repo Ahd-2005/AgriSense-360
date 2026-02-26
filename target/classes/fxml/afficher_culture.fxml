@@ -20,7 +20,7 @@
                 <!-- Search Bar -->
                 <TextField fx:id="searchField" promptText="🔍 Rechercher par nom..."
                            styleClass="search-field"/>
-
+                <Button fx:id="agendaBtn" text="📅 Agenda" onAction="#openAgenda" styleClass="agenda-button"/>
                 <Button text="➕ Ajouter Culture" onAction="#showAddPopup"
                         styleClass="add-button"/>
             </HBox>

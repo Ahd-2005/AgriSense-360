@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.AIPredictionController"
+      spacing="20" VBox.vgrow="ALWAYS">
+    <padding><Insets top="0"/></padding>
+
+    <VBox styleClass="mgmt-form-card" spacing="0">
+        <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="3">
+                <Label text="Condition Predictor" styleClass="mgmt-form-title"/>
+                <Label text="Uses up to the latest 10 health records (averages numeric values)" styleClass="mgmt-form-subtitle"/>
+            </VBox>
+        </HBox>
+        <VBox styleClass="mgmt-form-body" spacing="12">
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <ComboBox fx:id="animalCombo" promptText="Select an animal..." styleClass="mgmt-combo"
+                          HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#onAnimalSelected"/>
+                <Button text="Analyze" onAction="#onPredict" styleClass="mgmt-btn-primary" prefWidth="120"/>
+            </HBox>
+            <Label fx:id="statusLabel" text="" styleClass="mgmt-error-label" wrapText="true" managed="true" visible="true"/>
+        </VBox>
+    </VBox>
+
+    <VBox fx:id="resultsCard" styleClass="mgmt-form-card" spacing="0" visible="false" managed="false">
+        <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="3">
+                <Label text="Prediction Result" styleClass="mgmt-form-title"/>
+                <Label fx:id="animalInfoLabel" text="" styleClass="mgmt-form-subtitle"/>
+            </VBox>
+        </HBox>
+        <VBox styleClass="mgmt-form-body" spacing="18">
+
+            <HBox alignment="CENTER">
+                <Label fx:id="conditionBadge" text="" styleClass="ai-condition-badge"/>
+            </HBox>
+
+            <VBox spacing="7">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Model Confidence" styleClass="mgmt-form-label"/>
+                    <Label fx:id="confidenceLabel" text="" styleClass="ai-confidence-value"/>
+                </HBox>
+                <ProgressBar fx:id="confidenceBar" progress="0" maxWidth="Infinity" styleClass="ai-confidence-bar"/>
+            </VBox>
+
+            <VBox spacing="8">
+                <Label text="DATA USED FOR PREDICTION" styleClass="ai-section-label"/>
+                <HBox spacing="0" styleClass="mgmt-form-label">
+                    <Label text="Date"       prefWidth="140" styleClass="mgmt-form-label"/>
+                    <Label text="Weight"     prefWidth="120" styleClass="mgmt-form-label"/>
+                    <Label text="Appetite"   prefWidth="110" styleClass="mgmt-form-label"/>
+                    <Label fx:id="prodHeaderLabel" text="Production" prefWidth="130" styleClass="mgmt-form-label"/>
+                </HBox>
+                <VBox fx:id="recordsContainer" spacing="4"/>
+            </VBox>
+
+        </VBox>
+    </VBox>
+
+</VBox>
