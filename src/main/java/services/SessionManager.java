@@ -62,23 +62,26 @@ public class SessionManager {
     public boolean loadSavedSession() {
         try {
             // ── 1. Check if app was closed more than 10 min ago ──
+            // ✅ FIX: Read value fully FIRST, close the reader, THEN delete
+            //    (Windows locks files that are still open — must close before delete)
             File closeTimeFile = new File(CLOSE_TIME_FILE);
             if (closeTimeFile.exists()) {
+                long closeTime = 0;
                 try (BufferedReader reader = new BufferedReader(new FileReader(closeTimeFile))) {
                     String line = reader.readLine();
                     if (line != null) {
-                        long closeTime = Long.parseLong(line.trim());
-                        long idleMs    = System.currentTimeMillis() - closeTime;
-
-                        if (idleMs > MAX_IDLE_MS) {
-                            System.out.println("⏱ App fermée il y a "
-                                    + (idleMs / 1000 / 60) + " min → session expirée. Re-login requis.");
-                            clearAllSessionFiles();
-                            return false;
-                        }
-                        System.out.println("✅ Idle time: " + (idleMs / 1000) + "s — OK");
+                        closeTime = Long.parseLong(line.trim());
                     }
+                } // ← reader fully closed here before any file operation
+
+                long idleMs = System.currentTimeMillis() - closeTime;
+                if (idleMs > MAX_IDLE_MS) {
+                    System.out.println("⏱ App fermée il y a "
+                            + (idleMs / 1000 / 60) + " min → session expirée. Re-login requis.");
+                    clearAllSessionFiles(); // ← safe: reader already closed
+                    return false;
                 }
+                System.out.println("✅ Idle time: " + (idleMs / 1000) + "s — OK");
             }
 
             // ── 2. Check if session file exists ──────────────────
@@ -88,17 +91,19 @@ public class SessionManager {
                 return false;
             }
 
-            // ── 3. Validate token in DB ───────────────────────────
+            // ── 3. Read token FIRST, close reader, THEN validate/delete
+            String sessionToken = null;
             try (BufferedReader reader = new BufferedReader(new FileReader(sessionFile))) {
-                String sessionToken = reader.readLine();
-                if (sessionToken != null && !sessionToken.isEmpty()) {
-                    boolean valid = validateAndLoadSession(sessionToken);
-                    if (!valid) {
-                        clearAllSessionFiles();
-                        System.out.println("Session invalide ou expirée. Redirection vers login.");
-                    }
-                    return valid;
+                sessionToken = reader.readLine();
+            } // ← reader fully closed here
+
+            if (sessionToken != null && !sessionToken.isEmpty()) {
+                boolean valid = validateAndLoadSession(sessionToken);
+                if (!valid) {
+                    clearAllSessionFiles(); // ← safe: reader already closed
+                    System.out.println("Session invalide ou expirée. Redirection vers login.");
                 }
+                return valid;
             }
 
         } catch (IOException | NumberFormatException e) {
