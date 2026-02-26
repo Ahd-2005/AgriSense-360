@@ -22,7 +22,7 @@ public class ServiceAnimalHealthRecord implements IService<AnimalHealthRecord> {
     public void add(AnimalHealthRecord record) throws SQLException {
         Animal animal = serviceAnimal.getById(record.getAnimalId());
         if (animal == null) {
-            throw new SQLException("Animal with id " + record.getAnimalId() + " not found");
+            throw new SQLException("Animal id " + record.getAnimalId() + " not found");
         }
         record = clearProductionFieldsByType(record, animal.getType());
 
@@ -41,7 +41,7 @@ public class ServiceAnimalHealthRecord implements IService<AnimalHealthRecord> {
     public void update(AnimalHealthRecord record) throws SQLException {
         Animal animal = serviceAnimal.getById(record.getAnimalId());
         if (animal == null) {
-            throw new SQLException("Animal with id " + record.getAnimalId() + " not found");
+            throw new SQLException("Animal id " + record.getAnimalId() + " not found");
         }
         record = clearProductionFieldsByType(record, animal.getType());
 

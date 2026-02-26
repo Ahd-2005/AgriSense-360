@@ -292,3 +292,38 @@
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
+
+.map-button {
+    -fx-background-color: #1976D2;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.map-button:hover {
+    -fx-background-color: #1565C0;
+}
+.agenda-button {
+    -fx-background-color: #f59e0b;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(180, 110, 0, 0.35), 8, 0.2, 0, 2);
+}
+
+.agenda-button:hover {
+    -fx-background-color: #d97706;
+    -fx-effect: dropshadow(gaussian, rgba(180, 110, 0, 0.55), 12, 0.3, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.agenda-button:pressed {
+    -fx-background-color: #b45309;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
