@@ -9,7 +9,7 @@ public class user {
     private String phone;
     private Role role;
     private String status; // NEW: ACTIVE or BLOCKED
-
+    private String profilePicture;
     public enum Role {
         ROLE_OUVRIER,
         ROLE_GERANT,
@@ -43,7 +43,7 @@ public class user {
     }
 
     // Full constructor with status
-    public user(int id, String name, String email, String password, String phone, Role role, String status) {
+    public user(int id, String name, String email, String password, String phone, Role role, String status,String profilePicture) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -51,6 +51,7 @@ public class user {
         this.phone = phone;
         this.role = role;
         this.status = status;
+        this.profilePicture = profilePicture;
     }
 
     // ===== GETTERS & SETTERS =====
@@ -83,6 +84,10 @@ public class user {
     public void setRoleFromString(String roleString) {
         this.role = Role.valueOf(roleString);
     }
+
+    public String getProfilePicture() { return profilePicture; }
+
+    public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
 
     @Override
     public String toString() {

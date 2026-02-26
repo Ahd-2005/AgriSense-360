@@ -23,8 +23,7 @@ public class userservice {
     // SIGN UP
     // ===============================
     public void ajouter(user user) throws SQLException {
-        String sql = "INSERT INTO user (name, email, password, phone, roles, status) VALUES (?, ?, ?, ?, ?, ?)";
-
+        String sql = "INSERT INTO user (name, email, password, phone, roles, status,profile_picture) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, user.getName());
         ps.setString(2, user.getEmail());
@@ -32,11 +31,19 @@ public class userservice {
         ps.setString(4, user.getPhone());
         ps.setString(5, user.getRole().name());
         ps.setString(6, "ACTIVE"); // default status
-
+        ps.setString(7, user.getProfilePicture());
         ps.executeUpdate();
         System.out.println("✅ User inserted into database");
     }
 
+    public void updateProfilePicture(int userId, String pictureUrl) throws SQLException {
+        String sql = "UPDATE user SET profile_picture = ? WHERE id = ?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setString(1, pictureUrl);
+        ps.setInt(2, userId);
+        ps.executeUpdate();
+        System.out.println("✅ Profile picture updated");
+    }
     // ===============================
     // LOGIN (Check status)
     // ===============================
@@ -65,7 +72,8 @@ public class userservice {
                         rs.getString("password"),
                         rs.getString("phone"),
                         Role.valueOf(rs.getString("roles")),
-                        rs.getString("status")
+                        rs.getString("status"),
+                        rs.getString("profile_picture")
                 );
             }
 
@@ -94,7 +102,8 @@ public class userservice {
                     rs.getString("password"),
                     rs.getString("phone"),
                     user.Role.valueOf(rs.getString("roles")),
-                    rs.getString("status")
+                    rs.getString("status"),
+                    rs.getString("profile_picture")
             );
             list.add(u);
         }
@@ -120,7 +129,8 @@ public class userservice {
                     rs.getString("password"),
                     rs.getString("phone"),
                     user.Role.valueOf(rs.getString("roles")),
-                    rs.getString("status")
+                    rs.getString("status"),
+                    rs.getString("profile_picture")
             );
             list.add(u);
         }
@@ -205,7 +215,8 @@ public class userservice {
                         rs.getString("password"),
                         rs.getString("phone"),
                         Role.valueOf(rs.getString("roles")),
-                        rs.getString("status")
+                        rs.getString("status"),
+                        rs.getString("profile_picture")
                 );
             }
 
@@ -214,5 +225,37 @@ public class userservice {
         }
 
         return null;
+    }
+
+
+
+    // ===============================
+// GOOGLE LOGIN - Find or Create
+// ===============================
+    public user findOrCreateGoogleUser(String email, String name) throws SQLException {
+        // 1. Chercher si l'email existe déjà
+        user existingUser = findByEmail(email);
+
+        if (existingUser != null) {
+            // User existe → vérifier s'il est bloqué
+            if ("BLOCKED".equals(existingUser.getStatus())) {
+                return null; // bloqué
+            }
+            return existingUser; // connexion normale
+        }
+
+        // 2. User n'existe pas → créer un nouveau compte automatiquement
+        user newUser = new user();
+        newUser.setName(name);
+        newUser.setEmail(email);
+        newUser.setPassword("GOOGLE_AUTH_" + System.currentTimeMillis()); // password fictif
+        newUser.setPhone("00000000"); // valeur par défaut
+        newUser.setRole(user.Role.ROLE_OUVRIER); // rôle par défaut
+        newUser.setStatus("ACTIVE");
+
+        ajouter(newUser);
+
+        // Récupérer l'user avec son ID
+        return findByEmail(email);
     }
 }
