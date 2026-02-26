@@ -7,36 +7,35 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import services.SessionManager;
 import controllers.MainLayoutController;
+import entity.user;
 
 public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
         try {
-            // Connect to database on startup
             utils.MyDataBase.getInstance();
 
             SessionManager sessionManager = SessionManager.getInstance();
 
-            // Check if there's a saved session
             if (sessionManager.loadSavedSession()) {
-                // User has active session - go directly to main layout
-                System.out.println("Active session found. Loading dashboard...");
+                // ✅ Session valide + idle < 10 min → Dashboard directement
+                user currentUser = sessionManager.getCurrentUser();
+                System.out.println("✅ Session restaurée pour: " + currentUser.getName()
+                        + " (" + currentUser.getRole() + ")");
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainLayout.fxml"));
                 Parent root = loader.load();
 
-                // Configure sidebar based on user role
                 MainLayoutController controller = loader.getController();
-                controller.configureForUserRole(sessionManager.getCurrentUser().getRole());
-                controller.setCurrentUser(sessionManager.getCurrentUser());
+                controller.setCurrentUser(currentUser);
 
                 Scene scene = new Scene(root, 1400, 800);
                 stage.setScene(scene);
                 stage.setTitle("AgriSense 360 - Dashboard");
 
             } else {
-                // No active session - show landing page
+                // ❌ Pas de session ou idle > 10 min → Landing page
                 System.out.println("No active session. Loading landing page...");
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Landingpage.fxml"));
@@ -53,9 +52,8 @@ public class HelloApplication extends Application {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error starting application: " + e.getMessage());
+            System.err.println("❌ Erreur démarrage: " + e.getMessage());
 
-            // Fallback: Load landing page if anything fails
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/fxml/Landingpage.fxml"));
                 Scene scene = new Scene(root, 1400, 800);
@@ -63,19 +61,26 @@ public class HelloApplication extends Application {
                 stage.setTitle("AgriSense 360");
                 stage.centerOnScreen();
                 stage.show();
-            } catch (Exception fallbackError) {
-                fallbackError.printStackTrace();
-                throw fallbackError;
+            } catch (Exception fallback) {
+                fallback.printStackTrace();
+                throw fallback;
             }
         }
     }
 
     @Override
     public void stop() {
-        // Clean up expired sessions on app close
         try {
-            SessionManager.getInstance().cleanupExpiredSessions();
-            System.out.println("Application closed. Sessions cleaned up.");
+            SessionManager sessionManager = SessionManager.getInstance();
+
+            // ✅ Save the exact moment the app was closed
+            // On next startup, if > 10 min passed → force re-login
+            if (sessionManager.isLoggedIn()) {
+                sessionManager.saveCloseTimestamp();
+            }
+
+            sessionManager.cleanupExpiredSessions();
+            System.out.println("Application fermée. Close timestamp saved.");
         } catch (Exception e) {
             e.printStackTrace();
         }

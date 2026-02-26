@@ -43,6 +43,7 @@
                            style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"/>
                 </VBox>
 
+                <!-- ✅ Mot de passe oublié → navigue vers ForgotPassword.fxml -->
                 <Hyperlink text="Mot de passe oublié?"
                            onAction="#handleForgotPassword"
                            style="-fx-text-fill: #2e7d32; -fx-font-size: 14px;" />
@@ -62,6 +63,30 @@
                                onAction="#goToSignup"
                                style="-fx-text-fill: #2e7d32; -fx-font-size: 14px; -fx-font-weight: bold;" />
                 </HBox>
+
+                <!-- Séparateur -->
+                <HBox alignment="CENTER" spacing="10">
+                    <Separator HBox.hgrow="ALWAYS"/>
+                    <Label text="OU"/>
+                    <Separator HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <!-- Bouton Google -->
+                <Button fx:id="googleLoginBtn"
+                        text="🔍  Se connecter avec Google"
+                        onAction="#handleGoogleLogin"
+                        maxWidth="Infinity"
+                        prefHeight="45"
+                        style="-fx-background-color: white;
+                               -fx-border-color: #dadce0;
+                               -fx-border-width: 1.5;
+                               -fx-border-radius: 8;
+                               -fx-background-radius: 8;
+                               -fx-text-fill: #3c4043;
+                               -fx-font-size: 14px;
+                               -fx-cursor: hand;
+                               -fx-pref-width: 400;" />
+
             </VBox>
         </VBox>
     </center>

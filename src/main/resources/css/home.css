@@ -319,3 +319,18 @@
     -fx-font-size: 12px;
     -fx-text-fill: rgba(23, 35, 24, 0.65);
 }
+
+.google-btn {
+    -fx-background-color: white;
+    -fx-border-color: #dadce0;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-text-fill: #3c4043;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.google-btn:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #4285f4;
+}
