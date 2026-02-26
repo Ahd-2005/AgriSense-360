@@ -14,6 +14,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,8 +35,11 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.concurrent.CompletableFuture;
 
 public class DashboardCultureController {
+
+    private final services.AgromonitoringAdviceService adviceService = new services.AgromonitoringAdviceService();
 
     private final CultureService cultureService = new CultureService();
     private final ParcelleService parcelleService = new ParcelleService();
@@ -47,6 +51,13 @@ public class DashboardCultureController {
     @FXML private VBox gererParcelleCard;
     @FXML private ImageView cultureImage;
     @FXML private ImageView parcelleImage;
+
+    // Advice card (Agromonitoring API)
+    @FXML private HBox adviceCard;
+    @FXML private Label adviceText;
+    @FXML private Label adviceAuthor;
+    @FXML private Button adviceRefreshBtn;
+    @FXML private javafx.scene.layout.FlowPane adviceTags;
 
     @FXML private PieChart surfaceChart;
     @FXML private BarChart<String, Number> cultureTypeChart;
@@ -87,6 +98,35 @@ public class DashboardCultureController {
         loadTopParcelles();
         loadRecoltePrevue();
         loadRecolteRetard();
+
+        // Load advice (OpenFarm) after data fetched
+        loadAdvice();
+    }
+
+    // ============================================================
+    // CONSEIL (Général - Offline Random)
+    // ============================================================
+    private void loadAdvice() {
+        if (adviceText == null) return; // FXML not present
+        adviceText.setText("Chargement du conseil...");
+        adviceAuthor.setText("");
+
+        CompletableFuture.supplyAsync(() -> adviceService.fetchAdvice().orElse(null))
+                .thenAccept(advice -> javafx.application.Platform.runLater(() -> {
+                    if (advice != null) {
+                        adviceText.setText(advice.text);
+                        adviceAuthor.setText("— " + advice.source);
+                    } else {
+                        adviceText.setText("Impossible de récupérer un conseil pour le moment. Réessayez plus tard.");
+                        adviceAuthor.setText("");
+                    }
+                }));
+    }
+
+
+    @FXML
+    private void refreshAdvice() {
+        loadAdvice();
     }
 
     // ============================================================
