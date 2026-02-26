@@ -17,6 +17,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import services.SessionManager;
+import services.CultureNotificationService;
+import utils.EmailService;
 
 import java.io.IOException;
 
@@ -79,6 +81,12 @@ public class MainLayoutController {
         if (sessionManager.isLoggedIn()) {
             this.currentUser = sessionManager.getCurrentUser();
             configureForUserRole(currentUser.getRole());
+        }
+
+        // Schedule harvest notifications: on start and at 10:00 local, if email is enabled
+        if (EmailService.isEnabled()) {
+            CultureNotificationService notifier = new CultureNotificationService();
+            notifier.scheduleDailyAtTen();
         }
 
         // Load home page by default
@@ -413,16 +421,22 @@ public class MainLayoutController {
     private void loadContent(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Node content = loader.load();
+            Node content = loader.<Node>load();
             contentArea.getChildren().clear();
             contentArea.getChildren().add(content);
         } catch (IOException e) {
-            System.err.println("Error loading content: " + fxmlPath);
+            System.err.println("Error loading content (IOException): " + fxmlPath);
             e.printStackTrace();
+            showPlaceholder(fxmlPath);
+        } catch (Exception e) {
+            System.err.println("Error loading content (Exception): " + fxmlPath);
+            Throwable cause = e.getCause() != null ? e.getCause() : e;
+            System.err.println("Root cause: " + cause.getMessage());
+            cause.printStackTrace();
             showPlaceholder(fxmlPath);
         }
     }
-
+    @FXML
     public void navigateToCulture() {
         loadContent("/fxml/dashboard_culture.fxml");
         setActiveButton(cultureBtn);
@@ -431,6 +445,7 @@ public class MainLayoutController {
     /**
      * Navigate to Afficher Culture page (called from dashboard)
      */
+    @FXML
     public void navigateToAfficherCulture() {
         loadContent("/fxml/afficher_culture.fxml");
         setActiveButton(cultureBtn);
@@ -439,6 +454,7 @@ public class MainLayoutController {
     /**
      * Navigate to Afficher Parcelle page (called from dashboard)
      */
+    @FXML
     public void navigateToParcelle() {
         loadContent("/fxml/afficher_parcelle.fxml");
         setActiveButton(cultureBtn);

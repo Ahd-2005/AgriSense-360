@@ -12,23 +12,23 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.12.1</junit.version>
-        <!-- ✅ Définir la version JavaFX en un seul endroit -->
-        <javafx.version>17.0.14</javafx.version>
+        <!-- ✅ Single version for ALL JavaFX modules — no more mixing -->
+        <javafx.version>21</javafx.version>
     </properties>
 
     <dependencies>
 
-        <!-- ✅ JavaFX avec classifier WIN (résout "module not found: javafx.controls") -->
+        <!-- ✅ JavaFX — ALL modules same version 21 + win classifier -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>21</version>
+            <version>${javafx.version}</version>
             <classifier>win</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>21</version>
+            <version>${javafx.version}</version>
             <classifier>win</classifier>
         </dependency>
         <dependency>
@@ -151,19 +151,15 @@
             <artifactId>json</artifactId>
             <version>20240303</version>
         </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-web</artifactId>
-            <version>17.0.14</version> <!-- même version que votre JavaFX -->
-        </dependency>
 
+        <!-- Email -->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
             <version>2.0.1</version>
         </dependency>
 
-        <!-- ✅ Jackson pour Azure Face API (parser JSON) -->
+        <!-- Jackson for JSON parsing -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -192,13 +188,6 @@
             <version>1.43.3</version>
         </dependency>
 
-        <!-- Email -->
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>jakarta.mail</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -220,7 +209,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.agrisens360.HelloApplication</mainClass>
+                            <mainClass>com.example.agrisens360/com.example.agrisens360.HelloApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
