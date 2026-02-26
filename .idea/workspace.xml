@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="gestion user session">
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="gestion user session+ avatar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/services/SessionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/SessionManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -226,7 +224,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772061350835</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="gestion user session+ avatar">
+      <option name="closed" value="true" />
+      <created>1772143348886</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1772143348886</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -261,7 +267,8 @@
     <MESSAGE value="gestion user (api auth google + reset password by mail)" />
     <MESSAGE value="gestion user (api auth google + reset password by mail +Dicebea avatar)" />
     <MESSAGE value="gestion user session" />
-    <option name="LAST_COMMIT_MESSAGE" value="gestion user session" />
+    <MESSAGE value="gestion user session+ avatar" />
+    <option name="LAST_COMMIT_MESSAGE" value="gestion user session+ avatar" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
