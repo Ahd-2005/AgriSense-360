@@ -17,8 +17,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import services.SessionManager;
-import services.CultureNotificationService;
-import utils.EmailService;
 
 import java.io.IOException;
 
@@ -81,12 +79,6 @@ public class MainLayoutController {
         if (sessionManager.isLoggedIn()) {
             this.currentUser = sessionManager.getCurrentUser();
             configureForUserRole(currentUser.getRole());
-        }
-
-        // Schedule harvest notifications: on start and at 10:00 local, if email is enabled
-        if (EmailService.isEnabled()) {
-            CultureNotificationService notifier = new CultureNotificationService();
-            notifier.scheduleDailyAtTen();
         }
 
         // Load home page by default
