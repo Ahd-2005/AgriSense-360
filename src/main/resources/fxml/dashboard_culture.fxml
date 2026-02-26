@@ -70,6 +70,25 @@
                 </HBox>
             </VBox>
 
+            <!-- ===== CONSEIL AGRICOLE / AGROMONITORING ===== -->
+            <VBox spacing="12">
+                <Label text="💡 Conseil Agricole"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
+
+                <HBox fx:id="adviceCard" spacing="16" alignment="CENTER_LEFT" styleClass="advice-card">
+                    <Label text="🌱" styleClass="advice-icon"/>
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label fx:id="adviceText" wrapText="true" maxWidth="900"
+                               styleClass="advice-text"
+                               text="Chargement du conseil..."/>
+                        <FlowPane fx:id="adviceTags" hgap="6" vgap="6" prefWrapLength="600" />
+                        <Label fx:id="adviceAuthor" styleClass="advice-author" text=""/>
+                    </VBox>
+                    <Button fx:id="adviceRefreshBtn" text="Actualiser" onAction="#refreshAdvice"
+                            styleClass="advice-refresh"/>
+                </HBox>
+            </VBox>
+
             <!-- ===== STATISTICS SECTION ===== -->
             <VBox spacing="15">
                 <Label text="📊 Statistiques Visuelles"

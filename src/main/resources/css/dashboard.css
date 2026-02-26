@@ -181,6 +181,40 @@
     -fx-font-weight: bold;
 }
 
+/* ========== ADVICE CARD (Conseil Agricole - OpenFarm) ========== */
+.advice-card {
+    -fx-background-color: linear-gradient(to right, #ffffff, #f7fbf9);
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, 2);
+    -fx-padding: 16;
+    -fx-border-color: #2e7d32;
+    -fx-border-width: 0 0 0 5;
+    -fx-border-insets: 0;
+    -fx-border-radius: 16px;
+}
+.advice-icon {
+    -fx-font-size: 32px;
+}
+.advice-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: #1b5e20;
+    -fx-font-weight: bold;
+}
+.advice-author {
+    -fx-font-size: 12px;
+    -fx-text-fill: #558b2f;
+}
+.advice-refresh {
+    -fx-background-color: linear-gradient(to right, #2e7d32, #43a047);
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-padding: 8 14;
+    -fx-cursor: hand;
+}
+.advice-refresh:hover {
+    -fx-background-color: linear-gradient(to right, #1b5e20, #2e7d32);
+}
+
 /* ========== PROGRESS BAR ========== */
 .occupation-progress {
     -fx-accent: #4CAF50;

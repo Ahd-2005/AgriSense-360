@@ -17,9 +17,9 @@ public class MyDataBase {
     private MyDataBase() {
         try {
             cnx = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("Connected...");
+            System.out.println("✅ Connected to database agrisense-360");
         } catch (SQLException e) {
-            System.out.println("fix yo code bruh");
+            System.out.println("❌ Database connection failed");
             e.printStackTrace();
         }
     }
