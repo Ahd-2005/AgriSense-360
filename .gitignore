@@ -49,3 +49,4 @@ build/
 src/main/resources/agenda/config.js
 
 src/main/resources/config.properties
+src/main/resources/google-config.properties

@@ -19,7 +19,6 @@ module com.example.agrisens360 {
     requires jakarta.mail;
 
     requires org.json;
-    requires jakarta.mail;
 
     requires com.google.api.client.auth;
     requires com.google.api.client;
