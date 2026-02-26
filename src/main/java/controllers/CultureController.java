@@ -1,5 +1,6 @@
 package controllers;
 
+import javafx.stage.Window;
 import utils.CultureDurations;
 import entity.Culture;
 import entity.Parcelle;
@@ -37,6 +38,7 @@ public class CultureController {
     @FXML private GridPane cultureGrid;
     @FXML private TextField searchField;
     @FXML private Button addCultureBtn;
+    @FXML private Button agendaBtn;
 
     // Sort buttons
     @FXML private Button typeButton;
@@ -1237,5 +1239,14 @@ public class CultureController {
         if (controller != null) {
             controller.navigateToParcelle();
         }
+    }
+    @FXML
+    private void openAgenda() {
+        // Récupérer la fenêtre parente pour centrer la popup
+        Window ownerWindow = null;
+        if (cultureGrid != null && cultureGrid.getScene() != null) {
+            ownerWindow = cultureGrid.getScene().getWindow();
+        }
+        AgendaController.open((javafx.stage.Stage) ownerWindow);
     }
 }

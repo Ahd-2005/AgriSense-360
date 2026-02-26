@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda des Cultures</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --semis:#22c55e; --semis-bg:#dcfce7;
+            --crois:#eab308; --crois-bg:#fef9c3;
+            --matur:#3b82f6; --matur-bg:#dbeafe;
+            --rprev:#f97316; --rprev-bg:#ffedd5;
+            --recol:#ef4444; --recol-bg:#fee2e2;
+            --bg:#faf7f2; --card:#fff; --border:#e8e0d5;
+            --txt:#1c1917; --txt2:#78716c;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
+
+        /* HEADER */
+        .header{background:#1c1917;background-image:radial-gradient(ellipse at top right,rgba(34,197,94,.12) 0%,transparent 60%);color:white;padding:26px 40px 20px;}
+        .header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+        .header h1{font-family:'Instrument Serif',serif;font-size:30px;font-weight:400;letter-spacing:-.5px;}
+        .header h1 span{color:#86efac;font-style:italic;}
+        .header-sub{color:#a8a29e;font-size:11px;margin-top:3px;}
+        .add-btn{background:#22c55e;color:white;border:none;padding:10px 18px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .2s;white-space:nowrap;}
+        .add-btn:hover{background:#16a34a;transform:translateY(-1px);}
+
+        /* LÉGENDE */
+        .legend-bar{background:white;border-bottom:1px solid var(--border);padding:10px 40px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;}
+        .legend-bar>span{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;}
+        .leg{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--txt);}
+        .leg-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+
+        /* MAIN */
+        .main{padding:22px 40px;max-width:1200px;margin:0 auto;}
+
+        /* STORAGE BAR */
+        .storage-bar{display:flex;align-items:center;justify-content:space-between;background:white;border:1.5px solid var(--border);border-radius:10px;padding:9px 16px;margin-bottom:16px;font-size:12px;color:var(--txt2);flex-wrap:wrap;gap:8px;}
+        .storage-bar .saved-info{display:flex;align-items:center;gap:6px;}
+        .saved-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;}
+        .saved-dot.saving{background:#eab308;animation:pulse .8s infinite;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .storage-bar .reset-btn{padding:4px 10px;border:1.5px solid #fecaca;border-radius:6px;background:#fff5f5;color:#ef4444;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;}
+        .storage-bar .reset-btn:hover{background:#fee2e2;}
+
+        /* TOOLBAR */
+        .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+        .search-wrap{position:relative;flex:1;min-width:200px;}
+        .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--txt2);pointer-events:none;}
+        .search-input{width:100%;padding:10px 12px 10px 36px;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:14px;background:white;color:var(--txt);transition:border-color .2s;}
+        .search-input:focus{outline:none;border-color:var(--semis);box-shadow:0 0 0 3px rgba(34,197,94,.1);}
+        .filter-select{padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;font-size:13px;background:white;cursor:pointer;color:var(--txt);}
+        .filter-select:focus{outline:none;border-color:var(--semis);}
+
+        /* ── SOURCE BADGE ── */
+        .source-badge{
+            display:inline-flex;align-items:center;gap:4px;
+            padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;
+            letter-spacing:.3px;white-space:nowrap;border:1.5px solid;
+        }
+        .source-db{background:#eff6ff;border-color:#93c5fd;color:#1d4ed8;}
+        .source-agenda{background:#fdf4ff;border-color:#e879f9;color:#86198f;}
+
+        /* CARDS */
+        .cards-list{display:flex;flex-direction:column;gap:14px;}
+        .culture-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:18px 22px;transition:box-shadow .2s,border-color .2s;}
+        .culture-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.07);border-color:#d4c9be;}
+        .culture-card.from-db{border-left:3px solid #3b82f6;}
+        .culture-card.from-agenda{border-left:3px solid #d946ef;}
+
+        .card-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+
+        /* ── CROP ICON REDESIGN ── */
+        .crop-icon-wrap{
+            width:52px;height:52px;border-radius:14px;display:flex;align-items:center;
+            justify-content:center;font-size:28px;flex-shrink:0;
+            box-shadow:0 2px 8px rgba(0,0,0,.12);
+        }
+        /* Couleur de fond selon le type */
+        .icon-cereales { background:linear-gradient(135deg,#fef3c7,#fde68a); }
+        .icon-legumes  { background:linear-gradient(135deg,#dcfce7,#bbf7d0); }
+        .icon-fruits   { background:linear-gradient(135deg,#fee2e2,#fecaca); }
+        .icon-ornementales { background:linear-gradient(135deg,#fce7f3,#fbcfe8); }
+        .icon-default  { background:linear-gradient(135deg,#f3f4f6,#e5e7eb); }
+
+        .card-names{flex:1;min-width:100px;}
+        .card-name{font-family:'Instrument Serif',serif;font-size:19px;line-height:1.2;}
+        .card-type{font-size:11px;color:var(--txt2);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-top:1px;}
+
+        /* ÉTAT BADGES */
+        .etat-badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap;border:1.5px solid transparent;}
+        .etat-semis          {background:var(--semis-bg);color:#15803d;border-color:#86efac;}
+        .etat-croissance     {background:var(--crois-bg);color:#92400e;border-color:#fde68a;}
+        .etat-maturite       {background:var(--matur-bg);color:#1d4ed8;border-color:#93c5fd;}
+        .etat-recolte-prevue {background:var(--rprev-bg);color:#9a3412;border-color:#fdba74;}
+        .etat-recolte        {background:var(--recol-bg);color:#b91c1c;border-color:#fca5a5;}
+
+        /* BOUTONS */
+        .date-btn{padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;background:#faf7f2;font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px;color:var(--txt);transition:all .15s;white-space:nowrap;}
+        .date-btn:hover{border-color:var(--semis);color:#15803d;background:#f0fdf4;}
+        .ai-btn{padding:7px 14px;border:none;border-radius:8px;background:#6366f1;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;color:white;transition:all .15s;white-space:nowrap;}
+        .ai-btn:hover{background:#4f46e5;transform:translateY(-1px);}
+        .ai-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+        .del-btn{padding:7px 10px;border:1.5px solid #fecaca;border-radius:8px;background:#fff5f5;font-size:14px;cursor:pointer;color:#ef4444;transition:all .15s;line-height:1;}
+        .del-btn:hover{background:#fee2e2;border-color:#ef4444;transform:scale(1.06);}
+
+        /* TIMELINE */
+        .timeline-wrap{margin-bottom:12px;}
+        .timeline-container{position:relative;}
+        .timeline-inner{height:30px;border-radius:8px;overflow:hidden;display:flex;}
+        .tl-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;cursor:default;transition:filter .15s;}
+        .tl-seg:hover{filter:brightness(1.08);}
+        .tl-seg.semis         {background:#22c55e;}
+        .tl-seg.croissance    {background:#eab308;color:#1c1917;}
+        .tl-seg.maturite      {background:#3b82f6;}
+        .tl-seg.recolte-prevue{background:#f97316;}
+        .tl-seg.recolte       {background:#ef4444;}
+        .today-needle{position:absolute;top:-6px;bottom:-6px;width:3px;background:#1c1917;border-radius:3px;pointer-events:none;z-index:10;box-shadow:0 0 0 2px white;}
+        .today-needle::before{content:"Aujourd'hui";position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:700;color:#1c1917;white-space:nowrap;background:white;padding:2px 6px;border-radius:5px;border:1px solid #d4c9be;box-shadow:0 2px 6px rgba(0,0,0,.1);}
+
+        /* DATE CHIPS */
+        .dates-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+        .date-chip{display:flex;flex-direction:column;align-items:center;text-align:center;padding:7px 13px;border-radius:10px;border:1.5px solid;min-width:105px;}
+        .date-chip .phase-name{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;}
+        .date-chip .phase-date{font-size:14px;font-weight:700;color:var(--txt);margin-top:3px;font-variant-numeric:tabular-nums;}
+        .date-chip .phase-days{font-size:10px;color:var(--txt2);margin-top:2px;}
+        .chip-semis     {background:#dcfce7;border-color:#86efac;} .chip-semis .phase-name     {color:#15803d;}
+        .chip-croissance{background:#fef9c3;border-color:#fde68a;} .chip-croissance .phase-name{color:#92400e;}
+        .chip-maturite  {background:#dbeafe;border-color:#93c5fd;} .chip-maturite .phase-name  {color:#1d4ed8;}
+        .chip-rprev     {background:#ffedd5;border-color:#fdba74;} .chip-rprev .phase-name     {color:#9a3412;}
+        .chip-recolte   {background:#fee2e2;border-color:#fca5a5;} .chip-recolte .phase-name   {color:#b91c1c;}
+
+        /* AI TIP */
+        .ai-tip-box{margin-top:12px;background:#f5f3ff;border:1.5px solid #c4b5fd;border-radius:12px;padding:14px 18px;font-size:13px;line-height:1.7;color:#3b1f7a;display:none;}
+        .ai-tip-box.visible{display:block;animation:fadeSlide .3s ease;}
+        @keyframes fadeSlide{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+        .ai-tip-box .ai-header{font-size:14px;font-weight:700;color:#5b21b6;margin-bottom:10px;}
+        .ai-tip-box .ai-content{background:white;border-radius:8px;border-left:3px solid #8b5cf6;padding:10px 14px;}
+        .ai-spinner{display:inline-block;width:14px;height:14px;border:2px solid #c4b5fd;border-top-color:#7c3aed;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* MODALS */
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+        .modal-overlay.open{display:flex;}
+        .modal{background:white;border-radius:18px;padding:26px 28px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.18);animation:popIn .22s ease;}
+        @keyframes popIn{from{transform:scale(.93);opacity:0}to{transform:scale(1);opacity:1}}
+        .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+        .modal-header h2{font-family:'Instrument Serif',serif;font-size:21px;}
+        .modal-close{background:none;border:none;font-size:16px;cursor:pointer;color:var(--txt2);padding:5px 9px;border-radius:7px;}
+        .modal-close:hover{background:#f3f4f6;color:var(--txt);}
+
+        .form-group{margin-bottom:15px;}
+        .form-group label{display:block;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
+
+        .form-group select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;background:white;color:var(--txt);cursor:pointer;transition:border-color .15s;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2378716c' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;}
+        .form-group select:focus{outline:none;border-color:var(--semis);box-shadow:0 0 0 3px rgba(34,197,94,.1);}
+
+        /* DATE INPUT — custom styled */
+        .date-input-wrap{position:relative;}
+        .date-input-wrap .cal-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);pointer-events:none;color:#78716c;}
+        .form-group input[type="date"]{
+            width:100%;padding:11px 14px 11px 40px;
+            border:1.5px solid var(--border);border-radius:10px;
+            font-family:inherit;font-size:15px;font-weight:500;
+            background:white;color:var(--txt);cursor:pointer;
+            transition:border-color .15s;
+            -webkit-appearance:none;appearance:none;
+        }
+        .form-group input[type="date"]:focus{outline:none;border-color:var(--semis);box-shadow:0 0 0 3px rgba(34,197,94,.1);}
+        .form-group input[type="date"]::-webkit-calendar-picker-indicator{
+            opacity:0.6;cursor:pointer;width:18px;height:18px;margin-right:2px;
+        }
+        .form-group input[type="date"]::-webkit-datetime-edit{color:var(--txt);font-weight:500;}
+        .form-group input[type="date"]::-webkit-datetime-edit-fields-wrapper{padding:0;}
+
+        .harvest-preview{background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:12px 16px;font-size:13px;color:#15803d;font-weight:500;display:none;margin-top:8px;line-height:1.9;}
+        .harvest-preview.show{display:block;}
+        .change-date-info{background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:12px 14px;font-size:13px;margin-bottom:15px;line-height:1.6;color:#92400e;}
+
+        .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+        .btn-cancel{padding:10px 20px;border:1.5px solid var(--border);border-radius:10px;background:white;font-family:inherit;font-size:14px;cursor:pointer;color:var(--txt);}
+        .btn-cancel:hover{background:#f9fafb;}
+        .btn-save{padding:10px 22px;border:none;border-radius:10px;background:#22c55e;color:white;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;}
+        .btn-save:hover{background:#16a34a;}
+        .btn-danger{background:#ef4444;}
+        .btn-danger:hover{background:#dc2626;}
+
+        .delete-preview{background:#fff5f5;border:1.5px solid #fecaca;border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+        .delete-preview .del-icon-wrap{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+        .delete-preview .del-info .del-name{font-family:'Instrument Serif',serif;font-size:18px;}
+        .delete-preview .del-info .del-meta{font-size:12px;color:var(--txt2);margin-top:3px;}
+
+        .empty-state{text-align:center;padding:56px 20px;color:var(--txt2);}
+        .empty-state .icon{font-size:50px;margin-bottom:12px;}
+        .empty-state h3{font-family:'Instrument Serif',serif;font-size:22px;color:var(--txt);margin-bottom:6px;}
+
+        @media(max-width:640px){
+            .header,.main{padding-left:16px;padding-right:16px;}
+            .legend-bar{padding:10px 16px;}
+            .date-chip{min-width:88px;padding:5px 8px;}
+            .date-chip .phase-date{font-size:12px;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-top">
+        <div>
+            <h1>Agenda des <span>Cultures</span></h1>
+            <p class="header-sub">Phases calculées automatiquement · Sauvegarde automatique</p>
+        </div>
+        <button class="add-btn" onclick="openAddModal()">＋ Ajouter une culture</button>
+    </div>
+</div>
+
+<div class="legend-bar">
+    <span>Phases :</span>
+    <div class="leg"><div class="leg-dot" style="background:#22c55e"></div> Semis</div>
+    <div class="leg"><div class="leg-dot" style="background:#eab308"></div> Croissance</div>
+    <div class="leg"><div class="leg-dot" style="background:#3b82f6"></div> Maturité</div>
+    <div class="leg"><div class="leg-dot" style="background:#f97316"></div> Récolte prévue (−7j)</div>
+    <div class="leg"><div class="leg-dot" style="background:#ef4444"></div> Récolte</div>
+    <div style="margin-left:auto;display:flex;gap:12px;align-items:center;">
+        <span class="source-badge source-db">🗄 Base de données</span>
+        <span class="source-badge source-agenda">✏️ Agenda</span>
+    </div>
+</div>
+
+<div class="main">
+
+    <div class="storage-bar">
+        <div class="saved-info">
+            <div class="saved-dot" id="savedDot"></div>
+            <span id="savedLabel">Chargement...</span>
+        </div>
+        <button class="reset-btn" onclick="clearAllData()">🗑 Réinitialiser tout</button>
+    </div>
+
+    <div class="toolbar">
+        <div class="search-wrap">
+            <svg class="search-icon" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input class="search-input" type="text" placeholder="Rechercher une culture..." oninput="filterCards(this.value)">
+        </div>
+        <select class="filter-select" onchange="filterByType(this.value)">
+            <option value="">Tous les types</option>
+            <option value="Céréales">🌾 Céréales</option>
+            <option value="Légumes">🥬 Légumes</option>
+            <option value="Fruits">🍎 Fruits</option>
+            <option value="Ornementales">🌸 Ornementales</option>
+        </select>
+        <select class="filter-select" onchange="filterBySource(this.value)">
+            <option value="">Toutes les sources</option>
+            <option value="db">🗄 Base de données seulement</option>
+            <option value="agenda">✏️ Agenda seulement</option>
+        </select>
+        <select class="filter-select" onchange="filterByEtat(this.value)">
+            <option value="">Tous les états</option>
+            <option value="Semis">Semis</option>
+            <option value="Croissance">Croissance</option>
+            <option value="Maturité">Maturité</option>
+            <option value="Récolte Prévue">Récolte Prévue</option>
+            <option value="Récolte en Retard">En Retard</option>
+        </select>
+    </div>
+
+    <div class="cards-list" id="cardsList"></div>
+</div>
+
+<!-- MODAL AJOUTER -->
+<div class="modal-overlay" id="addModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>🌱 Ajouter une culture</h2>
+            <button class="modal-close" onclick="closeAddModal()">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Type de culture</label>
+            <select id="addType" onchange="updateNomOptions()">
+                <option value="">Sélectionner un type…</option>
+                <option>Céréales</option>
+                <option>Légumes</option>
+                <option>Fruits</option>
+                <option>Ornementales</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Nom de la culture</label>
+            <select id="addNom" onchange="updateHarvestPreview()" disabled>
+                <option value="">Sélectionner d'abord le type…</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Date de plantation</label>
+            <div class="date-input-wrap">
+                <svg class="cal-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                <input type="date" id="addDate" onchange="updateHarvestPreview()">
+            </div>
+        </div>
+        <div class="harvest-preview" id="harvestPreview"></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeAddModal()">Annuler</button>
+            <button class="btn-save" onclick="addCulture()">✅ Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CHANGER DATE -->
+<div class="modal-overlay" id="changeDateModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>📅 Modifier la plantation</h2>
+            <button class="modal-close" onclick="closeChangeDateModal()">✕</button>
+        </div>
+        <div class="change-date-info" id="changeDateInfo"></div>
+        <div class="form-group">
+            <label>Nouvelle date de plantation</label>
+            <div class="date-input-wrap">
+                <svg class="cal-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                <input type="date" id="newPlantDate" onchange="previewNewDates()">
+            </div>
+        </div>
+        <div id="newDatesPreview" style="margin-bottom:6px;"></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeChangeDateModal()">Annuler</button>
+            <button class="btn-save" onclick="saveNewDate()">💾 Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL SUPPRIMER -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>🗑 Supprimer la culture ?</h2>
+            <button class="modal-close" onclick="closeDeleteModal()">✕</button>
+        </div>
+        <div class="delete-preview">
+            <div class="del-icon-wrap" id="del-icon-wrap">🌱</div>
+            <div class="del-info">
+                <div class="del-name" id="del-name">—</div>
+                <div class="del-meta" id="del-meta">—</div>
+            </div>
+        </div>
+        <p style="font-size:13px;color:var(--txt2);">Cette action est irréversible.</p>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeDeleteModal()">Annuler</button>
+            <button class="btn-save btn-danger" onclick="confirmDelete()">🗑 Supprimer</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ════════════════════════════════════════════════════════════════
+    //  🔑 REMPLACEZ ICI VOTRE CLÉ API ANTHROPIC
+    //  Obtenez-la sur : https://console.anthropic.com → API Keys
+    // ════════════════════════════════════════════════════════════════
+    const ANTHROPIC_API_KEY = "VOTRE_CLE_API_ICI";
+    // Exemple: const ANTHROPIC_API_KEY = "sk-ant-api03-xxxxxx";
+    // ════════════════════════════════════════════════════════════════
+
+    const STORAGE_KEY = 'agenda_cultures_v2';
+
+    // ─── DONNÉES ────────────────────────────────────────────────────
+    const DURATIONS = {
+        "Maïs":[30,60,30],"Riz":[25,90,30],"Blé":[20,80,30],"Avoine":[20,70,25],
+        "Oignon":[15,70,20],"Salades":[10,40,15],"Pomme de terre":[20,70,25],
+        "Tomates":[20,60,20],"Carottes":[15,60,20],"Lentille":[15,55,20],
+        "Pêche":[30,90,40],"Fraise":[15,50,25],"Pomme":[30,100,50],
+        "Orange":[30,120,60],"Framboise":[15,50,25],"Banane":[30,150,60],
+        "Rosier":[20,60,40],"Tulipe":[15,45,30],"Jasmin":[20,55,35],"Laurier-rose":[20,65,40],
+    };
+    const CULTURES_MAP = {
+        "Céréales":["Maïs","Riz","Blé","Avoine"],
+        "Légumes":["Tomates","Salades","Pomme de terre","Carottes","Oignon","Lentille"],
+        "Fruits":["Pomme","Pêche","Orange","Fraise","Framboise","Banane"],
+        "Ornementales":["Rosier","Tulipe","Jasmin","Laurier-rose"],
+    };
+
+    // ── ICÔNES COLORÉES PAR TYPE ─────────────────────────────────
+    // emoji + classe CSS de fond selon le type
+    const ICONS = {
+        "Maïs":       { emoji:"🌽", cls:"icon-cereales" },
+        "Riz":        { emoji:"🌾", cls:"icon-cereales" },
+        "Blé":        { emoji:"🌾", cls:"icon-cereales" },
+        "Avoine":     { emoji:"🌾", cls:"icon-cereales" },
+        "Tomates":    { emoji:"🍅", cls:"icon-legumes"  },
+        "Salades":    { emoji:"🥬", cls:"icon-legumes"  },
+        "Pomme de terre":{ emoji:"🥔", cls:"icon-legumes"},
+        "Carottes":   { emoji:"🥕", cls:"icon-legumes"  },
+        "Oignon":     { emoji:"🧅", cls:"icon-legumes"  },
+        "Lentille":   { emoji:"🫘", cls:"icon-legumes"  },
+        "Pomme":      { emoji:"🍎", cls:"icon-fruits"   },
+        "Pêche":      { emoji:"🍑", cls:"icon-fruits"   },
+        "Orange":     { emoji:"🍊", cls:"icon-fruits"   },
+        "Fraise":     { emoji:"🍓", cls:"icon-fruits"   },
+        "Framboise":  { emoji:"🫐", cls:"icon-fruits"   },
+        "Banane":     { emoji:"🍌", cls:"icon-fruits"   },
+        "Rosier":     { emoji:"🌹", cls:"icon-ornementales" },
+        "Tulipe":     { emoji:"🌷", cls:"icon-ornementales" },
+        "Jasmin":     { emoji:"🌸", cls:"icon-ornementales" },
+        "Laurier-rose":{ emoji:"🌺", cls:"icon-ornementales"},
+    };
+
+    // Classe de fond par type (fallback si nom inconnu)
+    const TYPE_ICON_CLASS = {
+        "Céréales":"icon-cereales","Légumes":"icon-legumes",
+        "Fruits":"icon-fruits","Ornementales":"icon-ornementales"
+    };
+
+    function getIcon(nom, type) {
+        const found = ICONS[nom];
+        if (found) return found;
+        const cls = TYPE_ICON_CLASS[type] || 'icon-default';
+        return { emoji: '🌱', cls };
+    }
+
+    // ─── LOGIQUE DATES ───────────────────────────────────────────
+    function parseDate(str) {
+        const [y,m,d] = str.split('-').map(Number);
+        return new Date(y, m-1, d);
+    }
+    function toInputDate(d) {
+        return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    }
+    function fmtDate(d) {
+        return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
+    }
+    function addDays(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; }
+    function todayStr(){ return toInputDate(new Date()); }
+
+    function computeTimeline(plantStr, nom) {
+        const plantation = parseDate(plantStr);
+        const [semis,crois,matur] = DURATIONS[nom] || [20,50,20];
+        const total = semis+crois+matur;
+        const croisStart    = addDays(plantation, semis);
+        const maturStart    = addDays(plantation, semis+crois);
+        const recolte       = addDays(plantation, total);
+        const recoltePrevue = addDays(recolte, -7);
+        const today = new Date(); today.setHours(0,0,0,0);
+        const daysFromPlant = Math.round((today-plantation)/86400000);
+        let etat;
+        if      (today > recolte)              etat="Récolte en Retard";
+        else if (today >= recoltePrevue)       etat="Récolte Prévue";
+        else if (daysFromPlant >= semis+crois) etat="Maturité";
+        else if (daysFromPlant >= semis)       etat="Croissance";
+        else                                   etat="Semis";
+        return { plantation,croisStart,maturStart,recoltePrevue,recolte,
+            semisDays:semis,croisDays:crois,maturDays:matur,
+            totalDays:total,today,etat,
+            todayPct:Math.max(0,Math.min(1,daysFromPlant/total)) };
+    }
+
+    // ─── ÉTAT ────────────────────────────────────────────────────
+    let cultures        = [];
+    let activeCultureIdx = null;
+    let pendingDeleteIdx = null;
+    let searchFilter='', typeFilter='', etatFilter='', sourceFilter='';
+
+    // ─── SAUVEGARDE ──────────────────────────────────────────────
+    function saveData() {
+        const dot = document.getElementById('savedDot');
+        const lbl = document.getElementById('savedLabel');
+        dot.classList.add('saving');
+        lbl.textContent = 'Sauvegarde...';
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(cultures));
+            setTimeout(() => {
+                dot.classList.remove('saving');
+                const t = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+                const dbCount     = cultures.filter(c=>c.source==='db').length;
+                const agendaCount = cultures.filter(c=>c.source==='agenda').length;
+                lbl.textContent = `✅ Sauvegardé à ${t} · 🗄 ${dbCount} BD · ✏️ ${agendaCount} Agenda`;
+            }, 350);
+        } catch(e) {
+            dot.classList.remove('saving');
+            dot.style.background='#ef4444';
+            lbl.textContent='❌ Erreur: '+e.message;
+        }
+    }
+
+    function loadData() {
+        const lbl = document.getElementById('savedLabel');
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved !== null) {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed)) {
+                    // Migration: ajouter source='agenda' si absent
+                    cultures = parsed.map(c => ({ ...c, source: c.source || 'agenda' }));
+                    if (cultures.length === 0) {
+                        lbl.textContent = 'Agenda vide — ajoutez votre première culture';
+                    } else {
+                        const dbC = cultures.filter(c=>c.source==='db').length;
+                        const agC = cultures.filter(c=>c.source==='agenda').length;
+                        lbl.textContent = `✅ ${cultures.length} culture(s) · 🗄 ${dbC} BD · ✏️ ${agC} Agenda`;
+                    }
+                    renderAll();
+                    return true;
+                }
+            }
+        } catch(e) { console.warn('Load error:',e); }
+        lbl.textContent = 'Première ouverture — données de démonstration';
+        return false;
+    }
+
+    function loadSilent() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved !== null) {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed)) {
+                    cultures = parsed.map(c => ({ ...c, source: c.source || 'agenda' }));
+                    return true;
+                }
+            }
+        } catch(e) {}
+        cultures = [];
+        return false;
+    }
+
+    function clearAllData() {
+        if (!confirm('Supprimer TOUTES les cultures sauvegardées et recharger les données de démonstration ?')) return;
+        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+        cultures = [];
+        loadDemo();
+        toast('🗑 Réinitialisé avec les données de démonstration');
+    }
+
+    // ─── DÉMO ────────────────────────────────────────────────────
+    function loadDemo() {
+        const t = new Date();
+        cultures = [
+            { nom:"Tomates",   type:"Légumes",      plantation:toInputDate(addDays(t,-45)),  source:'demo' },
+            { nom:"Blé",       type:"Céréales",     plantation:toInputDate(addDays(t,-70)),  source:'demo' },
+            { nom:"Fraise",    type:"Fruits",       plantation:toInputDate(addDays(t,-80)),  source:'demo' },
+            { nom:"Rosier",    type:"Ornementales", plantation:toInputDate(addDays(t,-10)),  source:'demo' },
+            { nom:"Maïs",      type:"Céréales",     plantation:toInputDate(addDays(t,-100)), source:'demo' },
+            { nom:"Tulipe",    type:"Ornementales", plantation:toInputDate(addDays(t,-67)),  source:'demo' },
+            { nom:"Salades",   type:"Légumes",      plantation:toInputDate(addDays(t,-5)),   source:'demo' },
+        ];
+        renderAll();
+    }
+
+    // ─── RENDU ───────────────────────────────────────────────────
+    function renderAll() {
+        const list = cultures.filter(c => {
+            if (searchFilter && !c.nom.toLowerCase().includes(searchFilter.toLowerCase())) return false;
+            if (typeFilter && c.type !== typeFilter) return false;
+            if (sourceFilter) {
+                if (sourceFilter==='db'     && c.source!=='db')     return false;
+                if (sourceFilter==='agenda' && c.source!=='agenda') return false;
+            }
+            if (etatFilter && computeTimeline(c.plantation,c.nom).etat !== etatFilter) return false;
+            return true;
+        });
+        const container = document.getElementById('cardsList');
+        if (!list.length) {
+            container.innerHTML = `<div class="empty-state">
+      <div class="icon">🌿</div>
+      <h3>Aucune culture trouvée</h3>
+      <p>Modifiez les filtres ou ajoutez une nouvelle culture.</p>
+    </div>`;
+            return;
+        }
+        container.innerHTML = list.map(c => buildCard(c, cultures.indexOf(c))).join('');
+    }
+
+    function buildCard(c, idx) {
+        const tl       = computeTimeline(c.plantation, c.nom);
+        const maturSeg = tl.maturDays - 7;
+        const total    = tl.totalDays;
+        const pct      = v => (v/total*100).toFixed(1)+'%';
+        const recolPct = Math.max(0.8, 1/total*100).toFixed(1)+'%';
+        const todayLeft= (tl.todayPct*100).toFixed(1)+'%';
+
+        const etatClass = {
+            "Semis":"etat-semis","Croissance":"etat-croissance","Maturité":"etat-maturite",
+            "Récolte Prévue":"etat-recolte-prevue","Récolte en Retard":"etat-recolte"
+        }[tl.etat] || "etat-semis";
+
+        const { emoji, cls } = getIcon(c.nom, c.type);
+
+        // Source badge
+        const source = c.source || 'agenda';
+        let sourceBadge = '';
+        if (source === 'db') {
+            sourceBadge = `<span class="source-badge source-db">🗄 Base de données</span>`;
+        } else if (source === 'agenda') {
+            sourceBadge = `<span class="source-badge source-agenda">✏️ Agenda</span>`;
+        }
+        // source 'demo' → pas de badge
+
+        const cardClass = source==='db' ? 'culture-card from-db' : source==='agenda' ? 'culture-card from-agenda' : 'culture-card';
+
+        return `<div class="${cardClass}" id="card-${idx}">
+    <div class="card-header">
+      <div class="crop-icon-wrap ${cls}">${emoji}</div>
+      <div class="card-names">
+        <div class="card-name">${c.nom}</div>
+        <div class="card-type">${c.type}</div>
+      </div>
+      ${sourceBadge}
+      <span class="etat-badge ${etatClass}">${tl.etat}</span>
+      <button class="date-btn" onclick="openChangeDateModal(${idx})">📅 Plantation : ${fmtDate(tl.plantation)}</button>
+      <button class="ai-btn" id="aibtn-${idx}" onclick="askAI(${idx})">✨ Conseil IA</button>
+      <button class="del-btn" onclick="openDeleteModal(${idx})" title="Supprimer">🗑</button>
+    </div>
+    <div class="timeline-wrap">
+      <div class="timeline-container">
+        <div class="timeline-inner">
+          <div class="tl-seg semis"          style="width:${pct(tl.semisDays)}"  title="Semis – ${tl.semisDays}j">${tl.semisDays>=20?'Semis':''}</div>
+          <div class="tl-seg croissance"     style="width:${pct(tl.croisDays)}"  title="Croissance – ${tl.croisDays}j">${tl.croisDays>=25?'Croissance':''}</div>
+          <div class="tl-seg maturite"       style="width:${pct(maturSeg)}"      title="Maturité – ${maturSeg}j">${maturSeg>=20?'Maturité':''}</div>
+          <div class="tl-seg recolte-prevue" style="width:${pct(7)}"             title="Récolte prévue – 7j">⏰</div>
+          <div class="tl-seg recolte"        style="width:${recolPct}"           title="Récolte">✅</div>
+        </div>
+        <div class="today-needle" style="left:${todayLeft}"></div>
+      </div>
+    </div>
+    <div class="dates-row">
+      ${chip('chip-semis',     '🌱 Semis',         fmtDate(tl.plantation),    tl.semisDays+'j')}
+      ${chip('chip-croissance','🌿 Croissance',     fmtDate(tl.croisStart),    tl.croisDays+'j')}
+      ${chip('chip-maturite',  '🌾 Maturité',       fmtDate(tl.maturStart),    maturSeg+'j')}
+      ${chip('chip-rprev',     '⏰ Récolte prévue', fmtDate(tl.recoltePrevue), '7j')}
+      ${chip('chip-recolte',   '✅ Récolte',         fmtDate(tl.recolte),       '1j')}
+    </div>
+    <div class="ai-tip-box" id="aitip-${idx}"></div>
+  </div>`;
+    }
+
+    function chip(cls, label, date, days) {
+        return `<div class="date-chip ${cls}">
+    <span class="phase-name">${label}</span>
+    <span class="phase-date">${date}</span>
+    <span class="phase-days">${days}</span>
+  </div>`;
+    }
+
+    // ─── TOAST ───────────────────────────────────────────────────
+    function toast(msg, err=false) {
+        const el = document.createElement('div');
+        el.textContent = msg;
+        Object.assign(el.style, {
+            position:'fixed',bottom:'24px',left:'50%',transform:'translateX(-50%)',
+            background:err?'#ef4444':'#22c55e',color:'white',
+            padding:'10px 22px',borderRadius:'10px',fontSize:'13px',
+            fontWeight:'600',zIndex:'9999',boxShadow:'0 4px 20px rgba(0,0,0,.15)',
+            whiteSpace:'nowrap',
+        });
+        document.body.appendChild(el);
+        setTimeout(()=>el.remove(), 3000);
+    }
+
+    // ─── CONSEIL IA ──────────────────────────────────────────────
+    async function askAI(idx) {
+        const apiKey = ANTHROPIC_API_KEY;
+        if (!apiKey || apiKey === "VOTRE_CLE_API_ICI" || !apiKey.trim()) {
+            toast('🔑 Ajoutez votre clé API dans AgendaCulture.html (ligne ANTHROPIC_API_KEY)', true);
+            return;
+        }
+        const c   = cultures[idx];
+        const tl  = computeTimeline(c.plantation, c.nom);
+        const btn = document.getElementById(`aibtn-${idx}`);
+        const box = document.getElementById(`aitip-${idx}`);
+        const daysFromPlant = Math.round((tl.today - tl.plantation)/86400000);
+        const daysToHarvest = Math.round((tl.recolte - tl.today)/86400000);
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="ai-spinner"></span> Analyse…';
+        box.innerHTML = '<span class="ai-spinner"></span> Consultation de l\'IA…';
+        box.classList.add('visible');
+
+        const prompt = `Tu es un expert agronome francophone.
+CULTURE : ${c.nom} (${c.type})
+Planté le : ${fmtDate(tl.plantation)} · Jours depuis : ${daysFromPlant}
+Phase actuelle : ${tl.etat}
+Maturité le : ${fmtDate(tl.maturStart)} · Récolte le : ${fmtDate(tl.recolte)}
+Avant récolte : ${daysToHarvest>0?daysToHarvest+'j':'DÉPASSÉ de '+Math.abs(daysToHarvest)+'j'}
+
+Fournis en français (5-7 phrases) :
+**📊 Situation actuelle** : phase en cours
+**💧 Actions recommandées** : 2-3 conseils pratiques
+**⚠️ À surveiller** : risques spécifiques à cette phase`;
+
+        try {
+            const res = await fetch("https://api.anthropic.com/v1/messages", {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                    "x-api-key":apiKey,
+                    "anthropic-version":"2023-06-01",
+                    "anthropic-dangerous-direct-browser-access":"true"
+                },
+                body:JSON.stringify({
+                    model:"claude-sonnet-4-20250514",
+                    max_tokens:600,
+                    messages:[{role:"user",content:prompt}]
+                })
+            });
+            if (!res.ok) {
+                const e2 = await res.json().catch(()=>({}));
+                if (res.status===401) throw new Error('Clé API invalide ou expirée');
+                if (res.status===429) throw new Error('Trop de requêtes, réessayez dans 30s');
+                throw new Error(e2.error?.message||`Erreur HTTP ${res.status}`);
+            }
+            const data = await res.json();
+            const raw  = data.content?.[0]?.text || 'Aucune réponse.';
+            const html = raw.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+            box.innerHTML = `<div class="ai-header">✨ Conseil IA — <em>${c.nom}</em> · Phase : ${tl.etat}</div><div class="ai-content">${html}</div>`;
+        } catch(e) {
+            box.innerHTML = `<div class="ai-header">❌ Erreur</div><div class="ai-content">${e.message}</div>`;
+        }
+        btn.disabled = false;
+        btn.innerHTML = '✨ Conseil IA';
+    }
+
+    // ─── MODAL AJOUTER ───────────────────────────────────────────
+    function openAddModal() {
+        document.getElementById('addDate').value = todayStr();
+        document.getElementById('addModal').classList.add('open');
+    }
+    function closeAddModal() {
+        document.getElementById('addModal').classList.remove('open');
+        document.getElementById('addType').value = '';
+        const s = document.getElementById('addNom');
+        s.innerHTML = "<option value=''>Sélectionner d'abord le type…</option>";
+        s.disabled = true;
+        document.getElementById('harvestPreview').classList.remove('show');
+    }
+    function updateNomOptions() {
+        const type = document.getElementById('addType').value;
+        const sel  = document.getElementById('addNom');
+        sel.innerHTML = "<option value=''>Sélectionner…</option>";
+        if (type && CULTURES_MAP[type]) {
+            CULTURES_MAP[type].forEach(n => {
+                const o = document.createElement('option'); o.value=n; o.textContent=n; sel.appendChild(o);
+            });
+            sel.disabled = false;
+        } else { sel.disabled = true; }
+        updateHarvestPreview();
+    }
+    function updateHarvestPreview() {
+        const nom  = document.getElementById('addNom').value;
+        const date = document.getElementById('addDate').value;
+        const box  = document.getElementById('harvestPreview');
+        if (nom && date) {
+            const tl = computeTimeline(date, nom);
+            box.innerHTML = `📊 Durée totale : <strong>${tl.totalDays} jours</strong><br>
+      🌱 Semis <strong>${tl.semisDays}j</strong> → 🌿 Croissance <strong>${tl.croisDays}j</strong> → 🌾 Maturité <strong>${tl.maturDays-7}j</strong><br>
+      ✅ Récolte estimée : <strong>${fmtDate(tl.recolte)}</strong>`;
+            box.classList.add('show');
+        } else { box.classList.remove('show'); }
+    }
+    function addCulture() {
+        const type = document.getElementById('addType').value;
+        const nom  = document.getElementById('addNom').value;
+        const date = document.getElementById('addDate').value;
+        if (!type||!nom||!date) { toast('❌ Veuillez remplir tous les champs', true); return; }
+        cultures.push({ nom, type, plantation:date, source:'agenda' }); // ← source = 'agenda'
+        saveData();
+        closeAddModal();
+        renderAll();
+        toast(`✅ ${nom} ajouté à l'agenda`);
+    }
+
+    // ─── MODAL CHANGER DATE ──────────────────────────────────────
+    function openChangeDateModal(idx) {
+        activeCultureIdx = idx;
+        const c  = cultures[idx];
+        const tl = computeTimeline(c.plantation, c.nom);
+        document.getElementById('changeDateInfo').innerHTML =
+            `<strong>${getIcon(c.nom,c.type).emoji} ${c.nom}</strong> — État : <strong>${tl.etat}</strong><br>
+     Plantation actuelle : <strong>${fmtDate(tl.plantation)}</strong>`;
+        document.getElementById('newPlantDate').value = c.plantation;
+        previewNewDates();
+        document.getElementById('changeDateModal').classList.add('open');
+    }
+    function closeChangeDateModal() {
+        document.getElementById('changeDateModal').classList.remove('open');
+        activeCultureIdx = null;
+    }
+    function previewNewDates() {
+        if (activeCultureIdx===null) return;
+        const val = document.getElementById('newPlantDate').value;
+        if (!val) return;
+        const c  = cultures[activeCultureIdx];
+        const tl = computeTimeline(val, c.nom);
+        const ms = tl.maturDays-7;
+        const ec = {"Semis":"etat-semis","Croissance":"etat-croissance","Maturité":"etat-maturite","Récolte Prévue":"etat-recolte-prevue","Récolte en Retard":"etat-recolte"}[tl.etat]||"etat-semis";
+        document.getElementById('newDatesPreview').innerHTML = `
+    <div class="dates-row" style="gap:6px;margin-bottom:10px;">
+      ${chip('chip-semis',     '🌱 Semis',         fmtDate(tl.plantation),    tl.semisDays+'j')}
+      ${chip('chip-croissance','🌿 Croissance',     fmtDate(tl.croisStart),    tl.croisDays+'j')}
+      ${chip('chip-maturite',  '🌾 Maturité',       fmtDate(tl.maturStart),    ms+'j')}
+      ${chip('chip-rprev',     '⏰ Récolte prévue', fmtDate(tl.recoltePrevue), '7j')}
+      ${chip('chip-recolte',   '✅ Récolte',         fmtDate(tl.recolte),       '1j')}
+    </div>
+    <div style="font-size:13px;color:#374151;">
+      Nouvel état : <span class="etat-badge ${ec}">${tl.etat}</span>
+      &nbsp;·&nbsp; Total : <strong>${tl.totalDays} jours</strong>
+    </div>`;
+    }
+    function saveNewDate() {
+        if (activeCultureIdx===null) return;
+        const val = document.getElementById('newPlantDate').value;
+        if (!val) return;
+        const nom = cultures[activeCultureIdx].nom;
+        cultures[activeCultureIdx].plantation = val;
+        saveData();
+        closeChangeDateModal();
+        renderAll();
+        toast(`✅ Date de ${nom} mise à jour`);
+    }
+
+    // ─── MODAL SUPPRIMER ─────────────────────────────────────────
+    function openDeleteModal(idx) {
+        pendingDeleteIdx = idx;
+        const c  = cultures[idx];
+        const tl = computeTimeline(c.plantation, c.nom);
+        const { emoji, cls } = getIcon(c.nom, c.type);
+        const wrap = document.getElementById('del-icon-wrap');
+        wrap.className = `del-icon-wrap ${cls}`;
+        wrap.textContent = emoji;
+        document.getElementById('del-name').textContent = c.nom;
+        document.getElementById('del-meta').textContent =
+            `${c.type} · Planté le ${fmtDate(tl.plantation)} · État : ${tl.etat}`;
+        document.getElementById('deleteModal').classList.add('open');
+    }
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('open');
+        pendingDeleteIdx = null;
+    }
+    function confirmDelete() {
+        if (pendingDeleteIdx===null) return;
+        const nom = cultures[pendingDeleteIdx].nom;
+        cultures.splice(pendingDeleteIdx, 1);
+        saveData();
+        closeDeleteModal();
+        renderAll();
+        toast(`🗑 ${nom} supprimé`);
+    }
+
+    // ─── FILTRES ─────────────────────────────────────────────────
+    function filterCards(v)    { searchFilter = v; renderAll(); }
+    function filterByType(v)   { typeFilter   = v; renderAll(); }
+    function filterBySource(v) { sourceFilter = v; renderAll(); }
+    function filterByEtat(v)   { etatFilter   = v; renderAll(); }
+
+    // ─── FERMER MODALS ───────────────────────────────────────────
+    ['addModal','changeDateModal','deleteModal'].forEach(id => {
+        document.getElementById(id).addEventListener('click', e => {
+            if (e.target.id !== id) return;
+            if      (id==='addModal')        closeAddModal();
+            else if (id==='changeDateModal') closeChangeDateModal();
+            else if (id==='deleteModal')     closeDeleteModal();
+        });
+    });
+
+    // ─── INJECTION JAVA ──────────────────────────────────────────
+    // Logique de fusion : localStorage prime, la BD n'ajoute que les nouveautés
+    function loadFromJava(data) {
+        loadSilent(); // charger localStorage en premier
+        if (!data || !data.length) { renderAll(); return; }
+
+        // Construire un Set de clés existantes
+        const existingKeys = new Set(cultures.map(c => c.nom+'|'+c.type));
+        let added = 0;
+        data.forEach(c => {
+            const key = c.nom+'|'+c.type;
+            if (!existingKeys.has(key)) {
+                cultures.push({ nom:c.nom, type:c.type, plantation:c.plantation, source:'db' }); // ← source = 'db'
+                existingKeys.add(key);
+                added++;
+            }
+        });
+
+        const lbl = document.getElementById('savedLabel');
+        if (added > 0) {
+            saveData();
+            lbl.textContent = `✅ ${cultures.length} culture(s) · ${added} nouvelle(s) depuis la BD`;
+        } else {
+            document.getElementById('savedDot').classList.remove('saving');
+            const dbC = cultures.filter(c=>c.source==='db').length;
+            const agC = cultures.filter(c=>c.source==='agenda').length;
+            lbl.textContent = `✅ ${cultures.length} culture(s) · 🗄 ${dbC} BD · ✏️ ${agC} Agenda`;
+        }
+        renderAll();
+    }
+
+    // ─── INIT ─────────────────────────────────────────────────────
+    function init() {
+        const hadSaved = loadData();
+        if (!hadSaved) loadDemo();
+    }
+    init();
+</script>
+</body>
+</html>

@@ -16,6 +16,7 @@ module com.example.agrisens360 {
     requires java.sql;
     requires java.desktop;
     requires java.net.http;
+    requires jakarta.mail;
 
     requires org.json;
     requires jakarta.mail;
