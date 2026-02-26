@@ -47,6 +47,8 @@ public class MainController {
         }
     }
 
+
+
     @FXML
     private void navigateEquipment() {
         try {
