@@ -1,6 +1,7 @@
 package services;
 
 import entity.Culture;
+import entity.Parcellehistorique;
 import utils.MyDataBase;
 
 import java.sql.*;
@@ -10,21 +11,21 @@ import java.util.List;
 public class CultureService {
 
     private Connection cnx;
+    private final Parcellehistoriqueservice historiqueService = new Parcellehistoriqueservice();
 
     public CultureService() {
         cnx = MyDataBase.getInstance().getCnx();
     }
 
-    // CREATE - Add culture and update surface_restant
+    // CREATE
     public void addCulture(Culture c) throws SQLException {
         Connection conn = null;
         try {
             conn = cnx;
             conn.setAutoCommit(false);
 
-            // 1. Insert culture
             String sql = "INSERT INTO culture (nom, type_culture, date_plantation, date_recolte, etat, parcelle_id, surface, img) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, c.getNom());
             ps.setString(2, c.getTypeCulture());
             ps.setDate(3, c.getDatePlantation());
@@ -35,199 +36,234 @@ public class CultureService {
             ps.setString(8, c.getImg());
             ps.executeUpdate();
 
-            // 2. Update surface_restant: decrease by culture surface
-            String updateRestant = "UPDATE parcelle SET surface_restant = surface_restant - ? WHERE id = ?";
-            PreparedStatement updatePs = conn.prepareStatement(updateRestant);
+            ResultSet genKeys = ps.getGeneratedKeys();
+            int newId = 0;
+            if (genKeys.next()) { newId = genKeys.getInt(1); c.setId(newId); }
+
+            PreparedStatement updatePs = conn.prepareStatement(
+                    "UPDATE parcelle SET surface_restant = surface_restant - ? WHERE id = ?");
             updatePs.setDouble(1, c.getSurface());
             updatePs.setInt(2, c.getParcelleId());
             updatePs.executeUpdate();
 
-            // 3. Update status
             updateParcelleStatus(c.getParcelleId(), conn);
-
             conn.commit();
 
+            historiqueService.logAction(new Parcellehistorique(
+                    c.getParcelleId(), "CULTURE_AJOUTEE", newId > 0 ? newId : null,
+                    c.getNom(), c.getTypeCulture(), c.getSurface(), null, c.getEtat(),
+                    "Culture \"" + c.getNom() + "\" (" + c.getTypeCulture() + ") ajoutee · "
+                            + c.getSurface() + " m2 · du " + c.getDatePlantation() + " au " + c.getDateRecolte(),
+                    null
+            ));
+
         } catch (SQLException e) {
-            if (conn != null) {
-                conn.rollback();
-            }
+            if (conn != null) conn.rollback();
             throw e;
         } finally {
-            if (conn != null) {
-                conn.setAutoCommit(true);
-            }
+            if (conn != null) conn.setAutoCommit(true);
         }
     }
 
     // READ
     public List<Culture> getAllCultures() throws SQLException {
         List<Culture> list = new ArrayList<>();
-        String sql = "SELECT * FROM culture";
-        Statement st = cnx.createStatement();
-        ResultSet rs = st.executeQuery(sql);
-
+        ResultSet rs = cnx.createStatement().executeQuery("SELECT * FROM culture");
         while (rs.next()) {
-            Culture c = new Culture(
-                    rs.getInt("id"),
-                    rs.getString("nom"),
-                    rs.getString("type_culture"),
-                    rs.getDate("date_plantation"),
-                    rs.getDate("date_recolte"),
-                    rs.getString("etat"),
-                    rs.getInt("parcelle_id"),
-                    rs.getDouble("surface"),
-                    rs.getString("img")
-            );
-            list.add(c);
+            list.add(new Culture(
+                    rs.getInt("id"), rs.getString("nom"), rs.getString("type_culture"),
+                    rs.getDate("date_plantation"), rs.getDate("date_recolte"),
+                    rs.getString("etat"), rs.getInt("parcelle_id"),
+                    rs.getDouble("surface"), rs.getString("img")
+            ));
         }
         return list;
     }
 
-    // UPDATE - Update culture and adjust surface_restant
+    // UPDATE
     public void updateCulture(Culture c) throws SQLException {
         Connection conn = null;
+        String oldEtat = null, oldNom = null;
+        double oldSurface = 0;
+        int oldParcelleId = 0;
+
         try {
             conn = cnx;
             conn.setAutoCommit(false);
 
-            // 1. Get old culture data
-            String selectSql = "SELECT parcelle_id, surface FROM culture WHERE id = ?";
-            PreparedStatement selectPs = conn.prepareStatement(selectSql);
-            selectPs.setInt(1, c.getId());
-            ResultSet rs = selectPs.executeQuery();
-
-            int oldParcelleId = 0;
-            double oldSurface = 0;
+            PreparedStatement sel = conn.prepareStatement(
+                    "SELECT parcelle_id, surface, etat, nom FROM culture WHERE id = ?");
+            sel.setInt(1, c.getId());
+            ResultSet rs = sel.executeQuery();
             if (rs.next()) {
                 oldParcelleId = rs.getInt("parcelle_id");
-                oldSurface = rs.getDouble("surface");
+                oldSurface    = rs.getDouble("surface");
+                oldEtat       = rs.getString("etat");
+                oldNom        = rs.getString("nom");
             }
 
-            // 2. Update culture
-            String updateSql = "UPDATE culture SET nom = ?, type_culture = ?, date_plantation = ?, date_recolte = ?, etat = ?, parcelle_id = ?, surface = ?, img = ? WHERE id = ?";
-            PreparedStatement updatePs = conn.prepareStatement(updateSql);
-            updatePs.setString(1, c.getNom());
-            updatePs.setString(2, c.getTypeCulture());
-            updatePs.setDate(3, c.getDatePlantation());
-            updatePs.setDate(4, c.getDateRecolte());
-            updatePs.setString(5, c.getEtat());
-            updatePs.setInt(6, c.getParcelleId());
-            updatePs.setDouble(7, c.getSurface());
-            updatePs.setString(8, c.getImg());
-            updatePs.setInt(9, c.getId());
-            updatePs.executeUpdate();
+            PreparedStatement upd = conn.prepareStatement(
+                    "UPDATE culture SET nom=?,type_culture=?,date_plantation=?,date_recolte=?,etat=?,parcelle_id=?,surface=?,img=? WHERE id=?");
+            upd.setString(1, c.getNom()); upd.setString(2, c.getTypeCulture());
+            upd.setDate(3, c.getDatePlantation()); upd.setDate(4, c.getDateRecolte());
+            upd.setString(5, c.getEtat()); upd.setInt(6, c.getParcelleId());
+            upd.setDouble(7, c.getSurface()); upd.setString(8, c.getImg());
+            upd.setInt(9, c.getId());
+            upd.executeUpdate();
 
-            // 3. Adjust surface_restant
             if (oldParcelleId == c.getParcelleId()) {
-                // Same parcelle: add back old surface, subtract new surface
-                double diff = c.getSurface() - oldSurface;
-                String adjustSql = "UPDATE parcelle SET surface_restant = surface_restant - ? WHERE id = ?";
-                PreparedStatement adjustPs = conn.prepareStatement(adjustSql);
-                adjustPs.setDouble(1, diff);
-                adjustPs.setInt(2, c.getParcelleId());
-                adjustPs.executeUpdate();
-
+                PreparedStatement adj = conn.prepareStatement(
+                        "UPDATE parcelle SET surface_restant = surface_restant - ? WHERE id = ?");
+                adj.setDouble(1, c.getSurface() - oldSurface);
+                adj.setInt(2, c.getParcelleId());
+                adj.executeUpdate();
                 updateParcelleStatus(c.getParcelleId(), conn);
             } else {
-                // Different parcelle: restore old, reduce new
-                String restoreOld = "UPDATE parcelle SET surface_restant = surface_restant + ? WHERE id = ?";
-                PreparedStatement restorePs = conn.prepareStatement(restoreOld);
-                restorePs.setDouble(1, oldSurface);
-                restorePs.setInt(2, oldParcelleId);
-                restorePs.executeUpdate();
-
-                String reduceNew = "UPDATE parcelle SET surface_restant = surface_restant - ? WHERE id = ?";
-                PreparedStatement reducePs = conn.prepareStatement(reduceNew);
-                reducePs.setDouble(1, c.getSurface());
-                reducePs.setInt(2, c.getParcelleId());
-                reducePs.executeUpdate();
-
+                PreparedStatement r1 = conn.prepareStatement(
+                        "UPDATE parcelle SET surface_restant = surface_restant + ? WHERE id = ?");
+                r1.setDouble(1, oldSurface); r1.setInt(2, oldParcelleId); r1.executeUpdate();
+                PreparedStatement r2 = conn.prepareStatement(
+                        "UPDATE parcelle SET surface_restant = surface_restant - ? WHERE id = ?");
+                r2.setDouble(1, c.getSurface()); r2.setInt(2, c.getParcelleId()); r2.executeUpdate();
                 updateParcelleStatus(oldParcelleId, conn);
                 updateParcelleStatus(c.getParcelleId(), conn);
             }
-
             conn.commit();
 
-        } catch (SQLException e) {
-            if (conn != null) {
-                conn.rollback();
+            StringBuilder desc = new StringBuilder("Culture \"" + c.getNom() + "\" modifiee.");
+            if (oldEtat != null && !oldEtat.equals(c.getEtat()))
+                desc.append(" Etat: ").append(oldEtat).append(" -> ").append(c.getEtat()).append(".");
+            if (c.getSurface() != oldSurface)
+                desc.append(" Surface: ").append(oldSurface).append(" -> ").append(c.getSurface()).append(" m2.");
+
+            historiqueService.logAction(new Parcellehistorique(
+                    c.getParcelleId(), "CULTURE_MODIFIEE", c.getId(),
+                    c.getNom(), c.getTypeCulture(), c.getSurface(),
+                    oldEtat, c.getEtat(), desc.toString(), null
+            ));
+
+            if (oldParcelleId != c.getParcelleId()) {
+                historiqueService.logAction(new Parcellehistorique(
+                        oldParcelleId, "CULTURE_SUPPRIMEE", c.getId(),
+                        oldNom, c.getTypeCulture(), oldSurface, oldEtat, null,
+                        "Culture deplacee vers parcelle #" + c.getParcelleId(), null
+                ));
             }
+
+        } catch (SQLException e) {
+            if (conn != null) conn.rollback();
             throw e;
         } finally {
-            if (conn != null) {
-                conn.setAutoCommit(true);
-            }
+            if (conn != null) conn.setAutoCommit(true);
         }
     }
 
-    // DELETE - Delete culture and restore surface_restant
+    // DELETE (suppression manuelle — log CULTURE_SUPPRIMEE)
     public void deleteCulture(int id) throws SQLException {
+        Connection conn = null;
+        String nom = "N/A", type = null, etat = null;
+        double surface = 0;
+        int parcelleId = 0;
+
+        try {
+            conn = cnx;
+            conn.setAutoCommit(false);
+
+            PreparedStatement sel = conn.prepareStatement(
+                    "SELECT parcelle_id, surface, nom, type_culture, etat FROM culture WHERE id = ?");
+            sel.setInt(1, id);
+            ResultSet rs = sel.executeQuery();
+            if (rs.next()) {
+                parcelleId = rs.getInt("parcelle_id");
+                surface    = rs.getDouble("surface");
+                nom        = rs.getString("nom");
+                type       = rs.getString("type_culture");
+                etat       = rs.getString("etat");
+            }
+
+            PreparedStatement del = conn.prepareStatement("DELETE FROM culture WHERE id = ?");
+            del.setInt(1, id); del.executeUpdate();
+
+            if (parcelleId > 0) {
+                PreparedStatement restore = conn.prepareStatement(
+                        "UPDATE parcelle SET surface_restant = surface_restant + ? WHERE id = ?");
+                restore.setDouble(1, surface); restore.setInt(2, parcelleId); restore.executeUpdate();
+                updateParcelleStatus(parcelleId, conn);
+            }
+            conn.commit();
+
+            if (parcelleId > 0) {
+                historiqueService.logAction(new Parcellehistorique(
+                        parcelleId, "CULTURE_SUPPRIMEE", id, nom, type, surface, etat, null,
+                        "Culture \"" + nom + "\" supprimee · " + surface + " m2 liberes.", null
+                ));
+            }
+
+        } catch (SQLException e) {
+            if (conn != null) conn.rollback();
+            throw e;
+        } finally {
+            if (conn != null) conn.setAutoCommit(true);
+        }
+    }
+
+    // ✅ NEW — Récolte officielle avec quantité ML
+    // Appelé par CultureController APRÈS que HarvestAIService a calculé la quantité.
+    // Remplace l'appel à deleteCulture() dans performHarvest().
+    public void recolterEtSupprimerCulture(Culture culture, double quantiteKg) throws SQLException {
         Connection conn = null;
         try {
             conn = cnx;
             conn.setAutoCommit(false);
 
-            // 1. Get culture data before deleting
-            String selectSql = "SELECT parcelle_id, surface FROM culture WHERE id = ?";
-            PreparedStatement selectPs = conn.prepareStatement(selectSql);
-            selectPs.setInt(1, id);
-            ResultSet rs = selectPs.executeQuery();
+            // 1. Supprimer la culture
+            PreparedStatement del = conn.prepareStatement("DELETE FROM culture WHERE id = ?");
+            del.setInt(1, culture.getId());
+            del.executeUpdate();
 
-            int parcelleId = 0;
-            double cultureSurface = 0;
-            if (rs.next()) {
-                parcelleId = rs.getInt("parcelle_id");
-                cultureSurface = rs.getDouble("surface");
-            }
+            // 2. Libérer la surface sur la parcelle
+            PreparedStatement restore = conn.prepareStatement(
+                    "UPDATE parcelle SET surface_restant = surface_restant + ? WHERE id = ?");
+            restore.setDouble(1, culture.getSurface());
+            restore.setInt(2, culture.getParcelleId());
+            restore.executeUpdate();
 
-            // 2. Delete culture
-            String deleteSql = "DELETE FROM culture WHERE id = ?";
-            PreparedStatement deletePs = conn.prepareStatement(deleteSql);
-            deletePs.setInt(1, id);
-            deletePs.executeUpdate();
-
-            // 3. Restore surface_restant: add back culture surface
-            if (parcelleId > 0) {
-                String restoreSql = "UPDATE parcelle SET surface_restant = surface_restant + ? WHERE id = ?";
-                PreparedStatement restorePs = conn.prepareStatement(restoreSql);
-                restorePs.setDouble(1, cultureSurface);
-                restorePs.setInt(2, parcelleId);
-                restorePs.executeUpdate();
-
-                updateParcelleStatus(parcelleId, conn);
-            }
-
+            // 3. Mettre à jour le statut parcelle
+            updateParcelleStatus(culture.getParcelleId(), conn);
             conn.commit();
 
+            // ✅ 4. Log RECOLTE avec la quantité calculée par le ML
+            String desc = "Recolte de \"" + culture.getNom() + "\" (" + culture.getTypeCulture() + ")"
+                    + " · Surface: " + culture.getSurface() + " m2 liberee"
+                    + " · Quantite ML: " + String.format("%.1f", quantiteKg) + " kg"
+                    + " · Date recolte prevue: " + culture.getDateRecolte();
+
+            historiqueService.logAction(new Parcellehistorique(
+                    culture.getParcelleId(), "RECOLTE", culture.getId(),
+                    culture.getNom(), culture.getTypeCulture(), culture.getSurface(),
+                    culture.getEtat(), "Recoltee",
+                    desc,
+                    quantiteKg   // ← quantité réelle du modèle ML
+            ));
+
         } catch (SQLException e) {
-            if (conn != null) {
-                conn.rollback();
-            }
+            if (conn != null) conn.rollback();
             throw e;
         } finally {
-            if (conn != null) {
-                conn.setAutoCommit(true);
-            }
+            if (conn != null) conn.setAutoCommit(true);
         }
     }
 
-    // Update parcelle status based on surface_restant
     private void updateParcelleStatus(int parcelleId, Connection conn) throws SQLException {
-        String getSql = "SELECT surface_restant FROM parcelle WHERE id = ?";
-        PreparedStatement getPs = conn.prepareStatement(getSql);
-        getPs.setInt(1, parcelleId);
-        ResultSet rs = getPs.executeQuery();
-
+        PreparedStatement ps = conn.prepareStatement(
+                "SELECT surface_restant FROM parcelle WHERE id = ?");
+        ps.setInt(1, parcelleId);
+        ResultSet rs = ps.executeQuery();
         if (rs.next()) {
-            double restant = rs.getDouble("surface_restant");
-            String newStatut = (restant <= 0.01) ? "Occupée" : "Libre";
-
-            String updateSql = "UPDATE parcelle SET statut = ? WHERE id = ?";
-            PreparedStatement updatePs = conn.prepareStatement(updateSql);
-            updatePs.setString(1, newStatut);
-            updatePs.setInt(2, parcelleId);
-            updatePs.executeUpdate();
+            String statut = (rs.getDouble("surface_restant") <= 0.01) ? "Occupee" : "Libre";
+            PreparedStatement upd = conn.prepareStatement(
+                    "UPDATE parcelle SET statut = ? WHERE id = ?");
+            upd.setString(1, statut); upd.setInt(2, parcelleId); upd.executeUpdate();
         }
     }
-
 }

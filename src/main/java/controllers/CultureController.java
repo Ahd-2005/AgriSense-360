@@ -2398,11 +2398,11 @@ public class CultureController {
 
             } else {
 
-                // Succes -> supprimer la culture de la DB et liberer la parcelle
+                // ✅ Recolte officielle : supprime + libere + log RECOLTE avec quantite ML
 
                 try {
 
-                    service.deleteCulture(culture.getId());
+                    service.recolterEtSupprimerCulture(culture, result.quantiteKg);
 
                 } catch (SQLException ex) {
 

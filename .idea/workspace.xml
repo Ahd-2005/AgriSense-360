@@ -4,14 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="bien joue">
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="fixes for perfection">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_close_time.dat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/utils/CultureDurations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/CultureDurations.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CultureController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CultureController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ParcelleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ParcelleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/services/CultureService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/CultureService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/cultures/lentille.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/cultures/pomme_de_terre.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,8 +35,8 @@
         <option value="package.json" />
         <option value="JavaScript File" />
         <option value="HTML File" />
-        <option value="Class" />
         <option value="Python Script" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -94,6 +100,7 @@
   "keyToString": {
     "Application.HelloApplication.executor": "Run",
     "DefaultHtmlFileTemplate": "HTML File",
+    "Maven.agrisens360 [clean].executor": "Run",
     "Maven.agrisens360 [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor": "Run",
     "Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:jlink].executor": "Run",
     "Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
@@ -128,8 +135,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\scripts" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\images\cultures" />
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\scripts" />
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\services" />
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\entity" />
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\controllers" />
@@ -194,7 +201,9 @@
       <workItem from="1772142470752" duration="2487000" />
       <workItem from="1772144990906" duration="12967000" />
       <workItem from="1772244994727" duration="1654000" />
-      <workItem from="1772246745018" duration="7351000" />
+      <workItem from="1772246745018" duration="7702000" />
+      <workItem from="1772257297803" duration="377000" />
+      <workItem from="1772315762126" duration="3257000" />
     </task>
     <task id="LOCAL-00001" summary="tous gestion + user">
       <option name="closed" value="true" />
@@ -292,7 +301,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772252830061</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="fixes for perfection">
+      <option name="closed" value="true" />
+      <created>1772254986959</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1772254986959</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -333,7 +350,8 @@
     <MESSAGE value="gestion culture+gestion user+gestion animal (integrated) API :" />
     <MESSAGE value="GESTION CULTURE COMPLETE (INTEGRATION DE IA + APIS + INTEGRATION STOCK +USER+ANIMAL) bien joue" />
     <MESSAGE value="bien joue" />
-    <option name="LAST_COMMIT_MESSAGE" value="bien joue" />
+    <MESSAGE value="fixes for perfection" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixes for perfection" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
