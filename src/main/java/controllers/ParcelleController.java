@@ -1,5 +1,7 @@
 package controllers;
 
+ import controllers.ParcelleHistoriqueController;
+
 import entity.Culture;
 import entity.Parcelle;
 import javafx.concurrent.Worker;
@@ -308,39 +310,47 @@ public class ParcelleController {
         }
 
         HBox buttonBox = new HBox(8);
-
         buttonBox.setAlignment(Pos.CENTER);
 
         Button editBtn = new Button("✏ Modifier");
-
         editBtn.setStyle("-fx-font-size: 13px;");
-
         editBtn.getStyleClass().addAll("card-button", "edit-button");
-
         editBtn.setOnAction(e -> {
-
             try {
-
                 showUpdatePopup(parcelle);
-
             } catch (SQLException ex) {
-
                 throw new RuntimeException(ex);
-
             }
-
         });
 
         Button deleteBtn = new Button("🗑 Supprimer");
-
         deleteBtn.setStyle("-fx-font-size: 13px;");
-
         deleteBtn.getStyleClass().addAll("card-button", "delete-button");
-
         deleteBtn.setOnAction(e -> handleDelete(parcelle));
 
-        buttonBox.getChildren().addAll(editBtn, deleteBtn);
+        // ✅ NEW: History button
+        Button historiqueBtn = new Button("📋 Historique");
+        historiqueBtn.setStyle(
+                "-fx-background-color: linear-gradient(to right, #1ABC9C, #16A085); " +
+                        "-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; " +
+                        "-fx-padding: 7 14; -fx-background-radius: 8; -fx-cursor: hand;"
+        );
+        historiqueBtn.setOnMouseEntered(e2 -> historiqueBtn.setStyle(
+                "-fx-background-color: linear-gradient(to right, #16A085, #1ABC9C); " +
+                        "-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; " +
+                        "-fx-padding: 7 14; -fx-background-radius: 8; -fx-cursor: hand;"
+        ));
+        historiqueBtn.setOnMouseExited(e2 -> historiqueBtn.setStyle(
+                "-fx-background-color: linear-gradient(to right, #1ABC9C, #16A085); " +
+                        "-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; " +
+                        "-fx-padding: 7 14; -fx-background-radius: 8; -fx-cursor: hand;"
+        ));
+        historiqueBtn.setOnAction(e -> {
+            Stage parentStage = (Stage) parcelleGrid.getScene().getWindow();
+            new ParcelleHistoriqueController().show(parentStage, parcelle);
+        });
 
+        buttonBox.getChildren().addAll(editBtn, deleteBtn, historiqueBtn);
         card.getChildren().addAll(nameLabel, infoGrid, statutLabel, buttonBox);
 
         card.setOnMouseClicked(event -> {
