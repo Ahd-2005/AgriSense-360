@@ -14,31 +14,50 @@ public class CultureDurations {
     private static final Map<String, int[]> DURATIONS = new HashMap<>();
 
     static {
-        // CÉRÉALES
-        DURATIONS.put("Maïs", new int[]{30, 60, 30});      // Total: 120 jours
-        DURATIONS.put("Riz", new int[]{25, 90, 30});       // Total: 145 jours
-        DURATIONS.put("Blé", new int[]{20, 80, 30});       // Total: 130 jours
+        // ── CÉRÉALES ─────────────────────────────────────────────
+        // [Semis, Croissance, Maturité]  — identique à l'Agenda HTML
+        DURATIONS.put("Maïs",           new int[]{30,  60,  30}); // Total: 120 jours
+        DURATIONS.put("Riz",            new int[]{25,  90,  30}); // Total: 145 jours
+        DURATIONS.put("Blé",            new int[]{20,  80,  30}); // Total: 130 jours
+        DURATIONS.put("Avoine",         new int[]{20,  70,  25}); // Total: 115 jours
 
-        // LÉGUMES
-        DURATIONS.put("Oignon", new int[]{15, 70, 20});    // Total: 105 jours
-        DURATIONS.put("Salades", new int[]{10, 40, 15});   // Total: 65 jours
-        DURATIONS.put("Pomme de terre", new int[]{20, 70, 25}); // Total: 115 jours
+        // ── LÉGUMES ──────────────────────────────────────────────
+        DURATIONS.put("Tomates",        new int[]{20,  60,  20}); // Total: 100 jours
+        DURATIONS.put("Salades",        new int[]{10,  40,  15}); // Total:  65 jours
+        DURATIONS.put("Pomme de terre", new int[]{20,  70,  25}); // Total: 115 jours
+        DURATIONS.put("Carottes",       new int[]{15,  60,  20}); // Total:  95 jours
+        DURATIONS.put("Oignon",         new int[]{15,  70,  20}); // Total: 105 jours
+        DURATIONS.put("Lentille",       new int[]{15,  55,  20}); // Total:  90 jours
 
-        // FRUITS
-        DURATIONS.put("Pêche", new int[]{30, 90, 40});     // Total: 160 jours
-        DURATIONS.put("Fraise", new int[]{15, 50, 25});    // Total: 90 jours
+        // ── FRUITS ───────────────────────────────────────────────
+        DURATIONS.put("Pomme",          new int[]{30, 100,  50}); // Total: 180 jours
+        DURATIONS.put("Pêche",          new int[]{30,  90,  40}); // Total: 160 jours
+        DURATIONS.put("Orange",         new int[]{30, 120,  60}); // Total: 210 jours
+        DURATIONS.put("Fraise",         new int[]{15,  50,  25}); // Total:  90 jours
+        DURATIONS.put("Framboise",      new int[]{15,  50,  25}); // Total:  90 jours
+        DURATIONS.put("Banane",         new int[]{30, 150,  60}); // Total: 240 jours
 
-        // ORNEMENTALES
-        DURATIONS.put("Rosier", new int[]{20, 60, 40});    // Total: 120 jours
-        DURATIONS.put("Tulipe", new int[]{15, 45, 30});    // Total: 90 jours
+        // ── ORNEMENTALES ─────────────────────────────────────────
+        DURATIONS.put("Rosier",         new int[]{20,  60,  40}); // Total: 120 jours
+        DURATIONS.put("Tulipe",         new int[]{15,  45,  30}); // Total:  90 jours
+        DURATIONS.put("Jasmin",         new int[]{20,  55,  35}); // Total: 110 jours
+        DURATIONS.put("Laurier-rose",   new int[]{20,  65,  40}); // Total: 125 jours
     }
 
     public static int getTotalDuration(String cultureName) {
         int[] phases = DURATIONS.get(cultureName);
         if (phases == null) {
-            return 90;
+            return 90; // default fallback: 20+50+20 = 90 (matches agenda)
         }
         return phases[0] + phases[1] + phases[2];
+    }
+
+    /**
+     * Retourne les durées [Semis, Croissance, Maturité] pour une culture.
+     * Utilisé pour afficher les phases dans l'interface.
+     */
+    public static int[] getPhaseDurations(String cultureName) {
+        return DURATIONS.getOrDefault(cultureName, new int[]{20, 50, 20});
     }
 
     public static LocalDate calculateHarvestDate(LocalDate plantationDate, String cultureName) {
@@ -53,7 +72,7 @@ public class CultureDurations {
         long daysSincePlantation = ChronoUnit.DAYS.between(plantationDate, today);
         long daysUntilHarvest = ChronoUnit.DAYS.between(today, recolteDate);
 
-        int[] phases = DURATIONS.getOrDefault(cultureName, new int[]{20, 50, 20});
+        int[] phases = DURATIONS.getOrDefault(cultureName, new int[]{20, 50, 20}); // default = agenda fallback
         int semisDuration = phases[0];
         int croissanceDuration = phases[1];
 
