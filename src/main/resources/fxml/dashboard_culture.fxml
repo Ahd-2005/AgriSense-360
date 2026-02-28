@@ -75,18 +75,24 @@
                 <Label text="💡 Conseil Agricole"
                        style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2a5a3a;"/>
 
-                <HBox fx:id="adviceCard" spacing="16" alignment="CENTER_LEFT" styleClass="advice-card">
-                    <Label text="🌱" styleClass="advice-icon"/>
-                    <VBox spacing="6" HBox.hgrow="ALWAYS">
-                        <Label fx:id="adviceText" wrapText="true" maxWidth="900"
+                <VBox fx:id="advicecard" spacing="0" styleClass="advice-card">
+                    <!-- Header row -->
+                    <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 16 20 10 20;">
+                        <Label text="🌱" style="-fx-font-size: 28px;"/>
+                        <Label fx:id="adviceText" wrapText="true" HBox.hgrow="ALWAYS"
+                               maxWidth="820"
                                styleClass="advice-text"
                                text="Chargement du conseil..."/>
-                        <FlowPane fx:id="adviceTags" hgap="6" vgap="6" prefWrapLength="600" />
-                        <Label fx:id="adviceAuthor" styleClass="advice-author" text=""/>
-                    </VBox>
-                    <Button fx:id="adviceRefreshBtn" text="Actualiser" onAction="#refreshAdvice"
-                            styleClass="advice-refresh"/>
-                </HBox>
+                        <Button fx:id="adviceRefreshBtn" text="🔄 Actualiser" onAction="#refreshAdvice"
+                                styleClass="advice-refresh"/>
+                    </HBox>
+                    <!-- Chips area -->
+                    <FlowPane fx:id="adviceTags" hgap="8" vgap="8" prefWrapLength="860"
+                              style="-fx-padding: 0 20 14 20;"/>
+                    <!-- Source -->
+                    <Label fx:id="adviceAuthor" styleClass="advice-author"
+                           style="-fx-padding: 0 20 14 20;" text=""/>
+                </VBox>
             </VBox>
 
             <!-- ===== STATISTICS SECTION ===== -->

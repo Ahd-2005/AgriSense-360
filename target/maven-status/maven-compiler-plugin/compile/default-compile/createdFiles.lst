@@ -1,5 +1,6 @@
 entity\Parcelle.class
 services\EvaluationPerformanceService.class
+controllers\CultureController$1.class
 com\example\agrisens360\MainApp.class
 controllers\AdminDashboard$ControllerCallback.class
 controllers\ProfileSetupController.class
@@ -21,6 +22,7 @@ com\example\agrisens360\HelloApplication.class
 services\IService.class
 controllers\EquipmentController.class
 services\ServiceStockStock.class
+services\HarvestAIService.class
 utils\AnimalListRefresh.class
 services\CultureNotificationService.class
 services\ServiceStockProduit.class
@@ -59,6 +61,7 @@ entity\Equipment.class
 controllers\OuvrierManagement.class
 entity\user$Role.class
 controllers\HomeContentController.class
+services\HarvestAIService$HarvestResult.class
 controllers\ParcelleController.class
 controllers\GerantProfile.class
 controllers\MainLayoutController.class

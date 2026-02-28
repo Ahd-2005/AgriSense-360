@@ -107,20 +107,134 @@ public class DashboardCultureController {
     // CONSEIL (Général - Offline Random)
     // ============================================================
     private void loadAdvice() {
-        if (adviceText == null) return; // FXML not present
-        adviceText.setText("Chargement du conseil...");
+        if (adviceText == null) return;
+        adviceText.setText("⏳ Chargement du conseil...");
         adviceAuthor.setText("");
+        if (adviceTags != null) adviceTags.getChildren().clear();
 
         CompletableFuture.supplyAsync(() -> adviceService.fetchAdvice().orElse(null))
                 .thenAccept(advice -> javafx.application.Platform.runLater(() -> {
-                    if (advice != null) {
-                        adviceText.setText(advice.text);
-                        adviceAuthor.setText("— " + advice.source);
-                    } else {
+                    if (advice == null) {
                         adviceText.setText("Impossible de récupérer un conseil pour le moment. Réessayez plus tard.");
                         adviceAuthor.setText("");
+                        return;
                     }
+
+                    // Split raw text into advice sentences and metrics JSON
+                    String raw = advice.text;
+                    String mainText = raw;
+                    org.json.JSONObject metrics = new org.json.JSONObject();
+
+                    int metaIdx = raw.indexOf("__METRICS__=");
+                    if (metaIdx >= 0) {
+                        mainText = raw.substring(0, metaIdx).trim();
+                        try {
+                            metrics = new org.json.JSONObject(raw.substring(metaIdx + "__METRICS__=".length()).trim());
+                        } catch (Exception ignored) {}
+                    }
+
+                    // Split advice into individual sentences and show them as bullet chips
+                    adviceText.setText("");
+                    if (adviceTags != null) {
+                        adviceTags.getChildren().clear();
+
+                        // --- Weather / advice sentence chips (one per sentence) ---
+                        String[] sentences = mainText.split("(?<=\\.) ");
+                        for (String sentence : sentences) {
+                            sentence = sentence.trim();
+                            if (sentence.isEmpty()) continue;
+                            Label chip = buildAdviceChip(sentence);
+                            adviceTags.getChildren().add(chip);
+                        }
+
+                        // --- Metric chips with emoji + colored background ---
+                        if (metrics.has("tempC")) {
+                            double t = metrics.optDouble("tempC");
+                            String emoji = t >= 30 ? "🔥" : t <= 5 ? "🥶" : "🌡️";
+                            String color = t >= 30 ? "#ff5722" : t <= 5 ? "#2196F3" : "#4CAF50";
+                            adviceTags.getChildren().add(buildMetricChip(emoji + " Temp", String.format("%.1f°C", t), color));
+                        }
+                        if (metrics.has("humidity")) {
+                            int h = metrics.optInt("humidity");
+                            String emoji = h >= 85 ? "💧" : h <= 35 ? "🏜️" : "💦";
+                            String color = h >= 85 ? "#1976D2" : h <= 35 ? "#FF9800" : "#26C6DA";
+                            adviceTags.getChildren().add(buildMetricChip(emoji + " Humidité", h + "%", color));
+                        }
+                        if (metrics.has("wind")) {
+                            double w = metrics.optDouble("wind");
+                            String emoji = w >= 8 ? "💨" : "🌬️";
+                            String color = w >= 8 ? "#9C27B0" : "#78909C";
+                            adviceTags.getChildren().add(buildMetricChip(emoji + " Vent", String.format("%.1f m/s", w), color));
+                        }
+                        if (metrics.has("rain1h")) {
+                            double r = metrics.optDouble("rain1h");
+                            adviceTags.getChildren().add(buildMetricChip("🌧️ Pluie", String.format("%.1f mm", r), "#1565C0"));
+                        }
+                        if (metrics.has("soilMoist")) {
+                            double sm = metrics.optDouble("soilMoist");
+                            String emoji = sm < 0.15 ? "🌵" : sm > 0.40 ? "🌊" : "🌱";
+                            String color = sm < 0.15 ? "#FF6F00" : sm > 0.40 ? "#0288D1" : "#388E3C";
+                            adviceTags.getChildren().add(buildMetricChip(emoji + " Sol", String.format("%.2f m³/m³", sm), color));
+                        }
+                        if (metrics.has("soilT")) {
+                            double st = metrics.optDouble("soilT");
+                            String emoji = st < 10 ? "❄️" : st > 25 ? "☀️" : "🌿";
+                            adviceTags.getChildren().add(buildMetricChip(emoji + " Sol T°", String.format("%.1f°C", st), "#5D4037"));
+                        }
+                        if (metrics.has("desc")) {
+                            adviceTags.getChildren().add(buildMetricChip("🌤️", metrics.optString("desc"), "#607D8B"));
+                        }
+                    }
+
+                    adviceAuthor.setText("— " + advice.source);
                 }));
+    }
+
+    /** A chip for advice sentence text */
+    private Label buildAdviceChip(String text) {
+        Label lbl = new Label("• " + text);
+        lbl.setWrapText(true);
+        lbl.setMaxWidth(860);
+        lbl.setStyle(
+                "-fx-background-color: #e8f5e9;" +
+                        "-fx-background-radius: 8px;" +
+                        "-fx-padding: 6 12;" +
+                        "-fx-text-fill: #2a5a3a;" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-weight: bold;"
+        );
+        return lbl;
+    }
+
+    /** A chip for a metric key+value with a colored badge */
+    private HBox buildMetricChip(String label, String value, String color) {
+        Label keyLbl = new Label(label);
+        keyLbl.setStyle(
+                "-fx-background-color: " + color + ";" +
+                        "-fx-background-radius: 8px 0 0 8px;" +
+                        "-fx-padding: 5 10;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        Label valLbl = new Label(value);
+        valLbl.setStyle(
+                "-fx-background-color: " + color + "22;" +
+                        "-fx-background-radius: 0 8px 8px 0;" +
+                        "-fx-border-color: " + color + ";" +
+                        "-fx-border-width: 1px;" +
+                        "-fx-border-radius: 0 8px 8px 0;" +
+                        "-fx-padding: 5 10;" +
+                        "-fx-text-fill: " + color + ";" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        HBox chip = new HBox(0, keyLbl, valLbl);
+        chip.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        chip.setStyle("-fx-cursor: default;");
+        return chip;
     }
 
 

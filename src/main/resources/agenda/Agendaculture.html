@@ -43,6 +43,11 @@
         .saved-dot.saving{background:#eab308;animation:pulse .8s infinite;}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
         .storage-bar .reset-btn{padding:4px 10px;border:1.5px solid #fecaca;border-radius:6px;background:#fff5f5;color:#ef4444;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;}
+        .reload-db-btn{padding:5px 13px;border:1.5px solid #93c5fd;border-radius:6px;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:background .15s;}
+        .reload-db-btn:hover{background:#dbeafe;}
+        .reload-db-btn:disabled{opacity:.5;cursor:not-allowed;}
+        .spin{display:inline-block;animation:spinAnim .7s linear infinite;}
+        @keyframes spinAnim{to{transform:rotate(360deg)}}
         .storage-bar .reset-btn:hover{background:#fee2e2;}
 
         /* TOOLBAR */
@@ -234,6 +239,9 @@
             <div class="saved-dot" id="savedDot"></div>
             <span id="savedLabel">Chargement...</span>
         </div>
+        <button class="reload-db-btn" id="reloadDbBtn" onclick="reloadFromDatabase()">
+            <span id="reloadIcon">🔄</span> Actualiser depuis la BD
+        </button>
         <button class="reset-btn" onclick="clearAllData()">🗑 Réinitialiser tout</button>
     </div>
 
@@ -867,34 +875,70 @@ Fournis en français (5-7 phrases) :
     });
 
     // ─── INJECTION JAVA ──────────────────────────────────────────
-    // Logique de fusion : localStorage prime, la BD n'ajoute que les nouveautés
-    function loadFromJava(data) {
-        loadSilent(); // charger localStorage en premier
-        if (!data || !data.length) { renderAll(); return; }
+    // Stocke les dernieres donnees recues de Java pour pouvoir les recharger
+    let _lastDbData = null;
 
-        // Construire un Set de clés existantes
-        const existingKeys = new Set(cultures.map(c => c.nom+'|'+c.type));
-        let added = 0;
+    function loadFromJava(data) {
+        _lastDbData = data;  // toujours sauvegarder pour le bouton reload
+        _applyDbData(data);
+    }
+
+    // Applique les donnees BD : REMPLACE toutes les entrees db existantes
+    // (au lieu de juste ajouter) → les suppressions sont reflétées
+    function _applyDbData(data) {
+        loadSilent(); // charger localStorage en premier (garde les entrees 'agenda')
+
+        // Supprimer toutes les anciennes entrees DB
+        cultures = cultures.filter(c => c.source !== 'db');
+
+        if (!data || !data.length) {
+            renderAll();
+            _updateStatusLabel();
+            return;
+        }
+
+        // Re-ajouter toutes les entrees fraiches de la BD
         data.forEach(c => {
-            const key = c.nom+'|'+c.type;
-            if (!existingKeys.has(key)) {
-                cultures.push({ nom:c.nom, type:c.type, plantation:c.plantation, source:'db' }); // ← source = 'db'
-                existingKeys.add(key);
-                added++;
-            }
+            cultures.push({ nom:c.nom, type:c.type, plantation:c.plantation, source:'db' });
         });
 
-        const lbl = document.getElementById('savedLabel');
-        if (added > 0) {
-            saveData();
-            lbl.textContent = `✅ ${cultures.length} culture(s) · ${added} nouvelle(s) depuis la BD`;
-        } else {
-            document.getElementById('savedDot').classList.remove('saving');
-            const dbC = cultures.filter(c=>c.source==='db').length;
-            const agC = cultures.filter(c=>c.source==='agenda').length;
-            lbl.textContent = `✅ ${cultures.length} culture(s) · 🗄 ${dbC} BD · ✏️ ${agC} Agenda`;
-        }
+        saveData();
+        _updateStatusLabel();
         renderAll();
+    }
+
+    function _updateStatusLabel() {
+        const lbl = document.getElementById('savedLabel');
+        const dbC = cultures.filter(c=>c.source==='db').length;
+        const agC = cultures.filter(c=>c.source==='agenda').length;
+        const t = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+        lbl.textContent = `✅ Mis à jour à ${t} · 🗄 ${dbC} BD · ✏️ ${agC} Agenda`;
+    }
+
+    // ─── BOUTON ACTUALISER BD ────────────────────────────────────
+    function reloadFromDatabase() {
+        const btn = document.getElementById('reloadDbBtn');
+        const icon = document.getElementById('reloadIcon');
+        const lbl = document.getElementById('savedLabel');
+
+        btn.disabled = true;
+        icon.classList.add('spin');
+        lbl.textContent = '🔄 Rechargement depuis la base de données...';
+
+        setTimeout(() => {
+            if (_lastDbData !== null) {
+                // Reappliquer les dernieres donnees BD → supprime ce qui a ete efface
+                _applyDbData(_lastDbData);
+            } else {
+                // Pas de donnees BD recues — nettoyer les entrees DB et rerendre
+                cultures = cultures.filter(c => c.source !== 'db');
+                saveData();
+                renderAll();
+                lbl.textContent = "⚠️ Aucune donnée BD disponible — rouvrez l'agenda";
+            }
+            btn.disabled = false;
+            icon.classList.remove('spin');
+        }, 300);
     }
 
     // ─── INIT ─────────────────────────────────────────────────────
