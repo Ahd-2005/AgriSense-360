@@ -26,6 +26,8 @@ module com.example.agrisens360 {
 
     // ✅ Ajouté pour Azure Face API (jackson)
     requires com.fasterxml.jackson.databind;
+    requires kernel;
+    requires layout;
 
     opens com.example.agrisens360 to javafx.fxml;
     opens controllers to javafx.fxml;
