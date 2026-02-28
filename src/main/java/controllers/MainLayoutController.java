@@ -560,7 +560,7 @@ public class MainLayoutController {
         profileBtn.getStyleClass().remove("active");
         ouvrierBtn.getStyleClass().remove("active");
 
-        // Add active class to clicked button
+
         if (!activeButton.getStyleClass().contains("active")) {
             activeButton.getStyleClass().add("active");
         }

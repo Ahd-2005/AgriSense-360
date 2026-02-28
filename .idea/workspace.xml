@@ -4,19 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="API agromonitoring (conseil selon le meteo et hummidite +conseil general )">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="gestion culture+gestion user+gestion animal (integrated) API :">
+      <change beforePath="$PROJECT_DIR$/.idea/cssdialects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_close_time.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CultureController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CultureController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/DashboardCultureController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/DashboardCultureController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ParcelleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ParcelleController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceStockProduit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceStockProduit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisense360/servicetests/ServiceAnimalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/example/agrisense360/servicetests/ServiceAnimalTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/utils/AnimalListRefresh.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/afficher_parcelle.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/afficher_parcelle.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/dashboard_culture.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/dashboard_culture.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CultureController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CultureController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/afficher_parcelle.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/afficher_parcelle.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
@@ -34,9 +37,10 @@
         <option value="CSS File" />
         <option value="FxmlFile" />
         <option value="package.json" />
-        <option value="Class" />
         <option value="JavaScript File" />
         <option value="HTML File" />
+        <option value="Class" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -55,6 +59,12 @@
     &quot;accountId&quot;: &quot;d12e9602-95d0-4a74-a022-1b9524b17cac&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-base/17.0.14/javafx-base-17.0.14-win.jar!/com/sun/javafx/collections/ListListenerHelper.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/21/javafx-controls-21-win.jar!/javafx/scene/chart/BarChart.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/21/javafx-controls-21-win.jar!/javafx/scene/chart/XYChart.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/17.0.14/javafx-graphics-17.0.14-win.jar!/javafx/scene/Parent.class" root0="SKIP_INSPECTION" />
+  </component>
   <component name="McpProjectServerCommands">
     <McpServerCommand>
       <option name="allowedToolsNames" />
@@ -106,7 +116,7 @@
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/images/cultures",
+    "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/scripts",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -116,18 +126,23 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Jupyter"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\scripts" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\images\cultures" />
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\services" />
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\entity" />
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\controllers" />
-      <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\resources\fxml" />
@@ -187,7 +202,9 @@
       <workItem from="1771620640104" duration="11187000" />
       <workItem from="1771690481201" duration="28078000" />
       <workItem from="1772142470752" duration="2487000" />
-      <workItem from="1772144990906" duration="3084000" />
+      <workItem from="1772144990906" duration="12967000" />
+      <workItem from="1772244994727" duration="1654000" />
+      <workItem from="1772246745018" duration="5073000" />
     </task>
     <task id="LOCAL-00001" summary="tous gestion + user">
       <option name="closed" value="true" />
@@ -269,7 +286,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772070709168</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="gestion culture+gestion user+gestion animal (integrated) API :">
+      <option name="closed" value="true" />
+      <created>1772148467302</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1772148467302</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -307,7 +332,8 @@
     <MESSAGE value="gestion culture api map gouvernorat + api agenda avec consultation IA groq" />
     <MESSAGE value="gestion culture api map gouvernorat + api agenda avec consultation IA groq+hiden api key" />
     <MESSAGE value="API agromonitoring (conseil selon le meteo et hummidite +conseil general )" />
-    <option name="LAST_COMMIT_MESSAGE" value="API agromonitoring (conseil selon le meteo et hummidite +conseil general )" />
+    <MESSAGE value="gestion culture+gestion user+gestion animal (integrated) API :" />
+    <option name="LAST_COMMIT_MESSAGE" value="gestion culture+gestion user+gestion animal (integrated) API :" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

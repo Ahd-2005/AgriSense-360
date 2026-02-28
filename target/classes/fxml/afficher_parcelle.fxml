@@ -21,11 +21,15 @@
                 <TextField fx:id="searchField" promptText="🔍 Rechercher par nom..."
                            styleClass="search-field"/>
 
+                <!-- Carte Button — blue, same position as Agenda button in culture view -->
+                <Button fx:id="carteBtn" text="🗺️ Carte" onAction="#showAllParcelleCarte"
+                        style="-fx-background-color: #1565C0; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 18; -fx-background-radius: 12px; -fx-cursor: hand;"/>
+
                 <Button text="➕ Ajouter Parcelle" onAction="#showAddPopup"
                         styleClass="add-button"/>
             </HBox>
 
-            <!-- Sort Buttons -->
+            <!-- Sort Buttons — Retour also moved here to remove the extra bar -->
             <HBox alignment="CENTER" spacing="15"
                   style="-fx-background-color: #8E24AA; -fx-padding: 15;">
                 <Label text="Trier par:"
@@ -36,13 +40,9 @@
                         styleClass="sort-button"/>
                 <Button fx:id="resetButton" text="Reset" onAction="#resetSort"
                         styleClass="sort-button"/>
-            </HBox>
-
-            <!-- Retour Button with Green Style -->
-            <HBox alignment="CENTER" style="-fx-background-color: #8E24AA; -fx-padding: 15;">
-                <Button text="⬅️ Retour aux Cultures"
-                        onAction="#goBackToCulture"
-                        style="-fx-background-color: #2a5a3a; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 20px; -fx-cursor: hand;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="⬅️ Retour aux Cultures" onAction="#goBackToCulture"
+                        style="-fx-background-color: #2a5a3a; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 8 18; -fx-background-radius: 15px; -fx-cursor: hand;"/>
             </HBox>
         </VBox>
     </top>
