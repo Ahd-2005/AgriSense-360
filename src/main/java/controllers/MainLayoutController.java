@@ -341,6 +341,8 @@ public class MainLayoutController {
         if (usersBtn != null) usersBtn.getStyleClass().remove("active");
         if (workersBtn != null) workersBtn.getStyleClass().remove("active");
         if (btnBOS != null) btnBOS.getStyleClass().remove("active");
+        if (exchangeRateBtn != null) exchangeRateBtn.getStyleClass().remove("active");
+
 
         // Add active class to clicked button
         activeButton.getStyleClass().add("active");

@@ -25,7 +25,7 @@ public class StockAlertService {
     private final ServiceStockProduit serviceProduit = new ServiceStockProduit();
 
     private ScheduledExecutorService scheduler;
-    private static final int VERIFICATION_INTERVAL_MINUTES = 1;
+    private static final int VERIFICATION_INTERVAL_MINUTES = 5;
 
     private AlertCallback alertCallback;
 
