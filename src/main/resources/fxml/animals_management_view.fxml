@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" VBox.vgrow="ALWAYS" stylesheets="@/animals-management.css">
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" VBox.vgrow="ALWAYS" stylesheets="@../css/animals-management.css">
     <padding>
         <Insets top="24" right="32" bottom="24" left="32"/>
     </padding>
@@ -17,8 +17,11 @@
             <Tab text="Health Records" styleClass="mgmt-tab">
                 <fx:include source="health_record_view.fxml"/>
             </Tab>
-            <Tab text="Types &amp; Locations" styleClass="mgmt-tab">
-                <fx:include source="enum_management_view.fxml"/>
+            <Tab text="Options" styleClass="mgmt-tab">
+                <fx:include source="options_view.fxml"/>
+            </Tab>
+            <Tab text="Condition Predictor" styleClass="mgmt-tab">
+                <fx:include source="ai_prediction_view.fxml"/>
             </Tab>
         </tabs>
     </TabPane>

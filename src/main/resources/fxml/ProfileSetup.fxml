@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.ProfileSetupController"
+            style="-fx-background-color: #e8f5e9;">
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <VBox alignment="CENTER" spacing="20" style="-fx-padding: 40;">
+
+                <!-- HEADER -->
+                <Label text="🌱 AgriSense 360"
+                       style="-fx-font-size: 42px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;" />
+
+                <Label text="Choisissez votre photo de profil"
+                       style="-fx-font-size: 18px; -fx-text-fill: #546e7a;" />
+
+                <Label text="Un avatar a été généré automatiquement — personnalisez-le ou importez votre propre photo depuis votre PC"
+                       style="-fx-font-size: 13px; -fx-text-fill: #90a4ae;"
+                       wrapText="true" maxWidth="500" textAlignment="CENTER"/>
+
+                <!-- AVATAR PREVIEW -->
+                <StackPane alignment="CENTER">
+                    <ProgressIndicator fx:id="loadingSpinner"
+                                       visible="false"
+                                       prefWidth="60" prefHeight="60"/>
+                    <ImageView fx:id="avatarPreview"
+                               fitWidth="180" fitHeight="180"
+                               preserveRatio="true"
+                               style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 15, 0, 0, 4);" />
+                </StackPane>
+
+                <!-- STATUS LABEL -->
+                <Label fx:id="statusLabel" text=""
+                       style="-fx-font-size: 13px; -fx-text-fill: #388e3c; -fx-font-weight: bold;" />
+
+                <!-- STYLE SWITCHER -->
+                <VBox spacing="8" alignment="CENTER" maxWidth="480">
+                    <Label text="🎨 Changer le style de l'avatar:"
+                           style="-fx-font-size: 14px; -fx-text-fill: #546e7a; -fx-font-weight: bold;" />
+                    <HBox fx:id="styleBox" spacing="10" alignment="CENTER">
+                        <Button text="◀ Précédent"
+                                onAction="#handlePrevStyle"
+                                style="-fx-background-color: #7986cb; -fx-text-fill: white;
+                                       -fx-pref-height: 38; -fx-font-size: 13px;
+                                       -fx-background-radius: 20; -fx-cursor: hand; -fx-pref-width: 145;" />
+                        <Button text="🎲 Aléatoire"
+                                onAction="#handleRandomAvatar"
+                                style="-fx-background-color: #ff7043; -fx-text-fill: white;
+                                       -fx-pref-height: 38; -fx-font-size: 13px;
+                                       -fx-background-radius: 20; -fx-cursor: hand; -fx-pref-width: 145;" />
+                        <Button text="Suivant ▶"
+                                onAction="#handleNextStyle"
+                                style="-fx-background-color: #7986cb; -fx-text-fill: white;
+                                       -fx-pref-height: 38; -fx-font-size: 13px;
+                                       -fx-background-radius: 20; -fx-cursor: hand; -fx-pref-width: 145;" />
+                    </HBox>
+                    <Label text="Styles: avataaars · bottts · fun-emoji · pixel-art · lorelei · micah · adventurer"
+                           style="-fx-font-size: 11px; -fx-text-fill: #b0bec5;"
+                           wrapText="true" textAlignment="CENTER" maxWidth="480"/>
+                </VBox>
+
+                <!-- SEPARATOR -->
+                <HBox alignment="CENTER" spacing="10" maxWidth="480">
+                    <Separator HBox.hgrow="ALWAYS"/>
+                    <Label text="OU importez depuis votre PC"
+                           style="-fx-font-size: 12px; -fx-text-fill: #90a4ae;"/>
+                    <Separator HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <!-- FILE PICKER BUTTON -->
+                <Button text="📂  Choisir une photo depuis mon PC"
+                        onAction="#handleChooseFromPC"
+                        style="-fx-background-color: #1976D2; -fx-text-fill: white;
+                               -fx-pref-width: 480; -fx-pref-height: 46;
+                               -fx-font-size: 15px; -fx-font-weight: bold;
+                               -fx-background-radius: 25; -fx-cursor: hand;" />
+
+                <!-- ACTION BUTTONS -->
+                <VBox spacing="12" alignment="CENTER" maxWidth="480">
+
+                    <Button text="✅  Confirmer et continuer"
+                            onAction="#handleConfirm"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white;
+                                   -fx-pref-width: 480; -fx-pref-height: 48;
+                                   -fx-font-size: 16px; -fx-font-weight: bold;
+                                   -fx-background-radius: 25; -fx-cursor: hand;" />
+
+                    <Button text="⏭  Passer cette étape (avatar auto)"
+                            onAction="#handleSkip"
+                            style="-fx-background-color: transparent; -fx-text-fill: #4CAF50;
+                                   -fx-pref-width: 480; -fx-pref-height: 44;
+                                   -fx-font-size: 14px; -fx-font-weight: bold;
+                                   -fx-border-color: #4CAF50; -fx-border-width: 2;
+                                   -fx-background-radius: 25; -fx-border-radius: 25;
+                                   -fx-cursor: hand;" />
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

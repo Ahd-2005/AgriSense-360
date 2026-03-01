@@ -1,47 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      alignment="CENTER" spacing="20"
-      style="-fx-background-color: #f5f5f5;"
-      styleClass="content">
-
-    <padding>
-        <Insets top="40" right="40" bottom="40" left="40"/>
-    </padding>
-
-    <Label text="🚧 Coming Soon 🚧"
-           style="-fx-font-size: 48px; -fx-text-fill: #666;"/>
-
-    <Label fx:id="managementTitle" text="This Management Module"
-           style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-
-    <Label text="This module will be implemented by your team members."
-           style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d; -fx-text-alignment: center;"
-           wrapText="true" maxWidth="600"/>
-
-    <Label text="The sidebar navigation is working correctly! ✅"
-           style="-fx-font-size: 14px; -fx-text-fill: #27ae60; -fx-font-weight: bold;"/>
-
-    <Label text="Click different management options in the sidebar to test navigation."
-           style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;"
-           wrapText="true" maxWidth="500"/>
-
-    <HBox spacing="20" alignment="CENTER">
-        <VBox styleClass="stat" alignment="CENTER" spacing="5">
-            <Label text="✓" style="-fx-font-size: 36px; -fx-text-fill: #27ae60;"/>
-            <Label text="Culture Management" style="-fx-font-size: 12px;"/>
-            <Label text="Implemented" style="-fx-font-size: 10px; -fx-text-fill: #27ae60;"/>
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+            fx:controller="controllers.EquipmentManagementController">
+    <content>
+        <VBox spacing="20" styleClass="tab-content-area">
+            <fx:include source="equipment-view.fxml"/>
+            <fx:include source="maintenance-view.fxml"/>
+            <HBox alignment="CENTER_RIGHT">
+                <Button text="Weather Forecast" onAction="#openWeather" styleClass="primary" />
+            </HBox>
         </VBox>
-
-        <VBox styleClass="stat" alignment="CENTER" spacing="5">
-            <Label text="⏳" style="-fx-font-size: 36px;"/>
-            <Label text="Other Modules" style="-fx-font-size: 12px;"/>
-            <Label text="In Progress" style="-fx-font-size: 10px; -fx-text-fill: #f39c12;"/>
-        </VBox>
-    </HBox>
-
-</VBox>
+    </content>
+</ScrollPane>

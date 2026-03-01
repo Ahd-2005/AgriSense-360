@@ -20,7 +20,7 @@
                 <!-- Search Bar -->
                 <TextField fx:id="searchField" promptText="🔍 Rechercher par nom..."
                            styleClass="search-field"/>
-
+                <Button fx:id="agendaBtn" text="📅 Agenda" onAction="#openAgenda" styleClass="agenda-button"/>
                 <Button text="➕ Ajouter Culture" onAction="#showAddPopup"
                         styleClass="add-button"/>
             </HBox>
@@ -30,13 +30,13 @@
                   style="-fx-background-color: #2a5a3a; -fx-padding: 15;">
                 <Label text="Trier par:"
                        style="-fx-text-fill: white; -fx-font-weight: bold;"/>
-                <Button text="Type Culture" onAction="#sortByType"
+                <Button fx:id="typeButton" text="Type Culture" onAction="#sortByType"
                         styleClass="sort-button"/>
-                <Button text="État" onAction="#sortByEtat"
+                <Button fx:id="etatButton" text="État" onAction="#sortByEtat"
                         styleClass="sort-button"/>
-                <Button text="Surface" onAction="#sortBySurface"
+                <Button fx:id="surfaceButton" text="Surface" onAction="#sortBySurface"
                         styleClass="sort-button"/>
-                <Button text="Reset" onAction="#resetSort"
+                <Button fx:id="resetButton" text="Reset" onAction="#resetSort"
                         styleClass="sort-button"/>
             </HBox>
 
