@@ -43,11 +43,6 @@
         .saved-dot.saving{background:#eab308;animation:pulse .8s infinite;}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
         .storage-bar .reset-btn{padding:4px 10px;border:1.5px solid #fecaca;border-radius:6px;background:#fff5f5;color:#ef4444;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;}
-        .reload-db-btn{padding:5px 13px;border:1.5px solid #93c5fd;border-radius:6px;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:background .15s;}
-        .reload-db-btn:hover{background:#dbeafe;}
-        .reload-db-btn:disabled{opacity:.5;cursor:not-allowed;}
-        .spin{display:inline-block;animation:spinAnim .7s linear infinite;}
-        @keyframes spinAnim{to{transform:rotate(360deg)}}
         .storage-bar .reset-btn:hover{background:#fee2e2;}
 
         /* TOOLBAR */
@@ -177,6 +172,8 @@
         .form-group input[type="date"]::-webkit-calendar-picker-indicator{
             opacity:0.6;cursor:pointer;width:18px;height:18px;margin-right:2px;
         }
+        .form-group input[type="date"]::-webkit-datetime-edit{color:var(--txt);font-weight:500;}
+        .form-group input[type="date"]::-webkit-datetime-edit-fields-wrapper{padding:0;}
 
         .harvest-preview{background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:12px 16px;font-size:13px;color:#15803d;font-weight:500;display:none;margin-top:8px;line-height:1.9;}
         .harvest-preview.show{display:block;}
@@ -239,9 +236,6 @@
             <div class="saved-dot" id="savedDot"></div>
             <span id="savedLabel">Chargement...</span>
         </div>
-        <button class="reload-db-btn" id="reloadDbBtn" onclick="reloadFromDatabase()">
-            <span id="reloadIcon">🔄</span> Actualiser depuis la BD
-        </button>
         <button class="reset-btn" onclick="clearAllData()">🗑 Réinitialiser tout</button>
     </div>
 
@@ -357,19 +351,14 @@
         </div>
     </div>
 </div>
-<script src="config.js"></script>
 
 <script>
     // ════════════════════════════════════════════════════════════════
-    //  🔑 CLÉ API GROQ — 100% GRATUIT, SANS CARTE DE CRÉDIT
-    //  1. Allez sur : https://console.groq.com
-    //  2. Créez un compte gratuit (email suffit)
-    //  3. Cliquez sur "API Keys" → "Create API Key"
-    //  4. Copiez la clé (commence par gsk_...)
-    //  5. Collez-la entre les guillemets ci-dessous
+    //  🔑 REMPLACEZ ICI VOTRE CLÉ API ANTHROPIC
+    //  Obtenez-la sur : https://console.anthropic.com → API Keys
     // ════════════════════════════════════════════════════════════════
-    //const GROQ_API_KEY = "VOTRE_CLE_GROQ_ICI";
-    // Exemple: const GROQ_API_KEY = "gsk_xxxxxxxxxxxxxxxxxxxx";
+    const ANTHROPIC_API_KEY = "VOTRE_CLE_API_ICI";
+    // Exemple: const ANTHROPIC_API_KEY = "sk-ant-api03-xxxxxx";
     // ════════════════════════════════════════════════════════════════
 
     const STORAGE_KEY = 'agenda_cultures_v2';
@@ -667,9 +656,9 @@
 
     // ─── CONSEIL IA ──────────────────────────────────────────────
     async function askAI(idx) {
-        const apiKey = GROQ_API_KEY;
-        if (!apiKey || apiKey === "VOTRE_CLE_GROQ_ICI" || !apiKey.trim()) {
-            toast('🔑 Ajoutez votre clé Groq gratuite dans AgendaCulture.html (ligne GROQ_API_KEY)', true);
+        const apiKey = ANTHROPIC_API_KEY;
+        if (!apiKey || apiKey === "VOTRE_CLE_API_ICI" || !apiKey.trim()) {
+            toast('🔑 Ajoutez votre clé API dans AgendaCulture.html (ligne ANTHROPIC_API_KEY)', true);
             return;
         }
         const c   = cultures[idx];
@@ -697,32 +686,28 @@ Fournis en français (5-7 phrases) :
 **⚠️ À surveiller** : risques spécifiques à cette phase`;
 
         try {
-            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            const res = await fetch("https://api.anthropic.com/v1/messages", {
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json",
-                    "Authorization":`Bearer ${apiKey}`
+                    "x-api-key":apiKey,
+                    "anthropic-version":"2023-06-01",
+                    "anthropic-dangerous-direct-browser-access":"true"
                 },
                 body:JSON.stringify({
-                    model:"llama-3.3-70b-versatile",
+                    model:"claude-sonnet-4-20250514",
                     max_tokens:600,
-                    temperature:0.7,
-                    messages:[
-                        {role:"system",content:"Tu es un expert agronome francophone. Tu donnes des conseils pratiques et adaptés."},
-                        {role:"user",content:prompt}
-                    ]
+                    messages:[{role:"user",content:prompt}]
                 })
-
-
             });
             if (!res.ok) {
                 const e2 = await res.json().catch(()=>({}));
-                if (res.status===401) throw new Error('Clé Groq invalide — vérifiez sur console.groq.com');
+                if (res.status===401) throw new Error('Clé API invalide ou expirée');
                 if (res.status===429) throw new Error('Trop de requêtes, réessayez dans 30s');
                 throw new Error(e2.error?.message||`Erreur HTTP ${res.status}`);
             }
             const data = await res.json();
-            const raw  = data.choices?.[0]?.message?.content || 'Aucune réponse.';
+            const raw  = data.content?.[0]?.text || 'Aucune réponse.';
             const html = raw.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
             box.innerHTML = `<div class="ai-header">✨ Conseil IA — <em>${c.nom}</em> · Phase : ${tl.etat}</div><div class="ai-content">${html}</div>`;
         } catch(e) {
@@ -875,70 +860,34 @@ Fournis en français (5-7 phrases) :
     });
 
     // ─── INJECTION JAVA ──────────────────────────────────────────
-    // Stocke les dernieres donnees recues de Java pour pouvoir les recharger
-    let _lastDbData = null;
-
+    // Logique de fusion : localStorage prime, la BD n'ajoute que les nouveautés
     function loadFromJava(data) {
-        _lastDbData = data;  // toujours sauvegarder pour le bouton reload
-        _applyDbData(data);
-    }
+        loadSilent(); // charger localStorage en premier
+        if (!data || !data.length) { renderAll(); return; }
 
-    // Applique les donnees BD : REMPLACE toutes les entrees db existantes
-    // (au lieu de juste ajouter) → les suppressions sont reflétées
-    function _applyDbData(data) {
-        loadSilent(); // charger localStorage en premier (garde les entrees 'agenda')
-
-        // Supprimer toutes les anciennes entrees DB
-        cultures = cultures.filter(c => c.source !== 'db');
-
-        if (!data || !data.length) {
-            renderAll();
-            _updateStatusLabel();
-            return;
-        }
-
-        // Re-ajouter toutes les entrees fraiches de la BD
+        // Construire un Set de clés existantes
+        const existingKeys = new Set(cultures.map(c => c.nom+'|'+c.type));
+        let added = 0;
         data.forEach(c => {
-            cultures.push({ nom:c.nom, type:c.type, plantation:c.plantation, source:'db' });
+            const key = c.nom+'|'+c.type;
+            if (!existingKeys.has(key)) {
+                cultures.push({ nom:c.nom, type:c.type, plantation:c.plantation, source:'db' }); // ← source = 'db'
+                existingKeys.add(key);
+                added++;
+            }
         });
 
-        saveData();
-        _updateStatusLabel();
+        const lbl = document.getElementById('savedLabel');
+        if (added > 0) {
+            saveData();
+            lbl.textContent = `✅ ${cultures.length} culture(s) · ${added} nouvelle(s) depuis la BD`;
+        } else {
+            document.getElementById('savedDot').classList.remove('saving');
+            const dbC = cultures.filter(c=>c.source==='db').length;
+            const agC = cultures.filter(c=>c.source==='agenda').length;
+            lbl.textContent = `✅ ${cultures.length} culture(s) · 🗄 ${dbC} BD · ✏️ ${agC} Agenda`;
+        }
         renderAll();
-    }
-
-    function _updateStatusLabel() {
-        const lbl = document.getElementById('savedLabel');
-        const dbC = cultures.filter(c=>c.source==='db').length;
-        const agC = cultures.filter(c=>c.source==='agenda').length;
-        const t = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-        lbl.textContent = `✅ Mis à jour à ${t} · 🗄 ${dbC} BD · ✏️ ${agC} Agenda`;
-    }
-
-    // ─── BOUTON ACTUALISER BD ────────────────────────────────────
-    function reloadFromDatabase() {
-        const btn = document.getElementById('reloadDbBtn');
-        const icon = document.getElementById('reloadIcon');
-        const lbl = document.getElementById('savedLabel');
-
-        btn.disabled = true;
-        icon.classList.add('spin');
-        lbl.textContent = '🔄 Rechargement depuis la base de données...';
-
-        setTimeout(() => {
-            if (_lastDbData !== null) {
-                // Reappliquer les dernieres donnees BD → supprime ce qui a ete efface
-                _applyDbData(_lastDbData);
-            } else {
-                // Pas de donnees BD recues — nettoyer les entrees DB et rerendre
-                cultures = cultures.filter(c => c.source !== 'db');
-                saveData();
-                renderAll();
-                lbl.textContent = "⚠️ Aucune donnée BD disponible — rouvrez l'agenda";
-            }
-            btn.disabled = false;
-            icon.classList.remove('spin');
-        }, 300);
     }
 
     // ─── INIT ─────────────────────────────────────────────────────
