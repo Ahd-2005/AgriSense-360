@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.MaintenanceController"
+      spacing="16" styleClass="tab-content-area">
+    <padding>
+        <Insets top="12" right="12" bottom="12" left="12"/>
+    </padding>
+
+    <VBox styleClass="form-section" spacing="15" minWidth="0" HBox.hgrow="ALWAYS">
+        <Label text="Maintenance Records" styleClass="form-title"/>
+        <GridPane hgap="15" vgap="10">
+            <Label text="Select Equipment:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="equipmentCombo" promptText="Choose equipment" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="240" onAction="#onEquipmentSelected"/>
+
+            <Label text="Maintenance Date:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <DatePicker fx:id="maintenanceDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Label text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="maintenanceTypeField" promptText="e.g. Oil change" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="Cost:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <TextField fx:id="costField" promptText="e.g. 120.50" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <Button text="Add Record" onAction="#onAddRecord"/>
+                <Button text="Update" fx:id="updateBtn" onAction="#onUpdateRecord" disable="true"/>
+                <Button text="Delete" fx:id="deleteBtn" styleClass="button-danger" onAction="#onDeleteRecord" disable="true"/>
+            </HBox>
+        </GridPane>
+    </VBox>
+
+    <VBox styleClass="form-section" minWidth="0" HBox.hgrow="ALWAYS">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="recordsTitleLabel" text="Maintenance Records for Selected Equipment" styleClass="form-title"/>
+            <TextField fx:id="maintenanceSearchField" promptText="Search maintenance type" HBox.hgrow="ALWAYS" />
+            <Button text="Refresh" onAction="#onRefreshRecords"/>
+        </HBox>
+        <TableView fx:id="maintenanceTable" VBox.vgrow="ALWAYS" minHeight="200" prefHeight="240">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colEquipment" text="Equipment" prefWidth="160"/>
+                <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
+                <TableColumn fx:id="colType" text="Type" prefWidth="120"/>
+                <TableColumn fx:id="colCost" text="Cost" prefWidth="90"/>
+            </columns>
+        </TableView>
+    </VBox>
+</HBox>

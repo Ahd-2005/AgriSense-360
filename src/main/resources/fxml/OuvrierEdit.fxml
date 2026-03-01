@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.OuvrierEdit"
+            fitToWidth="true"
+            style="-fx-background-color: transparent; -fx-background: transparent;">
+
+    <VBox spacing="25" style="-fx-padding: 40; -fx-background-color: #fbf7ef;">
+
+        <!-- TOP HEADER -->
+        <VBox spacing="8">
+            <Label text="Modifier Ouvrier"
+                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
+            <Label text="Mettre à jour les informations de l'ouvrier"
+                   style="-fx-font-size: 16px; -fx-text-fill: rgba(23, 35, 24, 0.72);" />
+        </VBox>
+
+        <!-- FORM CARD -->
+        <VBox spacing="20"
+              style="-fx-background-color: #fff; -fx-padding: 35;
+                     -fx-background-radius: 16px;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 12, 0, 0, 4);
+                     -fx-border-color: rgba(43, 59, 31, 0.08); -fx-border-width: 1;
+                     -fx-border-radius: 16px; -fx-max-width: 600;">
+
+            <!-- User ID (Read-only) -->
+            <VBox spacing="8">
+                <Label text="ID Ouvrier (Non modifiable)"
+                       style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <Label fx:id="idLabel" text="#12345"
+                       style="-fx-padding: 12; -fx-background-color: #f8f9fa;
+                              -fx-background-radius: 8px; -fx-text-fill: rgba(43, 59, 31, 0.6);
+                              -fx-font-size: 14px; -fx-font-weight: bold;" />
+            </VBox>
+
+            <!-- Name Field -->
+            <VBox spacing="5">
+                <Label text="Nom Complet *"
+                       style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <TextField fx:id="nameField" promptText="Entrez le nom complet"
+                           style="-fx-padding: 12; -fx-background-radius: 8px;
+                                 -fx-border-color: rgba(43, 59, 31, 0.2); -fx-border-radius: 8px;
+                                 -fx-font-size: 14px;" />
+                <Label fx:id="nameError" visible="false"
+                       style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+            </VBox>
+
+            <!-- Email Field -->
+            <VBox spacing="5">
+                <Label text="Email *"
+                       style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <TextField fx:id="emailField" promptText="ouvrier@example.com"
+                           style="-fx-padding: 12; -fx-background-radius: 8px;
+                                 -fx-border-color: rgba(43, 59, 31, 0.2); -fx-border-radius: 8px;
+                                 -fx-font-size: 14px;" />
+                <Label fx:id="emailError" visible="false"
+                       style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+            </VBox>
+
+            <!-- Phone Field -->
+            <VBox spacing="5">
+                <Label text="Téléphone *"
+                       style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <TextField fx:id="phoneField" promptText="+216 XX XXX XXX"
+                           style="-fx-padding: 12; -fx-background-radius: 8px;
+                                 -fx-border-color: rgba(43, 59, 31, 0.2); -fx-border-radius: 8px;
+                                 -fx-font-size: 14px;" />
+                <Label fx:id="phoneError" visible="false"
+                       style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+            </VBox>
+
+            <!-- Password Field (Optional) -->
+            <VBox spacing="5">
+                <Label text="Nouveau mot de passe (Optionnel)"
+                       style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <PasswordField fx:id="passwordField" promptText="Laisser vide pour garder le mot de passe actuel"
+                               style="-fx-padding: 12; -fx-background-radius: 8px;
+                                     -fx-border-color: rgba(43, 59, 31, 0.2); -fx-border-radius: 8px;
+                                     -fx-font-size: 14px;" />
+                <Label fx:id="passwordError" visible="false"
+                       style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+            </VBox>
+
+            <!-- Confirm Password Field -->
+            <VBox spacing="5">
+                <Label text="Confirmer le mot de passe"
+                       style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <PasswordField fx:id="confirmPasswordField" promptText="Confirmer le mot de passe"
+                               style="-fx-padding: 12; -fx-background-radius: 8px;
+                                     -fx-border-color: rgba(43, 59, 31, 0.2); -fx-border-radius: 8px;
+                                     -fx-font-size: 14px;" />
+                <Label fx:id="confirmPasswordError" visible="false"
+                       style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <Label text="Laisser vide pour conserver le mot de passe actuel"
+                       style="-fx-text-fill: rgba(43, 59, 31, 0.5); -fx-font-size: 11px;" />
+            </VBox>
+
+        </VBox>
+
+        <!-- ACTION BUTTONS -->
+        <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 0 0 20 0;">
+            <Button text="💾 Enregistrer" onAction="#handleSave"
+                    style="-fx-background-color: #5a9814; -fx-text-fill: white;
+                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-font-weight: bold;
+                           -fx-background-radius: 25px; -fx-cursor: hand;
+                           -fx-effect: dropshadow(gaussian, rgba(90, 152, 20, 0.3), 10, 0, 0, 4);" />
+
+            <Button text="Annuler" onAction="#handleCancel"
+                    style="-fx-background-color: transparent; -fx-text-fill: #22301b;
+                           -fx-border-color: rgba(43, 59, 31, 0.3); -fx-border-width: 2;
+                           -fx-border-radius: 25px; -fx-background-radius: 25px;
+                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-cursor: hand;" />
+        </HBox>
+
+    </VBox>
+
+</ScrollPane>

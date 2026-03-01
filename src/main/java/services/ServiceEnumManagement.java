@@ -8,10 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Reads and modifies ENUM column definitions for Animal (type, location) via INFORMATION_SCHEMA and ALTER TABLE.
- * No new tables; only existing ENUM columns are changed.
- */
+
 public class ServiceEnumManagement {
 
     private static final Pattern ENUM_PATTERN = Pattern.compile("enum\\((.+)\\)", Pattern.CASE_INSENSITIVE);
@@ -22,10 +19,7 @@ public class ServiceEnumManagement {
         connection = MyDataBase.getInstance().getCnx();
     }
 
-    /**
-     * Returns current ENUM values for a column (e.g. Animal.type, Animal.location).
-     * Values are returned in DB form (lowercase).
-     */
+
     public List<String> getEnumValues(String tableName, String columnName) throws SQLException {
         String schema = connection.getCatalog();
         if (schema == null) schema = "agrisense-360";
@@ -40,34 +34,30 @@ public class ServiceEnumManagement {
         return parseEnumValues(columnType);
     }
 
-    /**
-     * Adds a new value to an ENUM column. Value is normalized to lowercase.
-     */
+
     public void addEnumValue(String tableName, String columnName, String newValue) throws SQLException {
-        if (newValue == null || newValue.trim().isEmpty()) throw new SQLException("Value cannot be empty");
+        if (newValue == null || newValue.trim().isEmpty()) throw new SQLException("Can't be empty");
         String normalized = newValue.trim().toLowerCase().replace(' ', '_');
         List<String> current = getEnumValues(tableName, columnName);
-        if (current.contains(normalized)) throw new SQLException("Value already exists: " + normalized);
+        if (current.contains(normalized)) throw new SQLException("Already exists: " + normalized);
         current.add(normalized);
         alterEnumColumn(tableName, columnName, current);
     }
 
-    /**
-     * Removes a value from an ENUM column. Fails if any row uses this value.
-     */
+
     public void removeEnumValue(String tableName, String columnName, String value) throws SQLException {
-        if (value == null || value.trim().isEmpty()) throw new SQLException("Value cannot be empty");
+        if (value == null || value.trim().isEmpty()) throw new SQLException("Can't empty");
         String normalized = value.trim().toLowerCase();
         List<String> current = getEnumValues(tableName, columnName);
-        if (!current.contains(normalized)) throw new SQLException("Value not found: " + normalized);
+        if (!current.contains(normalized)) throw new SQLException("Not found: " + normalized);
         if ("Animal".equalsIgnoreCase(tableName)) {
             if ("type".equalsIgnoreCase(columnName) && countAnimalsWithType(normalized) > 0)
-                throw new SQLException("Cannot remove type: some animals still use it.");
+                throw new SQLException("Can't remove it, some animals still use it");
             if ("location".equalsIgnoreCase(columnName) && countAnimalsWithLocation(normalized) > 0)
-                throw new SQLException("Cannot remove location: some animals still use it.");
+                throw new SQLException("Can't remove it, some animals still use it");
         }
         current.remove(normalized);
-        if (current.isEmpty()) throw new SQLException("Cannot remove the last value.");
+        if (current.isEmpty()) throw new SQLException("Can't remove");
         alterEnumColumn(tableName, columnName, current);
     }
 
