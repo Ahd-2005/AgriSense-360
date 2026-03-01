@@ -34,6 +34,7 @@ public class MainLayoutController {
     @FXML private Button cultureBtn;
     @FXML private Button usersBtn;
     @FXML private Button workersBtn;
+    @FXML private Button evaluationBtn;
 
     // Labels to hide/show
     @FXML private Label homeLabel;
@@ -43,6 +44,7 @@ public class MainLayoutController {
     @FXML private Label cultureLabel;
     @FXML private Label usersLabel;
     @FXML private Label workersLabel;
+    @FXML private Label evaluationLabel;
 
     private boolean sidebarCollapsed = false;
 
@@ -91,6 +93,8 @@ public class MainLayoutController {
             usersLabel.setManaged(true);
             workersLabel.setVisible(true);
             workersLabel.setManaged(true);
+            evaluationLabel.setVisible(true);
+            evaluationLabel.setManaged(true);
 
             toggleIcon.setText("☰");
             sidebarCollapsed = false;
@@ -124,6 +128,8 @@ public class MainLayoutController {
             usersLabel.setManaged(false);
             workersLabel.setVisible(false);
             workersLabel.setManaged(false);
+            evaluationLabel.setVisible(false);
+            evaluationLabel.setManaged(false);
 
             toggleIcon.setText("»");
             sidebarCollapsed = true;
@@ -177,6 +183,12 @@ public class MainLayoutController {
         setActiveButton(workersBtn);
     }
 
+    @FXML
+    public void navigateToEvaluation() {
+        loadContent("/fxml/evaluation_view.fxml");
+        setActiveButton(evaluationBtn);
+    }
+
     private void loadContent(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -224,6 +236,7 @@ public class MainLayoutController {
         cultureBtn.getStyleClass().remove("active");
         usersBtn.getStyleClass().remove("active");
         workersBtn.getStyleClass().remove("active");
+        evaluationBtn.getStyleClass().remove("active");
 
         // Add active class to clicked button
         if (!activeButton.getStyleClass().contains("active")) {

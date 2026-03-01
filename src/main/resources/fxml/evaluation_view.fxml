@@ -38,13 +38,34 @@
                 <Button fx:id="btnUpdate" text="Modifier" styleClass="edit-button" onAction="#onUpdate"/>
                 <Button fx:id="btnDelete" text="Supprimer" styleClass="delete-button" onAction="#onDelete"/>
                 <Button fx:id="btnClear" text="Vider" styleClass="ghost" onAction="#onClear"/>
+                <Separator orientation="VERTICAL" prefHeight="30"/>
+                <Button fx:id="btnRapportAI" text="🤖 Rapport IA"
+                        style="-fx-background-color: #7b2d8b; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 7 14 7 14;"
+                        onAction="#onGenerateRapport"/>
             </HBox>
             <Label fx:id="lblAverageNote" style="-fx-text-fill: #5a9814; -fx-font-weight: bold;"/>
         </VBox>
 
-        <!-- TableView -->
+        <!-- TableView avec filtres -->
         <VBox spacing="10">
             <Label text="Liste des évaluations" styleClass="section-title-main"/>
+            
+            <!-- Search and Sort Controls -->
+            <HBox spacing="15" styleClass="filter-controls" style="-fx-padding: 15; -fx-background-color: #f9f9f9; -fx-border-radius: 8; -fx-border-color: #e0e0e0;">
+                <Label text="🔍 Filtrer par qualité:" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="cbSearchQualite" prefWidth="180" promptText="Sélectionner qualité"/>
+                
+                <Separator orientation="VERTICAL" prefHeight="30"/>
+                
+                <Label text="📅 Trier par:" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="cbSortDate" prefWidth="220" promptText="Sélectionner ordre"/>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                
+                <Button text="🔄 Réinitialiser" styleClass="ghost" onAction="#onResetFilters" prefWidth="120"/>
+            </HBox>
+            
             <TableView fx:id="tvEvaluations" prefHeight="280" styleClass="table-view" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colIdEval" text="ID Eval" prefWidth="70"/>

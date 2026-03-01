@@ -2,6 +2,9 @@ package controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -10,6 +13,7 @@ import javafx.scene.input.KeyEvent;
 import entity.AffectationTravail;
 import entity.EvaluationPerformance;
 import services.AffectationTravailService;
+import services.AIReportService;
 import services.EvaluationPerformanceService;
 
 import java.net.URL;
@@ -25,6 +29,8 @@ public class EvaluationController implements Initializable {
     @FXML private ComboBox<String> cbQualite;
     @FXML private TextField tfCommentaire;
     @FXML private DatePicker dpDateEvaluation;
+    @FXML private ComboBox<String> cbSearchQualite;
+    @FXML private ComboBox<String> cbSortDate;
     @FXML private TableView<EvaluationPerformance> tvEvaluations;
     @FXML private TableColumn<EvaluationPerformance, Integer> colIdEval;
     @FXML private TableColumn<EvaluationPerformance, Integer> colIdAffect;
@@ -36,11 +42,13 @@ public class EvaluationController implements Initializable {
     @FXML private Button btnUpdate;
     @FXML private Button btnDelete;
     @FXML private Button btnClear;
+    @FXML private Button btnRapportAI;
     @FXML private Label lblAverageNote;
 
     private final AffectationTravailService affectationService = new AffectationTravailService();
     private final EvaluationPerformanceService evaluationService = new EvaluationPerformanceService();
     private final ObservableList<EvaluationPerformance> evaluationList = FXCollections.observableArrayList();
+    private FilteredList<EvaluationPerformance> filteredList;
     private EvaluationPerformance selectedEvaluation;
 
     private static final String[] QUALITE_OPTIONS = {"", "Faible", "Moyenne", "Bonne"};
@@ -48,6 +56,10 @@ public class EvaluationController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cbQualite.getItems().setAll(QUALITE_OPTIONS);
+        cbSearchQualite.getItems().addAll("", "Faible", "Moyenne", "Bonne");
+        cbSearchQualite.setValue("");
+        cbSortDate.getItems().addAll("Récent au plus ancien", "Ancien au plus récent");
+        cbSortDate.setValue("Récent au plus ancien");
 
         tfNote.addEventFilter(KeyEvent.KEY_TYPED, e -> {
             if (!e.getCharacter().matches("[0-9]")) {
@@ -71,7 +83,13 @@ public class EvaluationController implements Initializable {
             public AffectationTravail fromString(String s) { return null; }
         });
 
-        tvEvaluations.setItems(evaluationList);
+        // Setup FilteredList
+        filteredList = new FilteredList<>(evaluationList, p -> true);
+        
+        // Setup SortedList
+        SortedList<EvaluationPerformance> sortedList = new SortedList<>(filteredList);
+        tvEvaluations.setItems(sortedList);
+        
         tvEvaluations.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             selectedEvaluation = newVal;
             if (newVal != null) {
@@ -81,6 +99,12 @@ public class EvaluationController implements Initializable {
                 lblAverageNote.setText("");
             }
         });
+
+        // Setup quality filter listener
+        cbSearchQualite.valueProperty().addListener((obs, oldVal, newVal) -> applyFilters());
+        
+        // Setup sort listener
+        cbSortDate.valueProperty().addListener((obs, oldVal, newVal) -> applyFilters());
 
         loadAffectations();
         loadAll();
@@ -124,10 +148,42 @@ public class EvaluationController implements Initializable {
             List<EvaluationPerformance> list = evaluationService.getAll();
             evaluationList.clear();
             evaluationList.addAll(list);
+            applyFilters();
         } catch (SQLException e) {
             System.err.println("Error loading evaluations: " + e.getMessage());
             showError("Erreur", "Impossible de charger les évaluations: " + e.getMessage());
         }
+    }
+
+    private void applyFilters() {
+        String selectedQualite = cbSearchQualite.getValue();
+        String sortOption = cbSortDate.getValue();
+
+        // Apply quality filter
+        filteredList.setPredicate(evaluation -> {
+            if (selectedQualite == null || selectedQualite.isEmpty()) {
+                return true;
+            }
+            return evaluation.getQualite() != null && evaluation.getQualite().equals(selectedQualite);
+        });
+
+        // Apply sort by date
+        ObservableList<EvaluationPerformance> items = tvEvaluations.getItems();
+        if (items instanceof SortedList) {
+            SortedList<EvaluationPerformance> sortedList = (SortedList<EvaluationPerformance>) items;
+            if ("Récent au plus ancien".equals(sortOption)) {
+                sortedList.setComparator((e1, e2) -> e2.getDateEvaluation().compareTo(e1.getDateEvaluation()));
+            } else if ("Ancien au plus récent".equals(sortOption)) {
+                sortedList.setComparator((e1, e2) -> e1.getDateEvaluation().compareTo(e2.getDateEvaluation()));
+            }
+        }
+    }
+
+    @FXML
+    private void onResetFilters() {
+        cbSearchQualite.setValue("");
+        cbSortDate.setValue("Récent au plus ancien");
+        applyFilters();
     }
 
     @FXML
@@ -188,6 +244,64 @@ public class EvaluationController implements Initializable {
         clearForm();
         selectedEvaluation = null;
         lblAverageNote.setText("");
+    }
+
+    @FXML
+    private void onGenerateRapport() {
+        AffectationTravail affectation = cbAffectation.getValue();
+        if (affectation == null) {
+            showError("Rapport IA", "Sélectionnez d'abord une affectation dans le formulaire.");
+            return;
+        }
+
+        btnRapportAI.setDisable(true);
+        btnRapportAI.setText("⏳ Génération...");
+
+        final int idAffectation = affectation.getIdAffectation();
+        final AffectationTravail affectationCopy = affectation;
+
+        Task<String> task = new Task<>() {
+            @Override
+            protected String call() throws Exception {
+                List<EvaluationPerformance> evals = evaluationService.getByAffectation(idAffectation);
+                return AIReportService.generatePerformanceReport(affectationCopy, evals);
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            btnRapportAI.setDisable(false);
+            btnRapportAI.setText("🤖 Rapport IA");
+            showRapportDialog(affectationCopy, task.getValue());
+        });
+
+        task.setOnFailed(e -> {
+            btnRapportAI.setDisable(false);
+            btnRapportAI.setText("🤖 Rapport IA");
+            showError("Erreur", "Impossible de générer le rapport IA.");
+        });
+
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
+    }
+
+    private void showRapportDialog(AffectationTravail affectation, String rapport) {
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Rapport IA — " + affectation.getTypeTravail());
+        dialog.setHeaderText("📊 Analyse de performance IA\nAffectation : "
+                + affectation.getTypeTravail() + "  |  Zone : " + affectation.getZoneTravail());
+
+        TextArea ta = new TextArea(rapport);
+        ta.setEditable(false);
+        ta.setWrapText(true);
+        ta.setPrefSize(580, 360);
+        ta.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 13px;"
+                + " -fx-background-color: #fafafa; -fx-border-color: #ddd;");
+
+        dialog.getDialogPane().setContent(ta);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.getDialogPane().setPrefWidth(620);
+        dialog.showAndWait();
     }
 
     private void clearForm() {
