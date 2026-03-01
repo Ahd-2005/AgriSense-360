@@ -4,20 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="fixes for perfection">
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="we added historique de parcelle avec exportation pdf">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_close_time.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CultureController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CultureController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ParcelleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ParcelleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/services/CultureService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/CultureService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/HomeContentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/HomeContentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/css/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/home.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/css/sidebar.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/sidebar.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/home_content.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/home_content.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +109,7 @@
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/images/cultures",
+    "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/css",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -135,11 +131,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\css" />
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\fxml" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\images\cultures" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\scripts" />
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\services" />
-      <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\entity" />
-      <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\controllers" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\resources\fxml" />
@@ -203,7 +199,8 @@
       <workItem from="1772244994727" duration="1654000" />
       <workItem from="1772246745018" duration="7702000" />
       <workItem from="1772257297803" duration="377000" />
-      <workItem from="1772315762126" duration="3257000" />
+      <workItem from="1772315762126" duration="5207000" />
+      <workItem from="1772332726064" duration="7403000" />
     </task>
     <task id="LOCAL-00001" summary="tous gestion + user">
       <option name="closed" value="true" />
@@ -309,7 +306,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772254986959</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="we added historique de parcelle avec exportation pdf">
+      <option name="closed" value="true" />
+      <created>1772319598893</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1772319598893</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -351,7 +356,8 @@
     <MESSAGE value="GESTION CULTURE COMPLETE (INTEGRATION DE IA + APIS + INTEGRATION STOCK +USER+ANIMAL) bien joue" />
     <MESSAGE value="bien joue" />
     <MESSAGE value="fixes for perfection" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixes for perfection" />
+    <MESSAGE value="we added historique de parcelle avec exportation pdf" />
+    <option name="LAST_COMMIT_MESSAGE" value="we added historique de parcelle avec exportation pdf" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
