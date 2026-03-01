@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.EquipmentController"
+      spacing="16" styleClass="tab-content-area">
+    <padding>
+        <Insets top="12" right="12" bottom="12" left="12"/>
+    </padding>
+
+    <VBox styleClass="form-section" spacing="15" minWidth="0" HBox.hgrow="ALWAYS">
+        <Label text="Add New Equipment" styleClass="form-title"/>
+        <GridPane hgap="15" vgap="10">
+            <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="nameField" promptText="e.g. Tractor" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+            <Label text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="typeField" promptText="e.g. Vehicle" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="statusField" promptText="e.g. Active" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="Purchase Date:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <DatePicker fx:id="purchaseDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <Button text="Add Equipment" onAction="#onAddEquipment" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+        </GridPane>
+    </VBox>
+
+    <VBox styleClass="form-section" minWidth="0" HBox.hgrow="ALWAYS">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="All Equipment" styleClass="form-title"/>
+            <TextField fx:id="equipmentSearchField" promptText="Search name/type/status" HBox.hgrow="ALWAYS" />
+            <Button text="Refresh List" onAction="#onRefreshEquipments"/>
+            <Button text="Update" fx:id="updateEquipmentBtn" onAction="#onUpdateEquipment" disable="true"/>
+            <Button text="Delete" fx:id="deleteEquipmentBtn" styleClass="button-danger" onAction="#onDeleteEquipment" disable="true"/>
+        </HBox>
+        <TableView fx:id="equipmentTable" VBox.vgrow="ALWAYS" minHeight="230" prefHeight="280">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colName" text="Name" prefWidth="120"/>
+                <TableColumn fx:id="colType" text="Type" prefWidth="90"/>
+                <TableColumn fx:id="colStatus" text="Status" prefWidth="90"/>
+                <TableColumn fx:id="colPurchaseDate" text="Purchase Date" prefWidth="120"/>
+            </columns>
+        </TableView>
+    </VBox>
+</HBox>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AjoutProduitController">
+
+    <!-- HEADER -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="topbar">
+            <padding>
+                <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+            </padding>
+            <Button fx:id="sidebarToggle" onAction="#toggleSidebar" styleClass="sidebar-toggle" text="☰" />
+            <VBox spacing="10.0">
+                <Label styleClass="topbar-title" text="Gestion Produit et Stock" />
+                <Label styleClass="topbar-sub" text="Ajoutez ou modifiez un produit et son stock" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <VBox spacing="10.0" styleClass="topbar-right">
+                <HBox spacing="10.0">
+                    <VBox styleClass="stat">
+                        <Label styleClass="stat-value" text="142" />
+                        <Label styleClass="stat-label" text="Produits" />
+                    </VBox>
+                    <VBox styleClass="stat">
+                        <Label styleClass="stat-value" text="3" />
+                        <Label styleClass="stat-label" text="En alerte" />
+                    </VBox>
+                </HBox>
+            </VBox>
+        </HBox>
+    </top>
+
+    <!-- SIDEBAR -->
+    <left>
+        <VBox spacing="20.0" styleClass="sidebar">
+            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="brand">
+                <ImageView fitHeight="54.0" fitWidth="54.0" preserveRatio="true" styleClass="brand-logo">
+                    <image>
+                        <Image url="@../../../../../../../../Downloads/Group__1_-removebg-preview.png" />
+                    </image>
+                </ImageView>
+                <VBox spacing="6.0" styleClass="brand-text">
+                    <Label styleClass="brand-name" text="AgriSense 360" textFill="WHITE" />
+                    <Label styleClass="brand-tagline" text="Smart AI Companion for Farms" />
+                </VBox>
+            </HBox>
+
+            <VBox spacing="12.0" styleClass="managements">
+                <Label styleClass="nav-title" text="MENU" textAlignment="CENTER" textFill="#ffebeb" />
+                <VBox spacing="12.0">
+                    <Button styleClass="nav-link" text="Animals Management" textFill="WHITE">
+                        <graphic><Label style="-fx-font-size: 20px;" text="🐄" textFill="WHITE" /></graphic>
+                    </Button>
+                    <Button styleClass="nav-link" text="Equipments Management" textFill="WHITE">
+                        <graphic><Label style="-fx-font-size: 20px;" text="🚜" textFill="WHITE" /></graphic>
+                    </Button>
+                    <Button styleClass="nav-link active" text="Stock Management" textFill="WHITE">
+                        <graphic><Label style="-fx-font-size: 20px;" text="📦" textFill="WHITE" /></graphic>
+                    </Button>
+                </VBox>
+            </VBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="sidebar-foot">
+                <Circle fx:id="pulseDot" radius="5.0" styleClass="pulse-dot" />
+                <Label text="Connected to field data in real time" textFill="#d7c4c4" />
+            </HBox>
+        </VBox>
+    </left>
+
+    <center>
+        <ScrollPane fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="content" vbarPolicy="AS_NEEDED">
+        <VBox alignment="TOP_CENTER" spacing="30.0">
+            <!-- Padding généreux en bas + espace vide = fix du bug -->
+            <padding>
+                <Insets bottom="600.0" left="60.0" right="60.0" top="40.0" />
+            </padding>
+
+            <!-- Titre -->
+            <Label style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;" text="🌱 Ajouter / Modifier Produit et Stock" />
+
+            <!-- Formulaire Produit -->
+            <VBox spacing="20.0" styleClass="card">
+                <Label styleClass="card-title" text="Informations Produit" />
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" style="-fx-font-weight: bold;" text="Catégorie *" />
+                    <ComboBox fx:id="comboCategorie" prefWidth="500.0" promptText="Sélectionner..." styleClass="input-field" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" style="-fx-font-weight: bold;" text="Nom *" />
+                    <TextField fx:id="txtNom" prefWidth="500.0" promptText="Ex : Engrais NPK" styleClass="input-field" />
+                </HBox>
+
+                <HBox alignment="TOP_LEFT" spacing="20.0">
+                    <Label prefWidth="180" style="-fx-font-weight: bold;" text="Description" />
+                    <TextArea fx:id="txtDescription" prefHeight="100.0" prefWidth="500.0" promptText="Détails..." styleClass="input-field" wrapText="true" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0" />
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" style="-fx-font-weight: bold;" text="Prix unitaire (DT)" />
+                    <TextField fx:id="txtPrix" prefWidth="500.0" promptText="125.50" styleClass="input-field" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" style="-fx-font-weight: bold;" text="Photo" />
+                    <HBox alignment="CENTER_LEFT" spacing="15.0">
+                        <Button onAction="#choisirPhoto" styleClass="primary" text="📷 Choisir photo" />
+                        <Label fx:id="lblPhotoStatus" text="Aucune photo sélectionnée" />
+                    </HBox>
+                </HBox>
+                <ImageView fx:id="imgPreview" fitHeight="160.0" fitWidth="220.0" preserveRatio="true" visible="false" />
+            </VBox>
+
+            <!-- Formulaire Stock -->
+            <VBox spacing="20.0" styleClass="card">
+                <Label styleClass="card-title" text="Informations Stock" />
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" style="-fx-font-weight: bold;" text="Quantité actuelle" />
+                    <TextField fx:id="txtQuantite" prefWidth="500.0" promptText="150.0" styleClass="input-field" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" style="-fx-font-weight: bold;" text="Seuil d'alerte" />
+                    <TextField fx:id="txtSeuil" prefWidth="500.0" promptText="20.0" styleClass="input-field" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" style="-fx-font-weight: bold;" text="Unité" />
+                    <ComboBox fx:id="comboUnite" prefWidth="500.0" promptText="kg / L / sac" styleClass="input-field" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" style="-fx-font-weight: bold;" text="Date réception" />
+                    <DatePicker fx:id="dateReception" prefWidth="500.0" styleClass="input-field" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" style="-fx-font-weight: bold;" text="Date expiration" />
+                    <DatePicker fx:id="dateExpiration" prefWidth="500.0" styleClass="input-field" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <Label prefWidth="180" style="-fx-font-weight: bold;" text="Emplacement" />
+                    <TextField fx:id="txtEmplacement" prefWidth="500.0" promptText="Entrepôt A - Rayon 3" styleClass="input-field" />
+                </HBox>
+            </VBox>
+
+            <!-- Boutons -->
+            <HBox alignment="CENTER_RIGHT" spacing="20.0">
+                <Button onAction="#annuler" prefHeight="48.0" prefWidth="140.0" styleClass="ghost" text="Annuler" />
+                <Button onAction="#enregistrer" prefHeight="48.0" prefWidth="180.0" styleClass="primary" text="Enregistrer" />
+            </HBox>
+
+            <!-- ESPACE VIDE TRÈS GRAND EN BAS – C’EST ÇA QUI RÈGLE LE BUG -->
+            <Region prefHeight="800.0" VBox.vgrow="NEVER" />
+        </VBox>
+        </ScrollPane>
+    </center>
+
+    <stylesheets>
+        <URL value="file:///C:/Users/Super%20User/Documents/Esprit/3A/PI/Agritech/src/main/resources/css/home.css" />
+    </stylesheets>
+</BorderPane>

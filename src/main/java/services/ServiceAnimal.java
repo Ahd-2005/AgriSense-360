@@ -17,18 +17,17 @@ public class ServiceAnimal implements IService<Animal> {
 
     @Override
     public void add(Animal animal) throws SQLException {
-        String sql = "INSERT INTO Animal (earTag, type, gender, weight, healthStatus, birthDate, entryDate, origin, vaccinated, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Animal (earTag, type, weight, healthStatus, birthDate, entryDate, origin, vaccinated, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setObject(1, animal.getEarTag());
         ps.setString(2, animal.getType() != null ? animal.getType().toLowerCase() : null);
-        ps.setString(3, toDbEnum(animal.getGender()));
-        ps.setObject(4, animal.getWeight());
-        ps.setString(5, animal.getHealthStatus());
-        ps.setObject(6, animal.getBirthDate());
-        ps.setObject(7, animal.getEntryDate());
-        ps.setString(8, toDbEnum(animal.getOrigin()));
-        ps.setBoolean(9, animal.getVaccinated() != null && animal.getVaccinated());
-        ps.setString(10, animal.getLocation() != null ? animal.getLocation().toLowerCase() : null);
+        ps.setObject(3, animal.getWeight());
+        ps.setString(4, animal.getHealthStatus());
+        ps.setObject(5, animal.getBirthDate());
+        ps.setObject(6, animal.getEntryDate());
+        ps.setString(7, toDbEnum(animal.getOrigin()));
+        ps.setBoolean(8, animal.getVaccinated() != null && animal.getVaccinated());
+        ps.setString(9, animal.getLocation() != null ? animal.getLocation().toLowerCase() : null);
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
         if (rs.next()) {
@@ -38,19 +37,18 @@ public class ServiceAnimal implements IService<Animal> {
 
     @Override
     public void update(Animal animal) throws SQLException {
-        String sql = "UPDATE Animal SET earTag=?, type=?, gender=?, weight=?, healthStatus=?, birthDate=?, entryDate=?, origin=?, vaccinated=?, location=? WHERE id=?";
+        String sql = "UPDATE Animal SET earTag=?, type=?, weight=?, healthStatus=?, birthDate=?, entryDate=?, origin=?, vaccinated=?, location=? WHERE id=?";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setObject(1, animal.getEarTag());
         ps.setString(2, animal.getType() != null ? animal.getType().toLowerCase() : null);
-        ps.setString(3, toDbEnum(animal.getGender()));
-        ps.setObject(4, animal.getWeight());
-        ps.setString(5, animal.getHealthStatus());
-        ps.setObject(6, animal.getBirthDate());
-        ps.setObject(7, animal.getEntryDate());
-        ps.setString(8, toDbEnum(animal.getOrigin()));
-        ps.setBoolean(9, animal.getVaccinated() != null && animal.getVaccinated());
-        ps.setString(10, animal.getLocation() != null ? animal.getLocation().toLowerCase() : null);
-        ps.setInt(11, animal.getId());
+        ps.setObject(3, animal.getWeight());
+        ps.setString(4, animal.getHealthStatus());
+        ps.setObject(5, animal.getBirthDate());
+        ps.setObject(6, animal.getEntryDate());
+        ps.setString(7, toDbEnum(animal.getOrigin()));
+        ps.setBoolean(8, animal.getVaccinated() != null && animal.getVaccinated());
+        ps.setString(9, animal.getLocation() != null ? animal.getLocation().toLowerCase() : null);
+        ps.setInt(10, animal.getId());
         ps.executeUpdate();
     }
 
@@ -99,7 +97,6 @@ public class ServiceAnimal implements IService<Animal> {
         a.setId(rs.getInt("id"));
         a.setEarTag(rs.getObject("earTag") != null ? rs.getInt("earTag") : null);
         a.setType(rs.getString("type"));
-        a.setGender(fromDbGender(rs.getString("gender")));
         a.setWeight(rs.getObject("weight") != null ? rs.getDouble("weight") : null);
         a.setHealthStatus(rs.getString("healthStatus"));
         Date bd = rs.getDate("birthDate");
@@ -114,11 +111,6 @@ public class ServiceAnimal implements IService<Animal> {
 
     private static String toDbEnum(Enum<?> e) {
         return e != null ? e.name().toLowerCase() : null;
-    }
-
-    private static Animal.Gender fromDbGender(String s) {
-        if (s == null) return null;
-        return Animal.Gender.valueOf(s.toUpperCase());
     }
 
     private static Animal.Origin fromDbOrigin(String s) {
