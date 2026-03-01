@@ -120,6 +120,16 @@
                             </HBox>
                         </graphic>
                     </Button>
+
+                    <!-- Evaluation Management -->
+                    <Button fx:id="evaluationBtn" styleClass="nav-link" onAction="#navigateToEvaluation">
+                        <graphic>
+                            <HBox spacing="12" alignment="CENTER_LEFT">
+                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="📊" />
+                                <Label fx:id="evaluationLabel" text="Evaluation Management" styleClass="nav-label" />
+                            </HBox>
+                        </graphic>
+                    </Button>
                 </VBox>
             </VBox>
 
