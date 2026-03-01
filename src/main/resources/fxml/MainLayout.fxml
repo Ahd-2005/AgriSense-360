@@ -6,33 +6,15 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
-<!--
-    MainLayout.fxml — AgriSense 360
-    ══════════════════════════════════════
-    FIXES applied vs previous version:
-      1. sidebar VBox: added maxHeight="Infinity" so it never overflows
-         the window height — allows Profile/Logout to stay anchored at bottom
-      2. managements VBox: wrapped nav buttons in a ScrollPane so when
-         many modules are visible the sidebar itself scrolls — this is
-         the fix for "can't scroll sidebar nav"
-      3. contentArea StackPane: prefHeight="-1" so it uses computed size,
-         allowing the home_content.fxml ScrollPane to work correctly
--->
-
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.MainLayoutController"
             prefHeight="800.0" prefWidth="1400.0"
             stylesheets="@../css/sidebar.css,@../css/home.css,@../css/cards.css">
 
     <left>
-        <!--
-            CHANGE 1: maxHeight="Infinity" ensures the sidebar never
-            grows beyond window — critical for Profile/Logout anchoring
-        -->
         <VBox fx:id="sidebar" styleClass="sidebar" spacing="0"
               prefWidth="280" maxWidth="280" maxHeight="Infinity">
 
-            <!-- Brand / Logo -->
             <HBox fx:id="brandSection" styleClass="brand" alignment="CENTER_LEFT" spacing="12">
                 <padding>
                     <Insets top="24" right="20" bottom="24" left="20" />
@@ -42,10 +24,32 @@
                         <Image url="@../images/logo.png" />
                     </image>
                 </ImageView>
-                <VBox fx:id="brandText">
+                <VBox fx:id="brandText" HBox.hgrow="ALWAYS">
                     <Label text="AgriSense 360" styleClass="brand-name" />
                     <Label text="Smart AI Companion for Farms" styleClass="brand-tagline" />
                 </VBox>
+                <!-- AgriBot launcher button — lives in sidebar, zero overlay conflict -->
+                <StackPane>
+                    <Button fx:id="floatingButton" text="🌾" onAction="#toggleChat"
+                            style="-fx-min-width:40px;-fx-min-height:40px;
+                                   -fx-max-width:40px;-fx-max-height:40px;
+                                   -fx-background-radius:50;-fx-border-radius:50;
+                                   -fx-background-color:rgba(255,255,255,0.18);
+                                   -fx-text-fill:white;-fx-font-size:18px;
+                                   -fx-alignment:CENTER;
+                                   -fx-cursor:hand;-fx-border-width:0;
+                                   -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.25),6,0,0,2);"/>
+                    <Label fx:id="notificationDot" text="1"
+                           visible="false" managed="false"
+                           StackPane.alignment="TOP_RIGHT"
+                           translateX="4" translateY="-4"
+                           style="-fx-background-color:#e53935;-fx-text-fill:white;
+                                  -fx-font-size:9px;-fx-font-weight:bold;
+                                  -fx-min-width:16;-fx-min-height:16;
+                                  -fx-max-width:20;-fx-max-height:16;
+                                  -fx-background-radius:8;-fx-alignment:CENTER;
+                                  -fx-padding:0 3 0 3;"/>
+                </StackPane>
             </HBox>
 
             <Button fx:id="toggleButton" styleClass="sidebar-toggle" onAction="#toggleSidebar">
@@ -57,12 +61,6 @@
                 </graphic>
             </Button>
 
-            <!--
-                CHANGE 2: Wrap the nav buttons in a ScrollPane inside
-                the managements VBox — so if many nav items are shown
-                the sidebar nav area scrolls independently.
-                VBox.vgrow="ALWAYS" ensures it fills remaining height.
-            -->
             <ScrollPane fitToWidth="true" fitToHeight="false"
                         hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
                         styleClass="sidebar-scroll"
@@ -76,7 +74,6 @@
                     <Label fx:id="navTitle" text="MANAGEMENTS" styleClass="nav-title" />
 
                     <VBox spacing="5">
-                        <!-- Home / Mes Tâches -->
                         <Button fx:id="homeBtn" styleClass="nav-link" onAction="#navigateToHome">
                             <graphic>
                                 <HBox spacing="12" alignment="CENTER_LEFT">
@@ -86,7 +83,6 @@
                             </graphic>
                         </Button>
 
-                        <!-- Animals Management -->
                         <Button fx:id="animalsBtn" styleClass="nav-link" onAction="#navigateToAnimals"
                                 visible="false" managed="false">
                             <graphic>
@@ -97,7 +93,6 @@
                             </graphic>
                         </Button>
 
-                        <!-- Equipment Management -->
                         <Button fx:id="equipmentBtn" styleClass="nav-link" onAction="#navigateToEquipment"
                                 visible="false" managed="false">
                             <graphic>
@@ -108,7 +103,6 @@
                             </graphic>
                         </Button>
 
-                        <!-- Stock Management -->
                         <Button fx:id="stockBtn" styleClass="nav-link" onAction="#navigateToStock"
                                 visible="false" managed="false">
                             <graphic>
@@ -119,7 +113,6 @@
                             </graphic>
                         </Button>
 
-                        <!-- Backoffice Stock -->
                         <Button fx:id="btnBOS" styleClass="nav-link" onAction="#navigateToBackOfficeStock">
                             <graphic>
                                 <HBox spacing="12" alignment="CENTER_LEFT">
@@ -129,7 +122,6 @@
                             </graphic>
                         </Button>
 
-                        <!-- Culture Management -->
                         <Button fx:id="cultureBtn" styleClass="nav-link" onAction="#navigateToCulture"
                                 visible="false" managed="false">
                             <graphic>
@@ -140,7 +132,6 @@
                             </graphic>
                         </Button>
 
-                        <!-- Users Management -->
                         <Button fx:id="usersBtn" styleClass="nav-link" onAction="#navigateToUsers"
                                 visible="false" managed="false">
                             <graphic>
@@ -151,7 +142,6 @@
                             </graphic>
                         </Button>
 
-                        <!-- Workers Management -->
                         <Button fx:id="workersBtn" styleClass="nav-link" onAction="#navigateToWorkers"
                                 visible="false" managed="false">
                             <graphic>
@@ -162,7 +152,6 @@
                             </graphic>
                         </Button>
 
-                        <!-- Ouvrier Management -->
                         <Button fx:id="ouvrierBtn" styleClass="nav-link" onAction="#navigateToOuvrier"
                                 visible="false" managed="false">
                             <graphic>
@@ -176,7 +165,6 @@
                 </VBox>
             </ScrollPane>
 
-            <!-- Profile & Logout — always pinned at bottom -->
             <VBox spacing="5" style="-fx-padding: 10 15 10 15;">
                 <Button fx:id="profileBtn" styleClass="nav-link" onAction="#navigateToProfile">
                     <graphic>
@@ -197,7 +185,6 @@
                 </Button>
             </VBox>
 
-            <!-- Footer -->
             <HBox fx:id="sidebarFooter" styleClass="sidebar-foot" spacing="8" alignment="CENTER_LEFT">
                 <padding>
                     <Insets bottom="16" left="20" right="20" top="16" />
@@ -210,14 +197,15 @@
         </VBox>
     </left>
 
-    <!-- CENTER: Dynamic Content Area
-         CHANGE 3: prefHeight="-1" (USE_COMPUTED_SIZE) so the inner
-         home ScrollPane can determine its own scroll range correctly.
+    <!--
+        CENTER — Two-layer StackPane:
+        • Layer 1 (contentArea): original, prefHeight=-1 preserved → scroll works perfectly
+        • Layer 2 (AnchorPane): chatbot overlay with pickOnBounds=false
+          Only the small chatbot VBox in the corner captures events.
+          All transparent area passes clicks/scroll through to Layer 1.
     -->
     <center>
-        <StackPane fx:id="contentArea" prefHeight="-1"
-                   style="-fx-background-color: #f4f6f0;">
-        </StackPane>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #f4f6f0;"/>
     </center>
 
 </BorderPane>
