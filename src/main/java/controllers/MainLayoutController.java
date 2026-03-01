@@ -431,6 +431,7 @@ public class MainLayoutController {
         }
     }
 
+    @FXML
     public void navigateToCulture() {
         loadContent("/fxml/dashboard_culture.fxml");
         setActiveButton(cultureBtn);
@@ -565,4 +566,5 @@ public class MainLayoutController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
 }
