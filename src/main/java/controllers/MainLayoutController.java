@@ -286,6 +286,10 @@ public class MainLayoutController {
         loadContent("/fxml/BackOfficeStock.fxml");
         setActiveButton(btnBOS);
     }
+    public void navigateToCommodityPrice() {
+        loadContent("/fxml/CommodityPrice.fxml");
+    }
+
 
 
     private void loadContent(String fxmlPath) {

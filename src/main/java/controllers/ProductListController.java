@@ -447,6 +447,10 @@ public class ProductListController {
         if (MainLayoutController.getInstance() != null) MainLayoutController.getInstance().navigateToAddProduct();
     }
 
+    @FXML private void goToCommodityPrice() {
+        if (MainLayoutController.getInstance() != null) MainLayoutController.getInstance().navigateToCommodityPrice();
+    }
+
     @FXML private void genererBarcodesPourTous() {
         try {
             List<Produit> produits = serviceProduit.afficher();

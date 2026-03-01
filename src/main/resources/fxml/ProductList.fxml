@@ -28,11 +28,11 @@
                 <HBox alignment="CENTER_LEFT" spacing="20.0">
                     <Button onAction="#goToHome" prefHeight="48.0" prefWidth="150.0" styleClass="ghost" text="🏠 Accueil" />
                     <Button onAction="#goToStockList" prefHeight="48.0" prefWidth="150.0" styleClass="ghost" text="📊 Stocks" />
+                    <Button onAction="#goToCommodityPrice" prefHeight="48.0" prefWidth="200.0" styleClass="ghost" text="💹 Prix Commodités" />
+
                 </HBox>
 
-                <HBox alignment="CENTER_RIGHT">
-                    <Button onAction="#ajouterProduit" prefHeight="48.0" prefWidth="200.0" styleClass="primary" text="➕ Ajouter Nouveau Produit" />
-                </HBox>
+
                 <!-- Barre de recherche et tri -->
                 <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <TextField fx:id="txtRecherche" prefHeight="44.0" prefWidth="400.0" promptText="🔍 Rechercher par nom ou prix..." style="-fx-font-size: 14px; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-color: #c8d8b0; -fx-padding: 0 12px;" />
