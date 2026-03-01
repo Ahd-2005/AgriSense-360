@@ -14,6 +14,9 @@ import entity.user;
 import services.GoogleAuthService;
 import services.userservice;
 import services.SessionManager;
+import services.FaceRecognitionService;
+import javafx.stage.FileChooser;
+import java.io.File;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -249,4 +252,22 @@ public class login {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    // ============= FACE LOGIN =============
+
+    @FXML
+    private void handleFaceLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FaceLogin.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(new Scene(root, 1400, 800));
+            stage.setTitle("Connexion Faciale - AgriSense 360");
+            stage.centerOnScreen();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError(loginError, "❌ Impossible d'ouvrir la reconnaissance faciale");
+        }
+    }
+
 }
