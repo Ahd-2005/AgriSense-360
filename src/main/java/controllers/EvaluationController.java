@@ -48,6 +48,11 @@ public class EvaluationController implements Initializable {
     private final AffectationTravailService affectationService = new AffectationTravailService();
     private final EvaluationPerformanceService evaluationService = new EvaluationPerformanceService();
     private final ObservableList<EvaluationPerformance> evaluationList = FXCollections.observableArrayList();
+
+    @FXML
+    private void onSwitchToAffectation() {
+        MainLayoutController.getInstance().navigateToWorkers();
+    }
     private FilteredList<EvaluationPerformance> filteredList;
     private EvaluationPerformance selectedEvaluation;
 

@@ -48,6 +48,11 @@ public class AffectationController implements Initializable {
     private FilteredList<AffectationTravail> filteredList;
     private AffectationTravail selectedAffectation;
 
+    @FXML
+    private void onSwitchToEvaluation() {
+        MainLayoutController.getInstance().navigateToEvaluation();
+    }
+
     private static final String[] STATUT_OPTIONS = {"En cours", "Terminée", "Annulée", "En attente"};
 
     @Override
