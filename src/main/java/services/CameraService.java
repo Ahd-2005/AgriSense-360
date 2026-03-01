@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  */
 public class CameraService {
 
-    private static final String PYTHON     = "python";
+    private static final String PYTHON = "C:\\Users\\iamam\\OneDrive\\Bureau\\AgriSense-360\\.venv\\Scripts\\python.exe";
     private static final String SCRIPT     = "camera_capture_script.py";
 
     private Process       streamProcess;

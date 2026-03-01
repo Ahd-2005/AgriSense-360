@@ -10,7 +10,7 @@ import numpy as np
 DB_HOST     = 'localhost'
 DB_USER     = 'root'
 DB_PASSWORD = ''
-DB_NAME     = 'agrisense-360'   # ← change to your DB name
+DB_NAME     = 'agrisense-360'
 
 def get_db_connection():
     try:
@@ -24,7 +24,10 @@ def get_db_connection():
 
 # ── REGISTER ───────────────────────────────────────────
 def register_face(user_id, image_path):
-    image     = face_recognition.load_image_file(image_path)
+    image = face_recognition.load_image_file(image_path)
+    if len(image.shape) == 3 and image.shape[2] == 4:
+        image = image[:, :, :3]
+
     encodings = face_recognition.face_encodings(image)
 
     if not encodings:
@@ -38,7 +41,6 @@ def register_face(user_id, image_path):
     cursor = conn.cursor()
 
     try:
-        # Delete old encoding for this user if exists
         cursor.execute("DELETE FROM user_faces WHERE user_id = %s", (user_id,))
         cursor.execute(
             "INSERT INTO user_faces (user_id, face_encoding) VALUES (%s, %s)",
@@ -54,7 +56,10 @@ def register_face(user_id, image_path):
 
 # ── COMPARE ────────────────────────────────────────────
 def compare_face(image_path, threshold=0.6):
-    image     = face_recognition.load_image_file(image_path)
+    image = face_recognition.load_image_file(image_path)
+    if len(image.shape) == 3 and image.shape[2] == 4:
+        image = image[:, :, :3]
+
     encodings = face_recognition.face_encodings(image)
 
     if not encodings:

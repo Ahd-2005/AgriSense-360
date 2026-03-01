@@ -4,16 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif">
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ChatBotController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/HomeContentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/HomeContentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/chatbot_popup.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/home_content.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/home_content.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/face_recognition_script.py" beforeDir="false" afterPath="$PROJECT_DIR$/face_recognition_script.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/services/CameraService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/CameraService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/services/FaceRecognitionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/FaceRecognitionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,7 +202,7 @@
       <workItem from="1772257297803" duration="377000" />
       <workItem from="1772315762126" duration="5207000" />
       <workItem from="1772332726064" duration="10492000" />
-      <workItem from="1772381881200" duration="9352000" />
+      <workItem from="1772381881200" duration="15850000" />
     </task>
     <task id="LOCAL-00001" summary="tous gestion + user">
       <option name="closed" value="true" />
@@ -324,7 +324,23 @@
       <option name="project" value="LOCAL" />
       <updated>1772341290312</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'">
+      <option name="closed" value="true" />
+      <created>1772401106395</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1772401106395</updated>
+    </task>
+    <task id="LOCAL-00017" summary="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'">
+      <option name="closed" value="true" />
+      <created>1772401156417</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1772401156417</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -368,7 +384,8 @@
     <MESSAGE value="fixes for perfection" />
     <MESSAGE value="we added historique de parcelle avec exportation pdf" />
     <MESSAGE value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif" />
-    <option name="LAST_COMMIT_MESSAGE" value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif" />
+    <MESSAGE value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'" />
+    <option name="LAST_COMMIT_MESSAGE" value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

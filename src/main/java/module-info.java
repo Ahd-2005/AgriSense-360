@@ -12,7 +12,7 @@ module com.example.agrisens360 {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
-
+    requires static java.xml;
     requires java.sql;
     requires java.desktop;
     requires java.net.http;
