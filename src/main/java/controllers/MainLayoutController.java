@@ -486,6 +486,16 @@ public class MainLayoutController {
         setActiveButton(evaluationBtn);
     }
 
+    public void navigateToDashboardWorkers() {
+        loadContent("/fxml/workers_dashboard.fxml");
+        setActiveButton(workersBtn);
+    }
+
+    public void navigateToCalendar() {
+        loadContent("/fxml/workers_calendar.fxml");
+        setActiveButton(workersBtn);
+    }
+
 
     @FXML
     public void navigateToProfile() {

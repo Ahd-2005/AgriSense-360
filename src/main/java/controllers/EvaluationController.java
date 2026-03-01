@@ -53,6 +53,16 @@ public class EvaluationController implements Initializable {
     private void onSwitchToAffectation() {
         MainLayoutController.getInstance().navigateToWorkers();
     }
+
+    @FXML
+    private void onSwitchToDashboard() {
+        MainLayoutController.getInstance().navigateToDashboardWorkers();
+    }
+
+    @FXML
+    private void onSwitchToCalendar() {
+        MainLayoutController.getInstance().navigateToCalendar();
+    }
     private FilteredList<EvaluationPerformance> filteredList;
     private EvaluationPerformance selectedEvaluation;
 

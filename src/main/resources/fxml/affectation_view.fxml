@@ -14,16 +14,26 @@
 
         <!-- Navigation toggle -->
         <HBox spacing="0" alignment="CENTER_LEFT" style="-fx-padding: 0 0 10 0;">
-            <Button text="📋 Affectation de Travail"
+            <Button text="📋 Affectations"
                     style="-fx-background-color: #5a9814; -fx-text-fill: white; -fx-font-weight: bold;
-                           -fx-font-size: 13px; -fx-padding: 10 24; -fx-background-radius: 8 0 0 8;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 8 0 0 0;
                            -fx-cursor: hand;"
                     disable="true"/>
-            <Button text="📊 Évaluation de Travail"
+            <Button text="📊 Évaluations"
                     style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
-                           -fx-font-size: 13px; -fx-padding: 10 24; -fx-background-radius: 0 8 8 0;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0;
                            -fx-cursor: hand;"
                     onAction="#onSwitchToEvaluation"/>
+            <Button text="📈 Dashboard"
+                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0;
+                           -fx-cursor: hand;"
+                    onAction="#onSwitchToDashboard"/>
+            <Button text="📅 Calendrier"
+                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0 8 8 0;
+                           -fx-cursor: hand;"
+                    onAction="#onSwitchToCalendar"/>
         </HBox>
 
         <Label text="Gestion des Affectations de Travail" styleClass="topbar-title"/>
@@ -57,6 +67,10 @@
                         style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-font-weight: bold;
                                -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 7 14 7 14;"
                         onAction="#onCheckMeteo"/>
+                <Button fx:id="btnAIPlan" text="🤖 Planification IA"
+                        style="-fx-background-color: #7b2d8b; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 7 14 7 14;"
+                        onAction="#onAIPlan"/>
             </HBox>
             <!-- Résultat météo -->
             <Label fx:id="lblMeteoResult"
@@ -64,6 +78,12 @@
                    style="-fx-font-size: 12px; -fx-padding: 6 10 6 10;
                           -fx-background-color: #f0f8ff; -fx-background-radius: 6;
                           -fx-border-color: #b0d4f1; -fx-border-radius: 6;"/>
+            <!-- Résultat planification IA -->
+            <Label fx:id="lblAIPlanResult"
+                   wrapText="true"
+                   style="-fx-font-size: 12px; -fx-padding: 6 10 6 10;
+                          -fx-background-color: #f5f0ff; -fx-background-radius: 6;
+                          -fx-border-color: #d1b3ff; -fx-border-radius: 6;"/>
         </VBox>
 
         <!-- TableView avec filtres -->

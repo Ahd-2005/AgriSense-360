@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.WorkersDashboardController"
+            fitToWidth="true" styleClass="content">
+
+    <VBox spacing="20" styleClass="content-inner">
+        <padding><Insets top="30" right="40" bottom="40" left="40"/></padding>
+
+        <!-- Navigation toggle -->
+        <HBox spacing="0" alignment="CENTER_LEFT" style="-fx-padding: 0 0 10 0;">
+            <Button text="📋 Affectations"
+                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 8 0 0 0;
+                           -fx-cursor: hand;"
+                    onAction="#onSwitchToAffectation"/>
+            <Button text="📊 Évaluations"
+                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0;
+                           -fx-cursor: hand;"
+                    onAction="#onSwitchToEvaluation"/>
+            <Button text="📈 Dashboard"
+                    style="-fx-background-color: #5a9814; -fx-text-fill: white; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0;
+                           -fx-cursor: hand;"
+                    disable="true"/>
+            <Button text="📅 Calendrier"
+                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0 8 8 0;
+                           -fx-cursor: hand;"
+                    onAction="#onSwitchToCalendar"/>
+        </HBox>
+
+        <Label text="Dashboard — Statistiques Workers" styleClass="topbar-title"/>
+
+        <!-- KPI Cards Row -->
+        <HBox spacing="20" alignment="CENTER">
+            <!-- Total Affectations -->
+            <VBox alignment="CENTER" spacing="6" prefWidth="200"
+                  style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 20;
+                         -fx-border-color: #e0e0e0; -fx-border-radius: 14;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                <Label text="📋" style="-fx-font-size: 28px;"/>
+                <Label fx:id="lblTotalAffect" text="0" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Label text="Total Affectations" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+            </VBox>
+            <!-- En Cours -->
+            <VBox alignment="CENTER" spacing="6" prefWidth="200"
+                  style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 20;
+                         -fx-border-color: #e0e0e0; -fx-border-radius: 14;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                <Label text="🔄" style="-fx-font-size: 28px;"/>
+                <Label fx:id="lblEnCours" text="0" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #e67e22;"/>
+                <Label text="En Cours" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+            </VBox>
+            <!-- Terminées -->
+            <VBox alignment="CENTER" spacing="6" prefWidth="200"
+                  style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 20;
+                         -fx-border-color: #e0e0e0; -fx-border-radius: 14;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                <Label text="✅" style="-fx-font-size: 28px;"/>
+                <Label fx:id="lblTerminees" text="0" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+                <Label text="Terminées" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+            </VBox>
+            <!-- Moyenne Notes -->
+            <VBox alignment="CENTER" spacing="6" prefWidth="200"
+                  style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 20;
+                         -fx-border-color: #e0e0e0; -fx-border-radius: 14;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                <Label text="⭐" style="-fx-font-size: 28px;"/>
+                <Label fx:id="lblAvgNote" text="0.0" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #8e44ad;"/>
+                <Label text="Moyenne Notes /5" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+            </VBox>
+            <!-- Taux Complétion -->
+            <VBox alignment="CENTER" spacing="6" prefWidth="200"
+                  style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 20;
+                         -fx-border-color: #e0e0e0; -fx-border-radius: 14;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                <Label text="📊" style="-fx-font-size: 28px;"/>
+                <Label fx:id="lblCompletionRate" text="0%" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+                <Label text="Taux Complétion" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Charts Row -->
+        <HBox spacing="20" VBox.vgrow="ALWAYS">
+            <!-- Pie Chart: Affectations par statut -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS"
+                  style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 20;
+                         -fx-border-color: #e0e0e0; -fx-border-radius: 14;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                <Label text="Répartition par Statut" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <PieChart fx:id="pieStatut" prefHeight="280" legendSide="BOTTOM"/>
+            </VBox>
+
+            <!-- Bar Chart: Notes par qualité -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS"
+                  style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 20;
+                         -fx-border-color: #e0e0e0; -fx-border-radius: 14;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+                <Label text="Évaluations par Qualité" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <BarChart fx:id="barQualite" prefHeight="280" legendVisible="false">
+                    <xAxis><CategoryAxis label="Qualité"/></xAxis>
+                    <yAxis><NumberAxis label="Nombre"/></yAxis>
+                </BarChart>
+            </VBox>
+        </HBox>
+
+        <!-- Second row: Performance over time -->
+        <VBox spacing="10"
+              style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 20;
+                     -fx-border-color: #e0e0e0; -fx-border-radius: 14;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+            <Label text="Évolution des Notes dans le Temps" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <LineChart fx:id="lineNotes" prefHeight="250">
+                <xAxis><CategoryAxis label="Date"/></xAxis>
+                <yAxis><NumberAxis label="Note" lowerBound="0" upperBound="5" tickUnit="1" autoRanging="false"/></yAxis>
+            </LineChart>
+        </VBox>
+
+        <!-- Top Zones Table -->
+        <VBox spacing="10"
+              style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 20;
+                     -fx-border-color: #e0e0e0; -fx-border-radius: 14;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+            <Label text="Top Zones de Travail" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <BarChart fx:id="barZones" prefHeight="200" legendVisible="false">
+                <xAxis><CategoryAxis label="Zone"/></xAxis>
+                <yAxis><NumberAxis label="Affectations"/></yAxis>
+            </BarChart>
+        </VBox>
+    </VBox>
+</ScrollPane>
