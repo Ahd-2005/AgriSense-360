@@ -258,4 +258,32 @@ public class userservice {
         // Récupérer l'user avec son ID
         return findByEmail(email);
     }
+
+    // ===============================
+    // FIND BY ID
+    // ===============================
+    public user findById(int id) {
+        String sql = "SELECT * FROM user WHERE id = ?";
+        try {
+            PreparedStatement ps = cnx.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new user(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        Role.valueOf(rs.getString("roles")),
+                        rs.getString("status"),
+                        rs.getString("profile_picture")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

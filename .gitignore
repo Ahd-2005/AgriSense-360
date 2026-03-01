@@ -1,25 +1,45 @@
-# Secrets & API Keys
-src/main/resources/config.properties
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+.kotlin
 
-# IntelliJ IDEA
-.idea/
-*.iml
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
 *.iws
+*.iml
 *.ipr
 
-# Maven
-target/
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Temp files (Claude)
-tmpclaude-*
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
 
-# Clés API — ne jamais commiter
-src/main/resources/agenda/config.js
+### Mac OS ###
+.DS_Store
+# Build output
+/target/
+
+# IntelliJ local files
+.idea/workspace.xml
 src/main/resources/google-config.properties
