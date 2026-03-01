@@ -48,7 +48,6 @@
     /* Let height follow content — no more wasted green space */
     -fx-min-height: 0;
     -fx-pref-height: -1;
-    -fx-max-height: -Infinity;
 }
 
 /*
