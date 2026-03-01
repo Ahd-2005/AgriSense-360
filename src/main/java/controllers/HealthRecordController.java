@@ -2,15 +2,16 @@ package controllers;
 
 import entity.Animal;
 import entity.AnimalHealthRecord;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import java.util.Comparator;
 import javafx.util.StringConverter;
 import services.ServiceAnimal;
 import services.ServiceAnimalHealthRecord;
@@ -35,37 +36,235 @@ public class HealthRecordController implements Initializable {
     @FXML private Button updateBtn;
     @FXML private Button deleteBtn;
     @FXML private Label recordsTitleLabel;
-    @FXML private TableView<AnimalHealthRecord> recordTable;
-    @FXML private TableColumn<AnimalHealthRecord, Integer> colRecordId;
-    @FXML private TableColumn<AnimalHealthRecord, LocalDate> colRecordDate;
-    @FXML private TableColumn<AnimalHealthRecord, Double> colWeight;
-    @FXML private TableColumn<AnimalHealthRecord, String> colAppetite;
-    @FXML private TableColumn<AnimalHealthRecord, String> colCondition;
-    @FXML private TableColumn<AnimalHealthRecord, String> colProduction;
-    @FXML private TableColumn<AnimalHealthRecord, String> colNotes;
+    @FXML private VBox recordTableContainer;
+    @FXML private TextField searchField;
+    @FXML private ComboBox<String> searchFieldCombo;
 
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
     private final ServiceAnimalHealthRecord serviceRecord = new ServiceAnimalHealthRecord();
     private final ObservableList<AnimalHealthRecord> recordList = FXCollections.observableArrayList();
+    private FilteredList<AnimalHealthRecord> filteredRecords;
     private AnimalHealthRecord selectedRecord;
+    private String currentSortColumn = null;
+    private boolean sortAscending = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         appetiteCombo.setItems(FXCollections.observableArrayList("LOW", "NORMAL", "HIGH", "NONE"));
         conditionCombo.setItems(FXCollections.observableArrayList("HEALTHY", "SICK", "INJURED", "CRITICAL"));
 
-        colRecordId.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getId()).asObject());
-        colRecordDate.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().getRecordDate()));
-        colWeight.setCellValueFactory(c -> c.getValue().getWeight() != null ? new SimpleDoubleProperty(c.getValue().getWeight()).asObject() : new SimpleObjectProperty<>());
-        colAppetite.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAppetite() != null ? c.getValue().getAppetite().name() : ""));
-        colCondition.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getConditionStatus() != null ? c.getValue().getConditionStatus().name() : ""));
-        colProduction.setCellValueFactory(c -> new SimpleStringProperty(formatProduction(c.getValue())));
-        colNotes.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNotes() != null ? c.getValue().getNotes() : ""));
+        filteredRecords = new FilteredList<>(recordList, p -> true);
 
-        recordTable.setItems(recordList);
-        recordTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> onTableRowSelected());
+        if (searchFieldCombo != null) {
+            searchFieldCombo.setItems(FXCollections.observableArrayList(
+                "All Fields", "Date", "Weight", "Appetite", "Condition", "Production", "Notes"
+            ));
+            searchFieldCombo.getSelectionModel().selectFirst();
+        }
+
+
+        if (searchField != null) {
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+                filterRecords(newValue);
+                refreshRecordTable();
+            });
+        }
+        if (searchFieldCombo != null) {
+            searchFieldCombo.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+                filterRecords(searchField.getText());
+                refreshRecordTable();
+            });
+        }
+
+        recordDatePicker.setValue(LocalDate.now());
+
         loadAnimals();
         AnimalListRefresh.addListener(this::loadAnimals);
+    }
+
+    private void refreshRecordTable() {
+        if (recordTableContainer == null) return;
+        recordTableContainer.getChildren().clear();
+        
+
+        HBox headerRow = createRecordHeaderRow();
+        recordTableContainer.getChildren().add(headerRow);
+        
+
+        List<AnimalHealthRecord> sortedList = new java.util.ArrayList<>(filteredRecords);
+        if (currentSortColumn != null) {
+            sortedList.sort(getRecordComparator(currentSortColumn, sortAscending));
+        }
+        
+        int rowIdx = 0;
+        for (AnimalHealthRecord r : sortedList) {
+            HBox row = createRecordDataRow(r, rowIdx++);
+            recordTableContainer.getChildren().add(row);
+        }
+    }
+
+    private HBox createRecordHeaderRow() {
+        HBox header = new HBox();
+        header.getStyleClass().add("mgmt-table-header-row");
+        header.setAlignment(Pos.CENTER_LEFT);
+        
+        String[] headers = {"ID", "Date", "Weight", "Appetite", "Condition", "Production", "Notes"};
+        double[] widths = {50, 110, 80, 90, 90, 90, 180};
+        
+        for (int i = 0; i < headers.length; i++) {
+            Label headerLabel = new Label(headers[i]);
+            headerLabel.getStyleClass().add("mgmt-table-header-cell");
+            headerLabel.setPrefWidth(widths[i]);
+            headerLabel.setMinWidth(widths[i]);
+            headerLabel.setAlignment(Pos.CENTER_LEFT);
+            
+            final String column = headers[i];
+            headerLabel.setOnMouseClicked(e -> {
+                if (currentSortColumn != null && currentSortColumn.equals(column)) {
+                    sortAscending = !sortAscending;
+                } else {
+                    currentSortColumn = column;
+                    sortAscending = true;
+                }
+                refreshRecordTable();
+            });
+            
+            if (currentSortColumn != null && currentSortColumn.equals(column)) {
+                headerLabel.setText(headers[i] + (sortAscending ? " ▲" : " ▼"));
+            }
+            
+            header.getChildren().add(headerLabel);
+        }
+        return header;
+    }
+
+    private HBox createRecordDataRow(AnimalHealthRecord r, int rowIndex) {
+        HBox row = new HBox();
+        row.getStyleClass().add(rowIndex % 2 == 0 ? "mgmt-table-row" : "mgmt-table-row-alt");
+        if (selectedRecord != null && selectedRecord.getId() != null && selectedRecord.getId().equals(r.getId())) {
+            row.getStyleClass().add("mgmt-table-row-selected");
+        }
+        row.setAlignment(Pos.CENTER_LEFT);
+
+        double[] widths = {50, 110, 80, 90, 90, 90, 180};
+        String notes = r.getNotes();
+        if (notes != null && notes.length() > 30) {
+            notes = notes.substring(0, 27) + "...";
+        }
+        String[] values = {
+            r.getId() != null ? r.getId().toString() : "-",
+            r.getRecordDate() != null ? r.getRecordDate().toString() : "-",
+            r.getWeight() != null ? r.getWeight() + " kg" : "-",
+            r.getAppetite() != null ? r.getAppetite().name() : "-",
+            r.getConditionStatus() != null ? r.getConditionStatus().name() : "-",
+            formatProduction(r),
+            notes != null ? notes : "-"
+        };
+
+        for (int i = 0; i < values.length; i++) {
+            Label cell = new Label(values[i]);
+            cell.setPrefWidth(widths[i]);
+            cell.setMinWidth(widths[i]);
+            cell.setAlignment(Pos.CENTER_LEFT);
+            if (i == 4) {
+
+                String status = values[i].toLowerCase();
+                String badge = switch (status) {
+                    case "healthy"  -> "badge-healthy";
+                    case "sick"     -> "badge-sick";
+                    case "injured"  -> "badge-injured";
+                    case "critical" -> "badge-critical";
+                    default         -> "badge-neutral";
+                };
+                cell.getStyleClass().addAll("mgmt-table-cell", badge);
+            } else {
+                cell.getStyleClass().add("mgmt-table-cell");
+            }
+            row.getChildren().add(cell);
+        }
+        
+        row.setOnMouseClicked(e -> {
+            selectedRecord = r;
+            refreshRecordTable();
+            updateBtn.setDisable(false);
+            deleteBtn.setDisable(false);
+            onTableRowSelected();
+        });
+        
+        return row;
+    }
+
+    private Comparator<AnimalHealthRecord> getRecordComparator(String column, boolean ascending) {
+        Comparator<AnimalHealthRecord> comp = switch (column) {
+            case "ID" -> Comparator.comparing(r -> r.getId() != null ? r.getId() : 0);
+            case "Date" -> Comparator.comparing(r -> r.getRecordDate() != null ? r.getRecordDate() : LocalDate.MIN);
+            case "Weight" -> Comparator.comparing(r -> r.getWeight() != null ? r.getWeight() : 0.0);
+            case "Appetite" -> Comparator.comparing(r -> r.getAppetite() != null ? r.getAppetite().name() : "");
+            case "Condition" -> Comparator.comparing(r -> r.getConditionStatus() != null ? r.getConditionStatus().name() : "");
+            case "Production" -> Comparator.comparing(r -> {
+                String prod = formatProduction(r);
+                try {
+                    return prod != null && !prod.isEmpty() ? Double.parseDouble(prod) : 0.0;
+                } catch (NumberFormatException e) {
+                    return 0.0;
+                }
+            });
+            case "Notes" -> Comparator.comparing(r -> r.getNotes() != null ? r.getNotes() : "");
+            default -> Comparator.comparing(r -> r.getId() != null ? r.getId() : 0);
+        };
+        return ascending ? comp : comp.reversed();
+    }
+
+    private void filterRecords(String searchText) {
+        if (searchText == null || searchText.trim().isEmpty()) {
+            filteredRecords.setPredicate(record -> true);
+            return;
+        }
+
+        String selectedField = searchFieldCombo != null && searchFieldCombo.getSelectionModel().getSelectedItem() != null
+                ? searchFieldCombo.getSelectionModel().getSelectedItem() : "All Fields";
+        String lowerSearch = searchText.toLowerCase();
+
+        filteredRecords.setPredicate(record -> {
+            switch (selectedField) {
+                case "Date":
+                    return record.getRecordDate() != null && record.getRecordDate().toString().contains(lowerSearch);
+                case "Weight":
+                    return record.getWeight() != null && String.valueOf(record.getWeight()).contains(lowerSearch);
+                case "Appetite":
+                    return record.getAppetite() != null && record.getAppetite().name().toLowerCase().contains(lowerSearch);
+                case "Condition":
+                    return record.getConditionStatus() != null && record.getConditionStatus().name().toLowerCase().contains(lowerSearch);
+                case "Production":
+                    String prod = formatProduction(record);
+                    return prod != null && prod.toLowerCase().contains(lowerSearch);
+                case "Notes":
+                    return record.getNotes() != null && record.getNotes().toLowerCase().contains(lowerSearch);
+                case "All Fields":
+                default:
+
+                    if (record.getRecordDate() != null && record.getRecordDate().toString().contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (record.getWeight() != null && String.valueOf(record.getWeight()).contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (record.getAppetite() != null && record.getAppetite().name().toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (record.getConditionStatus() != null && record.getConditionStatus().name().toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    String production = formatProduction(record);
+                    if (production != null && production.toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    if (record.getNotes() != null && record.getNotes().toLowerCase().contains(lowerSearch)) {
+                        return true;
+                    }
+                    return false;
+            }
+        });
     }
 
     private String formatProduction(AnimalHealthRecord r) {
@@ -89,7 +288,7 @@ public class HealthRecordController implements Initializable {
                 public Animal fromString(String s) { return null; }
             });
         } catch (SQLException e) {
-            showError("Could not load animals: " + e.getMessage());
+            showError(e.getMessage());
         }
     }
 
@@ -141,8 +340,9 @@ public class HealthRecordController implements Initializable {
         recordList.clear();
         try {
             recordList.addAll(serviceRecord.getRecordsByAnimalId(animalId));
+            refreshRecordTable();
         } catch (SQLException e) {
-            showError("Could not load records: " + e.getMessage());
+            showError(e.getMessage());
         }
     }
 
@@ -159,7 +359,14 @@ public class HealthRecordController implements Initializable {
                 showError("Please select record date.");
                 return;
             }
-            Double weight = weightField.getText().trim().isEmpty() ? null : Double.parseDouble(weightField.getText().trim());
+            Double weight = null;
+            if (!weightField.getText().trim().isEmpty()) {
+                weight = Double.parseDouble(weightField.getText().trim());
+                if (weight < 0) {
+                    showError("Weight can't be negative.");
+                    return;
+                }
+            }
             AnimalHealthRecord.Appetite appetite = appetiteCombo.getSelectionModel().getSelectedItem() != null
                     ? AnimalHealthRecord.Appetite.valueOf(appetiteCombo.getSelectionModel().getSelectedItem()) : null;
             AnimalHealthRecord.ConditionStatus condition = conditionCombo.getSelectionModel().getSelectedItem() != null
@@ -178,12 +385,24 @@ public class HealthRecordController implements Initializable {
                     case "cow":
                     case "goat":
                         milkYield = Double.parseDouble(prod);
+                        if (milkYield < 0) {
+                            showError("Production can't be negative.");
+                            return;
+                        }
                         break;
                     case "chicken":
                         eggCount = Integer.parseInt(prod);
+                        if (eggCount < 0) {
+                            showError("Production can't be negative.");
+                            return;
+                        }
                         break;
                     case "sheep":
                         woolLength = Double.parseDouble(prod);
+                        if (woolLength < 0) {
+                            showError("Production can't be negative.");
+                            return;
+                        }
                         break;
                     default:
                         break;
@@ -196,7 +415,7 @@ public class HealthRecordController implements Initializable {
             clearForm();
             showInfo("Health record added.");
         } catch (NumberFormatException e) {
-            showError("Invalid number in Weight or Production.");
+            showError("Invalid number");
         } catch (SQLException e) {
             showError("Database error: " + e.getMessage());
         }
@@ -204,7 +423,6 @@ public class HealthRecordController implements Initializable {
 
     @FXML
     private void onTableRowSelected() {
-        selectedRecord = recordTable.getSelectionModel().getSelectedItem();
         if (selectedRecord == null) {
             updateBtn.setDisable(true);
             deleteBtn.setDisable(true);
@@ -235,7 +453,14 @@ public class HealthRecordController implements Initializable {
                 showError("Please select record date.");
                 return;
             }
-            Double weight = weightField.getText().trim().isEmpty() ? null : Double.parseDouble(weightField.getText().trim());
+            Double weight = null;
+            if (!weightField.getText().trim().isEmpty()) {
+                weight = Double.parseDouble(weightField.getText().trim());
+                if (weight < 0) {
+                    showError("Weight can't be negative");
+                    return;
+                }
+            }
             AnimalHealthRecord.Appetite appetite = appetiteCombo.getSelectionModel().getSelectedItem() != null
                     ? AnimalHealthRecord.Appetite.valueOf(appetiteCombo.getSelectionModel().getSelectedItem()) : null;
             AnimalHealthRecord.ConditionStatus condition = conditionCombo.getSelectionModel().getSelectedItem() != null
@@ -254,12 +479,24 @@ public class HealthRecordController implements Initializable {
                     case "cow":
                     case "goat":
                         milkYield = Double.parseDouble(prod);
+                        if (milkYield < 0) {
+                            showError("Production can't be negative");
+                            return;
+                        }
                         break;
                     case "chicken":
                         eggCount = Integer.parseInt(prod);
+                        if (eggCount < 0) {
+                            showError("Production can't be negative");
+                            return;
+                        }
                         break;
                     case "sheep":
                         woolLength = Double.parseDouble(prod);
+                        if (woolLength < 0) {
+                            showError("Production can't be negative");
+                            return;
+                        }
                         break;
                     default:
                         break;
@@ -282,7 +519,7 @@ public class HealthRecordController implements Initializable {
             deleteBtn.setDisable(true);
             showInfo("Health record updated.");
         } catch (NumberFormatException e) {
-            showError("Invalid number in Weight or Production.");
+            showError("Invalid number");
         } catch (SQLException e) {
             showError("Database error: " + e.getMessage());
         }
@@ -306,7 +543,7 @@ public class HealthRecordController implements Initializable {
     }
 
     private void clearForm() {
-        recordDatePicker.setValue(null);
+        recordDatePicker.setValue(LocalDate.now());
         weightField.clear();
         appetiteCombo.getSelectionModel().clearSelection();
         conditionCombo.getSelectionModel().clearSelection();

@@ -1,0 +1,40 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run JavaFX app",
+			"type": "shell",
+			"command": "mvn",
+			"args": [
+				"javafx:run"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Run JavaFX (debug)",
+			"type": "shell",
+			"command": "mvn",
+			"args": [
+				"-e",
+				"javafx:run"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Run JavaFX (capture log)",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-Command",
+				"mvn -e javafx:run *>&1 | Out-File -Encoding utf8 run.log"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		}
+	]
+}
