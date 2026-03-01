@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.FaceVerificationController"
+            style="-fx-background-color: #f5f7fa;">
+
+    <center>
+        <VBox spacing="22" style="-fx-padding: 35; -fx-alignment: center;">
+
+            <!-- Title Card -->
+            <VBox style="-fx-background-color: white; -fx-background-radius: 16;
+                         -fx-padding: 24; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 3);">
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="🔐" style="-fx-font-size: 34px;"/>
+                    <VBox spacing="3">
+                        <Label text="Vérification Faciale"
+                               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                        <Label text="Utilisez votre webcam pour enregistrer votre visage."
+                               style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d;"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Status Card -->
+            <HBox fx:id="statusCard" spacing="12" alignment="CENTER_LEFT"
+                  style="-fx-background-color: #fff3e0; -fx-background-radius: 12;
+                         -fx-padding: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+                <Label fx:id="statusIcon" text="⚠️" style="-fx-font-size: 20px;"/>
+                <VBox spacing="2">
+                    <Label fx:id="statusTitle" text="Face ID non configuré"
+                           style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e65100;"/>
+                    <Label fx:id="statusDesc"
+                           text="Vous n'avez pas encore enregistré votre visage."
+                           style="-fx-font-size: 12px; -fx-text-fill: #bf360c; -fx-wrap-text: true;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Main Camera Card -->
+            <VBox spacing="18" style="-fx-background-color: white; -fx-background-radius: 16;
+                                       -fx-padding: 28; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 3);">
+
+                <Label text="📷  Capture en direct"
+                       style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Separator/>
+
+                <HBox spacing="30" alignment="CENTER">
+
+                    <!-- Camera Preview Box -->
+                    <StackPane fx:id="cameraPane"
+                               prefWidth="320" prefHeight="240"
+                               style="-fx-background-color: #1a1a2e; -fx-background-radius: 12;">
+                        <ImageView fx:id="cameraPreview"
+                                   fitWidth="320" fitHeight="240"
+                                   preserveRatio="true" visible="false"/>
+                        <ImageView fx:id="capturedPreview"
+                                   fitWidth="320" fitHeight="240"
+                                   preserveRatio="true" visible="false"/>
+                        <VBox fx:id="cameraOffPlaceholder" alignment="CENTER" spacing="8">
+                            <Label text="📷" style="-fx-font-size: 48px;"/>
+                            <Label text="Caméra non démarrée"
+                                   style="-fx-font-size: 13px; -fx-text-fill: #aaaaaa;"/>
+                        </VBox>
+                        <Circle fx:id="faceGuide" radius="90"
+                                style="-fx-stroke: #00e676; -fx-stroke-width: 2.5; -fx-fill: transparent;"
+                                visible="false"/>
+                    </StackPane>
+
+                    <!-- Buttons Panel -->
+                    <VBox spacing="13" alignment="CENTER_LEFT" prefWidth="260">
+                        <Button fx:id="startCameraBtn"
+                                text="🎥  Démarrer la caméra"
+                                onAction="#handleStartCamera"
+                                maxWidth="Infinity"
+                                style="-fx-background-color: #2196f3; -fx-text-fill: white;
+                                       -fx-font-size: 13px; -fx-font-weight: bold;
+                                       -fx-padding: 12 20; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Button fx:id="captureBtn"
+                                text="📸  Prendre la photo"
+                                onAction="#handleCapture"
+                                maxWidth="Infinity" disable="true"
+                                style="-fx-background-color: #ff9800; -fx-text-fill: white;
+                                       -fx-font-size: 13px; -fx-font-weight: bold;
+                                       -fx-padding: 12 20; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Button fx:id="registerBtn"
+                                text="✅  Enregistrer mon visage"
+                                onAction="#handleRegisterFace"
+                                maxWidth="Infinity" disable="true"
+                                style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                                       -fx-font-size: 13px; -fx-font-weight: bold;
+                                       -fx-padding: 12 20; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Button fx:id="deleteBtn"
+                                text="🗑️  Supprimer Face ID"
+                                onAction="#handleDeleteFace"
+                                maxWidth="Infinity" visible="false" managed="false"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white;
+                                       -fx-font-size: 13px; -fx-font-weight: bold;
+                                       -fx-padding: 12 20; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Separator/>
+                        <VBox spacing="4"
+                              style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 12;">
+                            <Label text="💡 Comment faire :"
+                                   style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #555;"/>
+                            <Label text="1. Cliquez Démarrer la caméra"
+                                   style="-fx-font-size: 11px; -fx-text-fill: #666;"/>
+                            <Label text="2. Placez votre visage dans le cercle vert"
+                                   style="-fx-font-size: 11px; -fx-text-fill: #666;"/>
+                            <Label text="3. Cliquez Prendre la photo"
+                                   style="-fx-font-size: 11px; -fx-text-fill: #666;"/>
+                            <Label text="4. Cliquez Enregistrer mon visage"
+                                   style="-fx-font-size: 11px; -fx-text-fill: #666;"/>
+                        </VBox>
+                    </VBox>
+                </HBox>
+
+                <Label fx:id="resultLabel" text=""
+                       style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-wrap-text: true;"/>
+            </VBox>
+
+            <!-- Back Button -->
+            <HBox alignment="CENTER_LEFT">
+                <Button text="← Retour au profil" onAction="#handleBack"
+                        style="-fx-background-color: #ecf0f1; -fx-text-fill: #34495e;
+                               -fx-font-size: 13px; -fx-font-weight: bold;
+                               -fx-padding: 10 24; -fx-background-radius: 8; -fx-cursor: hand;"/>
+            </HBox>
+
+        </VBox>
+    </center>
+</BorderPane>

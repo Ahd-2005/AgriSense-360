@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.FaceLoginController"
+            style="-fx-background-color: #e8f5e9;">
+    <center>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 40;">
+
+            <Label text="🌱 AgriSense 360"
+                   style="-fx-font-size: 38px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+
+            <Label text="Connexion par reconnaissance faciale"
+                   style="-fx-font-size: 16px; -fx-text-fill: #546e7a;"/>
+
+            <!-- Camera preview area -->
+            <StackPane style="-fx-background-color: #1a1a2e; -fx-background-radius: 14;"
+                       prefWidth="340" prefHeight="255">
+                <ImageView fx:id="cameraPreview"
+                           fitWidth="340" fitHeight="255"
+                           preserveRatio="true" visible="false"/>
+                <ImageView fx:id="capturedPreview"
+                           fitWidth="340" fitHeight="255"
+                           preserveRatio="true" visible="false"/>
+                <VBox alignment="CENTER" spacing="6" fx:id="cameraOffPlaceholder">
+                    <Label fx:id="placeholderLabel" text="📷"
+                           style="-fx-font-size: 52px;"/>
+                    <Label text="Caméra non démarrée"
+                           style="-fx-font-size: 13px; -fx-text-fill: #aaaaaa;"/>
+                </VBox>
+                <Circle radius="95"
+                        style="-fx-stroke: #00e676; -fx-stroke-width: 2; -fx-fill: transparent;"/>
+            </StackPane>
+
+            <Label fx:id="statusLabel" text="Démarrez la caméra pour commencer"
+                   style="-fx-font-size: 13px; -fx-text-fill: #546e7a; -fx-font-weight: bold;"
+                   wrapText="true" maxWidth="420" textAlignment="CENTER"/>
+
+            <VBox spacing="11" alignment="CENTER" maxWidth="380">
+
+                <Button fx:id="startCameraBtn"
+                        text="🎥  Démarrer la caméra"
+                        onAction="#handleStartCamera"
+                        style="-fx-background-color: #1976D2; -fx-text-fill: white;
+                               -fx-pref-width: 380; -fx-pref-height: 44;
+                               -fx-font-size: 14px; -fx-font-weight: bold;
+                               -fx-background-radius: 22; -fx-cursor: hand;"/>
+
+                <Button fx:id="captureBtn"
+                        text="📸  Prendre la photo"
+                        onAction="#handleCapture"
+                        disable="true"
+                        style="-fx-background-color: #ff9800; -fx-text-fill: white;
+                               -fx-pref-width: 380; -fx-pref-height: 44;
+                               -fx-font-size: 14px; -fx-font-weight: bold;
+                               -fx-background-radius: 22; -fx-cursor: hand;"/>
+
+                <Button fx:id="loginBtn"
+                        text="🔍  Se connecter avec mon visage"
+                        onAction="#handleFaceLogin"
+                        disable="true"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;
+                               -fx-pref-width: 380; -fx-pref-height: 46;
+                               -fx-font-size: 15px; -fx-font-weight: bold;
+                               -fx-background-radius: 22; -fx-cursor: hand;"/>
+
+                <Button text="← Retour à la connexion normale"
+                        onAction="#handleBack"
+                        style="-fx-background-color: transparent; -fx-text-fill: #4CAF50;
+                               -fx-pref-width: 380; -fx-pref-height: 40;
+                               -fx-font-size: 13px; -fx-font-weight: bold;
+                               -fx-border-color: #4CAF50; -fx-border-width: 2;
+                               -fx-background-radius: 22; -fx-border-radius: 22; -fx-cursor: hand;"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

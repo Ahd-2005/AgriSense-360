@@ -13,6 +13,7 @@ module com.example.agrisens360 {
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
 
+    requires java.base;
     requires java.sql;
     requires com.google.gson;
     requires java.net.http;
@@ -32,8 +33,13 @@ module com.example.agrisens360 {
 
     opens com.example.agrisens360 to javafx.fxml;
     opens controllers to javafx.fxml;
-    opens entity to javafx.base;
+    opens entity to javafx.base, javafx.fxml;    opens services   to javafx.fxml;
+    opens utils      to javafx.fxml;
 
-    exports com.example.agrisens360;
     exports controllers;
+    exports entity;
+    exports services;
+    exports utils;
+    exports com.example.agrisens360;
+
 }

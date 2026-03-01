@@ -12,36 +12,39 @@ import services.ParcelleService;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * HomeContentController - AgriSense 360 Redesigned Home
+ */
 public class HomeContentController {
 
-    // ── Singleton ────────────────────────────────────────────────────
+    // -- Singleton --
     private static HomeContentController instance;
     public static HomeContentController getInstance() { return instance; }
 
-    // ── Hero stat chips ─────────────────────────────────────────────
+    // -- Hero stat chips --
     @FXML private Label totalParcellesLabel;
     @FXML private Label totalCulturesLabel;
     @FXML private Label tauxOccupationLabel;
     @FXML private Label culturesRetardLabel;
 
-    // ── Glass panel rows ────────────────────────────────────────────
+    // -- Glass panel rows --
     @FXML private Label glassParcellesLabel;
     @FXML private Label glassCulturesLabel;
     @FXML private Label glassCulturesRetesLabel;
     @FXML private Label glassCulturesRetardLabel;
     @FXML private Label glassTauxLabel;
 
-    // ── Stats band ──────────────────────────────────────────────────
+    // -- Stats band --
     @FXML private Label bandParcellesLabel;
     @FXML private Label bandCulturesLabel;
     @FXML private Label bandRetesLabel;
     @FXML private Label bandSurfaceLabel;
 
-    // ── AgriBot button + notification badge ─────────────────────────
+    // -- AgriBot button + notification badge --
     @FXML private Button agriBotBtn;
     @FXML private Label  agriBotBadge;
 
-    // ── Services ────────────────────────────────────────────────────
+    // -- Services --
     private final ParcelleService parcelleService = new ParcelleService();
     private final CultureService  cultureService  = new CultureService();
 
@@ -116,7 +119,7 @@ public class HomeContentController {
         if (label != null) label.setText(value);
     }
 
-    // ── AgriBot button handler ───────────────────────────────────────
+    // -- AgriBot button handler --
     @FXML
     private void openAgriBot() {
         MainLayoutController ctrl = MainLayoutController.getInstance();
@@ -138,7 +141,7 @@ public class HomeContentController {
         agriBotBadge.setManaged(false);
     }
 
-    // ── Navigation ───────────────────────────────────────────────────
+    // -- Navigation --
     @FXML
     private void navigateToAnimals() {
         MainLayoutController controller = MainLayoutController.getInstance();
