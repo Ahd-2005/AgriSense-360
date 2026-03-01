@@ -60,6 +60,8 @@ public class MainLayoutController {
 
     @FXML private Label stockAlertBadge;
     private boolean sidebarCollapsed = false;
+    private boolean badgeFermeParUtilisateur = false;
+
 
 
     // Store reference to self for access from child controllers
@@ -70,41 +72,15 @@ public class MainLayoutController {
         instance = this;
 
         NotificationService.getInstance().init(contentArea);
-
+        StockAlertService.getInstance().initialiser();
         navigateToHome();
-        demarrerAlertes();
     }
 
     public static MainLayoutController getInstance() {
         return instance;
     }
 
-    private void demarrerAlertes() {
-        StockAlertService.getInstance().setAlertCallback(alerts -> {
-            if (stockAlertBadge != null) {
-                if (alerts.isEmpty()) {
-                    stockAlertBadge.setVisible(false);
-                    stockAlertBadge.setManaged(false);
-                } else {
-                    stockAlertBadge.setText(String.valueOf(alerts.size()));
-                    stockAlertBadge.setVisible(true);
-                    stockAlertBadge.setManaged(true);
-                }
-            }
-        });
 
-        // Clic sur le badge → naviguer vers stock list ET masquer le badge
-        if (stockAlertBadge != null) {
-            stockAlertBadge.setOnMouseClicked(e -> {
-                stockAlertBadge.setVisible(false);
-                stockAlertBadge.setManaged(false);
-                navigateToStockList();
-            });
-            stockAlertBadge.setStyle(stockAlertBadge.getStyle() + "; -fx-cursor: hand;");
-        }
-
-        StockAlertService.getInstance().demarrer();
-    }
 
     @FXML
     private void toggleSidebar() {
@@ -367,5 +343,13 @@ public class MainLayoutController {
     }
     private void setVisible(Node node, boolean visible) {
         if (node != null) { node.setVisible(visible); node.setManaged(visible); }
+    }
+    public void signalerNouvelleAlerte(int nbAlertes) {
+        badgeFermeParUtilisateur = false;
+        if (stockAlertBadge != null) {
+            stockAlertBadge.setText(String.valueOf(nbAlertes));
+            stockAlertBadge.setVisible(true);
+            stockAlertBadge.setManaged(true);
+        }
     }
 }

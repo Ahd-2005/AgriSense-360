@@ -1,5 +1,6 @@
 package services;
 
+import controllers.MainLayoutController;
 import entity.Produit;
 import entity.Stock;
 import javafx.application.Platform;
@@ -9,20 +10,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class StockAlertService {
 
     private static StockAlertService instance;
-    private final ServiceStockStock   serviceStock   = new ServiceStockStock();
+    private final ServiceStockStock serviceStock = new ServiceStockStock();
     private final ServiceStockProduit serviceProduit = new ServiceStockProduit();
 
-    private ScheduledExecutorService scheduler;
-    private static final int INTERVAL_MINUTES = 5;
-
-    // IDs des produits déjà notifiés — évite les notifications répétées
+    // IDs des produits déjà notifiés (persistant dans la session)
     private final Set<Integer> dejaNotifies = new HashSet<>();
 
     private AlertCallback alertCallback;
@@ -32,14 +28,14 @@ public class StockAlertService {
     }
 
     public static class StockAlert {
-        public final Stock  stock;
+        public final Stock stock;
         public final String nomProduit;
         public final String categorie;
 
         public StockAlert(Stock stock, String nomProduit, String categorie) {
-            this.stock      = stock;
+            this.stock = stock;
             this.nomProduit = nomProduit;
-            this.categorie  = categorie;
+            this.categorie = categorie;
         }
     }
 
@@ -54,73 +50,70 @@ public class StockAlertService {
         this.alertCallback = callback;
     }
 
-    public void demarrer() {
-        // Au démarrage : badge sidebar seulement, AUCUNE notification Windows ni popup.
-        // Les alertes déjà présentes sont marquées "déjà vues" dans dejaNotifies.
-        // Seuls les produits qui passent sous le seuil APRÈS le lancement déclencheront une notif.
-        initialiserSansNotifier();
-
-        scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
-            Thread t = new Thread(r, "StockAlertThread");
-            t.setDaemon(true);
-            return t;
-        });
-        scheduler.scheduleAtFixedRate(
-                this::verifierEtNotifier,
-                INTERVAL_MINUTES, INTERVAL_MINUTES, TimeUnit.MINUTES
-        );
-    }
-
     /**
-     * Appelé UNE SEULE FOIS au démarrage.
-     * Met à jour le badge sidebar et pré-remplit dejaNotifies
-     * sans envoyer aucune notification ni popup.
+     * À appeler une seule fois au démarrage de l'application (ex: dans MainLayoutController.initialize())
+     * Charge les alertes existantes, les marque "déjà vues", met à jour le badge sans envoyer de notification.
      */
-    private void initialiserSansNotifier() {
+    public void initialiser() {
         List<StockAlert> alertesExistantes = getStocksEnAlerte();
-        // Toutes les alertes existantes sont marquées "déjà vues"
+        System.out.println("[AlertService] Initialisation — alertes existantes : " + alertesExistantes.size());
+
+        // Marquer tous les produits en alerte comme déjà notifiés
         for (StockAlert a : alertesExistantes) {
             dejaNotifies.add(a.stock.getProduitId());
+            System.out.println("[AlertService] Marqué déjà vu : produitId=" + a.stock.getProduitId() + " (" + a.nomProduit + ")");
         }
-        // Badge uniquement — pas de toast Windows, pas de barre in-app, pas de popup
+
+        // Mettre à jour le badge et la sidebar immédiatement
         Platform.runLater(() -> {
-            if (alertCallback != null) alertCallback.onAlertsUpdated(alertesExistantes);
+            if (alertCallback != null) {
+                alertCallback.onAlertsUpdated(alertesExistantes);
+            }
+            MainLayoutController ctrl = MainLayoutController.getInstance();
+            if (ctrl != null) {
+                ctrl.signalerNouvelleAlerte(alertesExistantes.size());
+            }
         });
     }
 
-    public void arreter() {
-        if (scheduler != null && !scheduler.isShutdown()) scheduler.shutdownNow();
-    }
-
     /**
-     * Vérification périodique (toutes les 5 min).
-     * Notification Windows + barre in-app SEULEMENT pour les NOUVELLES alertes.
+     * À appeler après CHAQUE modification de stock (ajout, modif, suppression).
+     * Détecte les **nouvelles** alertes uniquement et envoie une notification Windows.
      */
-    public void verifierEtNotifier() {
+    public void notifierSiNouvelleAlerte() {
         List<StockAlert> toutesAlertes = getStocksEnAlerte();
-
-        List<StockAlert> nouvellesAlertes = new ArrayList<>();
-        Set<Integer> idsActuels = new HashSet<>();
+        List<StockAlert> nouvelles = new ArrayList<>();
 
         for (StockAlert a : toutesAlertes) {
-            idsActuels.add(a.stock.getProduitId());
-            if (!dejaNotifies.contains(a.stock.getProduitId())) {
-                nouvellesAlertes.add(a);
-                dejaNotifies.add(a.stock.getProduitId());
+            int id = a.stock.getProduitId();
+            if (!dejaNotifies.contains(id)) {
+                nouvelles.add(a);
+                dejaNotifies.add(id);
+                System.out.println("[AlertService] Nouvelle alerte détectée : produitId=" + id + " (" + a.nomProduit + ")");
             }
         }
 
-        // Produits revenus au-dessus du seuil → sortent de dejaNotifies
-        // Ils pourront être notifiés à nouveau s'ils repassent sous le seuil
+        // Nettoyage : retire les IDs qui ne sont plus en alerte
+        Set<Integer> idsActuels = toutesAlertes.stream()
+                .map(a -> a.stock.getProduitId())
+                .collect(Collectors.toSet());
         dejaNotifies.retainAll(idsActuels);
 
-        Platform.runLater(() -> {
-            // Badge = toutes les alertes actives
-            if (alertCallback != null) alertCallback.onAlertsUpdated(toutesAlertes);
+        System.out.println("[AlertService] Total alertes : " + toutesAlertes.size() + " | Nouvelles : " + nouvelles.size());
 
-            // Toast Windows + barre in-app = NOUVELLES alertes uniquement
-            if (!nouvellesAlertes.isEmpty()) {
-                NotificationService.getInstance().notifierStocksEnAlerte(nouvellesAlertes);
+        Platform.runLater(() -> {
+            // Toujours mettre à jour le badge/sidebar
+            if (alertCallback != null) {
+                alertCallback.onAlertsUpdated(toutesAlertes);
+            }
+            MainLayoutController ctrl = MainLayoutController.getInstance();
+            if (ctrl != null) {
+                ctrl.signalerNouvelleAlerte(toutesAlertes.size());
+            }
+
+            // Notification Windows + barre in-app UNIQUEMENT si nouvelles alertes
+            if (!nouvelles.isEmpty()) {
+                NotificationService.getInstance().notifierStocksEnAlerte(nouvelles);
             }
         });
     }
@@ -128,7 +121,8 @@ public class StockAlertService {
     public List<StockAlert> getStocksEnAlerte() {
         List<StockAlert> alertes = new ArrayList<>();
         try {
-            for (Stock s : serviceStock.afficher()) {
+            List<Stock> stocks = serviceStock.afficher();
+            for (Stock s : stocks) {
                 if (s.getQuantiteActuelle() != null && s.getSeuilAlerte() != null
                         && s.getQuantiteActuelle().compareTo(s.getSeuilAlerte()) < 0) {
                     String nom = "Produit #" + s.getProduitId();
@@ -143,7 +137,9 @@ public class StockAlertService {
                     alertes.add(new StockAlert(s, nom, cat));
                 }
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return alertes;
     }
 }

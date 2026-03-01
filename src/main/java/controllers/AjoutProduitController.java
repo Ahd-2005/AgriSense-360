@@ -323,11 +323,9 @@ public class AjoutProduitController {
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setTitle(title); a.setHeaderText(null); a.setContentText(message);
+        a.showAndWait();
     }
     @FXML
     private void genererBarcodesPourTous() {
