@@ -96,6 +96,59 @@ public class AIReportService {
     }
 
     /**
+     * Génère une réponse IA à partir d'un prompt libre.
+     * Utilisé pour la planification intelligente et autres fonctionnalités IA.
+     */
+    public static String generateFromPrompt(String prompt) {
+        try {
+            JsonObject message = new JsonObject();
+            message.addProperty("role", "user");
+            message.addProperty("content", prompt);
+
+            JsonArray messages = new JsonArray();
+            messages.add(message);
+
+            JsonObject body = new JsonObject();
+            body.addProperty("model", MODEL);
+            body.add("messages", messages);
+            body.addProperty("max_tokens", 500);
+            body.addProperty("temperature", 0.6);
+
+            HttpClient client = HttpClient.newBuilder()
+                    .connectTimeout(Duration.ofSeconds(15))
+                    .build();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(API_URL))
+                    .timeout(Duration.ofSeconds(30))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + API_KEY)
+                    .POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(body)))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
+                return json.getAsJsonArray("choices")
+                        .get(0).getAsJsonObject()
+                        .getAsJsonObject("message")
+                        .get("content").getAsString().trim();
+            } else if (response.statusCode() == 401) {
+                return "❌ Clé API Groq invalide. Obtenez une clé gratuite sur console.groq.com";
+            } else if (response.statusCode() == 429) {
+                return "⚠️ Limite de requêtes Groq atteinte. Réessayez dans quelques instants.";
+            } else {
+                return "Erreur API (" + response.statusCode() + ")";
+            }
+        } catch (java.net.UnknownHostException e) {
+            return "❌ Pas de connexion Internet.";
+        } catch (Exception e) {
+            return "❌ Erreur: " + e.getMessage();
+        }
+    }
+
+    /**
      * Construit le prompt envoyé à l'IA avec toutes les données de l'affectation.
      */
     private static String buildPrompt(AffectationTravail affectation,

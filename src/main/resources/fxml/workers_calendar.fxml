@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.WorkersCalendarController"
+            fitToWidth="true" styleClass="content">
+
+    <VBox spacing="20" styleClass="content-inner">
+        <padding><Insets top="30" right="40" bottom="40" left="40"/></padding>
+
+        <!-- Navigation toggle -->
+        <HBox spacing="0" alignment="CENTER_LEFT" style="-fx-padding: 0 0 10 0;">
+            <Button text="📋 Affectations"
+                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 8 0 0 0;
+                           -fx-cursor: hand;"
+                    onAction="#onSwitchToAffectation"/>
+            <Button text="📊 Évaluations"
+                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0;
+                           -fx-cursor: hand;"
+                    onAction="#onSwitchToEvaluation"/>
+            <Button text="📈 Dashboard"
+                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0;
+                           -fx-cursor: hand;"
+                    onAction="#onSwitchToDashboard"/>
+            <Button text="📅 Calendrier"
+                    style="-fx-background-color: #5a9814; -fx-text-fill: white; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0 8 8 0;
+                           -fx-cursor: hand;"
+                    disable="true"/>
+        </HBox>
+
+        <Label text="Calendrier des Affectations" styleClass="topbar-title"/>
+
+        <!-- Month navigation -->
+        <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10;">
+            <Button fx:id="btnPrevMonth" text="◀ Précédent"
+                    style="-fx-background-color: #5a9814; -fx-text-fill: white; -fx-font-weight: bold;
+                           -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 8 16;"
+                    onAction="#onPrevMonth"/>
+            <Label fx:id="lblCurrentMonth" text="Mars 2026"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-min-width: 200; -fx-alignment: center;"/>
+            <Button fx:id="btnNextMonth" text="Suivant ▶"
+                    style="-fx-background-color: #5a9814; -fx-text-fill: white; -fx-font-weight: bold;
+                           -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 8 16;"
+                    onAction="#onNextMonth"/>
+        </HBox>
+
+        <!-- Legend -->
+        <HBox spacing="20" alignment="CENTER" style="-fx-padding: 5;">
+            <HBox spacing="5" alignment="CENTER">
+                <Region prefWidth="12" prefHeight="12" style="-fx-background-color: #e67e22; -fx-background-radius: 3;"/>
+                <Label text="En cours" style="-fx-font-size: 11px;"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER">
+                <Region prefWidth="12" prefHeight="12" style="-fx-background-color: #27ae60; -fx-background-radius: 3;"/>
+                <Label text="Terminée" style="-fx-font-size: 11px;"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER">
+                <Region prefWidth="12" prefHeight="12" style="-fx-background-color: #3498db; -fx-background-radius: 3;"/>
+                <Label text="En attente" style="-fx-font-size: 11px;"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER">
+                <Region prefWidth="12" prefHeight="12" style="-fx-background-color: #e74c3c; -fx-background-radius: 3;"/>
+                <Label text="Annulée" style="-fx-font-size: 11px;"/>
+            </HBox>
+        </HBox>
+
+        <!-- Calendar Grid -->
+        <VBox style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 15;
+                     -fx-border-color: #e0e0e0; -fx-border-radius: 14;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+            <!-- Day headers -->
+            <GridPane fx:id="dayHeaders" hgap="2" vgap="2">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="14.28"/>
+                    <ColumnConstraints percentWidth="14.28"/>
+                    <ColumnConstraints percentWidth="14.28"/>
+                    <ColumnConstraints percentWidth="14.28"/>
+                    <ColumnConstraints percentWidth="14.28"/>
+                    <ColumnConstraints percentWidth="14.28"/>
+                    <ColumnConstraints percentWidth="14.28"/>
+                </columnConstraints>
+            </GridPane>
+            <!-- Calendar cells -->
+            <GridPane fx:id="calendarGrid" hgap="2" vgap="2" VBox.vgrow="ALWAYS">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="14.28"/>
+                    <ColumnConstraints percentWidth="14.28"/>
+                    <ColumnConstraints percentWidth="14.28"/>
+                    <ColumnConstraints percentWidth="14.28"/>
+                    <ColumnConstraints percentWidth="14.28"/>
+                    <ColumnConstraints percentWidth="14.28"/>
+                    <ColumnConstraints percentWidth="14.28"/>
+                </columnConstraints>
+            </GridPane>
+        </VBox>
+    </VBox>
+</ScrollPane>

@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import entity.AffectationTravail;
 import services.AffectationTravailService;
+import services.AIReportService;
 import services.DiscordWebhookService;
 import services.WeatherService;
 
@@ -41,7 +42,9 @@ public class AffectationController implements Initializable {
     @FXML private Button btnDelete;
     @FXML private Button btnClear;
     @FXML private Button btnCheckMeteo;
+    @FXML private Button btnAIPlan;
     @FXML private Label lblMeteoResult;
+    @FXML private Label lblAIPlanResult;
 
     private final AffectationTravailService service = new AffectationTravailService();
     private final ObservableList<AffectationTravail> affectationList = FXCollections.observableArrayList();
@@ -51,6 +54,16 @@ public class AffectationController implements Initializable {
     @FXML
     private void onSwitchToEvaluation() {
         MainLayoutController.getInstance().navigateToEvaluation();
+    }
+
+    @FXML
+    private void onSwitchToDashboard() {
+        MainLayoutController.getInstance().navigateToDashboardWorkers();
+    }
+
+    @FXML
+    private void onSwitchToCalendar() {
+        MainLayoutController.getInstance().navigateToCalendar();
     }
 
     private static final String[] STATUT_OPTIONS = {"En cours", "Terminée", "Annulée", "En attente"};
@@ -255,6 +268,80 @@ public class AffectationController implements Initializable {
         t.start();
     }
 
+    @FXML
+    private void onAIPlan() {
+        String type = tfTypeTravail.getText() != null ? tfTypeTravail.getText().trim() : "";
+        String zone = tfZoneTravail.getText() != null ? tfZoneTravail.getText().trim() : "";
+        LocalDate debut = dpDateDebut.getValue();
+        LocalDate fin = dpDateFin.getValue();
+
+        if (type.isEmpty() && zone.isEmpty()) {
+            lblAIPlanResult.setText("⚠️ Renseignez au moins le type de travail ou la zone pour la planification IA.");
+            lblAIPlanResult.setStyle("-fx-text-fill: #d68910; -fx-font-weight: bold; -fx-font-size: 12px; " +
+                    "-fx-padding: 6 10; -fx-background-color: #fff8e1; -fx-background-radius: 6; -fx-border-color: #ffe082; -fx-border-radius: 6;");
+            return;
+        }
+
+        lblAIPlanResult.setText("⏳ L'IA analyse la situation et prépare des recommandations...");
+        lblAIPlanResult.setStyle("-fx-text-fill: #555; -fx-font-size: 12px; -fx-padding: 6 10; " +
+                "-fx-background-color: #f5f0ff; -fx-background-radius: 6; -fx-border-color: #d1b3ff; -fx-border-radius: 6;");
+        btnAIPlan.setDisable(true);
+
+        // Build context for the AI
+        StringBuilder context = new StringBuilder();
+        context.append("Type de travail: ").append(type.isEmpty() ? "Non spécifié" : type).append("\n");
+        context.append("Zone de travail: ").append(zone.isEmpty() ? "Non spécifiée" : zone).append("\n");
+        if (debut != null) context.append("Date début prévue: ").append(debut).append("\n");
+        if (fin != null) context.append("Date fin prévue: ").append(fin).append("\n");
+
+        // Add existing affectations for context
+        try {
+            List<AffectationTravail> existing = service.getAll();
+            if (!existing.isEmpty()) {
+                context.append("\nAffectations existantes (").append(existing.size()).append("):\n");
+                for (AffectationTravail a : existing) {
+                    context.append("  - ").append(a.getTypeTravail())
+                           .append(" | Zone: ").append(a.getZoneTravail())
+                           .append(" | ").append(a.getDateDebut()).append(" → ").append(a.getDateFin())
+                           .append(" | Statut: ").append(a.getStatut()).append("\n");
+                }
+            }
+        } catch (SQLException ignored) {}
+
+        String prompt = "Tu es un expert en planification agricole intelligente. " +
+                "Analyse les données suivantes et fournis des recommandations de planification.\n\n" +
+                context + "\n" +
+                "Réponds en français avec exactement ces 3 sections courtes :\n\n" +
+                "🎯 RECOMMANDATION\n(Analyse si le timing et la zone sont optimaux, suggère des ajustements)\n\n" +
+                "⚠️ CONFLITS POTENTIELS\n(Identifie les chevauchements avec les affectations existantes ou risques)\n\n" +
+                "💡 OPTIMISATION\n(Suggestions concrètes pour améliorer la productivité de cette affectation)\n\n" +
+                "Sois concis (max 150 mots total).";
+
+        Task<String> aiTask = new Task<>() {
+            @Override
+            protected String call() {
+                return AIReportService.generateFromPrompt(prompt);
+            }
+        };
+
+        aiTask.setOnSucceeded(e -> {
+            btnAIPlan.setDisable(false);
+            lblAIPlanResult.setText(aiTask.getValue());
+            lblAIPlanResult.setStyle("-fx-text-fill: #333; -fx-font-size: 12px; -fx-padding: 6 10; " +
+                    "-fx-background-color: #f5f0ff; -fx-background-radius: 6; -fx-border-color: #d1b3ff; -fx-border-radius: 6;");
+        });
+
+        aiTask.setOnFailed(e -> {
+            btnAIPlan.setDisable(false);
+            lblAIPlanResult.setText("❌ Erreur lors de la planification IA.");
+            lblAIPlanResult.setStyle("-fx-text-fill: #c0392b; -fx-font-weight: bold;");
+        });
+
+        Thread t2 = new Thread(aiTask);
+        t2.setDaemon(true);
+        t2.start();
+    }
+
     private void clearForm() {
         tfTypeTravail.clear();
         dpDateDebut.setValue(null);
@@ -262,6 +349,7 @@ public class AffectationController implements Initializable {
         tfZoneTravail.clear();
         cbStatut.setValue(null);
         lblMeteoResult.setText("");
+        lblAIPlanResult.setText("");
     }
 
     private AffectationTravail formToModel(Integer id) {
