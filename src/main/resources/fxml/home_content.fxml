@@ -13,405 +13,415 @@
 <?import javafx.scene.layout.VBox?>
 
 <!--
-    home_content.fxml — AgriSense 360 Redesigned Home
-    ═══════════════════════════════════════════════════
-    WHAT CHANGED vs old version:
-    1. Hero glass-panel:
-       - Removed "Active Sensors" and "Worker Tasks" fake rows
-       - "Fields" (glassParcellesLabel) = count of parcelles from DB
-       - "Active Cultures" (glassCulturesLabel) = count from DB
-       - "Ready to Harvest" (glassCulturesRetesLabel) = DB filtered
-       - "Harvest Overdue" (glassCulturesRetardLabel) = DB filtered
-       - "Field Occupancy" (glassTauxLabel) = computed occupation %
-    2. Hero stat chips: 4 chips all backed by fx:id DB labels
-    3. Stats band: replaced fake "16% / 4.8x / 37%" with 4 live
-       DB labels (parcelles, cultures, pretes, surface totale)
-    4. Nav cards: design upgraded, navigation @FXML handlers UNCHANGED
-    5. Team + Footer sections: kept from previous redesign
+    home_content.fxml — AgriSense 360 + AgriBot Chatbot
+    ══════════════════════════════════════════════════════
+    CHANGES vs previous version:
+      1. Root is now a StackPane (was VBox) so the chatbot
+         overlay sits on top of the scrollable content.
+      2. The chatbot overlay (fx:include of chatbot_popup.fxml)
+         is added as the 2nd child of the root StackPane.
+         It uses pickOnBounds="false" so clicks pass through
+         to the scrollable content underneath.
+      3. HomeContentController now also injects fx:id="chatbotPane"
+         (the include controller is auto-wired by JavaFX via
+         fx:id="chatbot" → chatbotController field).
+      4. All existing content is UNCHANGED.
 -->
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="controllers.HomeContentController"
-      spacing="0.0"
-      styleClass="home-root">
+<!-- ROOT: StackPane so chatbot floats above scrollable content -->
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="controllers.HomeContentController"
+           styleClass="home-root">
 
-    <ScrollPane fitToWidth="true" fitToHeight="false" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
-                pannable="false" styleClass="home-scroll" VBox.vgrow="ALWAYS" prefHeight="-1">
-        <VBox spacing="0.0" prefHeight="-1">
+    <!-- ══════════════════════════════════════════════════════
+         LAYER 1 — Existing scrollable page content (UNCHANGED)
+         ══════════════════════════════════════════════════════ -->
+    <VBox spacing="0.0">
 
-            <!-- ══════════════════════════════════════════════════════
-                 HERO WELCOME CARD
-                 To use a real farm photo: in home.css .hero-bg-overlay
-                 add:  -fx-background-image: url('../images/farm_bg.jpg');
-                       -fx-background-size: cover;
-                       -fx-background-position: center;
-                 ══════════════════════════════════════════════════════ -->
-            <StackPane styleClass="hero-stack">
+        <ScrollPane fitToWidth="true" fitToHeight="false" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                    pannable="false" styleClass="home-scroll" VBox.vgrow="ALWAYS" prefHeight="-1">
+            <VBox spacing="0.0" prefHeight="-1">
 
-                <Region styleClass="hero-bg-overlay" StackPane.alignment="CENTER"/>
+                <!-- ══════════════════════════════════════════════════════
+                     HERO WELCOME CARD
+                     ══════════════════════════════════════════════════════ -->
+                <StackPane styleClass="hero-stack">
 
-                <!-- Left copy + stat chips -->
-                <VBox alignment="CENTER_LEFT" styleClass="hero-content-box">
-                    <padding><Insets top="36" right="60" bottom="36" left="60"/></padding>
+                    <Region styleClass="hero-bg-overlay" StackPane.alignment="CENTER"/>
 
-                    <HBox alignment="CENTER_LEFT" spacing="8">
-                        <Region styleClass="hero-dot"/>
-                        <Label text="AGRISENSE 360 — SMART FARM PLATFORM" styleClass="hero-eyebrow"/>
+                    <!-- Left copy + stat chips -->
+                    <VBox alignment="CENTER_LEFT" styleClass="hero-content-box">
+                        <padding><Insets top="36" right="60" bottom="36" left="60"/></padding>
+
+                        <HBox alignment="CENTER_LEFT" spacing="8">
+                            <Region styleClass="hero-dot"/>
+                            <Label text="AGRISENSE 360 — SMART FARM PLATFORM" styleClass="hero-eyebrow"/>
+                        </HBox>
+
+                        <Region prefHeight="12"/>
+                        <Label text="Welcome Back," styleClass="hero-greeting" wrapText="true"/>
+                        <Label text="Your Farm is Growing Smarter." styleClass="hero-headline" wrapText="true"/>
+                        <Region prefHeight="10"/>
+                        <Label text="Every field signal, every crop status, every machine alert — unified into one living dashboard. Make confident decisions, every harvest."
+                               styleClass="hero-subtext" wrapText="true" maxWidth="520"/>
+                        <Region prefHeight="20"/>
+
+                        <!-- Live stat chips -->
+                        <HBox spacing="14" alignment="CENTER_LEFT">
+                            <VBox styleClass="hero-stat-chip" alignment="CENTER">
+                                <Label fx:id="totalParcellesLabel" text="..." styleClass="hero-stat-num"/>
+                                <Label text="Fields" styleClass="hero-stat-lbl"/>
+                            </VBox>
+                            <VBox styleClass="hero-stat-chip" alignment="CENTER">
+                                <Label fx:id="totalCulturesLabel" text="..." styleClass="hero-stat-num"/>
+                                <Label text="Cultures" styleClass="hero-stat-lbl"/>
+                            </VBox>
+                            <VBox styleClass="hero-stat-chip" alignment="CENTER">
+                                <Label fx:id="tauxOccupationLabel" text="..." styleClass="hero-stat-num"/>
+                                <Label text="Occupancy" styleClass="hero-stat-lbl"/>
+                            </VBox>
+                            <VBox styleClass="hero-stat-chip" alignment="CENTER">
+                                <Label fx:id="culturesRetardLabel" text="..." styleClass="hero-stat-num-warn"/>
+                                <Label text="Overdue" styleClass="hero-stat-lbl"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Right glass live-status panel -->
+                    <VBox alignment="TOP_RIGHT" StackPane.alignment="CENTER_RIGHT">
+                        <padding><Insets right="48" top="0"/></padding>
+                        <VBox styleClass="hero-glass-panel" spacing="0" alignment="TOP_LEFT">
+                            <Label text="📡  Live Farm Status" styleClass="glass-panel-title"/>
+                            <Region prefHeight="18"/>
+
+                            <HBox alignment="CENTER_LEFT">
+                                <VBox HBox.hgrow="ALWAYS">
+                                    <Label text="Fields (Parcelles)" styleClass="glass-row-label"/>
+                                </VBox>
+                                <Label fx:id="glassParcellesLabel" text="..." styleClass="glass-row-value"/>
+                            </HBox>
+                            <Region styleClass="glass-divider" prefHeight="1"/>
+                            <Region prefHeight="10"/>
+
+                            <HBox alignment="CENTER_LEFT">
+                                <VBox HBox.hgrow="ALWAYS">
+                                    <Label text="Active Cultures" styleClass="glass-row-label"/>
+                                </VBox>
+                                <Label fx:id="glassCulturesLabel" text="..." styleClass="glass-row-value"/>
+                            </HBox>
+                            <Region styleClass="glass-divider" prefHeight="1"/>
+                            <Region prefHeight="10"/>
+
+                            <HBox alignment="CENTER_LEFT">
+                                <VBox HBox.hgrow="ALWAYS">
+                                    <Label text="Ready to Harvest" styleClass="glass-row-label"/>
+                                </VBox>
+                                <Label fx:id="glassCulturesRetesLabel" text="..." styleClass="glass-row-value"/>
+                            </HBox>
+                            <Region styleClass="glass-divider" prefHeight="1"/>
+                            <Region prefHeight="10"/>
+
+                            <HBox alignment="CENTER_LEFT">
+                                <VBox HBox.hgrow="ALWAYS">
+                                    <Label text="Harvest Overdue" styleClass="glass-row-label"/>
+                                </VBox>
+                                <Label fx:id="glassCulturesRetardLabel" text="..." styleClass="glass-row-warning"/>
+                            </HBox>
+                            <Region styleClass="glass-divider" prefHeight="1"/>
+                            <Region prefHeight="10"/>
+
+                            <HBox alignment="CENTER_LEFT">
+                                <VBox HBox.hgrow="ALWAYS">
+                                    <Label text="Field Occupancy" styleClass="glass-row-label"/>
+                                </VBox>
+                                <Label fx:id="glassTauxLabel" text="..." styleClass="glass-row-value"/>
+                            </HBox>
+
+                            <Region prefHeight="16"/>
+                            <HBox styleClass="glass-live-badge" alignment="CENTER" spacing="6">
+                                <Region styleClass="live-dot"/>
+                                <Label text="Live · from database" styleClass="glass-live-text"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                </StackPane>
+
+                <!-- ══════════════════════════════════════════════════════
+                     QUICK NAVIGATION — 6 cards
+                     ══════════════════════════════════════════════════════ -->
+                <VBox styleClass="nav-section" spacing="22">
+                    <padding><Insets top="40" right="48" bottom="40" left="48"/></padding>
+
+                    <VBox spacing="6">
+                        <Label text="QUICK NAVIGATION" styleClass="section-eyebrow"/>
+                        <Label text="Every department, one click away." styleClass="section-heading"/>
+                        <Label text="Jump into any management area from here. Your data, your control." styleClass="section-sub"/>
+                    </VBox>
+
+                    <GridPane hgap="20" vgap="20">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="ALWAYS"/>
+                            <RowConstraints vgrow="ALWAYS"/>
+                        </rowConstraints>
+
+                        <Button onAction="#navigateToAnimals" styleClass="nav-card-btn"
+                                GridPane.columnIndex="0" GridPane.rowIndex="0" maxWidth="Infinity">
+                            <graphic>
+                                <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
+                                    <VBox styleClass="nav-card-icon-wrap" alignment="CENTER"><Label text="🐄" styleClass="nav-card-emoji"/></VBox>
+                                    <Region prefHeight="14"/>
+                                    <Label text="Animals" styleClass="nav-card-title"/>
+                                    <Label text="Management" styleClass="nav-card-title-2"/>
+                                    <Region prefHeight="8"/>
+                                    <Label text="Health · Feeding · Productivity" styleClass="nav-card-desc" wrapText="true"/>
+                                    <Region VBox.vgrow="ALWAYS" minHeight="12"/>
+                                    <HBox alignment="CENTER_LEFT" spacing="6" styleClass="nav-card-cta">
+                                        <Label text="Open module" styleClass="nav-cta-text"/>
+                                        <Label text="→" styleClass="nav-cta-arrow"/>
+                                    </HBox>
+                                </VBox>
+                            </graphic>
+                        </Button>
+
+                        <Button onAction="#navigateToEquipment" styleClass="nav-card-btn"
+                                GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="Infinity">
+                            <graphic>
+                                <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
+                                    <VBox styleClass="nav-card-icon-wrap nav-icon-equipment" alignment="CENTER"><Label text="🚜" styleClass="nav-card-emoji"/></VBox>
+                                    <Region prefHeight="14"/>
+                                    <Label text="Equipment" styleClass="nav-card-title"/>
+                                    <Label text="Management" styleClass="nav-card-title-2"/>
+                                    <Region prefHeight="8"/>
+                                    <Label text="Maintenance · Cycles · Readiness" styleClass="nav-card-desc" wrapText="true"/>
+                                    <Region VBox.vgrow="ALWAYS" minHeight="12"/>
+                                    <HBox alignment="CENTER_LEFT" spacing="6" styleClass="nav-card-cta">
+                                        <Label text="Open module" styleClass="nav-cta-text"/>
+                                        <Label text="→" styleClass="nav-cta-arrow"/>
+                                    </HBox>
+                                </VBox>
+                            </graphic>
+                        </Button>
+
+                        <Button onAction="#navigateToStock" styleClass="nav-card-btn"
+                                GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity">
+                            <graphic>
+                                <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
+                                    <VBox styleClass="nav-card-icon-wrap nav-icon-stock" alignment="CENTER"><Label text="📦" styleClass="nav-card-emoji"/></VBox>
+                                    <Region prefHeight="14"/>
+                                    <Label text="Stock" styleClass="nav-card-title"/>
+                                    <Label text="Management" styleClass="nav-card-title-2"/>
+                                    <Region prefHeight="8"/>
+                                    <Label text="Inventory · Control · Waste Reduction" styleClass="nav-card-desc" wrapText="true"/>
+                                    <Region VBox.vgrow="ALWAYS" minHeight="12"/>
+                                    <HBox alignment="CENTER_LEFT" spacing="6" styleClass="nav-card-cta">
+                                        <Label text="Open module" styleClass="nav-cta-text"/>
+                                        <Label text="→" styleClass="nav-cta-arrow"/>
+                                    </HBox>
+                                </VBox>
+                            </graphic>
+                        </Button>
+
+                        <Button onAction="#navigateToCulture" styleClass="nav-card-btn"
+                                GridPane.columnIndex="0" GridPane.rowIndex="1" maxWidth="Infinity">
+                            <graphic>
+                                <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
+                                    <VBox styleClass="nav-card-icon-wrap nav-icon-culture" alignment="CENTER"><Label text="🌱" styleClass="nav-card-emoji"/></VBox>
+                                    <Region prefHeight="14"/>
+                                    <Label text="Culture" styleClass="nav-card-title"/>
+                                    <Label text="Management" styleClass="nav-card-title-2"/>
+                                    <Region prefHeight="8"/>
+                                    <Label text="Crop Cycles · Climate · Planning" styleClass="nav-card-desc" wrapText="true"/>
+                                    <Region VBox.vgrow="ALWAYS" minHeight="12"/>
+                                    <HBox alignment="CENTER_LEFT" spacing="6" styleClass="nav-card-cta">
+                                        <Label text="Open module" styleClass="nav-cta-text"/>
+                                        <Label text="→" styleClass="nav-cta-arrow"/>
+                                    </HBox>
+                                </VBox>
+                            </graphic>
+                        </Button>
+
+                        <Button onAction="#navigateToUsers" styleClass="nav-card-btn"
+                                GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity">
+                            <graphic>
+                                <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
+                                    <VBox styleClass="nav-card-icon-wrap nav-icon-users" alignment="CENTER"><Label text="👤" styleClass="nav-card-emoji"/></VBox>
+                                    <Region prefHeight="14"/>
+                                    <Label text="User" styleClass="nav-card-title"/>
+                                    <Label text="Management" styleClass="nav-card-title-2"/>
+                                    <Region prefHeight="8"/>
+                                    <Label text="Accounts · Roles · Permissions" styleClass="nav-card-desc" wrapText="true"/>
+                                    <Region VBox.vgrow="ALWAYS" minHeight="12"/>
+                                    <HBox alignment="CENTER_LEFT" spacing="6" styleClass="nav-card-cta">
+                                        <Label text="Open module" styleClass="nav-cta-text"/>
+                                        <Label text="→" styleClass="nav-cta-arrow"/>
+                                    </HBox>
+                                </VBox>
+                            </graphic>
+                        </Button>
+
+                        <Button onAction="#navigateToWorkers" styleClass="nav-card-btn"
+                                GridPane.columnIndex="2" GridPane.rowIndex="1" maxWidth="Infinity">
+                            <graphic>
+                                <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
+                                    <VBox styleClass="nav-card-icon-wrap nav-icon-workers" alignment="CENTER"><Label text="👷" styleClass="nav-card-emoji"/></VBox>
+                                    <Region prefHeight="14"/>
+                                    <Label text="Workers" styleClass="nav-card-title"/>
+                                    <Label text="Management" styleClass="nav-card-title-2"/>
+                                    <Region prefHeight="8"/>
+                                    <Label text="Tasks · Scheduling · Coordination" styleClass="nav-card-desc" wrapText="true"/>
+                                    <Region VBox.vgrow="ALWAYS" minHeight="12"/>
+                                    <HBox alignment="CENTER_LEFT" spacing="6" styleClass="nav-card-cta">
+                                        <Label text="Open module" styleClass="nav-cta-text"/>
+                                        <Label text="→" styleClass="nav-cta-arrow"/>
+                                    </HBox>
+                                </VBox>
+                            </graphic>
+                        </Button>
+
+                    </GridPane>
+                </VBox>
+
+                <!-- ══════════════════════════════════════════════════════
+                     LIVE SUMMARY BAND
+                     ══════════════════════════════════════════════════════ -->
+                <HBox styleClass="stats-band" alignment="CENTER" spacing="0">
+                    <padding><Insets top="28" bottom="28" left="48" right="48"/></padding>
+                    <VBox alignment="CENTER" styleClass="stat-item" HBox.hgrow="ALWAYS">
+                        <Label fx:id="bandParcellesLabel" text="..." styleClass="stat-big-num"/>
+                        <Label text="FIELDS" styleClass="stat-big-lbl"/>
+                    </VBox>
+                    <Region styleClass="stat-sep"/>
+                    <VBox alignment="CENTER" styleClass="stat-item" HBox.hgrow="ALWAYS">
+                        <Label fx:id="bandCulturesLabel" text="..." styleClass="stat-big-num"/>
+                        <Label text="ACTIVE CULTURES" styleClass="stat-big-lbl"/>
+                    </VBox>
+                    <Region styleClass="stat-sep"/>
+                    <VBox alignment="CENTER" styleClass="stat-item" HBox.hgrow="ALWAYS">
+                        <Label fx:id="bandRetesLabel" text="..." styleClass="stat-big-num"/>
+                        <Label text="READY TO HARVEST" styleClass="stat-big-lbl"/>
+                    </VBox>
+                    <Region styleClass="stat-sep"/>
+                    <VBox alignment="CENTER" styleClass="stat-item" HBox.hgrow="ALWAYS">
+                        <Label fx:id="bandSurfaceLabel" text="..." styleClass="stat-big-num"/>
+                        <Label text="TOTAL SURFACE" styleClass="stat-big-lbl"/>
+                    </VBox>
+                </HBox>
+
+                <!-- ══════════════════════════════════════════════════════
+                     TEAM SECTION
+                     ══════════════════════════════════════════════════════ -->
+                <VBox styleClass="team-section" spacing="24">
+                    <padding><Insets top="40" right="48" bottom="36" left="48"/></padding>
+                    <VBox spacing="6">
+                        <Label text="THE TEAM BEHIND THE PLATFORM" styleClass="section-eyebrow"/>
+                        <Label text="Built by farmers, engineers &amp; data scientists." styleClass="section-heading"/>
+                        <Label text="AgriSense 360 was born from the field — literally. Our team combines deep agri knowledge with cutting-edge AI to give you the edge."
+                               styleClass="section-sub" wrapText="true"/>
+                    </VBox>
+                    <HBox spacing="20" alignment="CENTER_LEFT">
+                        <VBox styleClass="team-card" spacing="12" alignment="CENTER" HBox.hgrow="ALWAYS">
+                            <Label text="🧑‍🌾" styleClass="team-avatar"/>
+                            <Label text="Agri Specialists" styleClass="team-role"/>
+                            <Label text="Deep expertise in crop science, livestock, and sustainable farming." styleClass="team-desc" wrapText="true" textAlignment="CENTER"/>
+                        </VBox>
+                        <VBox styleClass="team-card" spacing="12" alignment="CENTER" HBox.hgrow="ALWAYS">
+                            <Label text="🤖" styleClass="team-avatar"/>
+                            <Label text="AI Engineers" styleClass="team-role"/>
+                            <Label text="Building intelligent models that detect risks before they escalate." styleClass="team-desc" wrapText="true" textAlignment="CENTER"/>
+                        </VBox>
+                        <VBox styleClass="team-card" spacing="12" alignment="CENTER" HBox.hgrow="ALWAYS">
+                            <Label text="📊" styleClass="team-avatar"/>
+                            <Label text="Data Scientists" styleClass="team-role"/>
+                            <Label text="Transforming raw sensor data into clear, actionable insight." styleClass="team-desc" wrapText="true" textAlignment="CENTER"/>
+                        </VBox>
+                        <VBox styleClass="team-card" spacing="12" alignment="CENTER" HBox.hgrow="ALWAYS">
+                            <Label text="🎨" styleClass="team-avatar"/>
+                            <Label text="UX Designers" styleClass="team-role"/>
+                            <Label text="Crafting interfaces that feel natural even in muddy boots." styleClass="team-desc" wrapText="true" textAlignment="CENTER"/>
+                        </VBox>
                     </HBox>
+                </VBox>
 
-                    <Region prefHeight="12"/>
-                    <Label text="Welcome Back," styleClass="hero-greeting" wrapText="true"/>
-                    <Label text="Your Farm is Growing Smarter." styleClass="hero-headline" wrapText="true"/>
-                    <Region prefHeight="10"/>
-                    <Label text="Every field signal, every crop status, every machine alert — unified into one living dashboard. Make confident decisions, every harvest."
-                           styleClass="hero-subtext" wrapText="true" maxWidth="520"/>
-                    <Region prefHeight="20"/>
-
-                    <!-- Live stat chips — all bound to DB values -->
-                    <HBox spacing="14" alignment="CENTER_LEFT">
-                        <VBox styleClass="hero-stat-chip" alignment="CENTER">
-                            <Label fx:id="totalParcellesLabel" text="..." styleClass="hero-stat-num"/>
-                            <Label text="Fields" styleClass="hero-stat-lbl"/>
+                <!-- ══════════════════════════════════════════════════════
+                     FOOTER
+                     ══════════════════════════════════════════════════════ -->
+                <VBox styleClass="footer-section" spacing="32">
+                    <padding><Insets top="48" right="48" bottom="32" left="48"/></padding>
+                    <HBox spacing="40" alignment="TOP_LEFT">
+                        <VBox spacing="14" HBox.hgrow="ALWAYS">
+                            <Label text="AgriSense 360" styleClass="footer-brand"/>
+                            <Label text="Smart AI Companion for Farms" styleClass="footer-tagline"/>
+                            <Label text="The all-in-one platform that unifies your farm operations, powered by real-time AI and precision sensing."
+                                   styleClass="footer-blurb" wrapText="true"/>
+                            <HBox spacing="10">
+                                <Label text="🌍" styleClass="footer-social"/>
+                                <Label text="📧" styleClass="footer-social"/>
+                                <Label text="📞" styleClass="footer-social"/>
+                            </HBox>
                         </VBox>
-                        <VBox styleClass="hero-stat-chip" alignment="CENTER">
-                            <Label fx:id="totalCulturesLabel" text="..." styleClass="hero-stat-num"/>
-                            <Label text="Cultures" styleClass="hero-stat-lbl"/>
+                        <VBox spacing="12" minWidth="160">
+                            <Label text="PLATFORM" styleClass="footer-col-title"/>
+                            <Label text="Animals Management" styleClass="footer-link"/>
+                            <Label text="Equipment Management" styleClass="footer-link"/>
+                            <Label text="Stock Management" styleClass="footer-link"/>
+                            <Label text="Culture Management" styleClass="footer-link"/>
+                            <Label text="Worker Management" styleClass="footer-link"/>
                         </VBox>
-                        <VBox styleClass="hero-stat-chip" alignment="CENTER">
-                            <Label fx:id="tauxOccupationLabel" text="..." styleClass="hero-stat-num"/>
-                            <Label text="Occupancy" styleClass="hero-stat-lbl"/>
+                        <VBox spacing="12" minWidth="200">
+                            <Label text="CONTACT US" styleClass="footer-col-title"/>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="📧" styleClass="footer-icon"/>
+                                <Label text="support@agrisense360.io" styleClass="footer-contact"/>
+                            </HBox>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="📞" styleClass="footer-icon"/>
+                                <Label text="+1 (800) 360-FARM" styleClass="footer-contact"/>
+                            </HBox>
+                            <HBox spacing="8" alignment="CENTER_LEFT">
+                                <Label text="📍" styleClass="footer-icon"/>
+                                <Label text="Smart Farm HQ, Agriville, CA" styleClass="footer-contact"/>
+                            </HBox>
                         </VBox>
-                        <VBox styleClass="hero-stat-chip" alignment="CENTER">
-                            <Label fx:id="culturesRetardLabel" text="..." styleClass="hero-stat-num-warn"/>
-                            <Label text="Overdue" styleClass="hero-stat-lbl"/>
+                        <VBox spacing="12" minWidth="180">
+                            <Label text="SUPPORT HOURS" styleClass="footer-col-title"/>
+                            <Label text="Mon – Fri: 7:00 AM – 8:00 PM" styleClass="footer-contact"/>
+                            <Label text="Sat: 8:00 AM – 5:00 PM" styleClass="footer-contact"/>
+                            <Label text="Emergency: 24/7 hotline available" styleClass="footer-contact"/>
+                            <Region prefHeight="8"/>
+                            <HBox styleClass="footer-badge" alignment="CENTER" spacing="6">
+                                <Region styleClass="live-dot"/>
+                                <Label text="All systems operational" styleClass="footer-badge-text"/>
+                            </HBox>
                         </VBox>
+                    </HBox>
+                    <Region styleClass="footer-hr"/>
+                    <HBox alignment="CENTER_LEFT" spacing="0">
+                        <Label text="© 2025 AgriSense 360 · All rights reserved · Crafted with  🌿  for smarter farming"
+                               styleClass="footer-copy" HBox.hgrow="ALWAYS"/>
+                        <Label text="v2.0.0" styleClass="footer-version"/>
                     </HBox>
                 </VBox>
 
-                <!-- Right glass live-status panel -->
-                <VBox alignment="TOP_RIGHT" StackPane.alignment="CENTER_RIGHT">
-                    <padding><Insets right="48" top="0"/></padding>
-                    <VBox styleClass="hero-glass-panel" spacing="0" alignment="TOP_LEFT">
-                        <Label text="📡  Live Farm Status" styleClass="glass-panel-title"/>
-                        <Region prefHeight="18"/>
-
-                        <HBox alignment="CENTER_LEFT">
-                            <VBox HBox.hgrow="ALWAYS">
-                                <Label text="Fields (Parcelles)" styleClass="glass-row-label"/>
-                            </VBox>
-                            <Label fx:id="glassParcellesLabel" text="..." styleClass="glass-row-value"/>
-                        </HBox>
-                        <Region styleClass="glass-divider" prefHeight="1"/>
-                        <Region prefHeight="10"/>
-
-                        <HBox alignment="CENTER_LEFT">
-                            <VBox HBox.hgrow="ALWAYS">
-                                <Label text="Active Cultures" styleClass="glass-row-label"/>
-                            </VBox>
-                            <Label fx:id="glassCulturesLabel" text="..." styleClass="glass-row-value"/>
-                        </HBox>
-                        <Region styleClass="glass-divider" prefHeight="1"/>
-                        <Region prefHeight="10"/>
-
-                        <HBox alignment="CENTER_LEFT">
-                            <VBox HBox.hgrow="ALWAYS">
-                                <Label text="Ready to Harvest" styleClass="glass-row-label"/>
-                            </VBox>
-                            <Label fx:id="glassCulturesRetesLabel" text="..." styleClass="glass-row-value"/>
-                        </HBox>
-                        <Region styleClass="glass-divider" prefHeight="1"/>
-                        <Region prefHeight="10"/>
-
-                        <HBox alignment="CENTER_LEFT">
-                            <VBox HBox.hgrow="ALWAYS">
-                                <Label text="Harvest Overdue" styleClass="glass-row-label"/>
-                            </VBox>
-                            <Label fx:id="glassCulturesRetardLabel" text="..." styleClass="glass-row-warning"/>
-                        </HBox>
-                        <Region styleClass="glass-divider" prefHeight="1"/>
-                        <Region prefHeight="10"/>
-
-                        <HBox alignment="CENTER_LEFT">
-                            <VBox HBox.hgrow="ALWAYS">
-                                <Label text="Field Occupancy" styleClass="glass-row-label"/>
-                            </VBox>
-                            <Label fx:id="glassTauxLabel" text="..." styleClass="glass-row-value"/>
-                        </HBox>
-
-                        <Region prefHeight="16"/>
-                        <HBox styleClass="glass-live-badge" alignment="CENTER" spacing="6">
-                            <Region styleClass="live-dot"/>
-                            <Label text="Live · from database" styleClass="glass-live-text"/>
-                        </HBox>
-                    </VBox>
-                </VBox>
-
-            </StackPane>
-
-            <!-- ══════════════════════════════════════════════════════
-                 QUICK NAVIGATION — 6 cards
-                 Navigation @FXML methods are UNCHANGED
-                 ══════════════════════════════════════════════════════ -->
-            <VBox styleClass="nav-section" spacing="22">
-                <padding><Insets top="40" right="48" bottom="40" left="48"/></padding>
-
-                <VBox spacing="6">
-                    <Label text="QUICK NAVIGATION" styleClass="section-eyebrow"/>
-                    <Label text="Every department, one click away." styleClass="section-heading"/>
-                    <Label text="Jump into any management area from here. Your data, your control." styleClass="section-sub"/>
-                </VBox>
-
-                <GridPane hgap="20" vgap="20">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33"/>
-                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33"/>
-                        <ColumnConstraints hgrow="ALWAYS" percentWidth="33.33"/>
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints vgrow="ALWAYS"/>
-                        <RowConstraints vgrow="ALWAYS"/>
-                    </rowConstraints>
-
-                    <Button onAction="#navigateToAnimals" styleClass="nav-card-btn"
-                            GridPane.columnIndex="0" GridPane.rowIndex="0" maxWidth="Infinity">
-                        <graphic>
-                            <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
-                                <VBox styleClass="nav-card-icon-wrap" alignment="CENTER"><Label text="🐄" styleClass="nav-card-emoji"/></VBox>
-                                <Region prefHeight="14"/>
-                                <Label text="Animals" styleClass="nav-card-title"/>
-                                <Label text="Management" styleClass="nav-card-title-2"/>
-                                <Region prefHeight="8"/>
-                                <Label text="Health · Feeding · Productivity" styleClass="nav-card-desc" wrapText="true"/>
-                                <Region VBox.vgrow="ALWAYS" minHeight="12"/>
-                                <HBox alignment="CENTER_LEFT" spacing="6" styleClass="nav-card-cta">
-                                    <Label text="Open module" styleClass="nav-cta-text"/>
-                                    <Label text="→" styleClass="nav-cta-arrow"/>
-                                </HBox>
-                            </VBox>
-                        </graphic>
-                    </Button>
-
-                    <Button onAction="#navigateToEquipment" styleClass="nav-card-btn"
-                            GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="Infinity">
-                        <graphic>
-                            <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
-                                <VBox styleClass="nav-card-icon-wrap nav-icon-equipment" alignment="CENTER"><Label text="🚜" styleClass="nav-card-emoji"/></VBox>
-                                <Region prefHeight="14"/>
-                                <Label text="Equipment" styleClass="nav-card-title"/>
-                                <Label text="Management" styleClass="nav-card-title-2"/>
-                                <Region prefHeight="8"/>
-                                <Label text="Maintenance · Cycles · Readiness" styleClass="nav-card-desc" wrapText="true"/>
-                                <Region VBox.vgrow="ALWAYS" minHeight="12"/>
-                                <HBox alignment="CENTER_LEFT" spacing="6" styleClass="nav-card-cta">
-                                    <Label text="Open module" styleClass="nav-cta-text"/>
-                                    <Label text="→" styleClass="nav-cta-arrow"/>
-                                </HBox>
-                            </VBox>
-                        </graphic>
-                    </Button>
-
-                    <Button onAction="#navigateToStock" styleClass="nav-card-btn"
-                            GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity">
-                        <graphic>
-                            <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
-                                <VBox styleClass="nav-card-icon-wrap nav-icon-stock" alignment="CENTER"><Label text="📦" styleClass="nav-card-emoji"/></VBox>
-                                <Region prefHeight="14"/>
-                                <Label text="Stock" styleClass="nav-card-title"/>
-                                <Label text="Management" styleClass="nav-card-title-2"/>
-                                <Region prefHeight="8"/>
-                                <Label text="Inventory · Control · Waste Reduction" styleClass="nav-card-desc" wrapText="true"/>
-                                <Region VBox.vgrow="ALWAYS" minHeight="12"/>
-                                <HBox alignment="CENTER_LEFT" spacing="6" styleClass="nav-card-cta">
-                                    <Label text="Open module" styleClass="nav-cta-text"/>
-                                    <Label text="→" styleClass="nav-cta-arrow"/>
-                                </HBox>
-                            </VBox>
-                        </graphic>
-                    </Button>
-
-                    <Button onAction="#navigateToCulture" styleClass="nav-card-btn"
-                            GridPane.columnIndex="0" GridPane.rowIndex="1" maxWidth="Infinity">
-                        <graphic>
-                            <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
-                                <VBox styleClass="nav-card-icon-wrap nav-icon-culture" alignment="CENTER"><Label text="🌱" styleClass="nav-card-emoji"/></VBox>
-                                <Region prefHeight="14"/>
-                                <Label text="Culture" styleClass="nav-card-title"/>
-                                <Label text="Management" styleClass="nav-card-title-2"/>
-                                <Region prefHeight="8"/>
-                                <Label text="Crop Cycles · Climate · Planning" styleClass="nav-card-desc" wrapText="true"/>
-                                <Region VBox.vgrow="ALWAYS" minHeight="12"/>
-                                <HBox alignment="CENTER_LEFT" spacing="6" styleClass="nav-card-cta">
-                                    <Label text="Open module" styleClass="nav-cta-text"/>
-                                    <Label text="→" styleClass="nav-cta-arrow"/>
-                                </HBox>
-                            </VBox>
-                        </graphic>
-                    </Button>
-
-                    <Button onAction="#navigateToUsers" styleClass="nav-card-btn"
-                            GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity">
-                        <graphic>
-                            <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
-                                <VBox styleClass="nav-card-icon-wrap nav-icon-users" alignment="CENTER"><Label text="👤" styleClass="nav-card-emoji"/></VBox>
-                                <Region prefHeight="14"/>
-                                <Label text="User" styleClass="nav-card-title"/>
-                                <Label text="Management" styleClass="nav-card-title-2"/>
-                                <Region prefHeight="8"/>
-                                <Label text="Accounts · Roles · Permissions" styleClass="nav-card-desc" wrapText="true"/>
-                                <Region VBox.vgrow="ALWAYS" minHeight="12"/>
-                                <HBox alignment="CENTER_LEFT" spacing="6" styleClass="nav-card-cta">
-                                    <Label text="Open module" styleClass="nav-cta-text"/>
-                                    <Label text="→" styleClass="nav-cta-arrow"/>
-                                </HBox>
-                            </VBox>
-                        </graphic>
-                    </Button>
-
-                    <Button onAction="#navigateToWorkers" styleClass="nav-card-btn"
-                            GridPane.columnIndex="2" GridPane.rowIndex="1" maxWidth="Infinity">
-                        <graphic>
-                            <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
-                                <VBox styleClass="nav-card-icon-wrap nav-icon-workers" alignment="CENTER"><Label text="👷" styleClass="nav-card-emoji"/></VBox>
-                                <Region prefHeight="14"/>
-                                <Label text="Workers" styleClass="nav-card-title"/>
-                                <Label text="Management" styleClass="nav-card-title-2"/>
-                                <Region prefHeight="8"/>
-                                <Label text="Tasks · Scheduling · Coordination" styleClass="nav-card-desc" wrapText="true"/>
-                                <Region VBox.vgrow="ALWAYS" minHeight="12"/>
-                                <HBox alignment="CENTER_LEFT" spacing="6" styleClass="nav-card-cta">
-                                    <Label text="Open module" styleClass="nav-cta-text"/>
-                                    <Label text="→" styleClass="nav-cta-arrow"/>
-                                </HBox>
-                            </VBox>
-                        </graphic>
-                    </Button>
-
-                </GridPane>
             </VBox>
+        </ScrollPane>
+    </VBox>
 
-            <!-- ══════════════════════════════════════════════════════
-                 LIVE SUMMARY BAND — replaces fake stats band
-                 4 live DB values pulled by HomeContentController
-                 ══════════════════════════════════════════════════════ -->
-            <HBox styleClass="stats-band" alignment="CENTER" spacing="0">
-                <padding><Insets top="28" bottom="28" left="48" right="48"/></padding>
-                <VBox alignment="CENTER" styleClass="stat-item" HBox.hgrow="ALWAYS">
-                    <Label fx:id="bandParcellesLabel" text="..." styleClass="stat-big-num"/>
-                    <Label text="FIELDS" styleClass="stat-big-lbl"/>
-                </VBox>
-                <Region styleClass="stat-sep"/>
-                <VBox alignment="CENTER" styleClass="stat-item" HBox.hgrow="ALWAYS">
-                    <Label fx:id="bandCulturesLabel" text="..." styleClass="stat-big-num"/>
-                    <Label text="ACTIVE CULTURES" styleClass="stat-big-lbl"/>
-                </VBox>
-                <Region styleClass="stat-sep"/>
-                <VBox alignment="CENTER" styleClass="stat-item" HBox.hgrow="ALWAYS">
-                    <Label fx:id="bandRetesLabel" text="..." styleClass="stat-big-num"/>
-                    <Label text="READY TO HARVEST" styleClass="stat-big-lbl"/>
-                </VBox>
-                <Region styleClass="stat-sep"/>
-                <VBox alignment="CENTER" styleClass="stat-item" HBox.hgrow="ALWAYS">
-                    <Label fx:id="bandSurfaceLabel" text="..." styleClass="stat-big-num"/>
-                    <Label text="TOTAL SURFACE" styleClass="stat-big-lbl"/>
-                </VBox>
-            </HBox>
+    <!-- ══════════════════════════════════════════════════════
+         LAYER 2 — Chatbot overlay (floats above everything)
+         pickOnBounds="false" lets mouse events pass through
+         transparent areas to the scroll content underneath.
+         fx:id="chatbot" wires ChatBotController into
+         HomeContentController as "chatbotController" field.
+         ══════════════════════════════════════════════════════ -->
+    <fx:include fx:id="chatbot" source="chatbot_popup.fxml"
+                mouseTransparent="false"
+                pickOnBounds="false"
+                StackPane.alignment="BOTTOM_RIGHT"/>
 
-            <!-- ══════════════════════════════════════════════════════
-                 TEAM SECTION
-                 ══════════════════════════════════════════════════════ -->
-            <VBox styleClass="team-section" spacing="24">
-                <padding><Insets top="40" right="48" bottom="36" left="48"/></padding>
-                <VBox spacing="6">
-                    <Label text="THE TEAM BEHIND THE PLATFORM" styleClass="section-eyebrow"/>
-                    <Label text="Built by farmers, engineers &amp; data scientists." styleClass="section-heading"/>
-                    <Label text="AgriSense 360 was born from the field — literally. Our team combines deep agri knowledge with cutting-edge AI to give you the edge."
-                           styleClass="section-sub" wrapText="true"/>
-                </VBox>
-                <HBox spacing="20" alignment="CENTER_LEFT">
-                    <VBox styleClass="team-card" spacing="12" alignment="CENTER" HBox.hgrow="ALWAYS">
-                        <Label text="🧑‍🌾" styleClass="team-avatar"/>
-                        <Label text="Agri Specialists" styleClass="team-role"/>
-                        <Label text="Deep expertise in crop science, livestock, and sustainable farming." styleClass="team-desc" wrapText="true" textAlignment="CENTER"/>
-                    </VBox>
-                    <VBox styleClass="team-card" spacing="12" alignment="CENTER" HBox.hgrow="ALWAYS">
-                        <Label text="🤖" styleClass="team-avatar"/>
-                        <Label text="AI Engineers" styleClass="team-role"/>
-                        <Label text="Building intelligent models that detect risks before they escalate." styleClass="team-desc" wrapText="true" textAlignment="CENTER"/>
-                    </VBox>
-                    <VBox styleClass="team-card" spacing="12" alignment="CENTER" HBox.hgrow="ALWAYS">
-                        <Label text="📊" styleClass="team-avatar"/>
-                        <Label text="Data Scientists" styleClass="team-role"/>
-                        <Label text="Transforming raw sensor data into clear, actionable insight." styleClass="team-desc" wrapText="true" textAlignment="CENTER"/>
-                    </VBox>
-                    <VBox styleClass="team-card" spacing="12" alignment="CENTER" HBox.hgrow="ALWAYS">
-                        <Label text="🎨" styleClass="team-avatar"/>
-                        <Label text="UX Designers" styleClass="team-role"/>
-                        <Label text="Crafting interfaces that feel natural even in muddy boots." styleClass="team-desc" wrapText="true" textAlignment="CENTER"/>
-                    </VBox>
-                </HBox>
-            </VBox>
-
-            <!-- ══════════════════════════════════════════════════════
-                 FOOTER
-                 ══════════════════════════════════════════════════════ -->
-            <VBox styleClass="footer-section" spacing="32">
-                <padding><Insets top="48" right="48" bottom="32" left="48"/></padding>
-                <HBox spacing="40" alignment="TOP_LEFT">
-                    <VBox spacing="14" HBox.hgrow="ALWAYS">
-                        <Label text="AgriSense 360" styleClass="footer-brand"/>
-                        <Label text="Smart AI Companion for Farms" styleClass="footer-tagline"/>
-                        <Label text="The all-in-one platform that unifies your farm operations, powered by real-time AI and precision sensing."
-                               styleClass="footer-blurb" wrapText="true"/>
-                        <HBox spacing="10">
-                            <Label text="🌍" styleClass="footer-social"/>
-                            <Label text="📧" styleClass="footer-social"/>
-                            <Label text="📞" styleClass="footer-social"/>
-                        </HBox>
-                    </VBox>
-                    <VBox spacing="12" minWidth="160">
-                        <Label text="PLATFORM" styleClass="footer-col-title"/>
-                        <Label text="Animals Management" styleClass="footer-link"/>
-                        <Label text="Equipment Management" styleClass="footer-link"/>
-                        <Label text="Stock Management" styleClass="footer-link"/>
-                        <Label text="Culture Management" styleClass="footer-link"/>
-                        <Label text="Worker Management" styleClass="footer-link"/>
-                    </VBox>
-                    <VBox spacing="12" minWidth="200">
-                        <Label text="CONTACT US" styleClass="footer-col-title"/>
-                        <HBox spacing="8" alignment="CENTER_LEFT">
-                            <Label text="📧" styleClass="footer-icon"/>
-                            <Label text="support@agrisense360.io" styleClass="footer-contact"/>
-                        </HBox>
-                        <HBox spacing="8" alignment="CENTER_LEFT">
-                            <Label text="📞" styleClass="footer-icon"/>
-                            <Label text="+1 (800) 360-FARM" styleClass="footer-contact"/>
-                        </HBox>
-                        <HBox spacing="8" alignment="CENTER_LEFT">
-                            <Label text="📍" styleClass="footer-icon"/>
-                            <Label text="Smart Farm HQ, Agriville, CA" styleClass="footer-contact"/>
-                        </HBox>
-                    </VBox>
-                    <VBox spacing="12" minWidth="180">
-                        <Label text="SUPPORT HOURS" styleClass="footer-col-title"/>
-                        <Label text="Mon – Fri: 7:00 AM – 8:00 PM" styleClass="footer-contact"/>
-                        <Label text="Sat: 8:00 AM – 5:00 PM" styleClass="footer-contact"/>
-                        <Label text="Emergency: 24/7 hotline available" styleClass="footer-contact"/>
-                        <Region prefHeight="8"/>
-                        <HBox styleClass="footer-badge" alignment="CENTER" spacing="6">
-                            <Region styleClass="live-dot"/>
-                            <Label text="All systems operational" styleClass="footer-badge-text"/>
-                        </HBox>
-                    </VBox>
-                </HBox>
-                <Region styleClass="footer-hr"/>
-                <HBox alignment="CENTER_LEFT" spacing="0">
-                    <Label text="© 2025 AgriSense 360 · All rights reserved · Crafted with  🌿  for smarter farming"
-                           styleClass="footer-copy" HBox.hgrow="ALWAYS"/>
-                    <Label text="v2.0.0" styleClass="footer-version"/>
-                </HBox>
-            </VBox>
-
-        </VBox>
-    </ScrollPane>
-
-</VBox>
+</StackPane>
