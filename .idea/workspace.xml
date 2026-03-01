@@ -4,44 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="gestion user session+ avatar">
-      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="we added historique de parcelle avec exportation pdf">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/GerantProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/GerantProfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/HomeContentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/HomeContentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/services/userservice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/userservice.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/css/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/home.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/css/sidebar.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/sidebar.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/GerantProfile.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/GerantProfile.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/home_content.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/home_content.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/login.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AnimalController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CultureController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/HealthRecordController$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/HealthRecordController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entity/Animal$Origin.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entity/Animal.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/afficher_culture.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/afficher_equipment.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/afficher_parcelle.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/animal_view.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/animals_management_view.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/health_record_view.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/services/ServiceAnimal.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/services/ServiceAnimalHealthRecord.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/utils/AnimalListRefresh.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,8 +26,13 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
+        <option value="CSS File" />
         <option value="FxmlFile" />
+        <option value="package.json" />
+        <option value="JavaScript File" />
+        <option value="HTML File" />
+        <option value="Python Script" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -71,14 +48,39 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Ahd-2005/AgriSense-360.git&quot;,
-    &quot;accountId&quot;: &quot;1f133cb3-140e-4dbc-b395-42ea5a63a50e&quot;
+    &quot;accountId&quot;: &quot;d12e9602-95d0-4a74-a022-1b9524b17cac&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-base/17.0.14/javafx-base-17.0.14-win.jar!/com/sun/javafx/collections/ListListenerHelper.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/21/javafx-controls-21-win.jar!/javafx/scene/chart/BarChart.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/21/javafx-controls-21-win.jar!/javafx/scene/chart/XYChart.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/17.0.14/javafx-graphics-17.0.14-win.jar!/javafx/scene/Parent.class" root0="SKIP_INSPECTION" />
+  </component>
   <component name="McpProjectServerCommands">
-    <commands />
-    <urls />
+    <McpServerCommand>
+      <option name="allowedToolsNames" />
+      <option name="enabled" value="true" />
+      <option name="name" />
+      <option name="programPath" />
+      <option name="arguments" />
+      <option name="workingDirectory" />
+      <envs />
+    </McpServerCommand>
+    <McpServerCommand>
+      <option name="allowedToolsNames" />
+      <option name="enabled" value="true" />
+      <option name="name" />
+      <option name="programPath" />
+      <option name="arguments" />
+      <option name="workingDirectory" />
+      <envs />
+    </McpServerCommand>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="$PROJECT_DIR$/../../../../../xampp/php/php.exe" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -90,41 +92,49 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.agrisens360 [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.agrisens360 [compile].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;gestion__user&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ahdbe/OneDrive/Desktop/AgriSense-360/src/main/java/services&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.HelloApplication.executor": "Run",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Maven.agrisens360 [clean].executor": "Run",
+    "Maven.agrisens360 [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor": "Run",
+    "Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:jlink].executor": "Run",
+    "Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "gestion__culture",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/css",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Jupyter"
+    ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\ahdbe\OneDrive\Desktop\AgriSense-360\src\main\java\services" />
-      <recent name="C:\Users\ahdbe\OneDrive\Desktop\AgriSense-360\src\main\java\controllers" />
-      <recent name="C:\Users\ahdbe\OneDrive\Desktop\AgriSense-360\src\main\resources\fxml" />
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\css" />
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\fxml" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\images\cultures" />
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\scripts" />
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\services" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -139,7 +149,7 @@
       <option name="ALTERNATIVE_JRE_PATH" value="jbr-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.example.agrisens360.HelloApplication" />
-      <module name="AgriSense-360" />
+      <module name="agrisens360" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.example.agrisens360.*" />
@@ -181,9 +191,16 @@
       <workItem from="1771281251304" duration="111000" />
       <workItem from="1771285589457" duration="1813000" />
       <workItem from="1771292030699" duration="283000" />
-      <workItem from="1771317165903" duration="14244000" />
-      <workItem from="1772318272525" duration="8014000" />
-      <workItem from="1772334487320" duration="4167000" />
+      <workItem from="1771317165903" duration="15083000" />
+      <workItem from="1771620640104" duration="11187000" />
+      <workItem from="1771690481201" duration="28078000" />
+      <workItem from="1772142470752" duration="2487000" />
+      <workItem from="1772144990906" duration="12967000" />
+      <workItem from="1772244994727" duration="1654000" />
+      <workItem from="1772246745018" duration="7702000" />
+      <workItem from="1772257297803" duration="377000" />
+      <workItem from="1772315762126" duration="5207000" />
+      <workItem from="1772332726064" duration="7403000" />
     </task>
     <task id="LOCAL-00001" summary="tous gestion + user">
       <option name="closed" value="true" />
@@ -193,95 +210,111 @@
       <option name="project" value="LOCAL" />
       <updated>1771318318455</updated>
     </task>
-    <task id="LOCAL-00002" summary="gestion user (api auth google)">
+    <task id="LOCAL-00002" summary="&quot;gestion culture - automatise date recolte + optimiser l etat + function de recolte  &quot;">
       <option name="closed" value="true" />
-      <created>1771635166955</created>
+      <created>1771550029628</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1771635166955</updated>
+      <updated>1771550029628</updated>
     </task>
-    <task id="LOCAL-00003" summary="gestion user (api auth google)">
+    <task id="LOCAL-00003" summary="gestion culture dashboard statistique">
       <option name="closed" value="true" />
-      <created>1771635494477</created>
+      <created>1771625957238</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1771635494477</updated>
+      <updated>1771625957238</updated>
     </task>
-    <task id="LOCAL-00004" summary="gestion user (api auth google)">
+    <task id="LOCAL-00004" summary="gestion culture api map 1.0">
       <option name="closed" value="true" />
-      <created>1771635593177</created>
+      <created>1771722588879</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1771635593177</updated>
+      <updated>1771722588879</updated>
     </task>
-    <task id="LOCAL-00005" summary="gestion user (api auth google + reset password by mail)">
+    <task id="LOCAL-00005" summary="gestion culture api map gouvernorat + api agenda avec consultation IA">
       <option name="closed" value="true" />
-      <created>1771723901593</created>
+      <created>1771736320762</created>
       <option name="number" value="00005" />
       <option name="presentableId" value="LOCAL-00005" />
       <option name="project" value="LOCAL" />
-      <updated>1771723901593</updated>
+      <updated>1771736320762</updated>
     </task>
-    <task id="LOCAL-00006" summary="gestion user (api auth google + reset password by mail)">
+    <task id="LOCAL-00006" summary="gestion culture api map gouvernorat + api agenda avec consultation IA groq">
       <option name="closed" value="true" />
-      <created>1771723930860</created>
+      <created>1771752909319</created>
       <option name="number" value="00006" />
       <option name="presentableId" value="LOCAL-00006" />
       <option name="project" value="LOCAL" />
-      <updated>1771723930860</updated>
+      <updated>1771752909319</updated>
     </task>
-    <task id="LOCAL-00007" summary="gestion user (api auth google + reset password by mail)">
+    <task id="LOCAL-00007" summary="gestion culture api map gouvernorat + api agenda avec consultation IA groq">
       <option name="closed" value="true" />
-      <created>1771724332318</created>
+      <created>1771755352405</created>
       <option name="number" value="00007" />
       <option name="presentableId" value="LOCAL-00007" />
       <option name="project" value="LOCAL" />
-      <updated>1771724332318</updated>
+      <updated>1771755352405</updated>
     </task>
-    <task id="LOCAL-00008" summary="gestion user (api auth google + reset password by mail)">
+    <task id="LOCAL-00008" summary="gestion culture api map gouvernorat + api agenda avec consultation IA groq">
       <option name="closed" value="true" />
-      <created>1771724611545</created>
+      <created>1771755403098</created>
       <option name="number" value="00008" />
       <option name="presentableId" value="LOCAL-00008" />
       <option name="project" value="LOCAL" />
-      <updated>1771724611545</updated>
+      <updated>1771755403098</updated>
     </task>
-    <task id="LOCAL-00009" summary="gestion user (api auth google + reset password by mail +Dicebea avatar)">
+    <task id="LOCAL-00009" summary="gestion culture api map gouvernorat + api agenda avec consultation IA groq+hiden api key">
       <option name="closed" value="true" />
-      <created>1771974300342</created>
+      <created>1771755869545</created>
       <option name="number" value="00009" />
       <option name="presentableId" value="LOCAL-00009" />
       <option name="project" value="LOCAL" />
-      <updated>1771974300342</updated>
+      <updated>1771755869545</updated>
     </task>
-    <task id="LOCAL-00010" summary="gestion user session">
+    <task id="LOCAL-00010" summary="API agromonitoring (conseil selon le meteo et hummidite +conseil general )">
       <option name="closed" value="true" />
-      <created>1772061350835</created>
+      <created>1772070709168</created>
       <option name="number" value="00010" />
       <option name="presentableId" value="LOCAL-00010" />
       <option name="project" value="LOCAL" />
-      <updated>1772061350835</updated>
+      <updated>1772070709168</updated>
     </task>
-    <task id="LOCAL-00011" summary="gestion user session+ avatar">
+    <task id="LOCAL-00011" summary="gestion culture+gestion user+gestion animal (integrated) API :">
       <option name="closed" value="true" />
-      <created>1772143348886</created>
+      <created>1772148467302</created>
       <option name="number" value="00011" />
       <option name="presentableId" value="LOCAL-00011" />
       <option name="project" value="LOCAL" />
-      <updated>1772143348886</updated>
+      <updated>1772148467302</updated>
     </task>
-    <task id="LOCAL-00012" summary="gestion user session+ avatar">
+    <task id="LOCAL-00012" summary="GESTION CULTURE COMPLETE (INTEGRATION DE IA + APIS + INTEGRATION STOCK +USER+ANIMAL) bien joue">
       <option name="closed" value="true" />
-      <created>1772144151911</created>
+      <created>1772252830061</created>
       <option name="number" value="00012" />
       <option name="presentableId" value="LOCAL-00012" />
       <option name="project" value="LOCAL" />
-      <updated>1772144151911</updated>
+      <updated>1772252830061</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="fixes for perfection">
+      <option name="closed" value="true" />
+      <created>1772254986959</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1772254986959</updated>
+    </task>
+    <task id="LOCAL-00014" summary="we added historique de parcelle avec exportation pdf">
+      <option name="closed" value="true" />
+      <created>1772319598893</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1772319598893</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -312,12 +345,19 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="tous gestion + user" />
-    <MESSAGE value="gestion user (api auth google)" />
-    <MESSAGE value="gestion user (api auth google + reset password by mail)" />
-    <MESSAGE value="gestion user (api auth google + reset password by mail +Dicebea avatar)" />
-    <MESSAGE value="gestion user session" />
-    <MESSAGE value="gestion user session+ avatar" />
-    <option name="LAST_COMMIT_MESSAGE" value="gestion user session+ avatar" />
+    <MESSAGE value="&quot;gestion culture - automatise date recolte + optimiser l etat + function de recolte  &quot;" />
+    <MESSAGE value="gestion culture dashboard statistique" />
+    <MESSAGE value="gestion culture api map 1.0" />
+    <MESSAGE value="gestion culture api map gouvernorat + api agenda avec consultation IA" />
+    <MESSAGE value="gestion culture api map gouvernorat + api agenda avec consultation IA groq" />
+    <MESSAGE value="gestion culture api map gouvernorat + api agenda avec consultation IA groq+hiden api key" />
+    <MESSAGE value="API agromonitoring (conseil selon le meteo et hummidite +conseil general )" />
+    <MESSAGE value="gestion culture+gestion user+gestion animal (integrated) API :" />
+    <MESSAGE value="GESTION CULTURE COMPLETE (INTEGRATION DE IA + APIS + INTEGRATION STOCK +USER+ANIMAL) bien joue" />
+    <MESSAGE value="bien joue" />
+    <MESSAGE value="fixes for perfection" />
+    <MESSAGE value="we added historique de parcelle avec exportation pdf" />
+    <option name="LAST_COMMIT_MESSAGE" value="we added historique de parcelle avec exportation pdf" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

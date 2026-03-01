@@ -13,32 +13,26 @@ import java.util.List;
 /**
  * HomeContentController — AgriSense 360 Redesigned Home
  * ═══════════════════════════════════════════════════════
- * WHAT CHANGED vs old version:
+ * CHANGES vs previous version:
  *
- *  1. Added @FXML label injections for all live stat chips:
- *       - totalParcellesLabel, totalCulturesLabel,
- *         tauxOccupationLabel, culturesRetardLabel   (hero chips)
- *       - glassParcellesLabel, glassCulturesLabel,
- *         glassCulturesRetesLabel, glassCulturesRetardLabel,
- *         glassTauxLabel                              (glass panel)
- *       - bandParcellesLabel, bandCulturesLabel,
- *         bandRetesLabel, bandSurfaceLabel            (stats band)
+ *  1. Added field:
+ *       @FXML private ChatBotController chatbotController;
+ *     This is auto-injected by JavaFX because home_content.fxml
+ *     uses <fx:include fx:id="chatbot" .../> — JavaFX automatically
+ *     creates a field named "<fx:id>Controller" in the parent
+ *     controller. No other code change needed; the chatbot is
+ *     fully self-contained in ChatBotController.
  *
- *  2. Added initialize() method that queries:
- *       - ParcelleService.getAllParcelles()  → count + total surface
- *       - CultureService.getAllCultures()    → count, prêtes, retard,
- *                                              occupation %
- *     (same computation as DashboardCultureController.loadSummaryStatistics)
- *
- *  3. All existing @FXML navigation methods are UNCHANGED.
+ *  2. All existing @FXML injections and navigation methods are
+ *     COMPLETELY UNCHANGED.
  */
 public class HomeContentController {
 
     // ── Hero stat chips ─────────────────────────────────────────────
-    @FXML private Label totalParcellesLabel;   // count of parcelles
-    @FXML private Label totalCulturesLabel;    // count of cultures
-    @FXML private Label tauxOccupationLabel;   // occupation %
-    @FXML private Label culturesRetardLabel;   // harvest overdue count
+    @FXML private Label totalParcellesLabel;
+    @FXML private Label totalCulturesLabel;
+    @FXML private Label tauxOccupationLabel;
+    @FXML private Label culturesRetardLabel;
 
     // ── Glass panel rows ────────────────────────────────────────────
     @FXML private Label glassParcellesLabel;
@@ -53,16 +47,21 @@ public class HomeContentController {
     @FXML private Label bandRetesLabel;
     @FXML private Label bandSurfaceLabel;
 
+    // ── Chatbot (auto-injected from <fx:include fx:id="chatbot">) ────
+    // JavaFX naming convention: fx:id="chatbot" → field "chatbotController"
+    @FXML private ChatBotController chatbotController;
+
     // ── Services ────────────────────────────────────────────────────
     private final ParcelleService parcelleService = new ParcelleService();
     private final CultureService  cultureService  = new CultureService();
 
-    // Unicode constant for m²
     private static final String M2 = "m\u00B2";
 
     /**
      * Called automatically by JavaFX after FXML injection.
      * Loads live stats from DB and populates all bound labels.
+     * ChatBotController.initialize() is called automatically
+     * by JavaFX for the included FXML — nothing extra needed here.
      */
     @FXML
     public void initialize() {
@@ -70,12 +69,11 @@ public class HomeContentController {
             List<Parcelle> parcelles = parcelleService.getAllParcelles();
             List<Culture>  cultures  = cultureService.getAllCultures();
 
-            // ── Computed values (same logic as DashboardCultureController) ──
-            int    nbParcelles    = parcelles.size();
-            int    nbCultures     = cultures.size();
-            double totalSurface   = parcelles.stream().mapToDouble(Parcelle::getSurface).sum();
+            int    nbParcelles     = parcelles.size();
+            int    nbCultures      = cultures.size();
+            double totalSurface    = parcelles.stream().mapToDouble(Parcelle::getSurface).sum();
             double surfaceUtilisee = cultures.stream().mapToDouble(Culture::getSurface).sum();
-            double taux           = totalSurface > 0 ? (surfaceUtilisee / totalSurface) * 100 : 0;
+            double taux            = totalSurface > 0 ? (surfaceUtilisee / totalSurface) * 100 : 0;
 
             long culturesPretes = cultures.stream()
                     .filter(c -> "Maturit\u00e9".equals(c.getEtat())
@@ -86,23 +84,23 @@ public class HomeContentController {
                     .filter(c -> "R\u00e9colte en Retard".equals(c.getEtat()))
                     .count();
 
-            String surfaceText  = String.format("%.0f", totalSurface) + " " + M2;
-            String tauxText     = String.format("%.1f%%", taux);
+            String surfaceText = String.format("%.0f", totalSurface) + " " + M2;
+            String tauxText    = String.format("%.1f%%", taux);
 
-            // ── Hero chips ──────────────────────────────────────────────
+            // Hero chips
             safeSet(totalParcellesLabel,  String.valueOf(nbParcelles));
             safeSet(totalCulturesLabel,   String.valueOf(nbCultures));
             safeSet(tauxOccupationLabel,  tauxText);
             safeSet(culturesRetardLabel,  String.valueOf(culturesRetard));
 
-            // ── Glass panel ─────────────────────────────────────────────
+            // Glass panel
             safeSet(glassParcellesLabel,      String.valueOf(nbParcelles));
             safeSet(glassCulturesLabel,       String.valueOf(nbCultures));
             safeSet(glassCulturesRetesLabel,  String.valueOf(culturesPretes));
             safeSet(glassCulturesRetardLabel, String.valueOf(culturesRetard));
             safeSet(glassTauxLabel,           tauxText);
 
-            // ── Stats band ──────────────────────────────────────────────
+            // Stats band
             safeSet(bandParcellesLabel, String.valueOf(nbParcelles));
             safeSet(bandCulturesLabel,  String.valueOf(nbCultures));
             safeSet(bandRetesLabel,     String.valueOf(culturesPretes));
@@ -110,17 +108,15 @@ public class HomeContentController {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            // Labels keep their default "..." placeholder text on error
         }
     }
 
-    /** Null-safe label setter — avoids NullPointerException if FXML injection fails */
     private void safeSet(Label label, String value) {
         if (label != null) label.setText(value);
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // NAVIGATION — completely unchanged from original
+    // NAVIGATION — completely unchanged
     // ═══════════════════════════════════════════════════════════════
 
     @FXML

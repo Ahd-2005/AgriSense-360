@@ -1,7 +1,7 @@
 package com.example.agrisens360.services;
 
 import entity.Produit;
-import com.example.agrisens360.utils.MyDataBase;
+import utils.MyDataBase;
 import services.IServiceStock;
 
 import java.sql.*;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ServiceStockProduit implements IServiceStock<Produit> {
 
-    private final Connection cnx = MyDataBase.getInstance().getMyConnection();
+    private final Connection cnx = MyDataBase.getInstance().getCnx();
 
     @Override
     public int ajouter(Produit p) throws SQLException {

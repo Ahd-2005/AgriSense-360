@@ -421,16 +421,21 @@ public class MainLayoutController {
     private void loadContent(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Node content = loader.load();
+            Node content = loader.<Node>load();
             contentArea.getChildren().clear();
             contentArea.getChildren().add(content);
         } catch (IOException e) {
-            System.err.println("Error loading content: " + fxmlPath);
+            System.err.println("Error loading content (IOException): " + fxmlPath);
             e.printStackTrace();
+            showPlaceholder(fxmlPath);
+        } catch (Exception e) {
+            System.err.println("Error loading content (Exception): " + fxmlPath);
+            Throwable cause = e.getCause() != null ? e.getCause() : e;
+            System.err.println("Root cause: " + cause.getMessage());
+            cause.printStackTrace();
             showPlaceholder(fxmlPath);
         }
     }
-
     @FXML
     public void navigateToCulture() {
         loadContent("/fxml/dashboard_culture.fxml");
@@ -440,6 +445,7 @@ public class MainLayoutController {
     /**
      * Navigate to Afficher Culture page (called from dashboard)
      */
+    @FXML
     public void navigateToAfficherCulture() {
         loadContent("/fxml/afficher_culture.fxml");
         setActiveButton(cultureBtn);
@@ -448,6 +454,7 @@ public class MainLayoutController {
     /**
      * Navigate to Afficher Parcelle page (called from dashboard)
      */
+    @FXML
     public void navigateToParcelle() {
         loadContent("/fxml/afficher_parcelle.fxml");
         setActiveButton(cultureBtn);
@@ -553,7 +560,7 @@ public class MainLayoutController {
         profileBtn.getStyleClass().remove("active");
         ouvrierBtn.getStyleClass().remove("active");
 
-        // Add active class to clicked button
+
         if (!activeButton.getStyleClass().contains("active")) {
             activeButton.getStyleClass().add("active");
         }
@@ -566,5 +573,4 @@ public class MainLayoutController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 }
