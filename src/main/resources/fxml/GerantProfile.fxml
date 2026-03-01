@@ -58,10 +58,18 @@
 
                         <Region HBox.hgrow="ALWAYS"/>
 
-                        <Button text="✏️  Modifier le profil" onAction="#handleEdit"
-                                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px;
-                                       -fx-font-weight: bold; -fx-padding: 12 28; -fx-background-radius: 10;
-                                       -fx-cursor: hand;"/>
+                        <HBox spacing="12">
+                            <Button text="✏️  Modifier le profil" onAction="#handleEdit"
+                                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px;
+                                           -fx-font-weight: bold; -fx-padding: 12 28; -fx-background-radius: 10;
+                                           -fx-cursor: hand;"/>
+                            <Button fx:id="faceIdBtn"
+                                    text="🔐  Face ID"
+                                    onAction="#handleFaceVerification"
+                                    style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-size: 14px;
+                                           -fx-font-weight: bold; -fx-padding: 12 22; -fx-background-radius: 10;
+                                           -fx-cursor: hand;"/>
+                        </HBox>
                     </HBox>
                 </VBox>
 
