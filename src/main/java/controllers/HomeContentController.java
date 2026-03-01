@@ -1,8 +1,10 @@
 package controllers;
 
+import controllers.MainLayoutController;
 import entity.Culture;
 import entity.Parcelle;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import services.CultureService;
 import services.ParcelleService;
@@ -10,23 +12,11 @@ import services.ParcelleService;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * HomeContentController — AgriSense 360 Redesigned Home
- * ═══════════════════════════════════════════════════════
- * CHANGES vs previous version:
- *
- *  1. Added field:
- *       @FXML private ChatBotController chatbotController;
- *     This is auto-injected by JavaFX because home_content.fxml
- *     uses <fx:include fx:id="chatbot" .../> — JavaFX automatically
- *     creates a field named "<fx:id>Controller" in the parent
- *     controller. No other code change needed; the chatbot is
- *     fully self-contained in ChatBotController.
- *
- *  2. All existing @FXML injections and navigation methods are
- *     COMPLETELY UNCHANGED.
- */
 public class HomeContentController {
+
+    // ── Singleton ────────────────────────────────────────────────────
+    private static HomeContentController instance;
+    public static HomeContentController getInstance() { return instance; }
 
     // ── Hero stat chips ─────────────────────────────────────────────
     @FXML private Label totalParcellesLabel;
@@ -41,15 +31,15 @@ public class HomeContentController {
     @FXML private Label glassCulturesRetardLabel;
     @FXML private Label glassTauxLabel;
 
-    // ── Stats band ───────────────────────────────────────────────────
+    // ── Stats band ──────────────────────────────────────────────────
     @FXML private Label bandParcellesLabel;
     @FXML private Label bandCulturesLabel;
     @FXML private Label bandRetesLabel;
     @FXML private Label bandSurfaceLabel;
 
-    // ── Chatbot (auto-injected from <fx:include fx:id="chatbot">) ────
-    // JavaFX naming convention: fx:id="chatbot" → field "chatbotController"
-    @FXML private ChatBotController chatbotController;
+    // ── AgriBot button + notification badge ─────────────────────────
+    @FXML private Button agriBotBtn;
+    @FXML private Label  agriBotBadge;
 
     // ── Services ────────────────────────────────────────────────────
     private final ParcelleService parcelleService = new ParcelleService();
@@ -57,14 +47,28 @@ public class HomeContentController {
 
     private static final String M2 = "m\u00B2";
 
-    /**
-     * Called automatically by JavaFX after FXML injection.
-     * Loads live stats from DB and populates all bound labels.
-     * ChatBotController.initialize() is called automatically
-     * by JavaFX for the included FXML — nothing extra needed here.
-     */
     @FXML
     public void initialize() {
+        instance = this;
+
+        // Hover effect on AgriBot button
+        if (agriBotBtn != null) {
+            String normal = "-fx-background-color:rgba(255,255,255,0.18);" +
+                    "-fx-text-fill:white;-fx-font-size:13px;-fx-font-weight:bold;" +
+                    "-fx-background-radius:50;-fx-border-radius:50;" +
+                    "-fx-border-color:rgba(255,255,255,0.45);-fx-border-width:1.5;" +
+                    "-fx-cursor:hand;-fx-padding:10 22 10 16;" +
+                    "-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.25),8,0,0,2);";
+            String hover  = "-fx-background-color:rgba(255,255,255,0.30);" +
+                    "-fx-text-fill:white;-fx-font-size:13px;-fx-font-weight:bold;" +
+                    "-fx-background-radius:50;-fx-border-radius:50;" +
+                    "-fx-border-color:rgba(255,255,255,0.65);-fx-border-width:1.5;" +
+                    "-fx-cursor:hand;-fx-padding:10 22 10 16;" +
+                    "-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.35),12,0,0,3);";
+            agriBotBtn.setOnMouseEntered(e -> agriBotBtn.setStyle(hover));
+            agriBotBtn.setOnMouseExited(e  -> agriBotBtn.setStyle(normal));
+        }
+
         try {
             List<Parcelle> parcelles = parcelleService.getAllParcelles();
             List<Culture>  cultures  = cultureService.getAllCultures();
@@ -87,20 +91,17 @@ public class HomeContentController {
             String surfaceText = String.format("%.0f", totalSurface) + " " + M2;
             String tauxText    = String.format("%.1f%%", taux);
 
-            // Hero chips
             safeSet(totalParcellesLabel,  String.valueOf(nbParcelles));
             safeSet(totalCulturesLabel,   String.valueOf(nbCultures));
             safeSet(tauxOccupationLabel,  tauxText);
             safeSet(culturesRetardLabel,  String.valueOf(culturesRetard));
 
-            // Glass panel
             safeSet(glassParcellesLabel,      String.valueOf(nbParcelles));
             safeSet(glassCulturesLabel,       String.valueOf(nbCultures));
             safeSet(glassCulturesRetesLabel,  String.valueOf(culturesPretes));
             safeSet(glassCulturesRetardLabel, String.valueOf(culturesRetard));
             safeSet(glassTauxLabel,           tauxText);
 
-            // Stats band
             safeSet(bandParcellesLabel, String.valueOf(nbParcelles));
             safeSet(bandCulturesLabel,  String.valueOf(nbCultures));
             safeSet(bandRetesLabel,     String.valueOf(culturesPretes));
@@ -115,10 +116,29 @@ public class HomeContentController {
         if (label != null) label.setText(value);
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // NAVIGATION — completely unchanged
-    // ═══════════════════════════════════════════════════════════════
+    // ── AgriBot button handler ───────────────────────────────────────
+    @FXML
+    private void openAgriBot() {
+        MainLayoutController ctrl = MainLayoutController.getInstance();
+        if (ctrl != null) ctrl.toggleChat();
+    }
 
+    /** Called by MainLayoutController when a bot reply arrives while chat is hidden */
+    public void showAgriBotBadge(int count) {
+        if (agriBotBadge == null) return;
+        agriBotBadge.setText(count > 9 ? "9+" : String.valueOf(count));
+        agriBotBadge.setVisible(true);
+        agriBotBadge.setManaged(true);
+    }
+
+    /** Called by MainLayoutController when chat is opened/cleared */
+    public void clearAgriBotBadge() {
+        if (agriBotBadge == null) return;
+        agriBotBadge.setVisible(false);
+        agriBotBadge.setManaged(false);
+    }
+
+    // ── Navigation ───────────────────────────────────────────────────
     @FXML
     private void navigateToAnimals() {
         MainLayoutController controller = MainLayoutController.getInstance();
