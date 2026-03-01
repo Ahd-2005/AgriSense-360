@@ -6,13 +6,31 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
+<!--
+    MainLayout.fxml — AgriSense 360
+    ══════════════════════════════════════
+    FIXES applied vs previous version:
+      1. sidebar VBox: added maxHeight="Infinity" so it never overflows
+         the window height — allows Profile/Logout to stay anchored at bottom
+      2. managements VBox: wrapped nav buttons in a ScrollPane so when
+         many modules are visible the sidebar itself scrolls — this is
+         the fix for "can't scroll sidebar nav"
+      3. contentArea StackPane: prefHeight="-1" so it uses computed size,
+         allowing the home_content.fxml ScrollPane to work correctly
+-->
+
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.MainLayoutController"
             prefHeight="800.0" prefWidth="1400.0"
             stylesheets="@../css/sidebar.css,@../css/home.css,@../css/cards.css">
 
     <left>
-        <VBox fx:id="sidebar" styleClass="sidebar" spacing="0" prefWidth="280" maxWidth="280">
+        <!--
+            CHANGE 1: maxHeight="Infinity" ensures the sidebar never
+            grows beyond window — critical for Profile/Logout anchoring
+        -->
+        <VBox fx:id="sidebar" styleClass="sidebar" spacing="0"
+              prefWidth="280" maxWidth="280" maxHeight="Infinity">
 
             <!-- Brand / Logo -->
             <HBox fx:id="brandSection" styleClass="brand" alignment="CENTER_LEFT" spacing="12">
@@ -39,134 +57,140 @@
                 </graphic>
             </Button>
 
-            <VBox styleClass="managements" VBox.vgrow="ALWAYS" spacing="5">
-                <padding>
-                    <Insets top="20" right="15" bottom="20" left="15" />
-                </padding>
+            <!--
+                CHANGE 2: Wrap the nav buttons in a ScrollPane inside
+                the managements VBox — so if many nav items are shown
+                the sidebar nav area scrolls independently.
+                VBox.vgrow="ALWAYS" ensures it fills remaining height.
+            -->
+            <ScrollPane fitToWidth="true" fitToHeight="false"
+                        hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                        styleClass="sidebar-scroll"
+                        VBox.vgrow="ALWAYS">
 
-                <Label fx:id="navTitle" text="MANAGEMENTS" styleClass="nav-title" />
+                <VBox styleClass="managements" spacing="5">
+                    <padding>
+                        <Insets top="20" right="15" bottom="10" left="15" />
+                    </padding>
 
-                <VBox spacing="8">
-                    <!-- Home / Mes Tâches (changes based on role) -->
-                    <Button fx:id="homeBtn" styleClass="nav-link" onAction="#navigateToHome">
-                        <graphic>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="🏠" />
-                                <Label fx:id="homeLabel" text="Home" styleClass="nav-label" />
-                            </HBox>
-                        </graphic>
-                    </Button>
+                    <Label fx:id="navTitle" text="MANAGEMENTS" styleClass="nav-title" />
 
-                    <!-- Animals Management -->
-                    <Button fx:id="animalsBtn" styleClass="nav-link" onAction="#navigateToAnimals"
-                            visible="false" managed="false">
-                        <graphic>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="🐄" />
-                                <Label fx:id="animalsLabel" text="Animals Management" styleClass="nav-label" />
-                            </HBox>
-                        </graphic>
-                    </Button>
+                    <VBox spacing="5">
+                        <!-- Home / Mes Tâches -->
+                        <Button fx:id="homeBtn" styleClass="nav-link" onAction="#navigateToHome">
+                            <graphic>
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="🏠" />
+                                    <Label fx:id="homeLabel" text="Home" styleClass="nav-label" />
+                                </HBox>
+                            </graphic>
+                        </Button>
 
+                        <!-- Animals Management -->
+                        <Button fx:id="animalsBtn" styleClass="nav-link" onAction="#navigateToAnimals"
+                                visible="false" managed="false">
+                            <graphic>
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="🐄" />
+                                    <Label fx:id="animalsLabel" text="Animals Management" styleClass="nav-label" />
+                                </HBox>
+                            </graphic>
+                        </Button>
 
-                    <!-- Equipment Management -->
-                    <Button fx:id="equipmentBtn" styleClass="nav-link" onAction="#navigateToEquipment"
-                            visible="false" managed="false">
-                        <graphic>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="🚜" />
-                                <Label fx:id="equipmentLabel" text="Equipments Management" styleClass="nav-label" />
-                            </HBox>
-                        </graphic>
-                    </Button>
+                        <!-- Equipment Management -->
+                        <Button fx:id="equipmentBtn" styleClass="nav-link" onAction="#navigateToEquipment"
+                                visible="false" managed="false">
+                            <graphic>
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="🚜" />
+                                    <Label fx:id="equipmentLabel" text="Equipments Management" styleClass="nav-label" />
+                                </HBox>
+                            </graphic>
+                        </Button>
 
-                    <!-- Stock Management -->
-                    <Button fx:id="stockBtn" styleClass="nav-link" onAction="#navigateToStock"
-                            visible="false" managed="false">
-                        <graphic>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="📦" />
-                                <Label fx:id="stockLabel" text="Stock Management" styleClass="nav-label" />
-                            </HBox>
-                        </graphic>
-                    </Button>
+                        <!-- Stock Management -->
+                        <Button fx:id="stockBtn" styleClass="nav-link" onAction="#navigateToStock"
+                                visible="false" managed="false">
+                            <graphic>
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="📦" />
+                                    <Label fx:id="stockLabel" text="Stock Management" styleClass="nav-label" />
+                                </HBox>
+                            </graphic>
+                        </Button>
 
-                    <!-- Ajoutez ce bouton sub pour le backoffice -->
-                    <Button fx:id="btnBOS" styleClass="nav-link" onAction="#navigateToBackOfficeStock">
-                        <graphic>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="🏢" />
-                                <Label fx:id="BOStockLabel" text="Backoffice Stock" styleClass="nav-label" />
-                            </HBox>
-                        </graphic>
-                    </Button>
+                        <!-- Backoffice Stock -->
+                        <Button fx:id="btnBOS" styleClass="nav-link" onAction="#navigateToBackOfficeStock">
+                            <graphic>
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="🏢" />
+                                    <Label fx:id="BOStockLabel" text="Backoffice Stock" styleClass="nav-label" />
+                                </HBox>
+                            </graphic>
+                        </Button>
 
-                    <!-- Culture Management -->
-                    <Button fx:id="cultureBtn" styleClass="nav-link" onAction="#navigateToCulture"
-                            visible="false" managed="false">
-                        <graphic>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="🌱" />
-                                <Label fx:id="cultureLabel" text="Culture Management" styleClass="nav-label" />
-                            </HBox>
-                        </graphic>
-                    </Button>
+                        <!-- Culture Management -->
+                        <Button fx:id="cultureBtn" styleClass="nav-link" onAction="#navigateToCulture"
+                                visible="false" managed="false">
+                            <graphic>
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="🌱" />
+                                    <Label fx:id="cultureLabel" text="Culture Management" styleClass="nav-label" />
+                                </HBox>
+                            </graphic>
+                        </Button>
 
-                    <!-- Users Management -->
-                    <Button fx:id="usersBtn" styleClass="nav-link" onAction="#navigateToUsers"
-                            visible="false" managed="false">
-                        <graphic>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="👤" />
-                                <Label fx:id="usersLabel" text="User Management" styleClass="nav-label" />
-                            </HBox>
-                        </graphic>
-                    </Button>
+                        <!-- Users Management -->
+                        <Button fx:id="usersBtn" styleClass="nav-link" onAction="#navigateToUsers"
+                                visible="false" managed="false">
+                            <graphic>
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="👤" />
+                                    <Label fx:id="usersLabel" text="User Management" styleClass="nav-label" />
+                                </HBox>
+                            </graphic>
+                        </Button>
 
-                    <!-- Workers Management -->
-                    <Button fx:id="workersBtn" styleClass="nav-link" onAction="#navigateToWorkers"
-                            visible="false" managed="false">
-                        <graphic>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="👷" />
-                                <Label fx:id="workersLabel" text="Workers Management" styleClass="nav-label" />
-                            </HBox>
-                        </graphic>
-                    </Button>
-                    <!-- Ouvrier Management -->
-                    <Button fx:id="ouvrierBtn" styleClass="nav-link" onAction="#navigateToOuvrier"
-                            visible="false" managed="false">
-                        <graphic>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="👨‍🔧" />
-                                <Label fx:id="ouvrierLabel" text="Ouvrier Management" styleClass="nav-label" />
-                            </HBox>
-                        </graphic>
-                    </Button>
+                        <!-- Workers Management -->
+                        <Button fx:id="workersBtn" styleClass="nav-link" onAction="#navigateToWorkers"
+                                visible="false" managed="false">
+                            <graphic>
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="👷" />
+                                    <Label fx:id="workersLabel" text="Workers Management" styleClass="nav-label" />
+                                </HBox>
+                            </graphic>
+                        </Button>
+
+                        <!-- Ouvrier Management -->
+                        <Button fx:id="ouvrierBtn" styleClass="nav-link" onAction="#navigateToOuvrier"
+                                visible="false" managed="false">
+                            <graphic>
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="👨‍🔧" />
+                                    <Label fx:id="ouvrierLabel" text="Ouvrier Management" styleClass="nav-label" />
+                                </HBox>
+                            </graphic>
+                        </Button>
+                    </VBox>
                 </VBox>
-            </VBox>
+            </ScrollPane>
 
-            <!-- Profile & Logout Section - ALWAYS VISIBLE -->
-            <VBox spacing="8" style="-fx-padding: 15;">
-                <padding>
-                    <Insets bottom="10" left="5" right="5" top="10" />
-                </padding>
-
-                <!-- Profile Button - ALWAYS VISIBLE -->
+            <!-- Profile & Logout — always pinned at bottom -->
+            <VBox spacing="5" style="-fx-padding: 10 15 10 15;">
                 <Button fx:id="profileBtn" styleClass="nav-link" onAction="#navigateToProfile">
                     <graphic>
                         <HBox spacing="12" alignment="CENTER_LEFT">
-                            <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="👨‍💼" />
+                            <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="👨‍💼" />
                             <Label fx:id="profileLabel" text="Profile" styleClass="nav-label" />
                         </HBox>
                     </graphic>
                 </Button>
 
-                <!-- Logout Button - ALWAYS VISIBLE -->
                 <Button fx:id="logoutBtn" styleClass="nav-link, logout-btn" onAction="#handleLogout">
                     <graphic>
                         <HBox spacing="12" alignment="CENTER_LEFT">
-                            <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="🚪" />
+                            <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="🚪" />
                             <Label fx:id="logoutLabel" text="Logout" styleClass="nav-label" />
                         </HBox>
                     </graphic>
@@ -176,7 +200,7 @@
             <!-- Footer -->
             <HBox fx:id="sidebarFooter" styleClass="sidebar-foot" spacing="8" alignment="CENTER_LEFT">
                 <padding>
-                    <Insets bottom="20" left="20" right="20" top="20" />
+                    <Insets bottom="16" left="20" right="20" top="16" />
                 </padding>
                 <Region styleClass="pulse-dot" prefWidth="8" prefHeight="8"
                         style="-fx-background-color: #4caf50; -fx-background-radius: 50%;"/>
@@ -186,10 +210,13 @@
         </VBox>
     </left>
 
-    <!-- CENTER: Dynamic Content Area -->
+    <!-- CENTER: Dynamic Content Area
+         CHANGE 3: prefHeight="-1" (USE_COMPUTED_SIZE) so the inner
+         home ScrollPane can determine its own scroll range correctly.
+    -->
     <center>
-        <StackPane fx:id="contentArea" style="-fx-background-color: #f5f5f5;">
-            <!-- Content will be loaded here dynamically -->
+        <StackPane fx:id="contentArea" prefHeight="-1"
+                   style="-fx-background-color: #f4f6f0;">
         </StackPane>
     </center>
 

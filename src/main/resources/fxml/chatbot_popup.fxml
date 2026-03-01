@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!--
+    chatbot_popup.fxml — AgriBot Messenger-Style Chatbot
+    ════════════════════════════════════════════════════════
+    ALL STYLES ARE INLINE — no external CSS file required.
+    This FXML is self-contained and will render correctly
+    regardless of your project's CSS setup.
+-->
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="controllers.ChatBotController"
+           fx:id="chatbotRoot"
+           mouseTransparent="false"
+           pickOnBounds="false"
+           style="-fx-background-color: transparent;">
+
+    <!-- ── BOTTOM-RIGHT ANCHOR ─────────────────────────────────── -->
+    <StackPane alignment="BOTTOM_RIGHT" pickOnBounds="false">
+        <padding><Insets bottom="24" right="28"/></padding>
+
+        <VBox alignment="BOTTOM_RIGHT" spacing="8" pickOnBounds="false">
+
+            <!-- ════════════════════════════════════════════════════
+                 CHAT POPUP WINDOW (hidden by default)
+                 ════════════════════════════════════════════════════ -->
+            <VBox fx:id="chatPopup"
+                  managed="false" visible="false"
+                  maxWidth="320" minWidth="300"
+                  maxHeight="460" minHeight="400"
+                  style="-fx-background-color: white;
+                         -fx-background-radius: 16;
+                         -fx-border-radius: 16;
+                         -fx-border-color: #c8e6c9;
+                         -fx-border-width: 1.5;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0, 0, 6);">
+
+                <!-- ── HEADER ──────────────────────────────────── -->
+                <HBox alignment="CENTER_LEFT" spacing="10"
+                      style="-fx-background-color: linear-gradient(to right, #2d7a3a, #43a047);
+                             -fx-background-radius: 15 15 0 0;
+                             -fx-padding: 12 12 12 14;">
+
+                    <!-- Bot avatar -->
+                    <Label text="🌾"
+                           style="-fx-font-size: 20px;
+                                  -fx-background-color: rgba(255,255,255,0.2);
+                                  -fx-background-radius: 50;
+                                  -fx-padding: 5 7 5 7;
+                                  -fx-min-width: 34;
+                                  -fx-min-height: 34;
+                                  -fx-alignment: CENTER;"/>
+
+                    <!-- Title + status -->
+                    <VBox HBox.hgrow="ALWAYS" spacing="1">
+                        <Label text="AgriBot"
+                               style="-fx-text-fill: white;
+                                      -fx-font-size: 14px;
+                                      -fx-font-weight: bold;"/>
+                        <Label fx:id="chatStatusLabel" text="● Online"
+                               style="-fx-text-fill: #c8f5ca;
+                                      -fx-font-size: 11px;"/>
+                    </VBox>
+
+                    <!-- Minimize -->
+                    <Button fx:id="minimizeButton" text="—"
+                            onAction="#minimizeChat"
+                            style="-fx-background-color: rgba(255,255,255,0.15);
+                                   -fx-text-fill: white;
+                                   -fx-font-size: 13px;
+                                   -fx-min-width: 28;
+                                   -fx-min-height: 28;
+                                   -fx-max-width: 28;
+                                   -fx-max-height: 28;
+                                   -fx-background-radius: 50;
+                                   -fx-cursor: hand;
+                                   -fx-border-width: 0;
+                                   -fx-padding: 0;"/>
+
+                    <!-- Close -->
+                    <Button fx:id="closeButton" text="✕"
+                            onAction="#closeChat"
+                            style="-fx-background-color: rgba(255,255,255,0.15);
+                                   -fx-text-fill: white;
+                                   -fx-font-size: 11px;
+                                   -fx-min-width: 28;
+                                   -fx-min-height: 28;
+                                   -fx-max-width: 28;
+                                   -fx-max-height: 28;
+                                   -fx-background-radius: 50;
+                                   -fx-cursor: hand;
+                                   -fx-border-width: 0;
+                                   -fx-padding: 0;"/>
+                </HBox>
+
+                <!-- ── MESSAGES SCROLL AREA ────────────────────── -->
+                <ScrollPane fx:id="chatScrollPane"
+                            fitToWidth="true"
+                            hbarPolicy="NEVER"
+                            vbarPolicy="AS_NEEDED"
+                            VBox.vgrow="ALWAYS"
+                            style="-fx-background-color: #fafff9;
+                                   -fx-background: #fafff9;
+                                   -fx-border-color: transparent;
+                                   -fx-padding: 0;">
+
+                    <VBox fx:id="messagesContainer"
+                          spacing="6"
+                          style="-fx-background-color: #fafff9; -fx-padding: 12 4 12 4;">
+
+                        <!-- Typing indicator (hidden by default) -->
+                        <HBox fx:id="typingIndicator"
+                              alignment="CENTER_LEFT"
+                              spacing="8"
+                              visible="false" managed="false"
+                              style="-fx-padding: 3 40 3 8;">
+                            <Label text="🌿"
+                                   style="-fx-background-color: #e8f5e9;
+                                          -fx-padding: 5 6 5 6;
+                                          -fx-background-radius: 50;
+                                          -fx-font-size: 14px;
+                                          -fx-min-width: 32;
+                                          -fx-min-height: 32;
+                                          -fx-alignment: CENTER;"/>
+                            <HBox alignment="CENTER_LEFT" spacing="5"
+                                  style="-fx-background-color: #f1f8e9;
+                                         -fx-background-radius: 18 18 18 4;
+                                         -fx-border-color: #c8e6c9;
+                                         -fx-border-radius: 18 18 18 4;
+                                         -fx-border-width: 1;
+                                         -fx-padding: 9 14 9 14;">
+                                <Label text="●" style="-fx-text-fill: #66bb6a; -fx-font-size: 11px;"/>
+                                <Label text="●" style="-fx-text-fill: #66bb6a; -fx-font-size: 11px;"/>
+                                <Label text="●" style="-fx-text-fill: #66bb6a; -fx-font-size: 11px;"/>
+                            </HBox>
+                        </HBox>
+
+                    </VBox>
+                </ScrollPane>
+
+                <!-- ── INPUT BAR ───────────────────────────────── -->
+                <HBox alignment="CENTER" spacing="8"
+                      style="-fx-background-color: #f5f5f5;
+                             -fx-background-radius: 0 0 15 15;
+                             -fx-border-color: #e0e0e0;
+                             -fx-border-width: 1 0 0 0;
+                             -fx-padding: 10 12 10 12;">
+
+                    <TextField fx:id="messageInput"
+                               promptText="Ask AgriBot anything..."
+                               HBox.hgrow="ALWAYS"
+                               style="-fx-background-color: white;
+                                      -fx-background-radius: 20;
+                                      -fx-border-color: #c8e6c9;
+                                      -fx-border-radius: 20;
+                                      -fx-border-width: 1.5;
+                                      -fx-font-size: 13px;
+                                      -fx-text-fill: #333;
+                                      -fx-padding: 8 14 8 14;"/>
+
+                    <Button fx:id="sendButton" text="➤"
+                            onAction="#handleSend"
+                            disable="true"
+                            style="-fx-background-color: #2d7a3a;
+                                   -fx-text-fill: white;
+                                   -fx-font-size: 15px;
+                                   -fx-min-width: 38;
+                                   -fx-min-height: 38;
+                                   -fx-max-width: 38;
+                                   -fx-max-height: 38;
+                                   -fx-background-radius: 50;
+                                   -fx-cursor: hand;
+                                   -fx-border-width: 0;
+                                   -fx-padding: 0;"/>
+                </HBox>
+
+            </VBox>
+
+            <!-- ════════════════════════════════════════════════════
+                 FLOATING ROUND BUTTON + NOTIFICATION DOT
+                 ════════════════════════════════════════════════════ -->
+            <StackPane alignment="CENTER" maxWidth="62" maxHeight="62">
+
+                <Button fx:id="floatingButton"
+                        text="🌾"
+                        onAction="#toggleChat"
+                        style="-fx-min-width: 58px;
+                               -fx-min-height: 58px;
+                               -fx-max-width: 58px;
+                               -fx-max-height: 58px;
+                               -fx-background-radius: 50;
+                               -fx-border-radius: 50;
+                               -fx-background-color: #2d7a3a;
+                               -fx-text-fill: white;
+                               -fx-font-size: 22px;
+                               -fx-cursor: hand;
+                               -fx-border-width: 0;
+                               -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 10, 0, 0, 3);"/>
+
+                <!-- Red notification badge -->
+                <Label fx:id="notificationDot"
+                       text="1"
+                       visible="false" managed="false"
+                       StackPane.alignment="TOP_RIGHT"
+                       translateX="5" translateY="-5"
+                       style="-fx-background-color: #e53935;
+                              -fx-text-fill: white;
+                              -fx-font-size: 9px;
+                              -fx-font-weight: bold;
+                              -fx-min-width: 18;
+                              -fx-min-height: 18;
+                              -fx-max-width: 22;
+                              -fx-max-height: 18;
+                              -fx-background-radius: 9;
+                              -fx-alignment: CENTER;
+                              -fx-padding: 0 3 0 3;
+                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0, 0, 1);"/>
+            </StackPane>
+
+        </VBox>
+    </StackPane>
+
+</StackPane>
