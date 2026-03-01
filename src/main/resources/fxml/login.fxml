@@ -86,6 +86,13 @@
                                -fx-font-size: 14px;
                                -fx-cursor: hand;
                                -fx-pref-width: 400;" />
+                <Button text="👤  Se connecter avec mon visage"
+                        onAction="#handleFaceLogin"
+                        maxWidth="Infinity"
+                        style="-fx-background-color: #2e7d32; -fx-text-fill: white;
+               -fx-font-size: 14px; -fx-font-weight: bold;
+               -fx-pref-height: 45; -fx-background-radius: 8;
+               -fx-cursor: hand;"/>
 
             </VBox>
         </VBox>

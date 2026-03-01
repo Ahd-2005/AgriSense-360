@@ -12,6 +12,7 @@ import entity.user;
 import entity.user.Role;
 import services.userservice;
 import services.SessionManager;
+import controllers.FaceVerificationController;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -30,6 +31,7 @@ public class GerantProfile {
     @FXML private Label emailLabel;
     @FXML private Label phoneLabel;
     @FXML private Label roleDetailLabel;
+    @FXML private javafx.scene.control.Button faceIdBtn;
 
     // ── Edit Mode ──────────────────────────────────────────
     @FXML private VBox editModeContainer;
@@ -332,6 +334,48 @@ public class GerantProfile {
             default:           return role.name();
         }
     }
+
+    @FXML
+    private void handleFaceVerification() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/fxml/FaceVerification.fxml")
+            );
+            javafx.scene.Parent root = loader.load();
+            javafx.stage.Stage stage = (javafx.stage.Stage) faceIdBtn.getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root, 1400, 800));
+            stage.setTitle("Face ID - AgriSense 360");
+            stage.centerOnScreen();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+// 4. In your initialize() method (or loadUserData()), update the Face ID button label:
+//    Call this after loading the user:
+
+    private void updateFaceIdButtonLabel() {
+        if (faceIdBtn == null) return;
+        entity.user current = services.SessionManager.getInstance().getCurrentUser();
+        if (current == null) return;
+
+        boolean hasFace = FaceVerificationController.userHasFaceRegistered(current.getId());
+        if (hasFace) {
+            faceIdBtn.setText("✅  Face ID");
+            faceIdBtn.setStyle(
+                    "-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px;" +
+                            "-fx-font-weight: bold; -fx-padding: 12 22; -fx-background-radius: 10; -fx-cursor: hand;"
+            );
+        } else {
+            faceIdBtn.setText("🔐  Face ID");
+            faceIdBtn.setStyle(
+                    "-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-font-size: 14px;" +
+                            "-fx-font-weight: bold; -fx-padding: 12 22; -fx-background-radius: 10; -fx-cursor: hand;"
+            );
+        }
+    }
+
+
     private void showError(Label lbl, String msg) { lbl.setText(msg); lbl.setVisible(true); }
     private void hideAllErrors() {
         if (nameError != null)            nameError.setVisible(false);
