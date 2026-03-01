@@ -18,6 +18,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import services.SessionManager;
 import services.CultureNotificationService;
+import services.NotificationService;
+import services.StockAlertService;
 import utils.EmailService;
 
 import java.io.IOException;
@@ -52,6 +54,8 @@ public class MainLayoutController {
     @FXML private Button ModstockBtn;
     @FXML private Button editprodBtn;
     @FXML private Button btnBOS;
+    @FXML private Button exchangeRateBtn;
+
 
     // Labels to hide/show
     @FXML private Label homeLabel;
@@ -65,9 +69,14 @@ public class MainLayoutController {
     @FXML private Label logoutLabel;
     @FXML private Button ouvrierBtn;
     @FXML private Label ouvrierLabel;
+    @FXML private Label exchangeRateLabel;
 
+
+    @FXML private Label stockAlertBadge;
     private boolean sidebarCollapsed = false;
     private user currentUser;
+    private boolean badgeFermeParUtilisateur = false;
+
 
     // Store reference to self for access from child controllers
     private static MainLayoutController instance;
@@ -88,6 +97,9 @@ public class MainLayoutController {
             CultureNotificationService notifier = new CultureNotificationService();
             notifier.scheduleDailyAtTen();
         }
+
+        NotificationService.getInstance().init(contentArea);
+        StockAlertService.getInstance().initialiser();
 
         // Load home page by default
         navigateToHome();
@@ -416,6 +428,24 @@ public class MainLayoutController {
         loadContent("/fxml/BackOfficeStock.fxml");
         setActiveButton(btnBOS);
     }
+    public void navigateToCommodityPrice() {
+        loadContent("/fxml/CommodityPrice.fxml");
+    }
+    public void navigateToExchangeRate() {
+        loadContent("/fxml/ExchangeRate.fxml");
+        setActiveButton(exchangeRateBtn);
+    }
+    private void setVisible(Node node, boolean visible) {
+        if (node != null) { node.setVisible(visible); node.setManaged(visible); }
+    }
+    public void signalerNouvelleAlerte(int nbAlertes) {
+        badgeFermeParUtilisateur = false;
+        if (stockAlertBadge != null) {
+            stockAlertBadge.setText(String.valueOf(nbAlertes));
+            stockAlertBadge.setVisible(true);
+            stockAlertBadge.setManaged(true);
+        }
+    }
 
 
     private void loadContent(String fxmlPath) {
@@ -559,6 +589,8 @@ public class MainLayoutController {
         workersBtn.getStyleClass().remove("active");
         profileBtn.getStyleClass().remove("active");
         ouvrierBtn.getStyleClass().remove("active");
+        btnBOS.getStyleClass().remove("active");
+
 
 
         if (!activeButton.getStyleClass().contains("active")) {
