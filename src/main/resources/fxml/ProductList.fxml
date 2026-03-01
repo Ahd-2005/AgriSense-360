@@ -14,7 +14,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="800.0" prefWidth="1530.0" stylesheets="@../css/Stockhome.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ProductListController">
+<BorderPane prefHeight="800.0" prefWidth="1530.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ProductListController"
+            stylesheets="@../css/Stockhome.css">
 
     <center>
         <ScrollPane fitToWidth="true" pannable="true" styleClass="content">
@@ -29,21 +30,22 @@
                     <Button onAction="#goToHome" prefHeight="48.0" prefWidth="150.0" styleClass="ghost" text="🏠 Accueil" />
                     <Button onAction="#goToStockList" prefHeight="48.0" prefWidth="150.0" styleClass="ghost" text="📊 Stocks" />
                     <Button onAction="#goToCommodityPrice" prefHeight="48.0" prefWidth="200.0" styleClass="ghost" text="💹 Prix Commodités" />
-
+                    <Button onAction="#goToExchangeRate" prefHeight="48.0" prefWidth="200.0" styleClass="ghost" text="💱 Taux de Change" />
                 </HBox>
-
 
                 <!-- Barre de recherche et tri -->
                 <HBox alignment="CENTER_LEFT" spacing="15.0">
-                    <TextField fx:id="txtRecherche" prefHeight="44.0" prefWidth="400.0" promptText="🔍 Rechercher par nom ou prix..." style="-fx-font-size: 14px; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-color: #c8d8b0; -fx-padding: 0 12px;" />
-                    <ComboBox fx:id="comboTri" prefHeight="44.0" prefWidth="220.0" promptText="Trier par..." style="-fx-font-size: 14px; -fx-background-radius: 8px;" />
+                    <TextField fx:id="txtRecherche" promptText="🔍 Rechercher par nom ou prix..." prefHeight="44.0" prefWidth="400.0"
+                               style="-fx-font-size: 14px; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-color: #c8d8b0; -fx-padding: 0 12px;"/>
+                    <ComboBox fx:id="comboTri" promptText="Trier par..." prefHeight="44.0" prefWidth="220.0"
+                              style="-fx-font-size: 14px; -fx-background-radius: 8px;"/>
                     <Button onAction="#reinitialiserFiltres" prefHeight="44.0" prefWidth="120.0" styleClass="ghost" text="✖ Réinitialiser" />
                     <Region HBox.hgrow="ALWAYS" />
-                    <Button onAction="#ajouterProduit" prefHeight="44.0" prefWidth="289.0" styleClass="primary" text="➕ Ajouter Nouveau Produit" />
+                    <Button onAction="#ajouterProduit" prefHeight="44.0" prefWidth="220.0" styleClass="primary" text="➕ Ajouter Nouveau Produit" />
                 </HBox>
+
+                <!-- Label résultats -->
                 <Label fx:id="lblResultats" style="-fx-font-size: 13px; -fx-text-fill: #6b7b6e; -fx-font-style: italic;" text="" />
-
-
 
                 <GridPane fx:id="gridProduits" hgap="20.0" styleClass="grid" vgap="20.0">
                     <columnConstraints>
@@ -58,6 +60,5 @@
             </VBox>
         </ScrollPane>
     </center>
-
 
 </BorderPane>

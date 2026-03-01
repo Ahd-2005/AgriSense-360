@@ -436,19 +436,23 @@ public class ProductListController {
     @FXML private void toggleSidebar() {}
 
     @FXML private void goToHome() {
-        if (MainLayoutController.getInstance() != null) MainLayoutController.getInstance().navigateToHome();
+        if (MainLayoutController.getInstance() != null) MainLayoutController.getInstance().navigateToStock();
     }
 
     @FXML private void goToStockList() {
         if (MainLayoutController.getInstance() != null) MainLayoutController.getInstance().navigateToStockList();
     }
 
-    @FXML private void ajouterProduit() {
-        if (MainLayoutController.getInstance() != null) MainLayoutController.getInstance().navigateToAddProduct();
-    }
-
     @FXML private void goToCommodityPrice() {
         if (MainLayoutController.getInstance() != null) MainLayoutController.getInstance().navigateToCommodityPrice();
+    }
+
+    @FXML private void goToExchangeRate() {
+        if (MainLayoutController.getInstance() != null) MainLayoutController.getInstance().navigateToExchangeRate();
+    }
+
+    @FXML private void ajouterProduit() {
+        if (MainLayoutController.getInstance() != null) MainLayoutController.getInstance().navigateToAddProduct();
     }
 
     @FXML private void genererBarcodesPourTous() {

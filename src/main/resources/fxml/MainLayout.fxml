@@ -97,15 +97,7 @@
                             <StackPane.margin><Insets top="4" right="8"/></StackPane.margin>
                         </Label>
                     </StackPane>
-                    <!-- Exchange Rate -->
-                    <Button fx:id="exchangeRateBtn" styleClass="nav-link" onAction="#navigateToExchangeRate">
-                        <graphic>
-                            <HBox spacing="12" alignment="CENTER_LEFT">
-                                <Label style="-fx-font-size: 24px; -fx-min-width: 30px;" text="💱" />
-                                <Label fx:id="exchangeRateLabel" text="Taux de Change" styleClass="nav-label" />
-                            </HBox>
-                        </graphic>
-                    </Button>
+
 
                         <!-- Ajoutez ce bouton sub pour le backoffice -->
                             <Button fx:id="btnBOS" styleClass="nav-link" onAction="#navigateToBackOfficeStock">

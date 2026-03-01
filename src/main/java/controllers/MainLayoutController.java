@@ -92,6 +92,17 @@ public class MainLayoutController {
                 }
             }
         });
+
+        // Clic sur le badge → naviguer vers stock list ET masquer le badge
+        if (stockAlertBadge != null) {
+            stockAlertBadge.setOnMouseClicked(e -> {
+                stockAlertBadge.setVisible(false);
+                stockAlertBadge.setManaged(false);
+                navigateToStockList();
+            });
+            stockAlertBadge.setStyle(stockAlertBadge.getStyle() + "; -fx-cursor: hand;");
+        }
+
         StockAlertService.getInstance().demarrer();
     }
 
@@ -270,9 +281,8 @@ public class MainLayoutController {
         return stockToEdit;
     }
 
-    // Dans MainLayoutController.java, ajoutez ces lignes après les autres champs
 
-    private static Produit produitToEdit;  // Variable temporaire pour passer le produit
+    private static Produit produitToEdit;
 
     public static void setProduitToEdit(Produit produit) {
         produitToEdit = produit;
@@ -354,5 +364,8 @@ public class MainLayoutController {
     public void navigateToExchangeRate() {
         loadContent("/fxml/ExchangeRate.fxml");
         setActiveButton(exchangeRateBtn);
+    }
+    private void setVisible(Node node, boolean visible) {
+        if (node != null) { node.setVisible(visible); node.setManaged(visible); }
     }
 }

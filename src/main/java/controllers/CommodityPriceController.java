@@ -474,7 +474,7 @@ public class CommodityPriceController {
     }
 
     @FXML private void goToHome() {
-        if (MainLayoutController.getInstance() != null) MainLayoutController.getInstance().navigateToHome();
+        if (MainLayoutController.getInstance() != null) MainLayoutController.getInstance().navigateToStock();
     }
     @FXML private void goToProductList() {
         if (MainLayoutController.getInstance() != null) MainLayoutController.getInstance().navigateToProductList();

@@ -6,9 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="css gestion ouvrier">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CommodityPriceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CommodityPriceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ExchangeRateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ExchangeRateController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/FrontHomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/FrontHomeController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ProductListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ProductListController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/StockListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/StockListController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/services/StockAlertService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/StockAlertService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/ProductList.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/ProductList.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/StockHome.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/StockHome.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -220,7 +227,7 @@
       <workItem from="1772282687026" duration="7973000" />
       <workItem from="1772320099799" duration="1511000" />
       <workItem from="1772339202760" duration="1193000" />
-      <workItem from="1772350350175" duration="2886000" />
+      <workItem from="1772350350175" duration="8429000" />
     </task>
     <task id="LOCAL-00001" summary="gestion culture +gestion animals+template">
       <option name="closed" value="true" />

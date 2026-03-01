@@ -264,7 +264,7 @@ public class StockListController {
     @FXML
     private void goToHome() {
         if (controllers.MainLayoutController.getInstance() != null) {
-            controllers.MainLayoutController.getInstance().navigateToHome();
+            controllers.MainLayoutController.getInstance().navigateToStock();
         }
     }
 

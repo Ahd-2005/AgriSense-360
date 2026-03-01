@@ -1,100 +1,145 @@
 package controllers;
 
-import controllers.MainLayoutController;
 import entity.Stock;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import services.ServiceStockProduit;
 import services.ServiceStockStock;
+import services.StockAlertService;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class FrontHomeController {
 
     @FXML private Label statProduits;
     @FXML private Label statStocks;
     @FXML private Label statAlertes;
-    @FXML private Label alertesText;
+    @FXML private VBox  statAlertesCard;   // carte alertes — fond change selon état
+    @FXML private VBox  alertesContainer;  // liste des alertes détaillées
 
-    private ServiceStockProduit serviceProduit = new ServiceStockProduit();
-    private ServiceStockStock serviceStock = new ServiceStockStock();
+    private final ServiceStockProduit serviceProduit = new ServiceStockProduit();
+    private final ServiceStockStock   serviceStock   = new ServiceStockStock();
 
     @FXML
     public void initialize() {
-        // Vérifier que les champs FXML sont injectés
-        if (statProduits == null || statStocks == null || statAlertes == null || alertesText == null) {
-            System.err.println("Erreur : Un ou plusieurs champs FXML ne sont pas injectés. Vérifiez les fx:id dans le FXML.");
-            return;
-        }
-        loadStatistics();
-        loadAlertes();
+        chargerStatistiques();
+        chargerAlertes();
     }
 
-    private void loadStatistics() {
+    // ── Statistiques ──────────────────────────────────────────────────────────
+
+    private void chargerStatistiques() {
         try {
-            List<?> produits = serviceProduit.afficher();
-            statProduits.setText(String.valueOf(produits.size()));
-
-            List<?> stocks = serviceStock.afficher();
-            statStocks.setText(String.valueOf(stocks.size()));
-
-            long alertes = stocks.stream()
-                    .map(s -> (Stock) s)
-                    .filter(s -> s.getQuantiteActuelle() != null && s.getSeuilAlerte() != null && s.getQuantiteActuelle().compareTo(s.getSeuilAlerte()) <= 0)
+            int nbProduits = serviceProduit.afficher().size();
+            List<Stock> stocks = serviceStock.afficher();
+            long nbAlertes = stocks.stream()
+                    .filter(s -> s.getQuantiteActuelle() != null && s.getSeuilAlerte() != null
+                            && s.getQuantiteActuelle().compareTo(s.getSeuilAlerte()) < 0)
                     .count();
-            statAlertes.setText(String.valueOf(alertes));
+
+            safeSetText(statProduits, String.valueOf(nbProduits));
+            safeSetText(statStocks,   String.valueOf(stocks.size()));
+            safeSetText(statAlertes,  String.valueOf(nbAlertes));
+
+            // Couleur dynamique du chiffre alertes
+            if (statAlertes != null) {
+                statAlertes.setStyle(nbAlertes > 0
+                        ? "-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #e53935;"
+                        : "-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;");
+            }
+            // Fond de la carte alertes : rouge si alertes, vert sinon
+            if (statAlertesCard != null) {
+                statAlertesCard.setStyle(nbAlertes > 0
+                        ? "-fx-background-color: #ffebee; -fx-background-radius: 14px; -fx-padding: 24px 32px;" +
+                        "-fx-border-color: #ef9a9a; -fx-border-radius: 14px;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 3);"
+                        : "-fx-background-color: #e8f5e9; -fx-background-radius: 14px; -fx-padding: 24px 32px;" +
+                        "-fx-border-color: #a5d6a7; -fx-border-radius: 14px;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 3);");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            statProduits.setText("Erreur");
-            statStocks.setText("Erreur");
-            statAlertes.setText("Erreur");
+            safeSetText(statProduits, "—");
+            safeSetText(statStocks,   "—");
+            safeSetText(statAlertes,  "—");
         }
     }
 
-    private void loadAlertes() {
-        try {
-            List<?> stocks = serviceStock.afficher();
-            StringBuilder alertes = new StringBuilder();
-            for (Object obj : stocks) {
-                Stock s = (Stock) obj;
-                if (s.getQuantiteActuelle() != null && s.getSeuilAlerte() != null && s.getQuantiteActuelle().compareTo(s.getSeuilAlerte()) <= 0) {
-                    alertes.append("Stock ID ").append(s.getId()).append(" en alerte (Produit ID ").append(s.getProduitId()).append(").\n");
-                }
+    // ── Alertes détaillées ────────────────────────────────────────────────────
+
+    private void chargerAlertes() {
+        if (alertesContainer == null) return;
+        alertesContainer.getChildren().clear();
+
+        List<StockAlertService.StockAlert> alertes =
+                StockAlertService.getInstance().getStocksEnAlerte();
+
+        if (alertes.isEmpty()) {
+            Label ok = new Label("✅  Tous les stocks sont au-dessus du seuil d'alerte.");
+            ok.setStyle("-fx-font-size: 15px; -fx-text-fill: #2e7d32; -fx-font-style: italic;");
+            alertesContainer.getChildren().add(ok);
+            return;
+        }
+
+        for (StockAlertService.StockAlert a : alertes) {
+            HBox card = new HBox(16);
+            card.setAlignment(Pos.CENTER_LEFT);
+            card.setPadding(new Insets(12, 16, 12, 16));
+            card.setStyle(
+                    "-fx-background-color: #fff3e0; -fx-background-radius: 10px;" +
+                            "-fx-border-color: #ff9800; -fx-border-radius: 10px;"
+            );
+
+            Label icone = new Label("⚠️");
+            icone.setStyle("-fx-font-size: 22px;");
+
+            VBox info = new VBox(4);
+            String cat = (a.categorie != null && !a.categorie.isEmpty()) ? "  (" + a.categorie + ")" : "";
+            Label nom = new Label("📦 " + a.nomProduit + cat);
+            nom.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #22301b;");
+
+            String u = a.stock.getUniteMesure() != null ? " " + a.stock.getUniteMesure() : "";
+            Label qte = new Label(
+                    "Actuel : " + a.stock.getQuantiteActuelle() + u +
+                            "   |   Seuil : " + a.stock.getSeuilAlerte() + u
+            );
+            qte.setStyle("-fx-font-size: 13px; -fx-text-fill: #d32f2f; -fx-font-weight: bold;");
+            info.getChildren().addAll(nom, qte);
+
+            if (a.stock.getEmplacement() != null && !a.stock.getEmplacement().isEmpty()) {
+                Label loc = new Label("📍 " + a.stock.getEmplacement());
+                loc.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
+                info.getChildren().add(loc);
             }
-            if (alertes.length() > 0) {
-                alertesText.setText(alertes.toString());
-            } else {
-                alertesText.setText("Aucune alerte pour le moment.");
-            }
-        } catch (SQLException e) {
-            alertesText.setText("Erreur lors du chargement des alertes.");
+
+            card.getChildren().addAll(icone, info);
+            alertesContainer.getChildren().add(card);
         }
     }
 
-    @FXML
-    private void goToProductList() {
-        if (controllers.MainLayoutController.getInstance() != null) {
-            controllers.MainLayoutController.getInstance().navigateToProductList();
-        } else {
-            showAlert("Erreur", "Impossible de naviguer vers la liste des produits.");
-        }
+    // ── Actions & Navigation ──────────────────────────────────────────────────
+
+    @FXML private void actualiserStats()    { chargerStatistiques(); chargerAlertes(); }
+
+    @FXML private void goToProductList()    { nav(MainLayoutController::navigateToProductList); }
+    @FXML private void goToStockList()      { nav(MainLayoutController::navigateToStockList); }
+    @FXML private void goToCommodityPrice() { nav(MainLayoutController::navigateToCommodityPrice); }
+    @FXML private void goToAddProduct()     { nav(MainLayoutController::navigateToAddProduct); }
+    @FXML private void goToAddStock()       { nav(MainLayoutController::navigateToAddStock); }
+    @FXML private void goToExchangeRate()   { nav(MainLayoutController::navigateToExchangeRate); }
+
+    private void nav(Consumer<MainLayoutController> action) {
+        MainLayoutController c = MainLayoutController.getInstance();
+        if (c != null) action.accept(c);
     }
 
-    @FXML
-    private void goToStockList() {
-        if (controllers.MainLayoutController.getInstance() != null) {
-            MainLayoutController.getInstance().navigateToStockList();
-        } else {
-            showAlert("Erreur", "Impossible de naviguer vers la liste des stocks.");
-        }
-    }
-
-    private void showAlert(String title, String message) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private void safeSetText(Label label, String text) {
+        if (label != null) label.setText(text);
     }
 }
