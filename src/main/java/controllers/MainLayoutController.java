@@ -56,6 +56,7 @@ public class MainLayoutController {
     @FXML private Button cultureBtn;
     @FXML private Button usersBtn;
     @FXML private Button workersBtn;
+    @FXML private Button evaluationBtn;
     @FXML private Button profileBtn;
     @FXML private Button logoutBtn;
     @FXML private Button ProdBtn;
@@ -73,6 +74,7 @@ public class MainLayoutController {
     @FXML private Label cultureLabel;
     @FXML private Label usersLabel;
     @FXML private Label workersLabel;
+    @FXML private Label evaluationLabel;
     @FXML private Label profileLabel;
     @FXML private Label logoutLabel;
     @FXML private Button ouvrierBtn;
@@ -705,6 +707,16 @@ public class MainLayoutController {
     @FXML
     public void navigateToEvaluation() {
         loadContent("/fxml/evaluation_view.fxml");
+        setActiveButton(evaluationBtn);
+    }
+
+    public void navigateToDashboardWorkers() {
+        loadContent("/fxml/workers_dashboard.fxml");
+        setActiveButton(workersBtn);
+    }
+
+    public void navigateToCalendar() {
+        loadContent("/fxml/workers_calendar.fxml");
         setActiveButton(workersBtn);
     }
 
@@ -785,6 +797,7 @@ public class MainLayoutController {
         cultureBtn.getStyleClass().remove("active");
         usersBtn.getStyleClass().remove("active");
         workersBtn.getStyleClass().remove("active");
+        evaluationBtn.getStyleClass().remove("active");
         profileBtn.getStyleClass().remove("active");
         ouvrierBtn.getStyleClass().remove("active");
 
