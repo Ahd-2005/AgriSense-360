@@ -37,7 +37,6 @@ public class AnimalController implements Initializable {
     @FXML private TextField searchField;
     @FXML private ComboBox<String> searchFieldCombo;
 
-    // Inline validation labels
     @FXML private Label earTagError;
     @FXML private Label typeError;
     @FXML private Label weightError;
@@ -363,13 +362,13 @@ public class AnimalController implements Initializable {
             }
         }
 
-        // Type: required
+
         if (typeCombo.getSelectionModel().isEmpty()) {
             setError(typeError, "Please select a type.");
             valid = false;
         }
 
-        // Weight: optional, must be non-negative if provided
+
         String weightText = weightField.getText().trim();
         if (!weightText.isEmpty()) {
             try {
@@ -384,14 +383,14 @@ public class AnimalController implements Initializable {
             }
         }
 
-        // Birth date: must not be in the future
+
         LocalDate birthDate = birthDatePicker.getValue();
         if (birthDate != null && birthDate.isAfter(LocalDate.now())) {
             setError(birthDateError, "Birth date cannot be in the future.");
             valid = false;
         }
 
-        // Entry date: must not be before birth date; must not be in the future
+
         LocalDate entryDate = entryDatePicker.getValue();
         if (entryDate != null) {
             if (entryDate.isAfter(LocalDate.now())) {
@@ -403,13 +402,13 @@ public class AnimalController implements Initializable {
             }
         }
 
-        // Origin: required
+
         if (originCombo.getSelectionModel().isEmpty()) {
             setError(originError, "Please select an origin.");
             valid = false;
         }
 
-        // Location: required
+
         if (locationCombo.getSelectionModel().isEmpty()) {
             setError(locationError, "Please select a location.");
             valid = false;
@@ -418,7 +417,7 @@ public class AnimalController implements Initializable {
         return valid;
     }
 
-    // ───────────────────────────────────────────────────────────
+
 
     @FXML
     private void onRefreshAnimals() {
