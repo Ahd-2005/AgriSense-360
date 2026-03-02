@@ -22,8 +22,8 @@ public class FaceRecognitionService {
 
     private FaceRecognitionService(String pythonExecutable, String scriptPath) {
         this.pythonExecutable = pythonExecutable;
-        this.scriptPath       = Paths.get(scriptPath);
-        initialized           = true;
+        this.scriptPath = Paths.get(scriptPath);
+        initialized = true;
     }
 
     public static synchronized FaceRecognitionService getInstance(String pythonExecutable, String scriptPath) {
@@ -152,27 +152,40 @@ public class FaceRecognitionService {
 
     // ── EXCEPTION ──────────────────────────────────────
     public static class FaceRecognitionException extends Exception {
-        public FaceRecognitionException(String message) { super(message); }
+        public FaceRecognitionException(String message) {
+            super(message);
+        }
     }
 
     // ── RESULT ─────────────────────────────────────────
     public static class FaceRecognitionResult {
         private final boolean success;
-        private final String  message;
+        private final String message;
         private final Integer userId;
-        private final double  distance;
+        private final double distance;
 
         public FaceRecognitionResult(boolean success, String message, Integer userId, double distance) {
-            this.success  = success;
-            this.message  = message;
-            this.userId   = userId;
+            this.success = success;
+            this.message = message;
+            this.userId = userId;
             this.distance = distance;
         }
 
-        public boolean isSuccess()   { return success; }
-        public String  getMessage()  { return message; }
-        public Integer getUserId()   { return userId; }
-        public double  getDistance() { return distance; }
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public Integer getUserId() {
+            return userId;
+        }
+
+        public double getDistance() {
+            return distance;
+        }
 
         @Override
         public String toString() {

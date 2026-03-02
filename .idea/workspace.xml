@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'">
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="FACE ID integrated well">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/face_recognition_script.py" beforeDir="false" afterPath="$PROJECT_DIR$/face_recognition_script.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/services/CameraService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/CameraService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/services/FaceRecognitionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/FaceRecognitionService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
     </list>
@@ -202,7 +198,8 @@
       <workItem from="1772257297803" duration="377000" />
       <workItem from="1772315762126" duration="5207000" />
       <workItem from="1772332726064" duration="10492000" />
-      <workItem from="1772381881200" duration="15850000" />
+      <workItem from="1772381881200" duration="15989000" />
+      <workItem from="1772410603960" duration="1340000" />
     </task>
     <task id="LOCAL-00001" summary="tous gestion + user">
       <option name="closed" value="true" />
@@ -340,7 +337,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772401156417</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="FACE ID integrated well">
+      <option name="closed" value="true" />
+      <created>1772407918587</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1772407918587</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -385,7 +390,8 @@
     <MESSAGE value="we added historique de parcelle avec exportation pdf" />
     <MESSAGE value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif" />
     <MESSAGE value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'" />
-    <option name="LAST_COMMIT_MESSAGE" value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'" />
+    <MESSAGE value="FACE ID integrated well" />
+    <option name="LAST_COMMIT_MESSAGE" value="FACE ID integrated well" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
