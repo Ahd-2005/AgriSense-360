@@ -11,19 +11,19 @@
     </padding>
     <TabPane styleClass="mgmt-tab-pane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
         <tabs>
-            <Tab text="Animals" styleClass="mgmt-tab">
+            <Tab text="Animaux" styleClass="mgmt-tab">
                 <fx:include source="animal_view.fxml"/>
             </Tab>
-            <Tab text="Health Records" styleClass="mgmt-tab">
+            <Tab text="Dossiers de Santé" styleClass="mgmt-tab">
                 <fx:include source="health_record_view.fxml"/>
             </Tab>
             <Tab text="Options" styleClass="mgmt-tab">
                 <fx:include source="options_view.fxml"/>
             </Tab>
-            <Tab text="Condition Predictor" styleClass="mgmt-tab">
+            <Tab text="Prédicteur de Condition" styleClass="mgmt-tab">
                 <fx:include source="ai_prediction_view.fxml"/>
             </Tab>
-            <Tab text="Analytics" styleClass="mgmt-tab">
+            <Tab text="Analytiques" styleClass="mgmt-tab">
                 <fx:include source="stats_view.fxml"/>
             </Tab>
         </tabs>

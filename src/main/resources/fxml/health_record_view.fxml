@@ -16,8 +16,8 @@
 
         <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="12">
             <VBox spacing="3">
-                <Label text="Add / Edit Health Record" styleClass="mgmt-form-title"/>
-                <Label text="There is no required field except the date" styleClass="mgmt-form-subtitle"/>
+                <Label text="Ajouter / Modifier un Dossier de Santé" styleClass="mgmt-form-title"/>
+                <Label text="Aucun champ n'est obligatoire sauf la date" styleClass="mgmt-form-subtitle"/>
             </VBox>
         </HBox>
 
@@ -26,21 +26,21 @@
             <GridPane hgap="16" vgap="11">
 
                 <Label text="Animal" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
-                <ComboBox fx:id="animalCombo" promptText="Choose animal" styleClass="mgmt-combo"
+                <ComboBox fx:id="animalCombo" promptText="Choisir un animal" styleClass="mgmt-combo"
                           GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.columnSpan="3"
                           maxWidth="Infinity" onAction="#onAnimalSelected"/>
 
-                <Label text="Record Date" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
+                <Label text="Date du Dossier" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
                 <DatePicker fx:id="recordDatePicker" styleClass="mgmt-datepicker" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="160"/>
 
-                <Label text="Weight (kg)" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
+                <Label text="Poids (kg)" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
                 <TextField fx:id="weightField" promptText="" styleClass="mgmt-input" GridPane.columnIndex="3" GridPane.rowIndex="1" prefWidth="140"/>
 
-                <Label text="Appetite" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
-                <ComboBox fx:id="appetiteCombo" promptText="Select" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="160"/>
+                <Label text="Appétit" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
+                <ComboBox fx:id="appetiteCombo" promptText="Sélectionner" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="160"/>
 
                 <Label text="Condition" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
-                <ComboBox fx:id="conditionCombo" promptText="Select" styleClass="mgmt-combo" GridPane.columnIndex="3" GridPane.rowIndex="2" prefWidth="160"/>
+                <ComboBox fx:id="conditionCombo" promptText="Sélectionner" styleClass="mgmt-combo" GridPane.columnIndex="3" GridPane.rowIndex="2" prefWidth="160"/>
 
 
                 <Label fx:id="productionLabel" text="Production" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="CENTER"/>
@@ -52,9 +52,9 @@
 
                 <HBox spacing="10" alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4">
                     <padding><Insets top="6"/></padding>
-                    <Button text="Add Record" onAction="#onAddRecord" styleClass="mgmt-btn-primary"/>
-                    <Button text="Update" fx:id="updateBtn" onAction="#onUpdateRecord" styleClass="mgmt-btn-ghost" disable="true"/>
-                    <Button text="Delete" fx:id="deleteBtn" onAction="#onDeleteRecord" styleClass="mgmt-btn-danger" disable="true"/>
+                    <Button text="Ajouter" onAction="#onAddRecord" styleClass="mgmt-btn-primary"/>
+                    <Button text="Modifier" fx:id="updateBtn" onAction="#onUpdateRecord" styleClass="mgmt-btn-ghost" disable="true"/>
+                    <Button text="Supprimer" fx:id="deleteBtn" onAction="#onDeleteRecord" styleClass="mgmt-btn-danger" disable="true"/>
                 </HBox>
             </GridPane>
         </VBox>
@@ -63,11 +63,11 @@
 
     <VBox styleClass="mgmt-table-card" VBox.vgrow="ALWAYS" spacing="12">
         <HBox alignment="CENTER_LEFT" spacing="12">
-            <Label fx:id="recordsTitleLabel" text="Health Records for Selected Animal" styleClass="mgmt-table-title"/>
+            <Label fx:id="recordsTitleLabel" text="Dossiers de Santé de l'Animal Sélectionné" styleClass="mgmt-table-title"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <ComboBox fx:id="searchFieldCombo" promptText="Search by" styleClass="mgmt-combo" prefWidth="135"/>
-            <TextField fx:id="searchField" promptText="Search..." styleClass="mgmt-input" prefWidth="190"/>
-            <Button text="Refresh" onAction="#onRefreshRecords" styleClass="mgmt-btn-ghost"/>
+            <ComboBox fx:id="searchFieldCombo" promptText="Rechercher par" styleClass="mgmt-combo" prefWidth="135"/>
+            <TextField fx:id="searchField" promptText="Rechercher..." styleClass="mgmt-input" prefWidth="190"/>
+            <Button text="Actualiser" onAction="#onRefreshRecords" styleClass="mgmt-btn-ghost"/>
         </HBox>
         <ScrollPane fitToWidth="true" styleClass="mgmt-scroll" VBox.vgrow="ALWAYS" minHeight="200">
             <VBox fx:id="recordTableContainer" styleClass="mgmt-table-container"/>
