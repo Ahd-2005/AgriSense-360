@@ -203,10 +203,12 @@
             <artifactId>layout</artifactId>
             <version>7.2.5</version>
         </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

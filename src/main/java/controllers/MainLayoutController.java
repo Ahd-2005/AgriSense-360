@@ -797,7 +797,7 @@ public class MainLayoutController {
         cultureBtn.getStyleClass().remove("active");
         usersBtn.getStyleClass().remove("active");
         workersBtn.getStyleClass().remove("active");
-        evaluationBtn.getStyleClass().remove("active");
+
         profileBtn.getStyleClass().remove("active");
         ouvrierBtn.getStyleClass().remove("active");
 

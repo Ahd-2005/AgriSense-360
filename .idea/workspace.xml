@@ -4,15 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif">
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="AGENDA TAMEL FIHOM BERASMI">
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_close_time.dat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/GerantProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/GerantProfile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/HomeContentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/HomeContentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/home_content.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/home_content.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/LandingPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/LandingPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/LandingPage.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/LandingPage.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,11 +104,11 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "gestion__user",
+    "git-widget-placeholder": "gestion__culture",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/css",
+    "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/db",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -131,11 +130,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\db" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\css" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\fxml" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\images\cultures" />
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\scripts" />
-      <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\java\services" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\resources\fxml" />
@@ -146,10 +145,10 @@
   </component>
   <component name="RunManager">
     <configuration name="HelloApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH" value="jbr-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.example.agrisens360.HelloApplication" />
-      <module name="AgriSense-360" />
+      <module name="agrisens360" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.example.agrisens360.*" />
@@ -201,7 +200,9 @@
       <workItem from="1772257297803" duration="377000" />
       <workItem from="1772315762126" duration="5207000" />
       <workItem from="1772332726064" duration="10492000" />
-      <workItem from="1772381881200" duration="9352000" />
+      <workItem from="1772381881200" duration="15989000" />
+      <workItem from="1772410603960" duration="4794000" />
+      <workItem from="1772422711744" duration="2609000" />
     </task>
     <task id="LOCAL-00001" summary="tous gestion + user">
       <option name="closed" value="true" />
@@ -323,7 +324,55 @@
       <option name="project" value="LOCAL" />
       <updated>1772341290312</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'">
+      <option name="closed" value="true" />
+      <created>1772401106395</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1772401106395</updated>
+    </task>
+    <task id="LOCAL-00017" summary="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'">
+      <option name="closed" value="true" />
+      <created>1772401156417</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1772401156417</updated>
+    </task>
+    <task id="LOCAL-00018" summary="FACE ID integrated well">
+      <option name="closed" value="true" />
+      <created>1772407918587</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1772407918587</updated>
+    </task>
+    <task id="LOCAL-00019" summary="fixs">
+      <option name="closed" value="true" />
+      <created>1772417114543</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1772417114543</updated>
+    </task>
+    <task id="LOCAL-00020" summary="AGENDA TAMEL FIHOM">
+      <option name="closed" value="true" />
+      <created>1772420370579</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1772420370579</updated>
+    </task>
+    <task id="LOCAL-00021" summary="AGENDA TAMEL FIHOM BERASMI">
+      <option name="closed" value="true" />
+      <created>1772422608960</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1772422608960</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -340,7 +389,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/gestion_culture" />
+                        <option value="gestion_user" />
                       </list>
                     </value>
                   </entry>
@@ -367,7 +416,12 @@
     <MESSAGE value="fixes for perfection" />
     <MESSAGE value="we added historique de parcelle avec exportation pdf" />
     <MESSAGE value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif" />
-    <option name="LAST_COMMIT_MESSAGE" value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif" />
+    <MESSAGE value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'" />
+    <MESSAGE value="FACE ID integrated well" />
+    <MESSAGE value="fixs" />
+    <MESSAGE value="AGENDA TAMEL FIHOM" />
+    <MESSAGE value="AGENDA TAMEL FIHOM BERASMI" />
+    <option name="LAST_COMMIT_MESSAGE" value="AGENDA TAMEL FIHOM BERASMI" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
