@@ -13,6 +13,7 @@ import entity.AffectationTravail;
 import services.AffectationTravailService;
 import services.AIReportService;
 import services.DiscordWebhookService;
+import services.GeocodingService;
 import services.WeatherService;
 
 import java.net.URL;
@@ -43,8 +44,10 @@ public class AffectationController implements Initializable {
     @FXML private Button btnClear;
     @FXML private Button btnCheckMeteo;
     @FXML private Button btnAIPlan;
+    @FXML private Button btnLocaliser;
     @FXML private Label lblMeteoResult;
     @FXML private Label lblAIPlanResult;
+    @FXML private Label lblGeoResult;
 
     private final AffectationTravailService service = new AffectationTravailService();
     private final ObservableList<AffectationTravail> affectationList = FXCollections.observableArrayList();
@@ -310,6 +313,57 @@ public class AffectationController implements Initializable {
         a.showAndWait();
     }
 
+    // ── Géocodage Google Maps ───────────────────────────────────────
+
+    @FXML
+    private void onLocaliser() {
+        String zone = tfZoneTravail.getText() != null ? tfZoneTravail.getText().trim() : "";
+        if (zone.isEmpty()) {
+            lblGeoResult.setText("⚠️ Renseignez d'abord la zone de travail.");
+            lblGeoResult.setStyle("-fx-text-fill: #d68910; -fx-font-weight: bold;");
+            return;
+        }
+
+        lblGeoResult.setText("⏳ Géocodage de « " + zone + " » en cours...");
+        lblGeoResult.setStyle("-fx-text-fill: #555;");
+        btnLocaliser.setDisable(true);
+
+        Task<GeocodingService.GeocodingResult> task = new Task<>() {
+            @Override
+            protected GeocodingService.GeocodingResult call() {
+                return GeocodingService.geocode(zone);
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            GeocodingService.GeocodingResult result = task.getValue();
+            btnLocaliser.setDisable(false);
+            if (result.success) {
+                lblGeoResult.setText(result.getSummary());
+                lblGeoResult.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold; -fx-font-size: 12px;");
+                // Ouvrir Google Maps dans le navigateur
+                try {
+                    java.awt.Desktop.getDesktop().browse(new java.net.URI(result.getGoogleMapsUrl()));
+                } catch (Exception ex) {
+                    System.err.println("Impossible d'ouvrir le navigateur: " + ex.getMessage());
+                }
+            } else {
+                lblGeoResult.setText("❌ " + result.errorMessage);
+                lblGeoResult.setStyle("-fx-text-fill: #c0392b; -fx-font-weight: bold;");
+            }
+        });
+
+        task.setOnFailed(e -> {
+            btnLocaliser.setDisable(false);
+            lblGeoResult.setText("❌ Erreur inattendue lors du géocodage.");
+            lblGeoResult.setStyle("-fx-text-fill: #c0392b;");
+        });
+
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
+    }
+
     // ── AI Planning ────────────────────────────────────────────────
 
     @FXML
@@ -325,7 +379,7 @@ public class AffectationController implements Initializable {
         Task<String> task = new Task<>() {
             @Override
             protected String call() {
-                return AIReportService.generatePerformanceReport(copy, java.util.Collections.emptyList());
+                return AIReportService.generateWorkPlan(copy);
             }
         };
         task.setOnSucceeded(e -> {

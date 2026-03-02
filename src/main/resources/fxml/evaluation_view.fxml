@@ -12,30 +12,6 @@
     <VBox spacing="20" styleClass="content-inner">
         <padding><Insets top="30" right="40" bottom="40" left="40"/></padding>
 
-        <!-- Navigation toggle -->
-        <HBox spacing="0" alignment="CENTER_LEFT" style="-fx-padding: 0 0 10 0;">
-            <Button text="📋 Affectations"
-                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
-                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 8 0 0 0;
-                           -fx-cursor: hand;"
-                    onAction="#onSwitchToAffectation"/>
-            <Button text="📊 Évaluations"
-                    style="-fx-background-color: #5a9814; -fx-text-fill: white; -fx-font-weight: bold;
-                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0;
-                           -fx-cursor: hand;"
-                    disable="true"/>
-            <Button text="📈 Dashboard"
-                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
-                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0;
-                           -fx-cursor: hand;"
-                    onAction="#onSwitchToDashboard"/>
-            <Button text="📅 Calendrier"
-                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
-                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0 8 8 0;
-                           -fx-cursor: hand;"
-                    onAction="#onSwitchToCalendar"/>
-        </HBox>
-
         <Label text="Gestion des Évaluations de Performance" styleClass="topbar-title"/>
 
         <!-- Form -->

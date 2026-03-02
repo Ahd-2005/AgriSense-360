@@ -71,6 +71,10 @@
                         style="-fx-background-color: #7b2d8b; -fx-text-fill: white; -fx-font-weight: bold;
                                -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 7 14 7 14;"
                         onAction="#onAIPlan"/>
+                <Button fx:id="btnLocaliser" text="📍 Localiser sur Carte"
+                        style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 7 14 7 14;"
+                        onAction="#onLocaliser"/>
             </HBox>
             <!-- Résultat météo -->
             <Label fx:id="lblMeteoResult"
@@ -84,6 +88,12 @@
                    style="-fx-font-size: 12px; -fx-padding: 6 10 6 10;
                           -fx-background-color: #f5f0ff; -fx-background-radius: 6;
                           -fx-border-color: #d1b3ff; -fx-border-radius: 6;"/>
+            <!-- Résultat géocodage Google Maps -->
+            <Label fx:id="lblGeoResult"
+                   wrapText="true"
+                   style="-fx-font-size: 12px; -fx-padding: 6 10 6 10;
+                          -fx-background-color: #fff8f0; -fx-background-radius: 6;
+                          -fx-border-color: #f0c878; -fx-border-radius: 6;"/>
         </VBox>
 
         <!-- TableView avec filtres -->

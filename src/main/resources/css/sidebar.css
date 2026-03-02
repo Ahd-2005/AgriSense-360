@@ -176,6 +176,13 @@
     -fx-pref-width: 4px;
 }
 
+/* ── Fix modena.bss LinearGradient→Color cast warning on arrows ── */
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-effect: null;
+}
+
 /* ── Icon SVG strokes ───────────────────────────────────────────── */
 .nav-icon SVGPath {
     -fx-stroke: rgba(200, 230, 170, 0.70);
