@@ -4,24 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="ou hedhi agenda lilla kemla ttpusha">
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_close_time.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/config/DBtest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceProduitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceStockTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisense360/servicetests/ServiceAnimalHealthRecordTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisense360/servicetests/ServiceAnimalTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/servicetests/ServiceAnimalHealthRecordTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/servicetests/ServiceAnimalTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/afficher_parcelle.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
-    </list>
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="ou hedhi agenda lilla kemla ttpusha" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
