@@ -15,11 +15,13 @@ import java.util.Comparator;
 import javafx.util.StringConverter;
 import services.ServiceAnimal;
 import services.ServiceAnimalHealthRecord;
+import services.ServiceEnumManagement;
 import utils.AnimalListRefresh;
 
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -41,13 +43,32 @@ public class HealthRecordController implements Initializable {
     @FXML private TextField searchField;
     @FXML private ComboBox<String> searchFieldCombo;
 
+    // Visit mode
+    @FXML private HBox visitSetupRow;
+    @FXML private ComboBox<String> visitLocationCombo;
+    @FXML private VBox visitWizardBox;
+    @FXML private Label visitProgressLabel;
+    @FXML private Label visitAnimalInfoLabel;
+    @FXML private DatePicker visitDatePicker;
+    @FXML private TextField visitWeightField;
+    @FXML private ComboBox<String> visitAppetiteCombo;
+    @FXML private ComboBox<String> visitConditionCombo;
+    @FXML private Label visitProductionLabel;
+    @FXML private TextField visitProductionField;
+    @FXML private TextField visitNotesField;
+    @FXML private Label visitStatusLabel;
+
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
     private final ServiceAnimalHealthRecord serviceRecord = new ServiceAnimalHealthRecord();
+    private final ServiceEnumManagement serviceEnum = new ServiceEnumManagement();
     private final ObservableList<AnimalHealthRecord> recordList = FXCollections.observableArrayList();
     private FilteredList<AnimalHealthRecord> filteredRecords;
     private AnimalHealthRecord selectedRecord;
     private String currentSortColumn = null;
     private boolean sortAscending = true;
+
+    private List<Animal> visitAnimals = new ArrayList<>();
+    private int visitIndex = 0;
 
     public static Consumer<Animal> onNavigate;
 
@@ -55,6 +76,8 @@ public class HealthRecordController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         appetiteCombo.setItems(FXCollections.observableArrayList("LOW", "NORMAL", "HIGH", "NONE"));
         conditionCombo.setItems(FXCollections.observableArrayList("HEALTHY", "SICK", "INJURED", "CRITICAL"));
+        visitAppetiteCombo.setItems(FXCollections.observableArrayList("LOW", "NORMAL", "HIGH", "NONE"));
+        visitConditionCombo.setItems(FXCollections.observableArrayList("HEALTHY", "SICK", "INJURED", "CRITICAL"));
 
         filteredRecords = new FilteredList<>(recordList, p -> true);
 
@@ -84,6 +107,17 @@ public class HealthRecordController implements Initializable {
         loadAnimals();
         AnimalListRefresh.addListener(this::loadAnimals);
         onNavigate = this::navigateToAnimal;
+        loadVisitLocations();
+        visitDatePicker.setValue(LocalDate.now());
+    }
+
+    private void loadVisitLocations() {
+        try {
+            List<String> locations = serviceEnum.getEnumValues("Animal", "location");
+            visitLocationCombo.setItems(FXCollections.observableArrayList(locations));
+        } catch (SQLException e) {
+            // silently skip if DB not available
+        }
     }
 
     private void navigateToAnimal(Animal a) {
@@ -565,6 +599,134 @@ public class HealthRecordController implements Initializable {
 
     private void showInfo(String msg) {
         new Alert(Alert.AlertType.INFORMATION, msg).showAndWait();
+    }
+
+    // ── Visit by Location ──────────────────────────────────────────────────────
+
+    @FXML
+    private void onStartVisit() {
+        String loc = visitLocationCombo.getSelectionModel().getSelectedItem();
+        if (loc == null) {
+            visitStatusLabel.setText("Sélectionnez d'abord un emplacement.");
+            return;
+        }
+        try {
+            List<Animal> all = serviceAnimal.getAll();
+            visitAnimals = new ArrayList<>();
+            for (Animal a : all) {
+                if (loc.equalsIgnoreCase(a.getLocation())) visitAnimals.add(a);
+            }
+        } catch (SQLException e) {
+            visitStatusLabel.setText("Erreur : " + e.getMessage());
+            return;
+        }
+        if (visitAnimals.isEmpty()) {
+            visitStatusLabel.setText("Aucun animal trouvé à cet emplacement.");
+            return;
+        }
+        visitIndex = 0;
+        visitStatusLabel.setText("");
+        visitSetupRow.setVisible(false);
+        visitSetupRow.setManaged(false);
+        visitWizardBox.setVisible(true);
+        visitWizardBox.setManaged(true);
+        showVisitAnimal(visitIndex);
+    }
+
+    private void showVisitAnimal(int idx) {
+        Animal a = visitAnimals.get(idx);
+        visitProgressLabel.setText("Animal " + (idx + 1) + " / " + visitAnimals.size());
+        visitAnimalInfoLabel.setText("Boucle #" + a.getEarTag()
+                + "  —  " + (a.getType() != null ? capitalize(a.getType()) : "?")
+                + (a.getLocation() != null ? "  [" + capitalize(a.getLocation()) + "]" : ""));
+        updateVisitProductionLabel(a.getType());
+        visitDatePicker.setValue(LocalDate.now());
+        visitWeightField.clear();
+        visitAppetiteCombo.getSelectionModel().clearSelection();
+        visitConditionCombo.getSelectionModel().clearSelection();
+        visitProductionField.clear();
+        visitNotesField.clear();
+        visitStatusLabel.setText("");
+    }
+
+    private void updateVisitProductionLabel(String type) {
+        if (type == null) { visitProductionLabel.setText("Production"); return; }
+        switch (type.toLowerCase()) {
+            case "cow": case "goat": visitProductionLabel.setText("Lait (L)"); break;
+            case "chicken":          visitProductionLabel.setText("Nb Oeufs"); break;
+            case "sheep":            visitProductionLabel.setText("Laine (cm)"); break;
+            default:                 visitProductionLabel.setText("Production"); break;
+        }
+    }
+
+    @FXML
+    private void onVisitSaveAndNext() {
+        Animal a = visitAnimals.get(visitIndex);
+        LocalDate date = visitDatePicker.getValue();
+        if (date == null) { visitStatusLabel.setText("La date est obligatoire."); return; }
+        String condSel = visitConditionCombo.getSelectionModel().getSelectedItem();
+        if (condSel == null) { visitStatusLabel.setText("La condition est obligatoire."); return; }
+
+        try {
+            Double weight = visitWeightField.getText().trim().isEmpty() ? null
+                    : Double.parseDouble(visitWeightField.getText().trim());
+            AnimalHealthRecord.Appetite appetite = visitAppetiteCombo.getSelectionModel().getSelectedItem() != null
+                    ? AnimalHealthRecord.Appetite.valueOf(visitAppetiteCombo.getSelectionModel().getSelectedItem()) : null;
+            AnimalHealthRecord.ConditionStatus condition =
+                    AnimalHealthRecord.ConditionStatus.valueOf(condSel);
+
+            Double milkYield = null; Integer eggCount = null; Double woolLength = null;
+            String prod = visitProductionField.getText().trim();
+            if (!prod.isEmpty() && a.getType() != null) {
+                switch (a.getType().toLowerCase()) {
+                    case "cow": case "goat": milkYield = Double.parseDouble(prod); break;
+                    case "chicken":          eggCount  = Integer.parseInt(prod);   break;
+                    case "sheep":            woolLength = Double.parseDouble(prod); break;
+                }
+            }
+            String notes = visitNotesField.getText().trim().isEmpty() ? null : visitNotesField.getText().trim();
+            AnimalHealthRecord r = new AnimalHealthRecord(
+                    a.getId(), date, weight, appetite, condition, milkYield, eggCount, woolLength, notes);
+            serviceRecord.add(r);
+        } catch (NumberFormatException e) {
+            visitStatusLabel.setText("Valeur numérique invalide.");
+            return;
+        } catch (SQLException e) {
+            visitStatusLabel.setText("Erreur DB : " + e.getMessage());
+            return;
+        }
+        visitNext();
+    }
+
+    @FXML
+    private void onVisitSkip() {
+        visitNext();
+    }
+
+    private void visitNext() {
+        visitIndex++;
+        if (visitIndex >= visitAnimals.size()) {
+            int total = visitAnimals.size();
+            onEndVisit();
+            visitStatusLabel.setText("Visite terminée — " + total + " animal(s) traité(s).");
+        } else {
+            showVisitAnimal(visitIndex);
+        }
+    }
+
+    @FXML
+    private void onEndVisit() {
+        visitWizardBox.setVisible(false);
+        visitWizardBox.setManaged(false);
+        visitSetupRow.setVisible(true);
+        visitSetupRow.setManaged(true);
+        visitAnimals.clear();
+        visitIndex = 0;
+    }
+
+    private String capitalize(String s) {
+        if (s == null || s.isEmpty()) return s;
+        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
 
     private void showError(String msg) {

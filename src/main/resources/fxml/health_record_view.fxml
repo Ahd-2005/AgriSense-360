@@ -61,6 +61,62 @@
     </VBox>
 
 
+    <VBox fx:id="visitCard" styleClass="mgmt-form-card" spacing="0">
+        <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="3">
+                <Label text="Visite par Emplacement" styleClass="mgmt-form-title"/>
+                <Label text="Parcourez les animaux d'un emplacement un par un et enregistrez leurs dossiers" styleClass="mgmt-form-subtitle"/>
+            </VBox>
+        </HBox>
+        <VBox styleClass="mgmt-form-body" spacing="12">
+
+            <HBox fx:id="visitSetupRow" spacing="12" alignment="CENTER_LEFT">
+                <Label text="Emplacement :" styleClass="mgmt-form-label"/>
+                <ComboBox fx:id="visitLocationCombo" promptText="Choisir un emplacement..."
+                          styleClass="mgmt-combo" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="Démarrer la Visite" onAction="#onStartVisit" styleClass="mgmt-btn-primary"/>
+            </HBox>
+
+            <VBox fx:id="visitWizardBox" spacing="12" visible="false" managed="false">
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label fx:id="visitProgressLabel" text="" styleClass="mgmt-form-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Terminer" onAction="#onEndVisit" styleClass="mgmt-btn-ghost"/>
+                </HBox>
+                <Label fx:id="visitAnimalInfoLabel" text="" styleClass="mgmt-form-subtitle"/>
+                <GridPane hgap="16" vgap="11">
+                    <Label text="Date" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
+                    <DatePicker fx:id="visitDatePicker" styleClass="mgmt-datepicker" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="160"/>
+
+                    <Label text="Poids (kg)" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
+                    <TextField fx:id="visitWeightField" promptText="" styleClass="mgmt-input" GridPane.columnIndex="3" GridPane.rowIndex="0" prefWidth="140"/>
+
+                    <Label text="Appétit" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
+                    <ComboBox fx:id="visitAppetiteCombo" promptText="Sélectionner" styleClass="mgmt-combo" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="160"/>
+
+                    <Label text="Condition" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
+                    <ComboBox fx:id="visitConditionCombo" promptText="Sélectionner" styleClass="mgmt-combo" GridPane.columnIndex="3" GridPane.rowIndex="1" prefWidth="160"/>
+
+                    <Label fx:id="visitProductionLabel" text="Production" styleClass="mgmt-form-label" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
+                    <TextField fx:id="visitProductionField" promptText="" styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="140"/>
+
+                    <Label text="Notes" styleClass="mgmt-form-label" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
+                    <TextField fx:id="visitNotesField" promptText="" styleClass="mgmt-input" GridPane.columnIndex="3" GridPane.rowIndex="2" prefWidth="200"/>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="4">
+                        <padding><Insets top="6"/></padding>
+                        <Button text="Sauvegarder &amp; Suivant" onAction="#onVisitSaveAndNext" styleClass="mgmt-btn-primary"/>
+                        <Button text="Passer" onAction="#onVisitSkip" styleClass="mgmt-btn-ghost"/>
+                    </HBox>
+                </GridPane>
+            </VBox>
+
+            <Label fx:id="visitStatusLabel" text="" styleClass="mgmt-form-subtitle" wrapText="true"/>
+
+        </VBox>
+    </VBox>
+
+
     <VBox styleClass="mgmt-table-card" VBox.vgrow="ALWAYS" spacing="12">
         <HBox alignment="CENTER_LEFT" spacing="12">
             <Label fx:id="recordsTitleLabel" text="Dossiers de Santé de l'Animal Sélectionné" styleClass="mgmt-table-title"/>

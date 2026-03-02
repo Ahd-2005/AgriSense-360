@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AnimalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AnimalController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/HealthRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/HealthRecordController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/condition_model.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/condition_model.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/health_record_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/health_record_view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,7 +167,7 @@
       <workItem from="1771928780952" duration="15000" />
       <workItem from="1772021669762" duration="1844000" />
       <workItem from="1772023878047" duration="2997000" />
-      <workItem from="1772458380466" duration="3982000" />
+      <workItem from="1772458380466" duration="4520000" />
     </task>
     <task id="LOCAL-00001" summary="gestion culture +gestion animals+template">
       <option name="closed" value="true" />
