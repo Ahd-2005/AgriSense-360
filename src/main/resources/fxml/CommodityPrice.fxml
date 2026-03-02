@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.CommodityPriceController"
+            stylesheets="@../css/Stockhome.css"
+            prefWidth="1530" prefHeight="800">
+
+    <VBox alignment="TOP_CENTER" spacing="28">
+        <padding><Insets top="40" right="60" bottom="60" left="60"/></padding>
+
+        <!-- Navigation -->
+        <HBox alignment="CENTER_LEFT" spacing="16">
+            <Button onAction="#goToHome"        prefHeight="44" prefWidth="130" styleClass="ghost" text="🏠 Accueil"/>
+            <Button onAction="#goToProductList" prefHeight="44" prefWidth="150" styleClass="ghost" text="📦 Produits"/>
+            <Button onAction="#goToStockList"   prefHeight="44" prefWidth="130" styleClass="ghost" text="📊 Stocks"/>
+        </HBox>
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <Label text="💹 Prix des Commodités Agricoles"
+                   style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #22301b;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblStatut" text="" style="-fx-font-size: 13px;"/>
+        </HBox>
+
+        <!-- Contrôles -->
+        <HBox alignment="CENTER_LEFT" spacing="16">
+            <Label text="Catégorie :" style="-fx-font-size: 14px; -fx-text-fill: #555;"/>
+            <ComboBox fx:id="comboCategorie" prefWidth="160" prefHeight="40"
+                      style="-fx-font-size: 14px; -fx-background-radius: 8px;"/>
+            <Button fx:id="btnActualiser" onAction="#actualiser"
+                    prefHeight="40" prefWidth="160" styleClass="primary" text="🔄 Actualiser"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblMaj" text=""
+                   style="-fx-font-size: 12px; -fx-text-fill: #aaa; -fx-font-style: italic;"/>
+        </HBox>
+
+        <!-- Section 1 : Prix du marché -->
+        <VBox spacing="14" style="-fx-background-color: white; -fx-background-radius: 14px;
+                                   -fx-padding: 24px;
+                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 3);">
+            <Label text="📊 Prix actuels du marché mondial"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #22301b;"/>
+            <Label text="Sources : marchés internationaux des matières premières agricoles"
+                   style="-fx-font-size: 12px; -fx-text-fill: #aaa; -fx-font-style: italic;"/>
+
+            <FlowPane fx:id="flowCommodities" hgap="14" vgap="14" prefWrapLength="1350">
+                <Label text="⏳ Chargement en cours..."
+                       style="-fx-font-size: 14px; -fx-text-fill: #888;"/>
+            </FlowPane>
+        </VBox>
+
+        <!-- Section 2 : Comparaison avec vos produits -->
+        <VBox spacing="14" style="-fx-background-color: white; -fx-background-radius: 14px;
+                                   -fx-padding: 24px;
+                                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 3);">
+            <Label text="🔍 Comparaison avec vos produits en stock"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #22301b;"/>
+            <Label text="Analyse automatique : vos prix vs prix du marché mondial"
+                   style="-fx-font-size: 12px; -fx-text-fill: #aaa; -fx-font-style: italic;"/>
+
+            <!-- Légende -->
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <HBox spacing="6" alignment="CENTER_LEFT">
+                    <Label text="✅" style="-fx-font-size: 14px;"/>
+                    <Label text="Prix correct (±20%)" style="-fx-font-size: 12px; -fx-text-fill: #2e7d32;"/>
+                </HBox>
+                <HBox spacing="6" alignment="CENTER_LEFT">
+                    <Label text="📈" style="-fx-font-size: 14px;"/>
+                    <Label text="Surévalué (+20%)" style="-fx-font-size: 12px; -fx-text-fill: #e53935;"/>
+                </HBox>
+                <HBox spacing="6" alignment="CENTER_LEFT">
+                    <Label text="📉" style="-fx-font-size: 14px;"/>
+                    <Label text="Sous-évalué (-20%)" style="-fx-font-size: 12px; -fx-text-fill: #1565c0;"/>
+                </HBox>
+                <HBox spacing="6" alignment="CENTER_LEFT">
+                    <Label text="❓" style="-fx-font-size: 14px;"/>
+                    <Label text="Pas de référence marché" style="-fx-font-size: 12px; -fx-text-fill: #888;"/>
+                </HBox>
+            </HBox>
+
+            <FlowPane fx:id="flowComparaison" hgap="16" vgap="16" prefWrapLength="1350">
+                <Label text="⏳ Chargement en cours..."
+                       style="-fx-font-size: 14px; -fx-text-fill: #888;"/>
+            </FlowPane>
+        </VBox>
+
+        <Region prefHeight="40"/>
+    </VBox>
+</ScrollPane>

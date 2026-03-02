@@ -50,7 +50,7 @@ public class AgriBotService {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("config.properties")) {
             if (is != null) {
                 props.load(is);
-                String key = props.getProperty("groq.api.key", "").trim();
+                String key = props.getProperty("groq.apiKey", "").trim();
                 if (!key.isEmpty() && !key.equals("gsk_YOUR_KEY_HERE")) {
                     return key;
                 }
