@@ -56,5 +56,12 @@
             </VBox>
         </HBox>
 
+        <VBox styleClass="mgmt-form-card" spacing="0">
+            <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT">
+                <Label text="Animaux par Emplacement" styleClass="mgmt-form-title"/>
+            </HBox>
+            <FlowPane fx:id="locationCardsPane" hgap="16" vgap="16" styleClass="mgmt-form-body"/>
+        </VBox>
+
     </VBox>
 </ScrollPane>

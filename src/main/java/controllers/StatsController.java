@@ -6,8 +6,11 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.chart.*;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import services.ServiceAnimal;
 import services.ServiceAnimalHealthRecord;
 
@@ -25,6 +28,7 @@ public class StatsController implements Initializable {
 
     @FXML private PieChart conditionPie;
     @FXML private BarChart<String, Number> typeBarChart;
+    @FXML private FlowPane locationCardsPane;
 
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
     private final ServiceAnimalHealthRecord serviceRecord = new ServiceAnimalHealthRecord();
@@ -49,6 +53,7 @@ public class StatsController implements Initializable {
             buildKPIs(animals, records);
             buildConditionPie(records);
             buildTypeBar(animals);
+            buildLocationCards(animals);
         } catch (SQLException e) {
             totalAnimalsLabel.setText("!");
             totalRecordsLabel.setText("!");
@@ -120,6 +125,34 @@ public class StatsController implements Initializable {
         Platform.runLater(() ->
                 typeBarChart.getData().get(0).getData()
                         .forEach(d -> d.getNode().setStyle("-fx-bar-fill: #5a9814;")));
+    }
+
+    private void buildLocationCards(List<Animal> animals) {
+        Map<String, Long> counts = animals.stream()
+                .filter(a -> a.getLocation() != null && !a.getLocation().isEmpty())
+                .collect(Collectors.groupingBy(a -> capitalize(a.getLocation()), Collectors.counting()));
+
+        if (counts.isEmpty()) return;
+
+        counts.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .forEach(e -> {
+                    VBox card = new VBox(6);
+                    card.setAlignment(Pos.CENTER);
+                    card.setPrefSize(130, 90);
+                    card.getStyleClass().add("stats-kpi-card");
+
+                    Label count = new Label(String.valueOf(e.getValue()));
+                    count.getStyleClass().add("stats-kpi-value");
+
+                    Label name = new Label(e.getKey());
+                    name.getStyleClass().add("stats-kpi-label");
+                    name.setWrapText(true);
+                    name.setMaxWidth(118);
+
+                    card.getChildren().addAll(count, name);
+                    locationCardsPane.getChildren().add(card);
+                });
     }
 
     private String capitalize(String s) {
