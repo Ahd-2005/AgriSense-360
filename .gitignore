@@ -46,4 +46,4 @@ build/
 # Clés API — ne jamais commiter
 src/main/resources/agenda/config.js
 src/main/resources/config.properties
-src/main/resources/google-config.properties
+src/main/resources/google-config.propertiesnul

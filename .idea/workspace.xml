@@ -5,22 +5,55 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="ou hedhi agenda lilla kemla ttpusha">
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_close_time.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AffectationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AffectationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/EvaluationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/EvaluationController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/config/DBtest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceProduitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisens360/services/ServiceStockTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisense360/servicetests/ServiceAnimalHealthRecordTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/agrisense360/servicetests/ServiceAnimalTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/servicetests/ServiceAnimalHealthRecordTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/servicetests/ServiceAnimalTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/afficher_parcelle.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/css/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/home.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/AjoutPrduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/AjoutPrduit.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/BackOfficeStock.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/BackOfficeStock.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/CommodityPrice.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/CommodityPrice.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/ExchangeRate.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/ExchangeRate.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/ModifProd.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/ModifProd.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/ProductList.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/ProductList.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/StockList.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/StockList.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/addStock.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/addStock.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/editStock.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/editStock.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/agrisens360/HelloApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/agrisens360/HelloApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AddStockController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/AddStockController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AffectationController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/AffectationController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AffectationController$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AffectationController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/AffectationController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AjoutProduitController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/AjoutProduitController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/BackOfficeStockController$AlerteData.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/BackOfficeStockController$AlerteData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/BackOfficeStockController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/BackOfficeStockController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EvaluationController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EvaluationController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EvaluationController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EvaluationController$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EvaluationController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EvaluationController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/FrontHomeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/FrontHomeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/GerantProfile.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/GerantProfile.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/LandingPage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/LandingPage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/MainLayoutController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/MainLayoutController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/MainLayoutController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/MainLayoutController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ProductListController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ProductListController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/StockListController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/StockListController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entity/Produit.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entity/Produit.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/AjoutPrduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/AjoutPrduit.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/BackOfficeStock.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/BackOfficeStock.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/LandingPage.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/LandingPage.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/ModifProd.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/ModifProd.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/ProductList.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/ProductList.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/StockHome.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/StockHome.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/StockList.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/StockList.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/addStock.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/addStock.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/editStock.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/editStock.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/services/ServiceStockProduit.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/services/ServiceStockProduit.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/services/ServiceStockStock.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/services/ServiceStockStock.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,22 +98,22 @@
     <setting file="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/17.0.14/javafx-graphics-17.0.14-win.jar!/javafx/scene/Parent.class" root0="SKIP_INSPECTION" />
   </component>
   <component name="McpProjectServerCommands">
-    <McpServerCommand>
+    <McpServerCommand sourceId="UserConfigurationSource">
       <option name="allowedToolsNames" />
       <option name="enabled" value="true" />
-      <option name="name" />
-      <option name="programPath" />
-      <option name="arguments" />
-      <option name="workingDirectory" />
+      <option name="name" value="" />
+      <option name="programPath" value="" />
+      <option name="arguments" value="" />
+      <option name="workingDirectory" value="" />
       <envs />
     </McpServerCommand>
-    <McpServerCommand>
+    <McpServerCommand sourceId="UserConfigurationSource">
       <option name="allowedToolsNames" />
       <option name="enabled" value="true" />
-      <option name="name" />
-      <option name="programPath" />
-      <option name="arguments" />
-      <option name="workingDirectory" />
+      <option name="name" value="" />
+      <option name="programPath" value="" />
+      <option name="arguments" value="" />
+      <option name="workingDirectory" value="" />
       <envs />
     </McpServerCommand>
   </component>
@@ -99,44 +132,44 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Maven.agrisens360 [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.agrisens360 [compile].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.agrisens360 [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:jlink].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;gestion__culture&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/db&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.HelloApplication.executor": "Run",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Maven.agrisens360 [clean].executor": "Run",
+    "Maven.agrisens360 [compile].executor": "Run",
+    "Maven.agrisens360 [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor": "Run",
+    "Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:jlink].executor": "Run",
+    "Maven.agrisens360 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "gestion-ouvrier",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/db",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;Jupyter&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Jupyter"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\db" />

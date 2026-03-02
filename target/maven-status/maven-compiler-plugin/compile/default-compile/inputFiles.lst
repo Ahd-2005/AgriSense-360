@@ -11,6 +11,7 @@ C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\AjoutProduitContr
 C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\AnimalController.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\BackOfficeStockController.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\ChatBotController.java
+C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\CommodityPriceController.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\CultureController.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\DashboardCultureController.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\EditStockController.java
@@ -18,6 +19,7 @@ C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\EnumManagementCon
 C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\EquipmentController.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\EquipmentManagementController.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\EvaluationController.java
+C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\ExchangeRateController.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\FaceLoginController.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\FaceVerificationController.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\controllers\ForgotPasswordController.java
@@ -84,9 +86,11 @@ C:\Users\user\IdeaProjects\untitled2\src\main\java\services\GoogleAuthService.ja
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\HarvestAIService.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\IService.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\IServiceStock.java
+C:\Users\user\IdeaProjects\untitled2\src\main\java\services\NotificationService.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\Parcellehistoriqueservice.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\ParcelleService.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\PasswordResetService.java
+C:\Users\user\IdeaProjects\untitled2\src\main\java\services\RecommandationService.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\ServiceAnimal.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\ServiceAnimalHealthRecord.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\ServiceEnumManagement.java
@@ -95,10 +99,12 @@ C:\Users\user\IdeaProjects\untitled2\src\main\java\services\ServiceMaintenance.j
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\ServiceStockProduit.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\ServiceStockStock.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\SessionManager.java
+C:\Users\user\IdeaProjects\untitled2\src\main\java\services\StockAlertService.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\userservice.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\services\WeatherService.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\utils\AnimalListRefresh.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\utils\AppConfig.java
+C:\Users\user\IdeaProjects\untitled2\src\main\java\utils\BarcodeGenerator.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\utils\CultureDurations.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\utils\DbInit.java
 C:\Users\user\IdeaProjects\untitled2\src\main\java\utils\EmailService.java

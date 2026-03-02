@@ -814,18 +814,11 @@ public class MainLayoutController {
     }
 
     private void setActiveButton(Button activeButton) {
-        homeBtn.getStyleClass().remove("active");
-        animalsBtn.getStyleClass().remove("active");
-        equipmentBtn.getStyleClass().remove("active");
-        stockBtn.getStyleClass().remove("active");
-        cultureBtn.getStyleClass().remove("active");
-        usersBtn.getStyleClass().remove("active");
-        workersBtn.getStyleClass().remove("active");
-        evaluationBtn.getStyleClass().remove("active");
-        profileBtn.getStyleClass().remove("active");
-        ouvrierBtn.getStyleClass().remove("active");
-
-        if (!activeButton.getStyleClass().contains("active")) {
+        for (Button btn : new Button[]{homeBtn, animalsBtn, equipmentBtn, stockBtn,
+                cultureBtn, usersBtn, workersBtn, evaluationBtn, profileBtn, ouvrierBtn}) {
+            if (btn != null) btn.getStyleClass().remove("active");
+        }
+        if (activeButton != null && !activeButton.getStyleClass().contains("active")) {
             activeButton.getStyleClass().add("active");
         }
     }

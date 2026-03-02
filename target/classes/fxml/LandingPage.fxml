@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -31,6 +32,63 @@
                                -fx-background-radius: 25; -fx-border-radius: 25;
                                -fx-cursor: hand; -fx-pref-width: 300;" />
             </VBox>
+
+            <!-- Motivational Quote Card -->
+            <VBox fx:id="quoteCard" alignment="CENTER" spacing="12"
+                  style="-fx-background-color: white;
+                         -fx-background-radius: 20;
+                         -fx-effect: dropshadow(gaussian, rgba(46,125,50,0.15), 20, 0, 0, 4);
+                         -fx-padding: 30 40 25 40;
+                         -fx-max-width: 560;
+                         -fx-min-width: 420;">
+
+                <!-- Top accent bar -->
+                <HBox alignment="CENTER" spacing="8">
+                    <Label text="✦"
+                           style="-fx-text-fill: #81C784; -fx-font-size: 14px;" />
+                    <Label text="CITATION DU JOUR"
+                           style="-fx-font-size: 11px; -fx-font-weight: bold;
+                                  -fx-text-fill: #81C784; -fx-letter-spacing: 2;" />
+                    <Label text="✦"
+                           style="-fx-text-fill: #81C784; -fx-font-size: 14px;" />
+                </HBox>
+
+                <!-- Large quote mark -->
+                <Label text="❝"
+                       style="-fx-font-size: 42px; -fx-text-fill: #c8e6c9; -fx-padding: -5 0 -15 0;" />
+
+                <!-- Quote text -->
+                <Label fx:id="quoteText"
+                       text="Chargement de la citation..."
+                       wrapText="true"
+                       alignment="CENTER"
+                       style="-fx-font-size: 15px; -fx-text-fill: #37474f;
+                              -fx-font-style: italic; -fx-line-spacing: 4;
+                              -fx-text-alignment: center;" />
+
+                <!-- Divider -->
+                <Separator style="-fx-background-color: #e8f5e9; -fx-pref-width: 60;" prefWidth="80" />
+
+                <!-- Author -->
+                <Label fx:id="quoteAuthor"
+                       text="— ..."
+                       style="-fx-font-size: 13px; -fx-font-weight: bold;
+                              -fx-text-fill: #4CAF50;" />
+
+                <!-- Refresh button -->
+                <Button fx:id="refreshBtn" text="↺  Nouvelle citation"
+                        onAction="#refreshQuote"
+                        style="-fx-background-color: #f1f8e9;
+                               -fx-text-fill: #558b2f;
+                               -fx-font-size: 12px; -fx-font-weight: bold;
+                               -fx-background-radius: 20;
+                               -fx-padding: 7 20;
+                               -fx-cursor: hand;
+                               -fx-border-color: #c5e1a5;
+                               -fx-border-radius: 20;
+                               -fx-border-width: 1;" />
+            </VBox>
+
         </VBox>
     </center>
 

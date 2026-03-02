@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" stylesheets="@../css/Stockhome.css" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BackOfficeStockController">
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" stylesheets="@../css/Stockhome.css" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BackOfficeStockController">
 
     <VBox alignment="TOP_CENTER" spacing="40.0" styleClass="content">
         <padding>

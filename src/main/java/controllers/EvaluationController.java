@@ -48,21 +48,6 @@ public class EvaluationController implements Initializable {
     private final AffectationTravailService affectationService = new AffectationTravailService();
     private final EvaluationPerformanceService evaluationService = new EvaluationPerformanceService();
     private final ObservableList<EvaluationPerformance> evaluationList = FXCollections.observableArrayList();
-
-    @FXML
-    private void onSwitchToAffectation() {
-        MainLayoutController.getInstance().navigateToWorkers();
-    }
-
-    @FXML
-    private void onSwitchToDashboard() {
-        MainLayoutController.getInstance().navigateToDashboardWorkers();
-    }
-
-    @FXML
-    private void onSwitchToCalendar() {
-        MainLayoutController.getInstance().navigateToCalendar();
-    }
     private FilteredList<EvaluationPerformance> filteredList;
     private EvaluationPerformance selectedEvaluation;
 
@@ -101,8 +86,9 @@ public class EvaluationController implements Initializable {
         // Setup FilteredList
         filteredList = new FilteredList<>(evaluationList, p -> true);
         
-        // Setup SortedList
-        SortedList<EvaluationPerformance> sortedList = new SortedList<>(filteredList);
+        // Setup SortedList (custom sorting via applyFilters, not TableView column sorting)
+        SortedList<EvaluationPerformance> sortedList = new SortedList<>(filteredList,
+                (e1, e2) -> e2.getDateEvaluation().compareTo(e1.getDateEvaluation()));
         tvEvaluations.setItems(sortedList);
         
         tvEvaluations.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {

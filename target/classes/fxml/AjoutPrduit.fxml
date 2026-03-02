@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" stylesheets="@../css/Stockhome.css" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AjoutProduitController">
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" stylesheets="@../css/Stockhome.css" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AjoutProduitController">
 
     <VBox alignment="TOP_CENTER" spacing="35.0" styleClass="content">
         <padding>
@@ -61,11 +61,14 @@
                         </HBox>
                     </HBox>
 
+
                     <!-- Conteneur pour l'aperçu de l'image -->
                     <HBox fx:id="imagePreviewContainer" alignment="CENTER" prefHeight="220.0" styleClass="image-preview-container" visible="false">
                         <ImageView fx:id="imgPreview" fitHeight="200.0" fitWidth="280.0" preserveRatio="true" visible="false" />
                     </HBox>
+
                 </VBox>
+                <Button text="📇 Générer Codes-barres pour Tous" onAction="#genererBarcodesPourTous" styleClass="primary"/>
             </VBox>
         </VBox>
 
