@@ -219,8 +219,7 @@ public class AIPredictionController implements Initializable {
                         + (customModelRadio.isSelected() ? "Modèle Personnalisé" : "Modèle Général"));
                 for (BatchResult r : batchResults) {
                     Label badge = new Label(capitalize(r.condition));
-                    badge.getStyleClass().addAll("ai-condition-badge", "ai-condition-badge-" + r.condition);
-                    badge.setMinWidth(80);
+                    badge.getStyleClass().addAll("ai-condition-badge-batch", "ai-condition-badge-" + r.condition);
 
                     Label info = new Label("#" + r.animal.getEarTag()
                             + "  —  " + capitalize(r.animal.getType() != null ? r.animal.getType() : "")
@@ -275,17 +274,16 @@ public class AIPredictionController implements Initializable {
 
     private String buildJsonBody(Animal animal, List<AnimalHealthRecord> records) {
         String type = animal.getType() != null ? animal.getType().toLowerCase() : "cow";
-        AnimalHealthRecord latest = records.get(0);
-        double weight = records.stream()
-                .mapToDouble(r -> r.getWeight() != null ? r.getWeight()
-                        : (animal.getWeight() != null ? animal.getWeight() : 200.0))
-                .average().orElse(animal.getWeight() != null ? animal.getWeight() : 200.0);
-        double production = records.stream().mapToDouble(r -> {
-            if (type.equals("cow") && r.getMilkYield() != null) return r.getMilkYield();
-            if ((type.equals("sheep") || type.equals("goat")) && r.getWoolLength() != null) return r.getWoolLength();
-            if (r.getEggCount() != null) return r.getEggCount();
-            return 0.0;
-        }).average().orElse(0.0);
+        AnimalHealthRecord latest = records.get(0); // records are ORDER BY recordDate DESC, so index 0 is newest
+
+        double weight = latest.getWeight() != null ? latest.getWeight()
+                : (animal.getWeight() != null ? animal.getWeight() : 200.0);
+
+        double production = 0.0;
+        if (type.equals("cow") && latest.getMilkYield() != null) production = latest.getMilkYield();
+        else if ((type.equals("sheep") || type.equals("goat")) && latest.getWoolLength() != null) production = latest.getWoolLength();
+        else if (latest.getEggCount() != null) production = latest.getEggCount();
+
         String appetite = latest.getAppetite() != null ? latest.getAppetite().name().toLowerCase() : "normal";
         String recordDate = latest.getRecordDate() != null ? latest.getRecordDate().toString() : LocalDate.now().toString();
         int vaccinated = Boolean.TRUE.equals(animal.getVaccinated()) ? 1 : 0;

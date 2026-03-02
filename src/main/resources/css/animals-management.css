@@ -498,6 +498,18 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);
 }
 
+.ai-condition-badge-batch {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 0;
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-pref-width: 68px;
+    -fx-min-width: 68px;
+    -fx-max-width: 68px;
+    -fx-alignment: center;
+}
+
 .ai-condition-badge-healthy {
     -fx-background-color: linear-gradient(to right, #2e7d32, #43a047);
 }

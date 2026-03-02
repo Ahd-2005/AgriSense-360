@@ -1,7 +1,7 @@
 id,animal,recordDate,weight,appetite,conditionStatus,milkYield,eggCount,woolLength
 9,2,2026-02-21,,,sick,,,
-8,1,2026-02-19,150.0,normal,healthy,10.0,,
-7,1,2026-02-09,134.0,normal,healthy,,,
+8,1,2026-02-19,150.0,low,critical,10.0,,
+7,1,2026-02-09,134.0,low,critical,,,
 10,3,2026-01-03,490.0,normal,sick,17.8,,
 11,3,2026-01-03,498.6,low,healthy,25.1,,
 12,3,2025-08-19,498.1,normal,healthy,30.2,,
@@ -1002,3 +1002,5 @@ id,animal,recordDate,weight,appetite,conditionStatus,milkYield,eggCount,woolLeng
 1007,22,2024-05-31,3.1,high,sick,,22,
 1008,22,2025-12-18,2.8,low,healthy,,8,
 1009,22,2025-06-26,2.6,high,sick,,8,
+1010,1,2026-02-19,99999.0,low,critical,10.0,,
+1011,12,2026-03-02,144.0,low,sick,,,144.0
