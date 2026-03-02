@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class HealthRecordController implements Initializable {
 
@@ -47,6 +48,8 @@ public class HealthRecordController implements Initializable {
     private AnimalHealthRecord selectedRecord;
     private String currentSortColumn = null;
     private boolean sortAscending = true;
+
+    public static Consumer<Animal> onNavigate;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -80,6 +83,15 @@ public class HealthRecordController implements Initializable {
 
         loadAnimals();
         AnimalListRefresh.addListener(this::loadAnimals);
+        onNavigate = this::navigateToAnimal;
+    }
+
+    private void navigateToAnimal(Animal a) {
+        javafx.scene.control.TabPane tabPane = (javafx.scene.control.TabPane)
+                animalCombo.getScene().lookup(".mgmt-tab-pane");
+        if (tabPane != null) tabPane.getSelectionModel().select(1);
+        animalCombo.getSelectionModel().select(a);
+        onAnimalSelected();
     }
 
     private void refreshRecordTable() {

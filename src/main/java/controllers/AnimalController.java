@@ -141,8 +141,8 @@ public class AnimalController implements Initializable {
         header.getStyleClass().add("mgmt-table-header-row");
         header.setAlignment(Pos.CENTER_LEFT);
         
-        String[] headers = {"ID", "Ear Tag", "Type", "Weight", "Health", "Birth Date", "Age", "Origin", "Location"};
-        double[] widths = {50, 80, 90, 80, 90, 110, 70, 120, 120};
+        String[] headers = {"ID", "Ear Tag", "Type", "Weight", "Health", "Birth Date", "Age", "Origin", "Location", "Actions"};
+        double[] widths = {50, 80, 90, 80, 90, 110, 70, 120, 120, 100};
         
         for (int i = 0; i < headers.length; i++) {
             Label headerLabel = new Label(headers[i]);
@@ -179,7 +179,7 @@ public class AnimalController implements Initializable {
         }
         row.setAlignment(Pos.CENTER_LEFT);
 
-        double[] widths = {50, 80, 90, 80, 90, 110, 70, 120, 120};
+        double[] widths = {50, 80, 90, 80, 90, 110, 70, 120, 120, 100};
         String[] values = {
             a.getId() != null ? a.getId().toString() : "-",
             a.getEarTag() != null ? a.getEarTag().toString() : "-",
@@ -213,7 +213,17 @@ public class AnimalController implements Initializable {
             }
             row.getChildren().add(cell);
         }
-        
+
+        Button dossiersBtn = new Button("+ Dossier");
+        dossiersBtn.getStyleClass().add("mgmt-btn-ghost");
+        dossiersBtn.setPrefWidth(100);
+        dossiersBtn.setOnMouseClicked(javafx.event.Event::consume);
+        dossiersBtn.setOnAction(e -> {
+            if (HealthRecordController.onNavigate != null)
+                HealthRecordController.onNavigate.accept(a);
+        });
+        row.getChildren().add(dossiersBtn);
+
         row.setOnMouseClicked(e -> {
             selectedAnimal = a;
             refreshTable();
