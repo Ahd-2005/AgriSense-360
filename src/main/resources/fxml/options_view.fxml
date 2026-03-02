@@ -108,5 +108,32 @@
             </VBox>
         </VBox>
 
+        <VBox styleClass="mgmt-form-card" spacing="0">
+            <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
+                <VBox spacing="3">
+                    <Label text="Exporter un Rapport PDF" styleClass="mgmt-form-title"/>
+                    <Label text="Choisissez les sections a inclure dans le rapport de la ferme" styleClass="mgmt-form-subtitle"/>
+                </VBox>
+            </HBox>
+            <VBox styleClass="mgmt-form-body" spacing="12">
+                <CheckBox fx:id="pdfSummaryCheck"
+                          text="Resume de la Ferme (totaux, vaccination, animaux a risque)"
+                          selected="true" styleClass="mgmt-form-label"/>
+                <CheckBox fx:id="pdfAllAnimalsCheck"
+                          text="Liste complete des animaux"
+                          selected="true" styleClass="mgmt-form-label"/>
+                <CheckBox fx:id="pdfAtRiskCheck"
+                          text="Animaux a risque (malades, blesses, critiques)"
+                          selected="true" styleClass="mgmt-form-label"/>
+                <CheckBox fx:id="pdfRecentRecordsCheck"
+                          text="Dossiers de sante recents (20 derniers)"
+                          selected="false" styleClass="mgmt-form-label"/>
+                <HBox spacing="14" alignment="CENTER_LEFT">
+                    <Button text="Generer le Rapport PDF" onAction="#onExportPdf" styleClass="mgmt-btn-primary"/>
+                    <Label fx:id="pdfStatusLabel" text="" styleClass="mgmt-form-subtitle" wrapText="true"/>
+                </HBox>
+            </VBox>
+        </VBox>
+
     </VBox>
 </ScrollPane>

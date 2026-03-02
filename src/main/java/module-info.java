@@ -12,6 +12,8 @@ module com.example.agrisens360 {
     requires com.almasb.fxgl.all;
     requires java.sql;
     requires java.net.http;
+    requires java.desktop;
+    requires org.apache.pdfbox;
 
     opens com.example.agrisens360 to javafx.fxml;
     opens controllers to javafx.fxml;

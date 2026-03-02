@@ -8,6 +8,7 @@ com\example\agrisens360\HelloController.class
 services\AffectationTravailService.class
 utils\MyDataBase.class
 controllers\AffectationController.class
+services\PdfReportService$VisitEntry.class
 controllers\OptionsController.class
 controllers\EvaluationController$1.class
 controllers\HomeContentController.class
@@ -39,3 +40,4 @@ controllers\AIPredictionController$BatchResult.class
 services\ServiceEnumManagement.class
 controllers\HealthRecordController$1.class
 entity\AnimalHealthRecord.class
+services\PdfReportService.class

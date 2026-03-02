@@ -11,9 +11,11 @@ import javafx.scene.control.*;
 import services.ServiceAnimal;
 import services.ServiceAnimalHealthRecord;
 import services.ServiceEnumManagement;
+import services.PdfReportService;
 import utils.AnimalListRefresh;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
@@ -53,6 +55,12 @@ public class OptionsController implements Initializable {
     @FXML private Label trainInfoLabel;
     @FXML private Button trainModelBtn;
     @FXML private Label trainStatusLabel;
+
+    @FXML private CheckBox pdfSummaryCheck;
+    @FXML private CheckBox pdfAllAnimalsCheck;
+    @FXML private CheckBox pdfAtRiskCheck;
+    @FXML private CheckBox pdfRecentRecordsCheck;
+    @FXML private Label pdfStatusLabel;
 
     private final ServiceEnumManagement serviceEnum = new ServiceEnumManagement();
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
@@ -360,6 +368,59 @@ public class OptionsController implements Initializable {
         } else {
             trainStatusLabel.setStyle("-fx-text-fill: #e53935;");
         }
+    }
+
+    @FXML
+    private void onExportPdf() {
+        boolean summary  = pdfSummaryCheck.isSelected();
+        boolean all      = pdfAllAnimalsCheck.isSelected();
+        boolean atRisk   = pdfAtRiskCheck.isSelected();
+        boolean recent   = pdfRecentRecordsCheck.isSelected();
+
+        if (!summary && !all && !atRisk && !recent) {
+            pdfStatusLabel.setText("Selectionnez au moins une section.");
+            pdfStatusLabel.setStyle("-fx-text-fill: #e53935;");
+            return;
+        }
+
+        javafx.stage.FileChooser chooser = new javafx.stage.FileChooser();
+        chooser.setTitle("Enregistrer le Rapport PDF");
+        chooser.setInitialFileName("rapport_ferme_" + LocalDate.now() + ".pdf");
+        chooser.getExtensionFilters().add(
+                new javafx.stage.FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
+        File file = chooser.showSaveDialog(pdfSummaryCheck.getScene().getWindow());
+        if (file == null) return;
+
+        pdfStatusLabel.setText("Generation en cours...");
+        pdfStatusLabel.setStyle("-fx-text-fill: #888888;");
+
+        Thread t = new Thread(() -> {
+            try {
+                List<Animal> animals = serviceAnimal.getAll();
+                List<AnimalHealthRecord> records = recent
+                        ? serviceAnimalHealthRecord.getAll().stream()
+                                .filter(r -> r.getRecordDate() != null)
+                                .sorted((a, b) -> b.getRecordDate().compareTo(a.getRecordDate()))
+                                .limit(20)
+                                .collect(Collectors.toList())
+                        : new ArrayList<>();
+
+                new PdfReportService().generateFarmReport(
+                        summary, all, atRisk, recent, animals, records, file);
+
+                Platform.runLater(() -> {
+                    pdfStatusLabel.setText("Rapport genere : " + file.getName());
+                    pdfStatusLabel.setStyle("-fx-text-fill: #2e7d32;");
+                });
+            } catch (Exception ex) {
+                Platform.runLater(() -> {
+                    pdfStatusLabel.setText("Erreur : " + ex.getMessage());
+                    pdfStatusLabel.setStyle("-fx-text-fill: #e53935;");
+                });
+            }
+        });
+        t.setDaemon(true);
+        t.start();
     }
 
     private void showInfo(String msg)  { new Alert(Alert.AlertType.INFORMATION, msg).showAndWait(); }
