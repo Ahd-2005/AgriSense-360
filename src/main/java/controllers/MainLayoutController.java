@@ -25,9 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import services.AgriBotService;
-import services.SessionManager;
-import services.CultureNotificationService;
+import services.*;
 import utils.EmailService;
 
 import java.io.IOException;
@@ -66,6 +64,7 @@ public class MainLayoutController {
     @FXML private Button ModstockBtn;
     @FXML private Button editprodBtn;
     @FXML private Button btnBOS;
+    @FXML private Button exchangeRateBtn;
 
     @FXML private Label homeLabel;
     @FXML private Label animalsLabel;
@@ -79,6 +78,11 @@ public class MainLayoutController {
     @FXML private Label logoutLabel;
     @FXML private Button ouvrierBtn;
     @FXML private Label ouvrierLabel;
+    @FXML private Label exchangeRateLabel;
+
+    @FXML private Label stockAlertBadge;
+
+    private boolean badgeFermeParUtilisateur = false;
 
     private boolean sidebarCollapsed = false;
     private user currentUser;
@@ -134,7 +138,24 @@ public class MainLayoutController {
             CultureNotificationService notifier = new CultureNotificationService();
             notifier.scheduleDailyAtTen();
         }
+        NotificationService.getInstance().init(contentArea);
+        StockAlertService.getInstance().initialiser();
         navigateToHome();
+    }
+    public void navigateToExchangeRate() {
+        loadContent("/fxml/ExchangeRate.fxml");
+        setActiveButton(exchangeRateBtn);
+    }
+    private void setVisible(Node node, boolean visible) {
+        if (node != null) { node.setVisible(visible); node.setManaged(visible); }
+    }
+    public void signalerNouvelleAlerte(int nbAlertes) {
+        badgeFermeParUtilisateur = false;
+        if (stockAlertBadge != null) {
+            stockAlertBadge.setText(String.valueOf(nbAlertes));
+            stockAlertBadge.setVisible(true);
+            stockAlertBadge.setManaged(true);
+        }
     }
 
     // ── Build the chat window (called once) ───────────────────────────
@@ -647,6 +668,9 @@ public class MainLayoutController {
     public void navigateToBackOfficeStock() {
         loadContent("/fxml/BackOfficeStock.fxml");
         setActiveButton(btnBOS);
+    }
+    public void navigateToCommodityPrice() {
+        loadContent("/fxml/CommodityPrice.fxml");
     }
 
     private void loadContent(String fxmlPath) {
