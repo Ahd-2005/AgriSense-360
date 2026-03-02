@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import entity.AffectationTravail;
 import services.AffectationTravailService;
+import services.AIReportService;
 import services.DiscordWebhookService;
 import services.WeatherService;
 
@@ -41,7 +42,9 @@ public class AffectationController implements Initializable {
     @FXML private Button btnDelete;
     @FXML private Button btnClear;
     @FXML private Button btnCheckMeteo;
+    @FXML private Button btnAIPlan;
     @FXML private Label lblMeteoResult;
+    @FXML private Label lblAIPlanResult;
 
     private final AffectationTravailService service = new AffectationTravailService();
     private final ObservableList<AffectationTravail> affectationList = FXCollections.observableArrayList();
@@ -305,5 +308,51 @@ public class AffectationController implements Initializable {
         a.setHeaderText(null);
         a.setContentText(message);
         a.showAndWait();
+    }
+
+    // ── AI Planning ────────────────────────────────────────────────
+
+    @FXML
+    private void onAIPlan() {
+        if (selectedAffectation == null) {
+            showError("Sélection requise", "Veuillez sélectionner une affectation pour la planification IA.");
+            return;
+        }
+        lblAIPlanResult.setText("⏳ Génération du plan IA en cours...");
+        btnAIPlan.setDisable(true);
+
+        AffectationTravail copy = selectedAffectation;
+        Task<String> task = new Task<>() {
+            @Override
+            protected String call() {
+                return AIReportService.generatePerformanceReport(copy, java.util.Collections.emptyList());
+            }
+        };
+        task.setOnSucceeded(e -> {
+            lblAIPlanResult.setText(task.getValue());
+            btnAIPlan.setDisable(false);
+        });
+        task.setOnFailed(e -> {
+            lblAIPlanResult.setText("❌ Erreur: " + task.getException().getMessage());
+            btnAIPlan.setDisable(false);
+        });
+        new Thread(task).start();
+    }
+
+    // ── Navigation ─────────────────────────────────────────────────
+
+    @FXML
+    private void onSwitchToEvaluation() {
+        MainLayoutController.getInstance().navigateToEvaluation();
+    }
+
+    @FXML
+    private void onSwitchToDashboard() {
+        MainLayoutController.getInstance().navigateToDashboardWorkers();
+    }
+
+    @FXML
+    private void onSwitchToCalendar() {
+        MainLayoutController.getInstance().navigateToCalendar();
     }
 }

@@ -375,4 +375,21 @@ public class EvaluationController implements Initializable {
         al.setContentText(message);
         al.showAndWait();
     }
+
+    // ── Navigation ─────────────────────────────────────────────────
+
+    @FXML
+    private void onSwitchToAffectation() {
+        MainLayoutController.getInstance().navigateToWorkers();
+    }
+
+    @FXML
+    private void onSwitchToDashboard() {
+        MainLayoutController.getInstance().navigateToDashboardWorkers();
+    }
+
+    @FXML
+    private void onSwitchToCalendar() {
+        MainLayoutController.getInstance().navigateToCalendar();
+    }
 }
