@@ -14,8 +14,9 @@ module com.example.agrisens360 {
     requires com.almasb.fxgl.all;
     requires static java.xml;
     requires java.sql;
-    requires java.desktop;
+    requires com.google.gson;
     requires java.net.http;
+    requires java.desktop;
     requires jakarta.mail;
 
     requires org.json;

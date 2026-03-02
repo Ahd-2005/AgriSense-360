@@ -12,6 +12,30 @@
     <VBox spacing="20" styleClass="content-inner">
         <padding><Insets top="30" right="40" bottom="40" left="40"/></padding>
 
+        <!-- Navigation toggle -->
+        <HBox spacing="0" alignment="CENTER_LEFT" style="-fx-padding: 0 0 10 0;">
+            <Button text="📋 Affectations"
+                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 8 0 0 0;
+                           -fx-cursor: hand;"
+                    onAction="#onSwitchToAffectation"/>
+            <Button text="📊 Évaluations"
+                    style="-fx-background-color: #5a9814; -fx-text-fill: white; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0;
+                           -fx-cursor: hand;"
+                    disable="true"/>
+            <Button text="📈 Dashboard"
+                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0;
+                           -fx-cursor: hand;"
+                    onAction="#onSwitchToDashboard"/>
+            <Button text="📅 Calendrier"
+                    style="-fx-background-color: #e8e8e8; -fx-text-fill: #333; -fx-font-weight: bold;
+                           -fx-font-size: 13px; -fx-padding: 10 20; -fx-background-radius: 0 8 8 0;
+                           -fx-cursor: hand;"
+                    onAction="#onSwitchToCalendar"/>
+        </HBox>
+
         <Label text="Gestion des Évaluations de Performance" styleClass="topbar-title"/>
 
         <!-- Form -->
@@ -38,13 +62,34 @@
                 <Button fx:id="btnUpdate" text="Modifier" styleClass="edit-button" onAction="#onUpdate"/>
                 <Button fx:id="btnDelete" text="Supprimer" styleClass="delete-button" onAction="#onDelete"/>
                 <Button fx:id="btnClear" text="Vider" styleClass="ghost" onAction="#onClear"/>
+                <Separator orientation="VERTICAL" prefHeight="30"/>
+                <Button fx:id="btnRapportAI" text="🤖 Rapport IA"
+                        style="-fx-background-color: #7b2d8b; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 7 14 7 14;"
+                        onAction="#onGenerateRapport"/>
             </HBox>
             <Label fx:id="lblAverageNote" style="-fx-text-fill: #5a9814; -fx-font-weight: bold;"/>
         </VBox>
 
-        <!-- TableView -->
+        <!-- TableView avec filtres -->
         <VBox spacing="10">
             <Label text="Liste des évaluations" styleClass="section-title-main"/>
+            
+            <!-- Search and Sort Controls -->
+            <HBox spacing="15" styleClass="filter-controls" style="-fx-padding: 15; -fx-background-color: #f9f9f9; -fx-border-radius: 8; -fx-border-color: #e0e0e0;">
+                <Label text="🔍 Filtrer par qualité:" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="cbSearchQualite" prefWidth="180" promptText="Sélectionner qualité"/>
+                
+                <Separator orientation="VERTICAL" prefHeight="30"/>
+                
+                <Label text="📅 Trier par:" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="cbSortDate" prefWidth="220" promptText="Sélectionner ordre"/>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                
+                <Button text="🔄 Réinitialiser" styleClass="ghost" onAction="#onResetFilters" prefWidth="120"/>
+            </HBox>
+            
             <TableView fx:id="tvEvaluations" prefHeight="280" styleClass="table-view" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colIdEval" text="ID Eval" prefWidth="70"/>
