@@ -6,15 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/services/PdfReportService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/PdfReportService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/condition_model.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/condition_model.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/HealthRecordController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/HealthRecordController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/HealthRecordController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/HealthRecordController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/fxml/health_record_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/health_record_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/servicetests/ServiceAnimalHealthRecordTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/servicetests/ServiceAnimalHealthRecordTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/servicetests/ServiceAnimalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/servicetests/ServiceAnimalTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,7 +169,8 @@
       <workItem from="1771928780952" duration="15000" />
       <workItem from="1772021669762" duration="1844000" />
       <workItem from="1772023878047" duration="2997000" />
-      <workItem from="1772458380466" duration="6170000" />
+      <workItem from="1772458380466" duration="6519000" />
+      <workItem from="1772467489003" duration="673000" />
     </task>
     <task id="LOCAL-00001" summary="gestion culture +gestion animals+template">
       <option name="closed" value="true" />
@@ -189,6 +185,9 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.py" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="gestion culture +gestion animals+template" />

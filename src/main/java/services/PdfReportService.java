@@ -33,7 +33,7 @@ public class PdfReportService {
     private static final float MARGIN    = 30f;
     private static final float CONTENT_W = PAGE_W - 2 * MARGIN;
 
-    // Column widths: total = 535 (= CONTENT_W)
+
     private static final float[] COL_W = {42, 55, 75, 48, 52, 60, 55, 90, 58};
     private static final String[] COL_HEADERS = {
         "#Boucle", "Type", "Date", "Poids(kg)", "Appetit", "Condition", "Production", "Notes", "Statut"
@@ -66,7 +66,7 @@ public class PdfReportService {
 
             float y = PAGE_H - MARGIN;
 
-            // ── Title block ─────────────────────────────────────────────
+
             y -= 14;
             drawText(cs, bold, 18, MARGIN, y, "AgriSense 360", COLOR_BRAND);
             y -= 22;
@@ -82,7 +82,7 @@ public class PdfReportService {
                     + "    |    Passes : " + skippedCount, Color.DARK_GRAY);
             y -= 10;
 
-            // Horizontal rule
+
             cs.setStrokingColor(COLOR_BRAND);
             cs.setLineWidth(1.5f);
             cs.moveTo(MARGIN, y);
@@ -90,7 +90,7 @@ public class PdfReportService {
             cs.stroke();
             y -= 6;
 
-            // ── Table ───────────────────────────────────────────────────
+
             drawTableHeaderRow(cs, bold, y);
             y -= HEADER_ROW_H;
 
@@ -109,7 +109,7 @@ public class PdfReportService {
                 y -= ROW_H;
             }
 
-            // ── Footer ──────────────────────────────────────────────────
+
             y -= 10;
             cs.setStrokingColor(COLOR_BORDER);
             cs.setLineWidth(0.5f);
@@ -124,18 +124,10 @@ public class PdfReportService {
             doc.save(outputFile);
         }
     }
-
-    // ── Farm Report ─────────────────────────────────────────────────────────
-
-    // Animal table columns  (sum = 535)
     private static final float[] ANIMAL_COL_W     = {55, 75, 65, 90, 130, 120};
     private static final String[] ANIMAL_COL_HEADS = {"#Boucle", "Type", "Poids(kg)", "Sante", "Emplacement", "Vaccine"};
-
-    // Health record table columns  (sum = 535)
     private static final float[] RECORD_COL_W     = {55, 65, 75, 65, 65, 70, 65, 75};
     private static final String[] RECORD_COL_HEADS = {"#Boucle", "Type", "Date", "Poids", "Appetit", "Condition", "Production", "Notes"};
-
-    // Per-call state (reset each generateFarmReport call)
     private PDDocument farmDoc;
     private PDPage     farmPage;
     private PDPageContentStream farmCs;
@@ -156,7 +148,7 @@ public class PdfReportService {
         farmRegular = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
         newFarmPage();
 
-        // ── Title ──────────────────────────────────────────────────────────
+
         farmY -= 14;
         drawText(farmCs, farmBold, 18, MARGIN, farmY, "AgriSense 360", COLOR_BRAND);
         farmY -= 22;
@@ -172,7 +164,7 @@ public class PdfReportService {
         farmCs.stroke();
         farmY -= 14;
 
-        // ── Sections ───────────────────────────────────────────────────────
+
         if (includeSummary) {
             drawFarmSectionHeader("Resume de la Ferme");
             drawFarmSummary(animals, recentRecords);
@@ -213,7 +205,6 @@ public class PdfReportService {
             }
         }
 
-        // ── Footer ─────────────────────────────────────────────────────────
         ensureFarmSpace(30);
         farmY -= 10;
         farmCs.setStrokingColor(COLOR_BORDER);
@@ -282,7 +273,7 @@ public class PdfReportService {
     }
 
     private void drawAnimalTable(List<Animal> animals, boolean highlightBad) throws IOException {
-        // header row
+
         ensureFarmSpace(ROW_H + HEADER_ROW_H);
         float x = MARGIN;
         farmCs.setNonStrokingColor(COLOR_TBL_HDR);
@@ -295,7 +286,6 @@ public class PdfReportService {
         }
         farmY -= HEADER_ROW_H;
 
-        // data rows
         for (int rowIdx = 0; rowIdx < animals.size(); rowIdx++) {
             ensureFarmSpace(ROW_H);
             Animal a = animals.get(rowIdx);
@@ -337,11 +327,9 @@ public class PdfReportService {
     }
 
     private void drawRecordsTable(List<AnimalHealthRecord> records, List<Animal> animals) throws IOException {
-        // Build a quick earTag lookup  id → animal
         java.util.Map<Integer, Animal> animalMap = new java.util.HashMap<>();
         for (Animal a : animals) animalMap.put(a.getId(), a);
 
-        // header
         ensureFarmSpace(ROW_H + HEADER_ROW_H);
         float x = MARGIN;
         farmCs.setNonStrokingColor(COLOR_TBL_HDR);
@@ -354,7 +342,6 @@ public class PdfReportService {
         }
         farmY -= HEADER_ROW_H;
 
-        // rows
         for (int rowIdx = 0; rowIdx < records.size(); rowIdx++) {
             ensureFarmSpace(ROW_H);
             AnimalHealthRecord r = records.get(rowIdx);
@@ -394,7 +381,6 @@ public class PdfReportService {
         farmY -= 8;
     }
 
-    // ── Helpers ─────────────────────────────────────────────────────────────
 
     private void drawTableHeaderRow(PDPageContentStream cs, PDFont bold, float y) throws IOException {
         float x = MARGIN;
@@ -478,7 +464,6 @@ public class PdfReportService {
         return s.length() <= max ? s : s.substring(0, max - 1) + "...";
     }
 
-    /** Strip characters that PDFBox standard fonts cannot encode. */
     private String sanitize(String s) {
         StringBuilder sb = new StringBuilder(s.length());
         for (char c : s.toCharArray()) {
