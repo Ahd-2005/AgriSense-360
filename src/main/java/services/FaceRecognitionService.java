@@ -119,16 +119,31 @@ public class FaceRecognitionService {
 
     // ── EXECUTE PYTHON SCRIPT ──────────────────────────
     private JSONObject executeScript(List<String> command) throws IOException {
-        ProcessBuilder pb = new ProcessBuilder(command);
-        pb.redirectErrorStream(true);
+        // Add -W ignore to suppress Python deprecation warnings on stderr
+        List<String> fullCmd = new ArrayList<>(command);
+        fullCmd.add(1, "-W");
+        fullCmd.add(2, "ignore");
+
+        ProcessBuilder pb = new ProcessBuilder(fullCmd);
+        pb.redirectErrorStream(false);  // Keep stderr separate from stdout!
         Process process = pb.start();
 
+        // Read stdout (JSON output)
         StringBuilder output = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(process.getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 output.append(line);
+            }
+        }
+
+        // Drain stderr to prevent blocking (log for debugging)
+        try (BufferedReader errReader = new BufferedReader(
+                new InputStreamReader(process.getErrorStream()))) {
+            String line;
+            while ((line = errReader.readLine()) != null) {
+                System.err.println("[face_recognition] " + line);
             }
         }
 
@@ -147,6 +162,13 @@ public class FaceRecognitionService {
         }
 
         String outputStr = output.toString().trim();
+
+        // Extract JSON from output (skip any non-JSON prefix)
+        int jsonStart = outputStr.indexOf('{');
+        if (jsonStart > 0) {
+            outputStr = outputStr.substring(jsonStart);
+        }
+
         if (outputStr.isEmpty()) {
             JSONObject error = new JSONObject();
             error.put("error", "Empty response from Python script");

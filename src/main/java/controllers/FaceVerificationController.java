@@ -159,7 +159,7 @@ public class FaceVerificationController {
                 });
             } catch (FaceRecognitionService.FaceRecognitionException e) {
                 Platform.runLater(() -> {
-                    setResult("❌ Aucun visage détecté. Réessayez.", false);
+                    setResult("❌ " + e.getMessage(), false);
                     registerBtn.setDisable(false);
                 });
             } catch (Exception e) {

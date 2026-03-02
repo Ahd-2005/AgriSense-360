@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import warnings
+warnings.filterwarnings("ignore")   # suppress pkg_resources deprecation warning
+
 import argparse
 import json
 import sys
