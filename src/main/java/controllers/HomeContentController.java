@@ -1,6 +1,7 @@
 package controllers;
 
 import controllers.MainLayoutController;
+import entity.user.Role;
 import entity.Culture;
 import entity.Parcelle;
 import javafx.fxml.FXML;
@@ -37,6 +38,14 @@ public class HomeContentController {
     @FXML private Label bandRetesLabel;
     @FXML private Label bandSurfaceLabel;
 
+    // ── Nav card buttons (shown/hidden by role) ────────────────────
+    @FXML private Button animalsCardBtn;
+    @FXML private Button equipmentCardBtn;
+    @FXML private Button stockCardBtn;
+    @FXML private Button cultureCardBtn;
+    @FXML private Button usersCardBtn;
+    @FXML private Button workersCardBtn;
+
     // ── AgriBot button + notification badge ─────────────────────────
     @FXML private Button agriBotBtn;
     @FXML private Label  agriBotBadge;
@@ -50,6 +59,9 @@ public class HomeContentController {
     @FXML
     public void initialize() {
         instance = this;
+
+        // ── Show/hide nav cards based on user role ───────────────────
+        configureCardsForRole();
 
         // Hover effect on AgriBot button
         if (agriBotBtn != null) {
@@ -136,6 +148,58 @@ public class HomeContentController {
         if (agriBotBadge == null) return;
         agriBotBadge.setVisible(false);
         agriBotBadge.setManaged(false);
+    }
+
+    // ── Role-based card visibility ──────────────────────────────────
+    private void configureCardsForRole() {
+        services.SessionManager sm = services.SessionManager.getInstance();
+        if (sm == null || !sm.isLoggedIn()) return;
+
+        Role role = sm.getCurrentUser().getRole();
+
+        switch (role) {
+            case ROLE_ADMIN:
+                // Admin sees ONLY the User card
+                hide(animalsCardBtn);
+                hide(equipmentCardBtn);
+                hide(stockCardBtn);
+                hide(cultureCardBtn);
+                show(usersCardBtn);
+                hide(workersCardBtn);
+                break;
+
+            case ROLE_GERANT:
+                // Gerant sees everything EXCEPT User
+                show(animalsCardBtn);
+                show(equipmentCardBtn);
+                show(stockCardBtn);
+                show(cultureCardBtn);
+                hide(usersCardBtn);
+                show(workersCardBtn);
+                break;
+
+            default:
+                // Ouvrier: hide all nav cards (they have their own page)
+                hide(animalsCardBtn);
+                hide(equipmentCardBtn);
+                hide(stockCardBtn);
+                hide(cultureCardBtn);
+                hide(usersCardBtn);
+                hide(workersCardBtn);
+                break;
+        }
+    }
+
+    private void show(Button btn) {
+        if (btn == null) return;
+        btn.setVisible(true);
+        btn.setManaged(true);
+    }
+
+    private void hide(Button btn) {
+        if (btn == null) return;
+        btn.setVisible(false);
+        btn.setManaged(false);
     }
 
     // ── Navigation ───────────────────────────────────────────────────

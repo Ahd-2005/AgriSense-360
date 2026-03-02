@@ -714,6 +714,15 @@ public class MainLayoutController {
         setActiveButton(profileBtn);
     }
 
+    /**
+     * Load Face ID verification page inside contentArea.
+     * Sidebar stays fully visible. Called from GerantProfile.
+     */
+    public void loadFaceVerification() {
+        loadContent("/fxml/FaceVerification.fxml");
+        setActiveButton(profileBtn);   // keep Profile highlighted
+    }
+
     @FXML
     public void handleLogout() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
