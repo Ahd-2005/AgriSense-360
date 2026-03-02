@@ -172,7 +172,7 @@
                         <RowConstraints vgrow="ALWAYS"/>
                     </rowConstraints>
 
-                    <Button onAction="#navigateToAnimals" styleClass="nav-card-btn"
+                    <Button fx:id="animalsCardBtn" onAction="#navigateToAnimals" styleClass="nav-card-btn"
                             GridPane.columnIndex="0" GridPane.rowIndex="0" maxWidth="Infinity">
                         <graphic>
                             <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
@@ -191,7 +191,7 @@
                         </graphic>
                     </Button>
 
-                    <Button onAction="#navigateToEquipment" styleClass="nav-card-btn"
+                    <Button fx:id="equipmentCardBtn" onAction="#navigateToEquipment" styleClass="nav-card-btn"
                             GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="Infinity">
                         <graphic>
                             <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
@@ -210,7 +210,7 @@
                         </graphic>
                     </Button>
 
-                    <Button onAction="#navigateToStock" styleClass="nav-card-btn"
+                    <Button fx:id="stockCardBtn" onAction="#navigateToStock" styleClass="nav-card-btn"
                             GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity">
                         <graphic>
                             <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
@@ -229,7 +229,7 @@
                         </graphic>
                     </Button>
 
-                    <Button onAction="#navigateToCulture" styleClass="nav-card-btn"
+                    <Button fx:id="cultureCardBtn" onAction="#navigateToCulture" styleClass="nav-card-btn"
                             GridPane.columnIndex="0" GridPane.rowIndex="1" maxWidth="Infinity">
                         <graphic>
                             <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
@@ -248,7 +248,7 @@
                         </graphic>
                     </Button>
 
-                    <Button onAction="#navigateToUsers" styleClass="nav-card-btn"
+                    <Button fx:id="usersCardBtn" onAction="#navigateToUsers" styleClass="nav-card-btn"
                             GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity">
                         <graphic>
                             <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
@@ -267,8 +267,8 @@
                         </graphic>
                     </Button>
 
-                    <Button onAction="#navigateToWorkers" styleClass="nav-card-btn"
-                            GridPane.columnIndex="2" GridPane.rowIndex="1" maxWidth="Infinity">
+                    <Button fx:id="workersCardBtn" onAction="#navigateToWorkers" styleClass="nav-card-btn"
+                            GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity">
                         <graphic>
                             <VBox styleClass="nav-card" spacing="0" alignment="TOP_LEFT">
                                 <VBox styleClass="nav-card-icon-wrap nav-icon-workers" alignment="CENTER"><Label text="👷" styleClass="nav-card-emoji"/></VBox>

@@ -337,17 +337,10 @@ public class GerantProfile {
 
     @FXML
     private void handleFaceVerification() {
-        try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
-                    getClass().getResource("/fxml/FaceVerification.fxml")
-            );
-            javafx.scene.Parent root = loader.load();
-            javafx.stage.Stage stage = (javafx.stage.Stage) faceIdBtn.getScene().getWindow();
-            stage.setScene(new javafx.scene.Scene(root, 1400, 800));
-            stage.setTitle("Face ID - AgriSense 360");
-            stage.centerOnScreen();
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Load inside MainLayout contentArea — sidebar stays visible
+        MainLayoutController main = MainLayoutController.getInstance();
+        if (main != null) {
+            main.loadFaceVerification();
         }
     }
 
