@@ -208,11 +208,19 @@ public class BackOfficeStockController {
         img.setFitHeight(80);
         img.setFitWidth(280);
         img.setPreserveRatio(true);
-        try {
-            String imageUrl = p.getPhotoUrl() != null ? p.getPhotoUrl() : "/images/default_product.png";
-            img.setImage(new Image(imageUrl, 280, 80, true, true));
-        } catch (Exception e) {
-            img.setImage(null);
+        String photoUrl = p.getPhotoUrl();
+        if (photoUrl != null && !photoUrl.trim().isEmpty()) {
+            try {
+                Image image = new Image(
+                        photoUrl.startsWith("file:") || photoUrl.startsWith("http")
+                                ? photoUrl
+                                : getClass().getResource(photoUrl).toExternalForm(), true);
+                img.setImage(image);
+            } catch (Exception e) {
+                loadDefaultImage(img);
+            }
+        } else {
+            loadDefaultImage(img);
         }
 
         // Nom
@@ -249,7 +257,14 @@ public class BackOfficeStockController {
         card.getChildren().addAll(img, name, cat, price, actions);
         return card;
     }
-
+    private void loadDefaultImage(ImageView imageView) {
+        try {
+            String defaultUrl = getClass().getResource("/images/default_product.png").toExternalForm();
+            imageView.setImage(new Image(defaultUrl, 320, 120, true, true));
+        } catch (Exception e) {
+            imageView.setImage(null);
+        }
+    }
     private VBox createStockCard(Stock s) {
         VBox card = new VBox(6);
         card.getStyleClass().add("stock-card");

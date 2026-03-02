@@ -29,6 +29,9 @@ module com.example.agrisens360 {
     requires com.fasterxml.jackson.databind;
     requires kernel;
     requires layout;
+    requires json.simple;
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
 
     opens com.example.agrisens360 to javafx.fxml;
     opens controllers to javafx.fxml;

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.ExchangeRateController"
+            stylesheets="@../css/Stockhome.css" prefWidth="1530" prefHeight="800">
+
+    <VBox alignment="TOP_CENTER" spacing="30">
+        <padding><Insets top="40" right="60" bottom="60" left="60"/></padding>
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <Button onAction="#goToHome" prefHeight="44" prefWidth="130" styleClass="ghost" text="🏠 Accueil"/>
+            <Button onAction="#goToProductList" prefHeight="44" prefWidth="150" styleClass="ghost" text="📦 Produits"/>
+            <Button onAction="#goToStockList" prefHeight="44" prefWidth="130" styleClass="ghost" text="📊 Stocks"/>
+        </HBox>
+
+        <Label text="💱 Convertisseur de Devises" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;"/>
+
+        <!-- Taux en temps réel -->
+        <VBox spacing="12" style="-fx-background-color: white; -fx-background-radius: 14px; -fx-padding: 24px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);">
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <Label text="📡 Taux en temps réel — Base :" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #22301b;"/>
+                <ComboBox fx:id="comboBaseDevise" prefWidth="160" prefHeight="40"
+                          style="-fx-font-size: 14px; -fx-background-radius: 8px;"/>
+                <Button fx:id="btnActualiser" onAction="#actualiserTaux" prefHeight="40" prefWidth="160"
+                        styleClass="primary" text="🔄 Actualiser"/>
+                <Label fx:id="lblDerniereMAJ" text="" style="-fx-font-size: 12px; -fx-text-fill: #888; -fx-font-style: italic;"/>
+            </HBox>
+
+            <!-- Grille des taux -->
+            <FlowPane fx:id="flowTaux" hgap="12" vgap="12" prefWrapLength="1300"/>
+        </VBox>
+
+        <!-- Convertisseur manuel -->
+        <VBox spacing="16" style="-fx-background-color: white; -fx-background-radius: 14px; -fx-padding: 24px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);">
+            <Label text="🔢 Convertisseur Manuel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #22301b;"/>
+
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <TextField fx:id="txtMontant" promptText="Montant à convertir" prefHeight="48" prefWidth="220"
+                           style="-fx-font-size: 16px; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-color: #c8d8b0; -fx-padding: 0 12px;"/>
+                <ComboBox fx:id="comboSource" prefWidth="160" prefHeight="48"
+                          style="-fx-font-size: 14px; -fx-background-radius: 8px;"/>
+                <Label text="→" style="-fx-font-size: 24px; -fx-text-fill: #5a9814; -fx-font-weight: bold;"/>
+                <ComboBox fx:id="comboCible" prefWidth="160" prefHeight="48"
+                          style="-fx-font-size: 14px; -fx-background-radius: 8px;"/>
+                <Button onAction="#convertir" prefHeight="48" prefWidth="140" styleClass="primary" text="💱 Convertir"/>
+            </HBox>
+
+            <Label fx:id="lblResultatConversion" text=""
+                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #5a9814;"/>
+            <Label fx:id="lblTauxUtilise" text=""
+                   style="-fx-font-size: 13px; -fx-text-fill: #888; -fx-font-style: italic;"/>
+        </VBox>
+
+        <!-- Prix produits convertis -->
+        <VBox spacing="16" style="-fx-background-color: white; -fx-background-radius: 14px; -fx-padding: 24px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);">
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <Label text="🛒 Prix des Produits en" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #22301b;"/>
+                <ComboBox fx:id="comboProduitDevise" prefWidth="160" prefHeight="40"
+                          style="-fx-font-size: 14px; -fx-background-radius: 8px;"/>
+                <Button onAction="#convertirProduits" prefHeight="40" prefWidth="160" styleClass="primary" text="📦 Afficher"/>
+            </HBox>
+
+            <FlowPane fx:id="flowProduits" hgap="16" vgap="16" prefWrapLength="1300"/>
+        </VBox>
+
+    </VBox>
+</ScrollPane>
+

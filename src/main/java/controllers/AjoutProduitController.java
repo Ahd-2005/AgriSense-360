@@ -11,11 +11,14 @@ import entity.Produit;
 import entity.Stock;
 import services.ServiceStockProduit;
 import services.ServiceStockStock;
+import utils.BarcodeGenerator;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.sql.*;
+import java.util.List;
 
 public class AjoutProduitController {
 
@@ -253,8 +256,15 @@ public class AjoutProduitController {
                     return;
                 }
                 produit.setId(produitId);
+                String code = "PROD-" + produitId;
+                String barcodeUrl = BarcodeGenerator.generateAndSave(code, 400, 150);
+                if (barcodeUrl != null) {
+                    produit.setBarcodeUrl(barcodeUrl);
+                    serviceProduit.updateBarcode(produitId, barcodeUrl);
+                }
                 showAlert("Succès", "Produit ajouté avec succès !");
             }
+
 
             // Gestion du stock
             try {
@@ -313,10 +323,28 @@ public class AjoutProduitController {
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setTitle(title); a.setHeaderText(null); a.setContentText(message);
+        a.showAndWait();
+    }
+    @FXML
+    private void genererBarcodesPourTous() {
+        try {
+            List<Produit> produits = serviceProduit.afficher();
+            for (Produit p : produits) {
+                if (p.getBarcodeUrl() == null || p.getBarcodeUrl().isEmpty()) {
+                    String code = "PROD-" + p.getId();
+                    String barcodeUrl = BarcodeGenerator.generateAndSave(code, 400, 150);
+                    if (barcodeUrl != null) {
+                        p.setBarcodeUrl(barcodeUrl);
+                        serviceProduit.updateBarcode(p.getId(), barcodeUrl);
+                    }
+                }
+
+            }
+            showAlert("Succès", "Codes-barres générés pour tous les produits existants !");
+            MainLayoutController.getInstance().navigateToProductList();        } catch (SQLException e) {
+            showAlert("Erreur", "Échec de la génération : " + e.getMessage());
+        }
     }
 }

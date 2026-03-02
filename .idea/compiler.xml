@@ -11,8 +11,12 @@
         <outputRelativeToContentRoot value="true" />
         <module name="AgriSense-360" />
         <module name="agrisens360" />
-        <module name="Agritech" />
       </profile>
     </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Agritech" options="" />
+    </option>
   </component>
 </project>
