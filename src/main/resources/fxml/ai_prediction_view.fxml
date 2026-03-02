@@ -34,8 +34,10 @@
                 <ComboBox fx:id="animalCombo" promptText="Sélectionner un animal..." styleClass="mgmt-combo"
                           HBox.hgrow="ALWAYS" maxWidth="Infinity" onAction="#onAnimalSelected"/>
                 <Button text="Analyser" onAction="#onPredict" styleClass="mgmt-btn-primary" prefWidth="120"/>
+                <Button text="Analyser tous" onAction="#onAnalyzeAll" styleClass="mgmt-btn-ghost" prefWidth="140"/>
             </HBox>
             <Label fx:id="statusLabel" text="" styleClass="mgmt-error-label" wrapText="true" managed="true" visible="true"/>
+            <Label fx:id="batchStatusLabel" text="" styleClass="mgmt-form-subtitle" wrapText="true" managed="true" visible="true"/>
         </VBox>
     </VBox>
 
@@ -71,6 +73,26 @@
                 <VBox fx:id="recordsContainer" spacing="4"/>
             </VBox>
 
+        </VBox>
+    </VBox>
+
+    <VBox fx:id="batchResultsCard" styleClass="mgmt-form-card" spacing="0" visible="false" managed="false">
+        <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="12">
+            <VBox spacing="3">
+                <Label text="Animaux à Surveiller" styleClass="mgmt-form-title"/>
+                <Label fx:id="batchSummaryLabel" text="" styleClass="mgmt-form-subtitle"/>
+            </VBox>
+        </HBox>
+        <VBox styleClass="mgmt-form-body" spacing="14">
+            <ScrollPane fitToWidth="true" prefHeight="260" styleClass="mgmt-scroll">
+                <VBox fx:id="batchResultsContainer" spacing="8"/>
+            </ScrollPane>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="batchVetEmailField" promptText="Email du vétérinaire..."
+                           styleClass="mgmt-input" HBox.hgrow="ALWAYS"/>
+                <Button text="Envoyer au Vétérinaire" onAction="#onSendBatchEmail" styleClass="mgmt-btn-primary"/>
+            </HBox>
+            <Label fx:id="batchEmailStatusLabel" text="" styleClass="mgmt-form-subtitle" wrapText="true"/>
         </VBox>
     </VBox>
 
