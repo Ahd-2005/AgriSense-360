@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.CultureController"
+            prefHeight="700.0" prefWidth="1200.0"
+            stylesheets="@../css/cards.css">
+
+    <top>
+        <VBox spacing="0">
+            <!-- Top Bar with Green Gradient -->
+            <HBox alignment="CENTER_LEFT" spacing="15"
+                  style="-fx-background-color: linear-gradient(to right, #1e3c2c, #2a5a3a); -fx-padding: 20;">
+                <Label text="🌱 Mes Cultures"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Search Bar -->
+                <TextField fx:id="searchField" promptText="🔍 Rechercher par nom..."
+                           styleClass="search-field"/>
+                <Button fx:id="agendaBtn" text="📅 Agenda" onAction="#openAgenda" styleClass="agenda-button"/>
+                <Button text="➕ Ajouter Culture" onAction="#showAddPopup"
+                        styleClass="add-button"/>
+            </HBox>
+
+            <!-- Sort Buttons with Darker Green -->
+            <HBox alignment="CENTER" spacing="15"
+                  style="-fx-background-color: #2a5a3a; -fx-padding: 15;">
+                <Label text="Trier par:"
+                       style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+                <Button fx:id="typeButton" text="Type Culture" onAction="#sortByType"
+                        styleClass="sort-button"/>
+                <Button fx:id="etatButton" text="État" onAction="#sortByEtat"
+                        styleClass="sort-button"/>
+                <Button fx:id="surfaceButton" text="Surface" onAction="#sortBySurface"
+                        styleClass="sort-button"/>
+                <Button fx:id="resetButton" text="Reset" onAction="#resetSort"
+                        styleClass="sort-button"/>
+            </HBox>
+
+            <!-- Gérer Parcelles Button with Purple Style -->
+            <HBox alignment="CENTER" style="-fx-background-color: #2a5a3a; -fx-padding: 15;">
+                <Button text="🌍 Gérer les Parcelles"
+                        onAction="#goToParcelles"
+                        style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 20px; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <!-- Light Green Gradient Background -->
+        <ScrollPane fitToWidth="true" fitToHeight="true"
+                    style="-fx-background: linear-gradient(to bottom, #e8f5e9 0%, #f1f8f4 100%); -fx-background-color: transparent;">
+            <VBox style="-fx-background-color: transparent;">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                <GridPane fx:id="cultureGrid" hgap="20" vgap="20">
+                </GridPane>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

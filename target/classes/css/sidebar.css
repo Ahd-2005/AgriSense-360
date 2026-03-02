@@ -1,0 +1,188 @@
+/* ═══════════════════════════════════════════════════════════════════
+   AgriSense 360 — sidebar.css  (Redesigned)
+   ═══════════════════════════════════════════════════════════════════
+   WHAT CHANGED vs old sidebar.css:
+     1. .sidebar background: richer dark-green gradient with subtle
+        border on right edge (visual depth)
+     2. .brand-name: changed gold → lime-green (#c8f080) to match preview
+     3. .brand-tagline: slightly brighter
+     4. .sidebar-toggle: cleaner hover + icon transition styles
+     5. .nav-link: larger hit-area, smoother hover with transition
+     6. .nav-link.active: uses strong green (#5a9814) with white text
+     7. .nav-label: uses softer off-white consistent with preview
+     8. .sidebar-foot: glowing pulse-dot animation class added
+     9. Collapse state helpers (.sidebar-collapsed) for icon-only mode
+    10. Scrollbar hidden for cleaner sidebar aesthetics
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Sidebar container ─────────────────────────────────────────── */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #1a2d12 0%, #1e3a16 60%, #162410 100%);
+    -fx-border-color: rgba(255, 255, 255, 0.07);
+    -fx-border-width: 0 1 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 14, 0, 4, 0);
+}
+
+/* ── Brand block ───────────────────────────────────────────────── */
+.brand {
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-width: 0 0 1 0;
+}
+
+.brand-name {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #c8f080;
+}
+
+.brand-tagline {
+    -fx-font-size: 10px;
+    -fx-text-fill: rgba(168, 220, 100, 0.60);
+}
+
+/* ── Toggle button ─────────────────────────────────────────────── */
+.sidebar-toggle {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-width: 1 0;
+    -fx-padding: 14 20;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+    -fx-max-width: Infinity;
+}
+
+.sidebar-toggle:hover {
+    -fx-background-color: rgba(200, 240, 128, 0.08);
+}
+
+.toggle-icon {
+    -fx-min-width: 22px;
+    -fx-font-size: 18px;
+    -fx-text-fill: #a8d86e;
+}
+
+.toggle-text {
+    -fx-text-fill: rgba(168, 220, 100, 0.70);
+    -fx-font-size: 13px;
+}
+
+/* ── Section title ─────────────────────────────────────────────── */
+.nav-title {
+    -fx-text-fill: rgba(160, 200, 100, 0.50);
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 8 6;
+}
+
+/* ── Nav links ─────────────────────────────────────────────────── */
+.nav-link {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10px;
+    -fx-padding: 11 14;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+    -fx-max-width: Infinity;
+    -fx-border-color: transparent;
+}
+
+.nav-link:hover {
+    -fx-background-color: rgba(200, 240, 128, 0.10);
+}
+
+.nav-link.active {
+    -fx-background-color: rgba(90, 152, 20, 0.30);
+    -fx-border-color: rgba(90, 152, 20, 0.50);
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
+}
+
+.nav-link.active .nav-label {
+    -fx-text-fill: #c8f080;
+    -fx-font-weight: bold;
+}
+
+/* ── Nav labels ─────────────────────────────────────────────────── */
+.nav-label {
+    -fx-text-fill: rgba(220, 240, 200, 0.72);
+    -fx-font-size: 13px;
+}
+
+/* ── Logout special styling ─────────────────────────────────────── */
+.logout-btn {
+    -fx-background-color: rgba(244, 67, 54, 0.07);
+    -fx-background-radius: 10px;
+}
+
+.logout-btn:hover {
+    -fx-background-color: rgba(244, 67, 54, 0.17);
+}
+
+.logout-btn .nav-label {
+    -fx-text-fill: #f48c8c;
+}
+
+/* ── Sidebar footer ─────────────────────────────────────────────── */
+.sidebar-foot {
+    -fx-border-color: rgba(255, 255, 255, 0.07);
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ── Pulse dot (green "Connected" indicator) ────────────────────── */
+.pulse-dot {
+    -fx-min-width: 8px;
+    -fx-max-width: 8px;
+    -fx-min-height: 8px;
+    -fx-max-height: 8px;
+    -fx-background-color: #4caf50;
+    -fx-background-radius: 50%;
+    -fx-effect: dropshadow(gaussian, #4caf50, 9, 0.6, 0, 0);
+}
+
+/* ── Sidebar ScrollPane (wraps nav buttons) ─────────────────────── */
+.sidebar-scroll {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.sidebar-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.sidebar-scroll > .scroll-bar:horizontal {
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+
+/* ── Scrollbar — thin visible scrollbar when nav overflows ─────── */
+.sidebar .scroll-bar:vertical {
+    -fx-pref-width: 4px;
+    -fx-background-color: transparent;
+}
+
+.sidebar .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(200, 240, 128, 0.25);
+    -fx-background-radius: 2px;
+}
+
+.sidebar .scroll-bar:vertical .track,
+.sidebar .scroll-bar:vertical .increment-button,
+.sidebar .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-pref-height: 0;
+    -fx-pref-width: 4px;
+}
+
+/* ── Icon SVG strokes ───────────────────────────────────────────── */
+.nav-icon SVGPath {
+    -fx-stroke: rgba(200, 230, 170, 0.70);
+    -fx-stroke-width: 2;
+    -fx-fill: transparent;
+}
+
+.nav-link.active .nav-icon SVGPath {
+    -fx-stroke: #c8f080;
+}

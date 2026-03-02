@@ -1,0 +1,10 @@
+entity\Animal.class
+controllers\AffectationController$2.class
+controllers\HealthRecordController.class
+services\ServiceAnimal.class
+services\ServiceAnimalHealthRecord.class
+controllers\WorkersCalendarController.class
+controllers\HealthRecordController$1.class
+controllers\WorkersDashboardController.class
+controllers\AnimalController.class
+entity\Animal$Origin.class

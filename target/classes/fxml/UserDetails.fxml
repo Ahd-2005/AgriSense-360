@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.UserDetails"
+      spacing="25" style="-fx-padding: 40; -fx-background-color: #fbf7ef;">
+
+    <!-- TOP HEADER -->
+    <VBox spacing="8">
+        <Label text="User Details"
+               style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
+        <Label text="View and manage user information"
+               style="-fx-font-size: 16px; -fx-text-fill: rgba(23, 35, 24, 0.72);" />
+    </VBox>
+
+    <!-- USER INFO CARD -->
+    <VBox spacing="20"
+          style="-fx-background-color: #fff; -fx-padding: 30;
+                 -fx-background-radius: 16px;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 12, 0, 0, 4);
+                 -fx-border-color: rgba(43, 59, 31, 0.08); -fx-border-width: 1;
+                 -fx-border-radius: 16px; -fx-max-width: 600;">
+
+        <!-- Name and Status Header -->
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Label fx:id="nameLabel" text="User Name"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="statusLabel" text="ACTIVE"
+                   style="-fx-padding: 8 20; -fx-background-radius: 15px;
+                          -fx-font-size: 13px; -fx-font-weight: bold;" />
+        </HBox>
+
+        <Separator />
+
+        <!-- Info Grid -->
+        <GridPane hgap="25" vgap="15">
+            <padding>
+                <Insets top="10" />
+            </padding>
+
+            <!-- Row 0 -->
+            <Label text="🆔 User ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: rgba(43, 59, 31, 0.7); -fx-font-size: 14px;" />
+            <Label fx:id="idLabel" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                   style="-fx-text-fill: #22301b; -fx-font-size: 14px;" />
+
+            <!-- Row 1 -->
+            <Label text="📧 Email:" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                   style="-fx-font-weight: bold; -fx-text-fill: rgba(43, 59, 31, 0.7); -fx-font-size: 14px;" />
+            <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                   style="-fx-text-fill: #22301b; -fx-font-size: 14px;" />
+
+            <!-- Row 2 -->
+            <Label text="📱 Phone:" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                   style="-fx-font-weight: bold; -fx-text-fill: rgba(43, 59, 31, 0.7); -fx-font-size: 14px;" />
+            <Label fx:id="phoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                   style="-fx-text-fill: #22301b; -fx-font-size: 14px;" />
+
+            <!-- Row 3 -->
+            <Label text="👤 Role:" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                   style="-fx-font-weight: bold; -fx-text-fill: rgba(43, 59, 31, 0.7); -fx-font-size: 14px;" />
+            <Label fx:id="roleLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                   style="-fx-text-fill: #22301b; -fx-font-size: 14px;" />
+        </GridPane>
+
+    </VBox>
+
+    <!-- ACTION BUTTONS -->
+    <VBox spacing="15">
+
+        <!-- Status Actions -->
+        <HBox spacing="12" alignment="CENTER_LEFT"
+              style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(90, 152, 20, 0.08), rgba(90, 152, 20, 0.05));
+                     -fx-background-radius: 12px; -fx-padding: 20;">
+            <Label text="Status Actions:"
+                   style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 15px;" />
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Button fx:id="activateBtn" text="✓ Activate User" onAction="#handleActivate"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                           -fx-padding: 10 24px; -fx-font-size: 13px; -fx-font-weight: bold;
+                           -fx-background-radius: 8px; -fx-cursor: hand;
+                           -fx-effect: dropshadow(gaussian, rgba(39, 174, 96, 0.3), 8, 0, 0, 2);" />
+
+            <Button fx:id="blockBtn" text="🚫 Block User" onAction="#handleBlock"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white;
+                           -fx-padding: 10 24px; -fx-font-size: 13px; -fx-font-weight: bold;
+                           -fx-background-radius: 8px; -fx-cursor: hand;
+                           -fx-effect: dropshadow(gaussian, rgba(231, 76, 60, 0.3), 8, 0, 0, 2);" />
+        </HBox>
+
+        <!-- User Actions -->
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Button text="✏ Edit User" onAction="#handleModifier"
+                    style="-fx-background-color: #f39c12; -fx-text-fill: white;
+                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-font-weight: bold;
+                           -fx-background-radius: 25px; -fx-cursor: hand;
+                           -fx-effect: dropshadow(gaussian, rgba(243, 156, 18, 0.3), 10, 0, 0, 4);" />
+
+            <Button text="🗑 Delete User" onAction="#handleDelete"
+                    style="-fx-background-color: transparent; -fx-text-fill: #e74c3c;
+                           -fx-border-color: #e74c3c; -fx-border-width: 2;
+                           -fx-border-radius: 25px; -fx-background-radius: 25px;
+                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-cursor: hand;" />
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Button text="← Back to Users" onAction="#handleBack"
+                    style="-fx-background-color: transparent; -fx-text-fill: #22301b;
+                           -fx-border-color: rgba(43, 59, 31, 0.3); -fx-border-width: 2;
+                           -fx-border-radius: 25px; -fx-background-radius: 25px;
+                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-cursor: hand;" />
+        </HBox>
+    </VBox>
+
+</VBox>

@@ -1,8 +1,0 @@
-# Copy this file to config.properties and fill in your API keys
-# Copiez ce fichier en config.properties et renseignez vos clés
-
-# OpenWeatherMap API key (free) - https://openweathermap.org/api
-weather.api.key=YOUR_OPENWEATHERMAP_API_KEY
-
-# Groq API key (free) - https://console.groq.com
-groq.api.key=YOUR_GROQ_API_KEY

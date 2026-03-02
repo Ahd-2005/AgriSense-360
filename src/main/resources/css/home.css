@@ -47,7 +47,8 @@
 .hero-stack {
     /* Let height follow content — no more wasted green space */
     -fx-min-height: 0;
-    -fx-pref-height: -1;
+    -fx-pref-height: USE_COMPUTED_SIZE;
+    -fx-max-height: USE_PREF_SIZE;
 }
 
 /*
@@ -244,6 +245,7 @@
     -fx-min-width: 100px;
 }
 
+<<<<<<< HEAD
 .card-clickable:hover .card {
     -fx-translate-y: -8px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 10);
@@ -258,6 +260,17 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 8, 0, 0, 2);
 }
 
+=======
+.nav-card-btn:hover .nav-card {
+    -fx-effect: dropshadow(gaussian, rgba(60, 130, 10, 0.24), 22, 0, 0, 10);
+    -fx-border-color: rgba(90, 152, 20, 0.28);
+}
+
+.nav-card-btn:pressed .nav-card {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 8, 0, 0, 2);
+}
+
+>>>>>>> origin/gestion_culture
 .nav-card {
     -fx-background-color: #ffffff;
     -fx-background-radius: 18px;
@@ -351,6 +364,7 @@
     -fx-font-size: 10px;
     -fx-font-weight: bold;
     -fx-text-fill: rgba(200, 225, 170, 0.65);
+<<<<<<< HEAD
 }
 
 .stat-sep {
@@ -479,3 +493,133 @@
     -fx-text-fill: #8ae040;
     -fx-font-weight: bold;
 }
+=======
+}
+
+.stat-sep {
+    -fx-background-color: rgba(255, 255, 255, 0.13);
+    -fx-min-width: 1px;
+    -fx-max-width: 1px;
+    -fx-min-height: 56px;
+    -fx-max-height: 56px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   TEAM SECTION
+   ═══════════════════════════════════════════════════════════════════ */
+
+.team-section {
+    -fx-background-color: #ffffff;
+}
+
+.team-card {
+    -fx-background-color: #f8faf4;
+    -fx-background-radius: 18px;
+    -fx-border-color: rgba(90, 152, 20, 0.13);
+    -fx-border-radius: 18px;
+    -fx-border-width: 1px;
+    -fx-padding: 28px 18px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 12, 0, 0, 3);
+    -fx-min-height: 176px;
+}
+
+.team-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(90, 152, 20, 0.18), 20, 0, 0, 8);
+    -fx-border-color: rgba(90, 152, 20, 0.32);
+}
+
+.team-avatar { -fx-font-size: 40px; }
+
+.team-role {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a3010;
+}
+
+.team-desc {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(40, 80, 20, 0.62);
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════════════ */
+
+.footer-section { -fx-background-color: #141f0d; }
+
+.footer-brand {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #c8f080;
+}
+
+.footer-tagline {
+    -fx-font-size: 10px;
+    -fx-text-fill: rgba(168, 220, 100, 0.68);
+    -fx-font-weight: bold;
+}
+
+.footer-blurb {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(200, 220, 170, 0.52);
+    -fx-wrap-text: true;
+    -fx-max-width: 280px;
+}
+
+.footer-social { -fx-font-size: 17px; }
+
+.footer-col-title {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #7aaa30;
+}
+
+.footer-link {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(200, 220, 170, 0.60);
+}
+
+.footer-icon { -fx-font-size: 13px; }
+
+.footer-contact {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(200, 220, 170, 0.60);
+}
+
+.footer-hr {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-min-height: 1px;
+    -fx-max-height: 1px;
+    -fx-pref-height: 1px;
+}
+
+.footer-copy {
+    -fx-font-size: 10px;
+    -fx-text-fill: rgba(180, 210, 140, 0.40);
+}
+
+.footer-version {
+    -fx-font-size: 9px;
+    -fx-text-fill: rgba(150, 190, 100, 0.32);
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 8px;
+    -fx-padding: 3px 8px;
+}
+
+.footer-badge {
+    -fx-background-color: rgba(90, 200, 40, 0.12);
+    -fx-background-radius: 20px;
+    -fx-border-color: rgba(90, 200, 40, 0.28);
+    -fx-border-radius: 20px;
+    -fx-border-width: 1px;
+    -fx-padding: 6px 13px;
+}
+
+.footer-badge-text {
+    -fx-font-size: 10px;
+    -fx-text-fill: #8ae040;
+    -fx-font-weight: bold;
+}
+>>>>>>> origin/gestion_culture

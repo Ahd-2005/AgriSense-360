@@ -73,6 +73,8 @@ public class ServiceStockProduit implements IServiceStock<Produit> {
                 p.setPhotoUrl(rs.getString("photo_url"));
                 p.setCreatedAt(rs.getTimestamp("created_at"));
                 produits.add(p);
+                p.setBarcodeUrl(rs.getString("barcode_url"));  // ← LIGNE MANQUANTE
+
             }
         }
         return produits;
@@ -94,6 +96,7 @@ public class ServiceStockProduit implements IServiceStock<Produit> {
                     p.setPrixUnitaire(rs.getBigDecimal("prix_unitaire"));
                     p.setPhotoUrl(rs.getString("photo_url"));
                     p.setCreatedAt(rs.getTimestamp("created_at"));
+                    p.setBarcodeUrl(rs.getString("barcode_url"));
                     return p;
                 }
             }
@@ -116,10 +119,19 @@ public class ServiceStockProduit implements IServiceStock<Produit> {
                 p.setPhotoUrl(rs.getString("photo_url"));
                 p.setCreatedAt(rs.getTimestamp("created_at"));
                 produits.add(p);
+                p.setBarcodeUrl(rs.getString("barcode_url"));  // ← LIGNE MANQUANTE
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return produits;
+    }
+    public void updateBarcode(int id, String barcodeUrl) throws SQLException {
+        String req = "UPDATE produit SET barcode_url = ? WHERE id = ?";
+        PreparedStatement ps = cnx.prepareStatement(req);
+        ps.setString(1, barcodeUrl);
+        ps.setInt(2, id);
+        ps.executeUpdate();
     }
 }

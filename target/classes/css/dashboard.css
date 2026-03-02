@@ -1,0 +1,231 @@
+/* ========== NAVIGATION CARDS WITH IMAGES ========== */
+.nav-card-with-image {
+    -fx-background-color: white;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 3);
+    -fx-padding: 20;
+}
+
+.nav-card-with-image:hover {
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.4), 20, 0, 0, 5);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-cursor: hand;
+}
+
+/* ========== CHART CARDS - CLICKABLE (clean placeholders) ========== */
+.chart-card-clickable {
+    -fx-background-color: white;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 12, 0, 0, 2);
+    -fx-padding: 24 20 20 20;
+    -fx-cursor: hand;
+}
+
+.chart-card-clickable:hover {
+    -fx-effect: dropshadow(gaussian, rgba(42, 90, 58, 0.25), 18, 0, 0, 5);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-background-color: #fafffe;
+}
+
+/* ========== PIE CHARTS (in-popup) ========== */
+.surface-pie-chart {
+    -fx-pie-color-0: #4CAF50;
+    -fx-pie-color-1: #2196F3;
+}
+
+.etat-pie-chart {
+    -fx-pie-color-0: #4CAF50;
+    -fx-pie-color-1: #FF9800;
+    -fx-pie-color-2: #2196F3;
+    -fx-pie-color-3: #FFB300;
+    -fx-pie-color-4: #f44336;
+}
+
+.chart-pie-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 5;
+}
+
+.chart-legend-item {
+    -fx-font-size: 11px;
+}
+
+.chart-legend-item-symbol {
+    -fx-padding: 8px;
+}
+
+/* ========== BAR CHART ========== */
+.bar-chart {
+    -fx-background-color: transparent;
+}
+
+.chart-bar {
+    -fx-background-color: #4CAF50;
+    -fx-background-radius: 6px;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.axis {
+    -fx-font-size: 11px;
+    -fx-tick-label-fill: #666;
+}
+
+.axis-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+/* Bar chart custom colors */
+.default-color0.chart-bar { -fx-bar-fill: #4CAF50; }
+.default-color1.chart-bar { -fx-bar-fill: #FF9800; }
+.default-color2.chart-bar { -fx-bar-fill: #2196F3; }
+.default-color3.chart-bar { -fx-bar-fill: #9C27B0; }
+
+/* ========== MINI STAT CARDS ========== */
+.stat-card-mini {
+    -fx-background-color: white;
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 10, 0, 0, 2);
+    -fx-padding: 15;
+}
+
+.stat-card-mini:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ========== DASHBOARD CULTURE CARDS ========== */
+.dashboard-culture-card {
+    -fx-background-color: white;
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 2);
+    -fx-padding: 15;
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+}
+
+.dashboard-culture-card .culture-image {
+    -fx-background-radius: 10px;
+}
+
+.dashboard-culture-card .culture-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.dashboard-culture-card .culture-info {
+    -fx-font-size: 11px;
+    -fx-text-fill: #666;
+}
+
+.dashboard-culture-card .etat-badge {
+    -fx-font-size: 11px;
+    -fx-padding: 4 8;
+    -fx-background-radius: 10px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.etat-recolte-prevue {
+    -fx-background-color: #FF9800;
+}
+
+.etat-recolte-en-retard {
+    -fx-background-color: #f44336;
+}
+
+/* ========== TOP PARCELLE CARD ========== */
+.top-parcelle-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+    -fx-padding: 20;
+}
+
+.top-parcelle-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(156, 39, 176, 0.3), 12, 0, 0, 3);
+}
+
+.medal-icon {
+    -fx-font-size: 35px;
+}
+
+.parcelle-name-top {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #9C27B0;
+}
+
+.parcelle-stats {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666;
+    -fx-padding: 2 0;
+}
+
+.parcelle-culture-count {
+    -fx-font-size: 12px;
+    -fx-text-fill: #4CAF50;
+    -fx-font-weight: bold;
+}
+
+/* ========== ADVICE CARD (Conseil Agricole - OpenFarm) ========== */
+.advice-card {
+    -fx-background-color: linear-gradient(to right, #ffffff, #f7fbf9);
+    -fx-background-radius: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, 2);
+    -fx-padding: 16;
+    -fx-border-color: #2e7d32;
+    -fx-border-width: 0 0 0 5;
+    -fx-border-insets: 0;
+    -fx-border-radius: 16px;
+}
+.advice-icon {
+    -fx-font-size: 32px;
+}
+.advice-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: #1b5e20;
+    -fx-font-weight: bold;
+}
+.advice-author {
+    -fx-font-size: 12px;
+    -fx-text-fill: #558b2f;
+}
+.advice-refresh {
+    -fx-background-color: linear-gradient(to right, #2e7d32, #43a047);
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-padding: 8 14;
+    -fx-cursor: hand;
+}
+.advice-refresh:hover {
+    -fx-background-color: linear-gradient(to right, #1b5e20, #2e7d32);
+}
+
+/* ========== PROGRESS BAR ========== */
+.occupation-progress {
+    -fx-accent: #4CAF50;
+}
+
+.occupation-progress .bar {
+    -fx-background-radius: 10px;
+    -fx-padding: 8px;
+}
+
+.occupation-progress .track {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 10px;
+}

@@ -11,9 +11,9 @@ module com.example.agrisens360 {
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
+    //requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
-
-    requires java.base;
+    requires static java.xml;
     requires java.sql;
     requires com.google.gson;
     requires java.net.http;
@@ -26,20 +26,20 @@ module com.example.agrisens360 {
     requires com.google.api.client;
     requires com.google.api.client.json.jackson2;
 
-    // ✅ Ajouté pour Azure Face API (jackson)
     requires com.fasterxml.jackson.databind;
     requires kernel;
     requires layout;
+    requires json.simple;
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
 
     opens com.example.agrisens360 to javafx.fxml;
     opens controllers to javafx.fxml;
-    opens entity to javafx.base, javafx.fxml;    opens services   to javafx.fxml;
-    opens utils      to javafx.fxml;
-
-    exports controllers;
-    exports entity;
-    exports services;
-    exports utils;
     exports com.example.agrisens360;
+    opens entity to javafx.base;
+    exports controllers;
 
 }
+
+
+
