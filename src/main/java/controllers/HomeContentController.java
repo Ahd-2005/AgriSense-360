@@ -19,6 +19,11 @@ public class HomeContentController {
     private static HomeContentController instance;
     public static HomeContentController getInstance() { return instance; }
 
+
+
+
+
+
     // ── Hero stat chips ─────────────────────────────────────────────
     @FXML private Label totalParcellesLabel;
     @FXML private Label totalCulturesLabel;
