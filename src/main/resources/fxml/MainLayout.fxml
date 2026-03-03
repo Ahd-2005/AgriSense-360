@@ -41,6 +41,9 @@
                     <Label text="AgriSense 360" styleClass="brand-name" />
                     <Label text="Smart AI Companion for Farms" styleClass="brand-tagline" />
                 </VBox>
+
+
+
                 <!-- AgriBot launcher button — lives in sidebar, zero overlay conflict -->
                 <StackPane>
                     <Button fx:id="floatingButton" text="🌾" onAction="#toggleChat"

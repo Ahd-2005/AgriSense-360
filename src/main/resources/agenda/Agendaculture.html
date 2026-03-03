@@ -42,6 +42,9 @@
         .saved-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;}
         .saved-dot.saving{background:#eab308;animation:pulse .8s infinite;}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .storage-bar .refresh-btn{padding:4px 10px;border:1.5px solid #93c5fd;border-radius:6px;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;}
+        .storage-bar .refresh-btn:hover{background:#dbeafe;}
+        .storage-bar .refresh-btn:disabled{opacity:.5;cursor:not-allowed;}
         .storage-bar .reset-btn{padding:4px 10px;border:1.5px solid #fecaca;border-radius:6px;background:#fff5f5;color:#ef4444;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;}
         .storage-bar .reset-btn:hover{background:#fee2e2;}
 
@@ -236,7 +239,10 @@
             <div class="saved-dot" id="savedDot"></div>
             <span id="savedLabel">Chargement...</span>
         </div>
-        <button class="reset-btn" onclick="clearAllData()">🗑 Réinitialiser tout</button>
+        <div style="display:flex;gap:8px;">
+            <button class="refresh-btn" onclick="refreshFromDB()" id="refreshBtn">🔄 Actualiser BD</button>
+            <button class="reset-btn" onclick="clearAllData()">🗑 Réinitialiser tout</button>
+        </div>
     </div>
 
     <div class="toolbar">
@@ -351,13 +357,9 @@
         </div>
     </div>
 </div>
-
 <script src="config.js"></script>
 <script>
-    // ════════════════════════════════════════════════════════════════
-    //  🔑 CLÉ API GROQ chargée depuis config.js (GROQ_API_KEY)
-    //  Obtenez-la sur : https://console.groq.com → API Keys
-    // ════════════════════════════════════════════════════════════════
+    // (GROQ_API_KEY chargée depuis config.js — fichier dans .gitignore, jamais commité)
 
     const STORAGE_KEY = 'agenda_cultures_v2';
 
@@ -652,11 +654,11 @@
         setTimeout(()=>el.remove(), 3000);
     }
 
-    // ─── CONSEIL IA ──────────────────────────────────────────────
+    // ─── CONSEIL IA (Groq) ───────────────────────────────────────
     async function askAI(idx) {
-        const apiKey = (typeof GROQ_API_KEY !== 'undefined') ? GROQ_API_KEY : '';
-        if (!apiKey || !apiKey.trim() || apiKey === 'VOTRE_CLE_API_ICI') {
-            toast('🔑 Ajoutez votre clé GROQ dans agenda/config.js (GROQ_API_KEY)', true);
+        const apiKey = GROQ_API_KEY;
+        if (!apiKey || !apiKey.startsWith('gsk_')) {
+            toast('🔑 Clé Groq invalide — vérifiez GROQ_API_KEY en haut du script', true);
             return;
         }
         const c   = cultures[idx];
@@ -678,37 +680,41 @@ Phase actuelle : ${tl.etat}
 Maturité le : ${fmtDate(tl.maturStart)} · Récolte le : ${fmtDate(tl.recolte)}
 Avant récolte : ${daysToHarvest>0?daysToHarvest+'j':'DÉPASSÉ de '+Math.abs(daysToHarvest)+'j'}
 
-Fournis en français (5-7 phrases) :
-**📊 Situation actuelle** : phase en cours
-**💧 Actions recommandées** : 2-3 conseils pratiques
+Réponds en français uniquement. Structure ta réponse ainsi :
+**📊 Situation actuelle** : décris la phase en cours (1-2 phrases)
+**💧 Actions recommandées** : 2-3 conseils pratiques concrets
 **⚠️ À surveiller** : risques spécifiques à cette phase`;
 
         try {
             const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json",
-                    "Authorization":"Bearer " + apiKey
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + apiKey
                 },
-                body:JSON.stringify({
-                    model:"llama-3.3-70b-versatile",
-                    max_tokens:600,
-                    temperature:0.65,
-                    messages:[{role:"user",content:prompt}]
+                body: JSON.stringify({
+                    model: "llama-3.3-70b-versatile",
+                    max_tokens: 600,
+                    temperature: 0.7,
+                    messages: [{ role: "user", content: prompt }]
                 })
             });
             if (!res.ok) {
-                const e2 = await res.json().catch(()=>({}));
-                if (res.status===401) throw new Error('Clé API Groq invalide ou expirée');
-                if (res.status===429) throw new Error('Limite Groq atteinte, réessayez dans 30s');
-                throw new Error(e2.error?.message||`Erreur HTTP ${res.status}`);
+                const e2 = await res.json().catch(() => ({}));
+                if (res.status === 401) throw new Error('Clé Groq invalide ou expirée');
+                if (res.status === 429) throw new Error('Trop de requêtes — réessayez dans 30s');
+                throw new Error(e2.error?.message || `Erreur HTTP ${res.status}`);
             }
             const data = await res.json();
             const raw  = data.choices?.[0]?.message?.content || 'Aucune réponse.';
-            const html = raw.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+            const html = raw
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '<br><br>')
+                .replace(/\n/g, '<br>');
             box.innerHTML = `<div class="ai-header">✨ Conseil IA — <em>${c.nom}</em> · Phase : ${tl.etat}</div><div class="ai-content">${html}</div>`;
         } catch(e) {
-            box.innerHTML = `<div class="ai-header">❌ Erreur</div><div class="ai-content">${e.message}</div>`;
+            box.innerHTML = `<div class="ai-header">❌ Erreur IA</div><div class="ai-content">${e.message}</div>`;
+            toast('❌ ' + e.message, true);
         }
         btn.disabled = false;
         btn.innerHTML = '✨ Conseil IA';
@@ -856,34 +862,83 @@ Fournis en français (5-7 phrases) :
         });
     });
 
+    // ─── REFRESH DEPUIS BD ───────────────────────────────────────
+    // ─── REFRESH DEPUIS BD ───────────────────────────────────────
+    // Le bouton appelle le pont Java (WebEngine/JSObject) pour redemander les données fraîches.
+    // Java reçoit l'appel et rappelle loadFromJava(data) avec les données à jour.
+    function refreshFromDB() {
+        const btn = document.getElementById('refreshBtn');
+        const lbl = document.getElementById('savedLabel');
+        btn.disabled = true;
+        btn.textContent = '⏳ Chargement…';
+        lbl.textContent = 'Actualisation depuis la base de données…';
+
+        try {
+            // JavaFX WebEngine expose l'objet Java via window.javaConnector
+            // Swing/JavaFX appellent : webEngine.executeScript("loadFromJava(...)") depuis Java
+            // → Le bouton signale à Java qu'il faut recharger
+            if (window.javaConnector && typeof window.javaConnector.refreshCultures === 'function') {
+                // Java appellera loadFromJava(data) en retour
+                window.javaConnector.refreshCultures();
+            } else if (window.java && typeof window.java.refreshCultures === 'function') {
+                window.java.refreshCultures();
+            } else {
+                // Fallback : recharger la page entière (Java re-injectera les données à l'init)
+                location.reload();
+            }
+        } catch(e) {
+            toast('❌ Erreur : ' + e.message, true);
+            btn.disabled = false;
+            btn.textContent = '🔄 Actualiser BD';
+            lbl.textContent = '❌ Échec actualisation';
+            return;
+        }
+
+        // Java rappelle loadFromJava() → il remettra le bouton en état via le label
+        // Si pas de réponse en 5s, on réactive le bouton quand même
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = '🔄 Actualiser BD';
+        }, 5000);
+    }
+
     // ─── INJECTION JAVA ──────────────────────────────────────────
-    // Logique de fusion : localStorage prime, la BD n'ajoute que les nouveautés
+    // Appelé par Java : au chargement initial ET quand le bouton Actualiser est cliqué.
+    // Remplace TOUS les items source='db' par les données fraîches, garde source='agenda' intact.
     function loadFromJava(data) {
         loadSilent(); // charger localStorage en premier
-        if (!data || !data.length) { renderAll(); return; }
 
-        // Construire un Set de clés existantes
-        const existingKeys = new Set(cultures.map(c => c.nom+'|'+c.type));
+        // Supprimer les anciens items BD (on va les remplacer par les frais)
+        cultures = cultures.filter(c => c.source !== 'db');
+
+        if (!data || !data.length) {
+            renderAll();
+            document.getElementById('savedLabel').textContent =
+                `✅ ${cultures.length} culture(s) · Aucune donnée BD`;
+            return;
+        }
+
+        // Ajouter tous les items frais de la BD (sauf ceux déjà dans l'agenda)
+        const agendaKeys = new Set(cultures.map(c => c.nom+'|'+c.type));
         let added = 0;
         data.forEach(c => {
             const key = c.nom+'|'+c.type;
-            if (!existingKeys.has(key)) {
-                cultures.push({ nom:c.nom, type:c.type, plantation:c.plantation, source:'db' }); // ← source = 'db'
-                existingKeys.add(key);
+            if (!agendaKeys.has(key)) {
+                cultures.push({ nom:c.nom, type:c.type, plantation:c.plantation, source:'db' });
                 added++;
             }
         });
 
+        saveData();
+
         const lbl = document.getElementById('savedLabel');
-        if (added > 0) {
-            saveData();
-            lbl.textContent = `✅ ${cultures.length} culture(s) · ${added} nouvelle(s) depuis la BD`;
-        } else {
-            document.getElementById('savedDot').classList.remove('saving');
-            const dbC = cultures.filter(c=>c.source==='db').length;
-            const agC = cultures.filter(c=>c.source==='agenda').length;
-            lbl.textContent = `✅ ${cultures.length} culture(s) · 🗄 ${dbC} BD · ✏️ ${agC} Agenda`;
-        }
+        const btn = document.getElementById('refreshBtn');
+        const dbC = cultures.filter(c=>c.source==='db').length;
+        const agC = cultures.filter(c=>c.source==='agenda').length;
+        lbl.textContent = `✅ ${cultures.length} culture(s) · 🗄 ${dbC} BD · ✏️ ${agC} Agenda`;
+        if (btn) { btn.disabled = false; btn.textContent = '🔄 Actualiser BD'; }
+        document.getElementById('savedDot').classList.remove('saving');
+        toast(`🔄 BD actualisée — ${data.length} culture(s) chargée(s)`);
         renderAll();
     }
 

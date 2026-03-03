@@ -294,6 +294,10 @@ public class MainLayoutController {
         return b;
     }
 
+
+
+
+
     private void positionChatStage() {
         // Always position bottom-right corner of screen — Facebook Messenger style
         javafx.geometry.Rectangle2D screen = javafx.stage.Screen.getPrimary().getVisualBounds();

@@ -12,6 +12,9 @@ public class GerantHome {
     @FXML private Label userRoleLabel;
     @FXML private Label userEmailLabel;
 
+
+
+
     @FXML
     public void initialize() {
         loadUserData();
