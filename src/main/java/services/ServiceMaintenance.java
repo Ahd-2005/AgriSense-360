@@ -1,8 +1,8 @@
-package com.example.agrisense360.services;
+package services;
 
-import com.example.agrisense360.entity.Equipment;
-import com.example.agrisense360.entity.Maintenance;
-import com.example.agrisense360.utils.MyDataBase;
+import entity.Equipment;
+import entity.Maintenance;
+import utils.MyDataBase;
 
 import java.math.BigDecimal;
 import java.sql.Connection;

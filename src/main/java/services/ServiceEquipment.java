@@ -1,7 +1,7 @@
-package com.example.agrisense360.services;
+package services;
 
-import com.example.agrisense360.entity.Equipment;
-import com.example.agrisense360.utils.MyDataBase;
+import entity.Equipment;
+import utils.MyDataBase;
 
 import java.sql.Connection;
 import java.sql.Date;

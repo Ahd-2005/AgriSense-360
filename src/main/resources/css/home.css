@@ -319,3 +319,53 @@
     -fx-font-size: 12px;
     -fx-text-fill: rgba(23, 35, 24, 0.65);
 }
+
+.ai-briefing-card {
+    -fx-background-color: rgba(255, 255, 255, 0.92);
+    -fx-background-radius: 16px;
+    -fx-padding: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 10, 0, 0, 3);
+}
+
+.ai-briefing-meta {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(43, 59, 31, 0.78);
+    -fx-wrap-text: true;
+}
+
+.ai-briefing-area {
+    -fx-background-color: rgba(246, 249, 242, 0.95);
+    -fx-border-color: rgba(90, 152, 20, 0.25);
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 10px;
+    -fx-font-size: 13px;
+}
+
+.ai-briefing-area .content {
+    -fx-background-color: transparent;
+    -fx-padding: 6px;
+}
+
+.ai-chip {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 14px;
+}
+
+.ai-chip-risk {
+    -fx-background-color: rgba(229, 115, 115, 0.18);
+    -fx-text-fill: #8b2f2f;
+}
+
+.ai-chip-pattern {
+    -fx-background-color: rgba(79, 195, 247, 0.2);
+    -fx-text-fill: #0f4f74;
+}
+
+.ai-chip-gap {
+    -fx-background-color: rgba(255, 213, 79, 0.28);
+    -fx-text-fill: #7b5b00;
+}

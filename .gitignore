@@ -14,3 +14,4 @@ Thumbs.db
 
 # Local config overrides
 src/main/resources/config.properties
+src/main/resources/config.local.properties

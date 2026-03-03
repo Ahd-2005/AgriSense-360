@@ -1,4 +1,4 @@
-package com.example.agrisense360.utils;
+package utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +36,10 @@ public class MyDataBase {
         } catch (SQLException e) {
             initializeConnection();
         }
+        return myConnection;
+    }
+
+    public Connection getCnx() {
         return myConnection;
     }
 

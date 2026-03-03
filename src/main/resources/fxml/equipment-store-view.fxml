@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+            fx:controller="com.example.agrisense360.controllers.EquipmentStoreController">
+    <content>
+        <VBox spacing="16" styleClass="weather-page">
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Equipment Store" styleClass="page-title" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Back to Equipment" onAction="#backToEquipment" />
+            </HBox>
+
+            <Label text="Search real agriculture marketplaces for equipment, materials, and vehicles." styleClass="page-subtitle" />
+            <Label text="Try: tractor, john deere 6155m, combine harvester, plow, sprayer, seed drill, baler" styleClass="page-subtitle" />
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Item:" styleClass="weather-label" />
+                <TextField fx:id="searchField" promptText="tractor, plow, sprayer, seeder..." prefWidth="260" />
+                <Label text="Min Price:" styleClass="weather-label" />
+                <TextField fx:id="minPriceField" promptText="1000" prefWidth="100" />
+                <Label text="Max Price:" styleClass="weather-label" />
+                <TextField fx:id="maxPriceField" promptText="50000" prefWidth="100" />
+                <Button fx:id="searchBtn" text="Search Markets" styleClass="primary" onAction="#onSearch" />
+                <Button text="Open Selected" onAction="#onOpenSelected" />
+            </HBox>
+
+            <Label fx:id="storeStatusLabel" styleClass="page-subtitle" text="Ready." />
+
+            <Separator />
+
+            <TableView fx:id="storeTable" prefHeight="520" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="marketCol" text="Market" prefWidth="150" />
+                    <TableColumn fx:id="titleCol" text="Equipment" prefWidth="460" />
+                    <TableColumn fx:id="priceCol" text="Price" prefWidth="160" />
+                    <TableColumn fx:id="sourceCol" text="Source" prefWidth="140" />
+                    <TableColumn fx:id="linkCol" text="Listing Link" prefWidth="260" />
+                </columns>
+            </TableView>
+        </VBox>
+    </content>
+</ScrollPane>

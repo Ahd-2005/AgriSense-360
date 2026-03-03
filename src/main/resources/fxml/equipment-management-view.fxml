@@ -11,8 +11,11 @@
         <VBox spacing="20" styleClass="tab-content-area">
             <fx:include source="equipment-view.fxml"/>
             <fx:include source="maintenance-view.fxml"/>
-            <HBox alignment="CENTER_RIGHT">
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <Button text="📹 Camera Management" onAction="#openCameras" styleClass="primary" />
                 <Button text="Weather Forecast" onAction="#openWeather" styleClass="primary" />
+                <Button text="AI Dashboard" onAction="#openAiDashboard" styleClass="primary" />
+                <Button text="Equipment Store" onAction="#openEquipmentStore" styleClass="primary" />
             </HBox>
         </VBox>
     </content>

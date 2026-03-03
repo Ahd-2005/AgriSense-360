@@ -11,4 +11,28 @@ public class EquipmentManagementController {
             controller.showWeather();
         }
     }
+
+    @FXML
+    private void openCameras() {
+        MainController controller = MainController.getInstance();
+        if (controller != null) {
+            controller.showCameras();
+        }
+    }
+
+    @FXML
+    private void openAiDashboard() {
+        MainController controller = MainController.getInstance();
+        if (controller != null) {
+            controller.showAiDashboard();
+        }
+    }
+
+    @FXML
+    private void openEquipmentStore() {
+        MainController controller = MainController.getInstance();
+        if (controller != null) {
+            controller.showEquipmentStore();
+        }
+    }
 }

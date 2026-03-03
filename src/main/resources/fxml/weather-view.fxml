@@ -2,12 +2,16 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.Region?>
@@ -31,12 +35,16 @@
 
             <!-- Controls Row -->
             <HBox spacing="20" alignment="CENTER_LEFT">
-                <Label text="Select Day:" styleClass="weather-label" />
+                <Label text="Location:" styleClass="weather-label" />
+                <TextField fx:id="locationField" promptText="e.g. Tunis, Paris, New York" prefWidth="240" />
+                <Button fx:id="loadLocationBtn" text="Load Location" onAction="#onLoadLocation" />
+
+                <Label fx:id="daySelectorLabel" text="Select Day:" styleClass="weather-label" />
                 <ComboBox fx:id="daySelector" prefWidth="200" />
                 
                 <Region HBox.hgrow="ALWAYS" />
                 
-                <HBox spacing="10" alignment="CENTER_RIGHT">
+                <HBox fx:id="viewOptionsBox" spacing="10" alignment="CENTER_RIGHT">
                     <Label text="View:" styleClass="weather-label" />
                     <ToggleButton fx:id="dayViewBtn" text="Day View">
                         <toggleGroup>
@@ -46,12 +54,66 @@
                     <ToggleButton fx:id="weeklyViewBtn" text="Weekly Graph" toggleGroup="$viewMode" />
                 </HBox>
                 
+                <Button text="Back to Equipment" onAction="#backToEquipment" />
                 <Button fx:id="exportBtn" text="📥 Export Data" styleClass="primary" />
             </HBox>
+
+            <VBox fx:id="aiSection" spacing="10" styleClass="ai-briefing-card">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fx:id="aiWeatherIconView" fitHeight="30" fitWidth="30" preserveRatio="true" />
+                    <Label text="AI Daily Briefing" styleClass="section-title-main" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button fx:id="generateAiBriefingBtn" text="Generate Today Briefing" onAction="#onGenerateAiBriefing" styleClass="primary" />
+                    <Button fx:id="exportAiBriefingBtn" text="Export Briefing" onAction="#onExportAiBriefing" />
+                </HBox>
+                <Label fx:id="aiBriefingMetaLabel" styleClass="ai-briefing-meta" text="Cross-checks weather, equipment, maintenance, and camera events to detect risks and loopholes." />
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label fx:id="riskBadgeLabel" styleClass="ai-chip ai-chip-risk" text="Risk: --" />
+                    <Label fx:id="patternBadgeLabel" styleClass="ai-chip ai-chip-pattern" text="Patterns: --" />
+                    <Label fx:id="loopholeBadgeLabel" styleClass="ai-chip ai-chip-gap" text="Loopholes: --" />
+                </HBox>
+                <TextArea fx:id="aiBriefingArea" prefRowCount="12" wrapText="true" styleClass="ai-briefing-area" />
+
+                <VBox fx:id="smsSection" spacing="8">
+                    <Separator />
+                    <Label text="SMS Delivery" styleClass="weather-label" />
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="To:" styleClass="weather-label" />
+                        <TextField fx:id="smsToField" promptText="+216xxxxxxxx" prefWidth="180" />
+                        <Label text="From:" styleClass="weather-label" />
+                        <TextField fx:id="smsFromField" promptText="Twilio number" prefWidth="180" />
+                    </HBox>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Daily Time (HH:mm):" styleClass="weather-label" />
+                        <TextField fx:id="smsTimeField" promptText="08:30" prefWidth="90" />
+                        <CheckBox fx:id="smsDailyCheck" text="Send daily at this time" />
+                        <Button fx:id="saveSmsScheduleBtn" text="Save Schedule" onAction="#onSaveSmsSchedule" />
+                        <Button fx:id="sendSmsNowBtn" text="Send SMS Now (Test)" onAction="#onSendSmsNow" />
+                    </HBox>
+
+                    <Label fx:id="smsStatusLabel" styleClass="page-subtitle" text="SMS not scheduled." />
+                </VBox>
+
+                <VBox fx:id="emailSection" spacing="8">
+                    <Separator />
+                    <Label text="Email Delivery" styleClass="weather-label" />
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="To:" styleClass="weather-label" />
+                        <TextField fx:id="emailToField" promptText="name@example.com" prefWidth="220" />
+                        <Label text="Subject:" styleClass="weather-label" />
+                        <TextField fx:id="emailSubjectField" promptText="AgriSense AI Daily Briefing" prefWidth="280" />
+                        <Button fx:id="sendEmailNowBtn" text="Send Email Now" onAction="#onSendEmailNow" />
+                    </HBox>
+                    <Label fx:id="emailStatusLabel" styleClass="page-subtitle" text="Email not sent." />
+                </VBox>
+            </VBox>
 
             <Separator />
 
             <!-- Day View Panel -->
+            <VBox fx:id="forecastSection" spacing="16">
             <VBox fx:id="dayViewPanel" spacing="16">
                 <!-- Day Summary -->
                 <VBox spacing="12" styleClass="day-summary-section">
@@ -122,6 +184,7 @@
             <VBox fx:id="weeklyViewPanel" spacing="16">
                 <Label text="Weekly Forecast" styleClass="section-title-main" />
                 <VBox fx:id="weeklyChartsBox" spacing="20" VBox.vgrow="ALWAYS" />
+            </VBox>
             </VBox>
         </VBox>
     </content>

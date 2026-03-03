@@ -16,6 +16,9 @@ public class MainController {
     private Node animalsView;
     private Node equipmentView;
     private Node weatherView;
+    private Node cameraView;
+    private Node equipmentStoreView;
+    private WeatherController weatherController;
 
     @FXML
     private void initialize() {
@@ -61,6 +64,15 @@ public class MainController {
             if (animalsView != null) {
                 animalsView.setVisible(false);
             }
+            if (weatherView != null) {
+                weatherView.setVisible(false);
+            }
+            if (cameraView != null) {
+                cameraView.setVisible(false);
+            }
+            if (equipmentStoreView != null) {
+                equipmentStoreView.setVisible(false);
+            }
         } catch (IOException e) {
             throw new RuntimeException("Could not load Equipment Management view", e);
         }
@@ -89,22 +101,98 @@ public class MainController {
     public void showWeather() {
         try {
             if (weatherView == null) {
-                weatherView = FXMLLoader.load(getClass().getResource("/fxml/weather-view.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/weather-view.fxml"));
+                weatherView = loader.load();
+                weatherController = loader.getController();
             }
             if (!contentStack.getChildren().contains(weatherView)) {
                 contentStack.getChildren().add(weatherView);
             }
             contentStack.getChildren().get(0).setVisible(false);
             weatherView.setVisible(true);
+            if (weatherController != null) {
+                weatherController.setAiDashboardMode(false);
+            }
             if (animalsView != null) {
                 animalsView.setVisible(false);
             }
             if (equipmentView != null) {
                 equipmentView.setVisible(false);
             }
+            if (cameraView != null) {
+                cameraView.setVisible(false);
+            }
+            if (equipmentStoreView != null) {
+                equipmentStoreView.setVisible(false);
+            }
         } catch (IOException e) {
             throw new RuntimeException("Could not load Weather view", e);
         }
+    }
+
+    public void showAiDashboard() {
+        showWeather();
+        if (weatherController != null) {
+            weatherController.setAiDashboardMode(true);
+        }
+    }
+
+    public void showCameras() {
+        try {
+            if (cameraView == null) {
+                cameraView = FXMLLoader.load(getClass().getResource("/fxml/camera-management-view.fxml"));
+            }
+            if (!contentStack.getChildren().contains(cameraView)) {
+                contentStack.getChildren().add(cameraView);
+            }
+            contentStack.getChildren().get(0).setVisible(false);
+            cameraView.setVisible(true);
+            if (animalsView != null) {
+                animalsView.setVisible(false);
+            }
+            if (equipmentView != null) {
+                equipmentView.setVisible(false);
+            }
+            if (weatherView != null) {
+                weatherView.setVisible(false);
+            }
+            if (equipmentStoreView != null) {
+                equipmentStoreView.setVisible(false);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load Camera Management view", e);
+        }
+    }
+
+    public void showEquipmentStore() {
+        try {
+            if (equipmentStoreView == null) {
+                equipmentStoreView = FXMLLoader.load(getClass().getResource("/fxml/equipment-store-view.fxml"));
+            }
+            if (!contentStack.getChildren().contains(equipmentStoreView)) {
+                contentStack.getChildren().add(equipmentStoreView);
+            }
+            contentStack.getChildren().get(0).setVisible(false);
+            equipmentStoreView.setVisible(true);
+            if (animalsView != null) {
+                animalsView.setVisible(false);
+            }
+            if (equipmentView != null) {
+                equipmentView.setVisible(false);
+            }
+            if (weatherView != null) {
+                weatherView.setVisible(false);
+            }
+            if (cameraView != null) {
+                cameraView.setVisible(false);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load Equipment Store view", e);
+        }
+    }
+
+    public void showEquipment() {
+        navigateEquipment();
     }
 
     private void showHome() {
@@ -115,6 +203,15 @@ public class MainController {
         }
         if (equipmentView != null) {
             equipmentView.setVisible(false);
+        }
+        if (weatherView != null) {
+            weatherView.setVisible(false);
+        }
+        if (cameraView != null) {
+            cameraView.setVisible(false);
+        }
+        if (equipmentStoreView != null) {
+            equipmentStoreView.setVisible(false);
         }
     }
 
