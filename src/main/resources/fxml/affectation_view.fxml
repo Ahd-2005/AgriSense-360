@@ -99,22 +99,22 @@
         <!-- TableView avec filtres -->
         <VBox spacing="10">
             <Label text="Liste des affectations" styleClass="section-title-main"/>
-            
+
             <!-- Search and Sort Controls -->
             <HBox spacing="15" styleClass="filter-controls" style="-fx-padding: 15; -fx-background-color: #f9f9f9; -fx-border-radius: 8; -fx-border-color: #e0e0e0;">
                 <Label text="🔍 Rechercher:" style="-fx-font-weight: bold;"/>
                 <TextField fx:id="tfSearch" promptText="Filtrer par type de travail..." prefWidth="250" styleClass="search-field"/>
-                
+
                 <Separator orientation="VERTICAL" prefHeight="30"/>
-                
+
                 <Label text="📊 Trier par:" style="-fx-font-weight: bold;"/>
                 <ComboBox fx:id="cbSort" prefWidth="200" promptText="Sélectionner ordre"/>
-                
+
                 <Region HBox.hgrow="ALWAYS"/>
-                
+
                 <Button text="🔄 Réinitialiser" styleClass="ghost" onAction="#onResetFilters" prefWidth="120"/>
             </HBox>
-            
+
             <TableView fx:id="tvAffectations" prefHeight="300" styleClass="table-view" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colId" text="ID" prefWidth="60"/>

@@ -50,22 +50,22 @@
         <!-- TableView avec filtres -->
         <VBox spacing="10">
             <Label text="Liste des évaluations" styleClass="section-title-main"/>
-            
+
             <!-- Search and Sort Controls -->
             <HBox spacing="15" styleClass="filter-controls" style="-fx-padding: 15; -fx-background-color: #f9f9f9; -fx-border-radius: 8; -fx-border-color: #e0e0e0;">
                 <Label text="🔍 Filtrer par qualité:" style="-fx-font-weight: bold;"/>
                 <ComboBox fx:id="cbSearchQualite" prefWidth="180" promptText="Sélectionner qualité"/>
-                
+
                 <Separator orientation="VERTICAL" prefHeight="30"/>
-                
+
                 <Label text="📅 Trier par:" style="-fx-font-weight: bold;"/>
                 <ComboBox fx:id="cbSortDate" prefWidth="220" promptText="Sélectionner ordre"/>
-                
+
                 <Region HBox.hgrow="ALWAYS"/>
-                
+
                 <Button text="🔄 Réinitialiser" styleClass="ghost" onAction="#onResetFilters" prefWidth="120"/>
             </HBox>
-            
+
             <TableView fx:id="tvEvaluations" prefHeight="280" styleClass="table-view" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colIdEval" text="ID Eval" prefWidth="70"/>

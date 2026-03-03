@@ -71,12 +71,12 @@ public class AffectationController implements Initializable {
 
         // Setup FilteredList
         filteredList = new FilteredList<>(affectationList, p -> true);
-        
+
         // Setup SortedList (custom sorting via applyFilters, not TableView column sorting)
         SortedList<AffectationTravail> sortedList = new SortedList<>(filteredList,
                 (a1, a2) -> a2.getDateDebut().compareTo(a1.getDateDebut()));
         tvAffectations.setItems(sortedList);
-        
+
         tvAffectations.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             selectedAffectation = newVal;
             if (newVal != null) {
@@ -86,7 +86,7 @@ public class AffectationController implements Initializable {
 
         // Setup search listener
         tfSearch.textProperty().addListener((obs, oldVal, newVal) -> applyFilters());
-        
+
         // Setup sort listener
         cbSort.valueProperty().addListener((obs, oldVal, newVal) -> applyFilters());
 
@@ -238,7 +238,7 @@ public class AffectationController implements Initializable {
                 if ("DECONSEILLE".equals(info.suitability)) {
                     showInfo("Alerte Météo ☁️",
                             "Les conditions météo à « " + info.cityName + " » sont défavorables.\n"
-                            + info.getSummary() + "\n\nIl est déconseillé de planifier un travail agricole.");
+                                    + info.getSummary() + "\n\nIl est déconseillé de planifier un travail agricole.");
                 }
             } else {
                 lblMeteoResult.setText("❌ " + info.errorMessage);
