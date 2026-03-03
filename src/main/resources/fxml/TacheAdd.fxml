@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.TacheAdd"
+            fitToWidth="true"
+            style="-fx-background-color: transparent; -fx-background: transparent;">
+
+    <VBox spacing="25" style="-fx-padding: 40; -fx-background-color: #fbf7ef;">
+
+        <!-- EN-TÊTE -->
+        <VBox spacing="8">
+            <Label text="Affecter une tâche"
+                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
+            <Label fx:id="ouvrierNameLabel" text=""
+                   style="-fx-font-size: 16px; -fx-text-fill: rgba(23,35,24,0.72);" />
+        </VBox>
+
+        <!-- FORMULAIRE -->
+        <VBox spacing="20"
+              style="-fx-background-color: #fff; -fx-padding: 35;
+                     -fx-background-radius: 16px;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 12, 0, 0, 4);
+                     -fx-border-color: rgba(43,59,31,0.08); -fx-border-width: 1;
+                     -fx-border-radius: 16px; -fx-max-width: 620;">
+
+            <!-- Titre -->
+            <VBox spacing="5">
+                <Label text="Titre de la tâche *"
+                       style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <TextField fx:id="titreField" promptText="Ex: Arrosage des parcelles nord"
+                           style="-fx-padding: 12; -fx-background-radius: 8px;
+                                 -fx-border-color: rgba(43,59,31,0.2); -fx-border-radius: 8px;
+                                 -fx-font-size: 14px;" />
+                <Label fx:id="titreError" visible="false"
+                       style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;" />
+            </VBox>
+
+            <!-- Description -->
+            <VBox spacing="5">
+                <Label text="Description"
+                       style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <TextArea fx:id="descriptionField" promptText="Décrivez la tâche en détail..."
+                          prefHeight="100"
+                          style="-fx-padding: 12; -fx-background-radius: 8px;
+                                -fx-border-color: rgba(43,59,31,0.2); -fx-border-radius: 8px;
+                                -fx-font-size: 14px;" />
+            </VBox>
+
+            <!-- Priorité -->
+            <VBox spacing="5">
+                <Label text="Priorité *"
+                       style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <ComboBox fx:id="prioriteCombo" maxWidth="Infinity"
+                          style="-fx-padding: 8; -fx-background-radius: 8px;
+                                -fx-border-color: rgba(43,59,31,0.2); -fx-border-radius: 8px;
+                                -fx-font-size: 14px;" />
+                <Label fx:id="prioriteError" visible="false"
+                       style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;" />
+            </VBox>
+
+            <!-- Date d'échéance -->
+            <VBox spacing="5">
+                <Label text="Date d'échéance"
+                       style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <DatePicker fx:id="dateEcheancePicker"
+                            style="-fx-padding: 8; -fx-background-radius: 8px;
+                                  -fx-border-color: rgba(43,59,31,0.2); -fx-border-radius: 8px;
+                                  -fx-font-size: 14px; -fx-max-width: Infinity;" />
+            </VBox>
+
+        </VBox>
+
+        <!-- BOUTONS -->
+        <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 0 0 20 0; -fx-max-width: 620;">
+            <Button text="✅ Affecter la tâche" onAction="#handleSave"
+                    style="-fx-background-color: #2d6a1f; -fx-text-fill: white;
+                           -fx-padding: 12 28; -fx-font-size: 14px; -fx-font-weight: bold;
+                           -fx-background-radius: 25px; -fx-cursor: hand;
+                           -fx-effect: dropshadow(gaussian, rgba(45,106,31,0.4), 10, 0, 0, 4);" />
+            <Button text="Annuler" onAction="#handleCancel"
+                    style="-fx-background-color: transparent; -fx-text-fill: #22301b;
+                           -fx-border-color: rgba(43,59,31,0.3); -fx-border-width: 2;
+                           -fx-border-radius: 25px; -fx-background-radius: 25px;
+                           -fx-padding: 12 28; -fx-font-size: 14px; -fx-cursor: hand;" />
+        </HBox>
+
+    </VBox>
+</ScrollPane>

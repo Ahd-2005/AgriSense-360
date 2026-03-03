@@ -12,115 +12,152 @@
 
     <VBox spacing="25" style="-fx-padding: 40; -fx-background-color: #fbf7ef;">
 
-        <!-- TOP HEADER -->
+        <!-- EN-TÊTE -->
         <VBox spacing="8">
-            <Label text="Add New User"
+            <Label text="Ajouter un utilisateur"
                    style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
-            <Label text="Create a new user account with role assignment"
+            <Label text="Créer un nouveau compte avec attribution de rôle"
                    style="-fx-font-size: 16px; -fx-text-fill: rgba(23, 35, 24, 0.72);" />
         </VBox>
 
-        <!-- FORM CARD -->
+        <!-- FORMULAIRE -->
         <VBox spacing="20"
               style="-fx-background-color: #fff; -fx-padding: 35;
                      -fx-background-radius: 16px;
                      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 12, 0, 0, 4);
-                     -fx-border-color: rgba(43, 59, 31, 0.08); -fx-border-width: 1;
-                     -fx-border-radius: 16px; -fx-max-width: 600;">
+                     -fx-border-color: rgba(43,59,31,0.08); -fx-border-width: 1;
+                     -fx-border-radius: 16px; -fx-max-width: 620;">
 
-            <!-- Name Field -->
+            <!-- Aperçu avatar -->
+            <HBox spacing="20" alignment="CENTER_LEFT"
+                  style="-fx-background-color: #f7faf5; -fx-padding: 16 18;
+                         -fx-background-radius: 12px; -fx-border-color: rgba(43,59,31,0.1);
+                         -fx-border-width: 1; -fx-border-radius: 12px;">
+                <StackPane fx:id="avatarPane" minWidth="64" minHeight="64" maxWidth="64" maxHeight="64"/>
+                <VBox spacing="4">
+                    <Label text="Aperçu de la photo de profil"
+                           style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 13px;" />
+                    <Label text="Entrez une URL ou générez un avatar DiceBear"
+                           style="-fx-text-fill: rgba(34,48,27,0.55); -fx-font-size: 11px;" />
+                </VBox>
+            </HBox>
+
+            <!-- Photo de profil -->
             <VBox spacing="5">
-                <Label text="Full Name *"
+                <Label text="Photo de profil (optionnelle)"
                        style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
-                <TextField fx:id="nameField" promptText="Enter full name"
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="profilePictureField"
+                               promptText="https://... ou laisser vide pour un avatar automatique"
+                               HBox.hgrow="ALWAYS"
+                               style="-fx-padding: 12; -fx-background-radius: 8px;
+                                     -fx-border-color: rgba(43,59,31,0.2); -fx-border-radius: 8px;
+                                     -fx-font-size: 13px;" />
+                    <Button text="🔄 Générer" onAction="#handleGenerateAvatar"
+                            style="-fx-background-color: #2d6a1f; -fx-text-fill: white;
+                                   -fx-padding: 11 16; -fx-background-radius: 8px;
+                                   -fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand;" />
+                    <Button text="👁" onAction="#handlePreviewPicture"
+                            style="-fx-background-color: #2980b9; -fx-text-fill: white;
+                                   -fx-padding: 11 14; -fx-background-radius: 8px;
+                                   -fx-font-size: 12px; -fx-cursor: hand;" />
+                </HBox>
+                <Label text="Cliquez sur 🔄 Générer pour créer un avatar DiceBear basé sur le nom"
+                       style="-fx-text-fill: rgba(43,59,31,0.5); -fx-font-size: 11px;" />
+            </VBox>
+
+            <Separator />
+
+            <!-- Nom -->
+            <VBox spacing="5">
+                <Label text="Nom complet *"
+                       style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <TextField fx:id="nameField" promptText="Entrez le nom complet"
                            style="-fx-padding: 12; -fx-background-radius: 8px;
-                                 -fx-border-color: rgba(43, 59, 31, 0.2); -fx-border-radius: 8px;
+                                 -fx-border-color: rgba(43,59,31,0.2); -fx-border-radius: 8px;
                                  -fx-font-size: 14px;" />
                 <Label fx:id="nameError" visible="false"
                        style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"/>
             </VBox>
 
-            <!-- Email Field -->
+            <!-- Email -->
             <VBox spacing="5">
-                <Label text="Email Address *"
+                <Label text="Adresse email *"
                        style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
-                <TextField fx:id="emailField" promptText="user@example.com"
+                <TextField fx:id="emailField" promptText="utilisateur@exemple.com"
                            style="-fx-padding: 12; -fx-background-radius: 8px;
-                                 -fx-border-color: rgba(43, 59, 31, 0.2); -fx-border-radius: 8px;
+                                 -fx-border-color: rgba(43,59,31,0.2); -fx-border-radius: 8px;
                                  -fx-font-size: 14px;" />
                 <Label fx:id="emailError" visible="false"
                        style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"/>
             </VBox>
 
-            <!-- Phone Field -->
+            <!-- Téléphone -->
             <VBox spacing="5">
-                <Label text="Phone Number *"
+                <Label text="Numéro de téléphone *"
                        style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
-                <TextField fx:id="phoneField" promptText="+1 (555) 000-0000"
+                <TextField fx:id="phoneField" promptText="12345678"
                            style="-fx-padding: 12; -fx-background-radius: 8px;
-                                 -fx-border-color: rgba(43, 59, 31, 0.2); -fx-border-radius: 8px;
+                                 -fx-border-color: rgba(43,59,31,0.2); -fx-border-radius: 8px;
                                  -fx-font-size: 14px;" />
                 <Label fx:id="phoneError" visible="false"
                        style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"/>
             </VBox>
 
-            <!-- Password Field -->
+            <!-- Mot de passe -->
             <VBox spacing="5">
-                <Label text="Password *"
+                <Label text="Mot de passe *"
                        style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
-                <PasswordField fx:id="passwordField" promptText="Enter secure password"
+                <PasswordField fx:id="passwordField" promptText="Entrez un mot de passe sécurisé"
                                style="-fx-padding: 12; -fx-background-radius: 8px;
-                                     -fx-border-color: rgba(43, 59, 31, 0.2); -fx-border-radius: 8px;
+                                     -fx-border-color: rgba(43,59,31,0.2); -fx-border-radius: 8px;
                                      -fx-font-size: 14px;" />
                 <Label fx:id="passwordError" visible="false"
                        style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"/>
             </VBox>
 
-            <!-- Confirm Password Field -->
+            <!-- Confirmer mot de passe -->
             <VBox spacing="5">
-                <Label text="Confirm Password *"
+                <Label text="Confirmer le mot de passe *"
                        style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
-                <PasswordField fx:id="confirmPasswordField" promptText="Re-enter password"
+                <PasswordField fx:id="confirmPasswordField" promptText="Ressaisir le mot de passe"
                                style="-fx-padding: 12; -fx-background-radius: 8px;
-                                     -fx-border-color: rgba(43, 59, 31, 0.2); -fx-border-radius: 8px;
+                                     -fx-border-color: rgba(43,59,31,0.2); -fx-border-radius: 8px;
                                      -fx-font-size: 14px;" />
                 <Label fx:id="confirmPasswordError" visible="false"
                        style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"/>
             </VBox>
 
-            <!-- Role ComboBox -->
+            <!-- Rôle -->
             <VBox spacing="5">
-                <Label text="User Role *"
+                <Label text="Rôle *"
                        style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
-                <ComboBox fx:id="roleCombo" promptText="Select user role" maxWidth="Infinity"
+                <ComboBox fx:id="roleCombo" promptText="Sélectionner un rôle" maxWidth="Infinity"
                           style="-fx-padding: 8; -fx-background-radius: 8px;
-                                -fx-border-color: rgba(43, 59, 31, 0.2); -fx-border-radius: 8px;
+                                -fx-border-color: rgba(43,59,31,0.2); -fx-border-radius: 8px;
                                 -fx-font-size: 14px;" />
                 <Label fx:id="roleError" visible="false"
                        style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"/>
             </VBox>
 
-            <!-- Required Fields Note -->
-            <Label text="* All fields are required"
-                   style="-fx-text-fill: rgba(43, 59, 31, 0.6); -fx-font-size: 12px; -fx-padding: 10 0 0 0;" />
+            <Label text="* Champs obligatoires"
+                   style="-fx-text-fill: rgba(43,59,31,0.6); -fx-font-size: 12px; -fx-padding: 8 0 0 0;" />
 
         </VBox>
 
-        <!-- ACTION BUTTONS -->
-        <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 0 0 20 0;">
-            <Button text="➕ Create User" onAction="#handleAddUser"
-                    style="-fx-background-color: #5a9814; -fx-text-fill: white;
-                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-font-weight: bold;
+        <!-- BOUTONS -->
+        <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 0 0 20 0; -fx-max-width: 620;">
+            <Button text="➕ Créer l'utilisateur" onAction="#handleAddUser"
+                    style="-fx-background-color: #2d6a1f; -fx-text-fill: white;
+                           -fx-padding: 12 28; -fx-font-size: 14px; -fx-font-weight: bold;
                            -fx-background-radius: 25px; -fx-cursor: hand;
-                           -fx-effect: dropshadow(gaussian, rgba(90, 152, 20, 0.3), 10, 0, 0, 4);" />
-
-            <Button text="Cancel" onAction="#handleCancel"
+                           -fx-effect: dropshadow(gaussian, rgba(45,106,31,0.4), 10, 0, 0, 4);" />
+            <Button text="Annuler" onAction="#handleCancel"
                     style="-fx-background-color: transparent; -fx-text-fill: #22301b;
-                           -fx-border-color: rgba(43, 59, 31, 0.3); -fx-border-width: 2;
+                           -fx-border-color: rgba(43,59,31,0.3); -fx-border-width: 2;
                            -fx-border-radius: 25px; -fx-background-radius: 25px;
-                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-cursor: hand;" />
+                           -fx-padding: 12 28; -fx-font-size: 14px; -fx-cursor: hand;" />
         </HBox>
 
     </VBox>
-
 </ScrollPane>

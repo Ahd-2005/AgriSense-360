@@ -4,14 +4,46 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="AGENDA TAMEL FIHOM BERASMI">
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="Merge remote-tracking branch 'origin/gestion-ouvrier' into gestion_user&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;agrisense_close_time.dat&#10;#&#9;agrisense_session.dat&#10;#&#9;src/main/java/controllers/HomeContentController.java&#10;#&#9;src/main/java/module-info.java&#10;#&#9;src/main/resources/css/home.css&#10;#&#9;src/main/resources/css/sidebar.css&#10;#&#9;src/main/resources/fxml/MainLayout.fxml&#10;#&#9;target/classes/module-info.class">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_close_time.dat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/LandingPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/LandingPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/EvaluationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/EvaluationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/OuvrierAdd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/OuvrierAdd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/OuvrierDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/OuvrierDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/OuvrierEdit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/OuvrierEdit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/OuvrierHome.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/OuvrierHome.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/OuvrierManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/OuvrierManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/UserAdd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/UserAdd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/UserDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/UserDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/UserEdit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/UserEdit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/WorkersCalendarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/WorkersCalendarController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/LandingPage.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/LandingPage.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/css/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/home.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/css/sidebar.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/sidebar.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/AdminDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/AdminDashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/GerantHome.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/GerantHome.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierAdd.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierAdd.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierDetails.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierDetails.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierEdit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierEdit.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierHome.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierHome.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierManagement.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierManagement.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/UserAdd.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/UserAdd.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/UserDetails.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/UserDetails.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/UserEdit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/UserEdit.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/animal-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/animals-management-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/mes_taches.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CultureController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +86,9 @@
     <setting file="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/21/javafx-controls-21-win.jar!/javafx/scene/chart/BarChart.class" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/21/javafx-controls-21-win.jar!/javafx/scene/chart/XYChart.class" root0="SKIP_INSPECTION" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/17.0.14/javafx-graphics-17.0.14-win.jar!/javafx/scene/Parent.class" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="MavenRunner">
+    <option name="jreName" value="jbr-17" />
   </component>
   <component name="McpProjectServerCommands">
     <McpServerCommand>
@@ -104,21 +139,21 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "gestion__culture",
+    "git-widget-placeholder": "gestion__user",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/iamam/OneDrive/Bureau/AgriSense-360/src/main/resources/db",
+    "last_opened_file_path": "C:/Users/ahdbe/OneDrive/Desktop/AgriSense-360/src/main/resources/fxml",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.runner",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   },
@@ -130,11 +165,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\db" />
-      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\css" />
-      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\fxml" />
-      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\images\cultures" />
-      <recent name="C:\Users\iamam\OneDrive\Bureau\AgriSense-360\src\main\resources\scripts" />
+      <recent name="C:\Users\ahdbe\OneDrive\Desktop\AgriSense-360\src\main\resources\fxml" />
+      <recent name="C:\Users\ahdbe\OneDrive\Desktop\AgriSense-360\src\main\java\controllers" />
+      <recent name="C:\Users\ahdbe\OneDrive\Desktop\AgriSense-360\src\main\java\services" />
+      <recent name="C:\Users\ahdbe\OneDrive\Desktop\AgriSense-360\src\main\java\entity" />
+      <recent name="C:\Users\ahdbe\OneDrive\Desktop\AgriSense-360\src\main\resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ahdbe\OneDrive\Documents\AgriSense-360gestion_culture\AgriSense-360-gestion_culture\src\main\resources\fxml" />
@@ -145,10 +180,10 @@
   </component>
   <component name="RunManager">
     <configuration name="HelloApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="jbr-17" />
+      <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/.jdks/jbr-17.0.14" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.example.agrisens360.HelloApplication" />
-      <module name="agrisens360" />
+      <module name="AgriSense-360" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.example.agrisens360.*" />
@@ -200,9 +235,7 @@
       <workItem from="1772257297803" duration="377000" />
       <workItem from="1772315762126" duration="5207000" />
       <workItem from="1772332726064" duration="10492000" />
-      <workItem from="1772381881200" duration="15989000" />
-      <workItem from="1772410603960" duration="4794000" />
-      <workItem from="1772422711744" duration="2609000" />
+      <workItem from="1772381881200" duration="9352000" />
     </task>
     <task id="LOCAL-00001" summary="tous gestion + user">
       <option name="closed" value="true" />
@@ -324,55 +357,7 @@
       <option name="project" value="LOCAL" />
       <updated>1772341290312</updated>
     </task>
-    <task id="LOCAL-00016" summary="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'">
-      <option name="closed" value="true" />
-      <created>1772401106395</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1772401106395</updated>
-    </task>
-    <task id="LOCAL-00017" summary="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'">
-      <option name="closed" value="true" />
-      <created>1772401156417</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1772401156417</updated>
-    </task>
-    <task id="LOCAL-00018" summary="FACE ID integrated well">
-      <option name="closed" value="true" />
-      <created>1772407918587</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1772407918587</updated>
-    </task>
-    <task id="LOCAL-00019" summary="fixs">
-      <option name="closed" value="true" />
-      <created>1772417114543</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1772417114543</updated>
-    </task>
-    <task id="LOCAL-00020" summary="AGENDA TAMEL FIHOM">
-      <option name="closed" value="true" />
-      <created>1772420370579</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1772420370579</updated>
-    </task>
-    <task id="LOCAL-00021" summary="AGENDA TAMEL FIHOM BERASMI">
-      <option name="closed" value="true" />
-      <created>1772422608960</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1772422608960</updated>
-    </task>
-    <option name="localTasksCounter" value="22" />
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -389,7 +374,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="gestion_user" />
+                        <option value="origin/gestion_culture" />
                       </list>
                     </value>
                   </entry>
@@ -416,12 +401,7 @@
     <MESSAGE value="fixes for perfection" />
     <MESSAGE value="we added historique de parcelle avec exportation pdf" />
     <MESSAGE value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif" />
-    <MESSAGE value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif 'top left'" />
-    <MESSAGE value="FACE ID integrated well" />
-    <MESSAGE value="fixs" />
-    <MESSAGE value="AGENDA TAMEL FIHOM" />
-    <MESSAGE value="AGENDA TAMEL FIHOM BERASMI" />
-    <option name="LAST_COMMIT_MESSAGE" value="AGENDA TAMEL FIHOM BERASMI" />
+    <option name="LAST_COMMIT_MESSAGE" value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

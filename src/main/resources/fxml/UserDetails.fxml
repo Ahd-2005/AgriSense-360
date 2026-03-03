@@ -4,118 +4,123 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="controllers.UserDetails"
-      spacing="25" style="-fx-padding: 40; -fx-background-color: #fbf7ef;">
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.UserDetails"
+            fitToWidth="true"
+            style="-fx-background-color: transparent; -fx-background: transparent;">
 
-    <!-- TOP HEADER -->
-    <VBox spacing="8">
-        <Label text="User Details"
-               style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
-        <Label text="View and manage user information"
-               style="-fx-font-size: 16px; -fx-text-fill: rgba(23, 35, 24, 0.72);" />
-    </VBox>
+    <VBox spacing="25" style="-fx-padding: 40; -fx-background-color: #fbf7ef;">
 
-    <!-- USER INFO CARD -->
-    <VBox spacing="20"
-          style="-fx-background-color: #fff; -fx-padding: 30;
-                 -fx-background-radius: 16px;
-                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 12, 0, 0, 4);
-                 -fx-border-color: rgba(43, 59, 31, 0.08); -fx-border-width: 1;
-                 -fx-border-radius: 16px; -fx-max-width: 600;">
+        <!-- EN-TÊTE -->
+        <VBox spacing="8">
+            <Label text="Détails de l'utilisateur"
+                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
+            <Label text="Consulter et gérer les informations de l'utilisateur"
+                   style="-fx-font-size: 16px; -fx-text-fill: rgba(23, 35, 24, 0.72);" />
+        </VBox>
 
-        <!-- Name and Status Header -->
-        <HBox spacing="15" alignment="CENTER_LEFT">
-            <Label fx:id="nameLabel" text="User Name"
-                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
-            <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="statusLabel" text="ACTIVE"
-                   style="-fx-padding: 8 20; -fx-background-radius: 15px;
-                          -fx-font-size: 13px; -fx-font-weight: bold;" />
-        </HBox>
+        <!-- CARTE UTILISATEUR -->
+        <VBox spacing="0"
+              style="-fx-background-color: #fff; -fx-background-radius: 20px;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 14, 0, 0, 5);
+                     -fx-border-color: rgba(43,59,31,0.07); -fx-border-width: 1;
+                     -fx-border-radius: 20px; -fx-max-width: 640;">
 
-        <Separator />
+            <!-- Bandeau vert haut -->
+            <HBox style="-fx-background-color: linear-gradient(to right, #2d7a3a, #43a047);
+                         -fx-background-radius: 18 18 0 0; -fx-padding: 28 30 22 30;"
+                  spacing="22" alignment="CENTER_LEFT">
 
-        <!-- Info Grid -->
-        <GridPane hgap="25" vgap="15">
-            <padding>
-                <Insets top="10" />
-            </padding>
+                <!-- Avatar / Photo -->
+                <StackPane fx:id="avatarPane" minWidth="80" minHeight="80" maxWidth="80" maxHeight="80" />
 
-            <!-- Row 0 -->
-            <Label text="🆔 User ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"
-                   style="-fx-font-weight: bold; -fx-text-fill: rgba(43, 59, 31, 0.7); -fx-font-size: 14px;" />
-            <Label fx:id="idLabel" GridPane.columnIndex="1" GridPane.rowIndex="0"
-                   style="-fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <!-- Nom + Statut -->
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <Label fx:id="nameLabel" text=""
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white;" />
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label fx:id="statusLabel" text=""
+                               style="-fx-padding: 5 16; -fx-background-radius: 12px;
+                                      -fx-font-size: 12px; -fx-font-weight: bold;" />
+                        <Label fx:id="roleBadgeLabel" text=""
+                               style="-fx-padding: 5 16; -fx-background-radius: 12px;
+                                      -fx-font-size: 12px; -fx-font-weight: bold;
+                                      -fx-background-color: rgba(255,255,255,0.22); -fx-text-fill: white;" />
+                    </HBox>
+                </VBox>
+            </HBox>
 
-            <!-- Row 1 -->
-            <Label text="📧 Email:" GridPane.columnIndex="0" GridPane.rowIndex="1"
-                   style="-fx-font-weight: bold; -fx-text-fill: rgba(43, 59, 31, 0.7); -fx-font-size: 14px;" />
-            <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"
-                   style="-fx-text-fill: #22301b; -fx-font-size: 14px;" />
+            <!-- Infos détaillées -->
+            <VBox spacing="16" style="-fx-padding: 28 30 28 30;">
 
-            <!-- Row 2 -->
-            <Label text="📱 Phone:" GridPane.columnIndex="0" GridPane.rowIndex="2"
-                   style="-fx-font-weight: bold; -fx-text-fill: rgba(43, 59, 31, 0.7); -fx-font-size: 14px;" />
-            <Label fx:id="phoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"
-                   style="-fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <Label text="📧 Email"
+                           style="-fx-font-weight: bold; -fx-text-fill: rgba(34,48,27,0.6);
+                                  -fx-font-size: 13px; -fx-min-width: 110;" />
+                    <Label fx:id="emailLabel" text=""
+                           style="-fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                </HBox>
 
-            <!-- Row 3 -->
-            <Label text="👤 Role:" GridPane.columnIndex="0" GridPane.rowIndex="3"
-                   style="-fx-font-weight: bold; -fx-text-fill: rgba(43, 59, 31, 0.7); -fx-font-size: 14px;" />
-            <Label fx:id="roleLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"
-                   style="-fx-text-fill: #22301b; -fx-font-size: 14px;" />
-        </GridPane>
+                <Separator style="-fx-opacity: 0.3;" />
 
-    </VBox>
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <Label text="📱 Téléphone"
+                           style="-fx-font-weight: bold; -fx-text-fill: rgba(34,48,27,0.6);
+                                  -fx-font-size: 13px; -fx-min-width: 110;" />
+                    <Label fx:id="phoneLabel" text=""
+                           style="-fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                </HBox>
 
-    <!-- ACTION BUTTONS -->
-    <VBox spacing="15">
+                <Separator style="-fx-opacity: 0.3;" />
 
-        <!-- Status Actions -->
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <Label text="👤 Rôle"
+                           style="-fx-font-weight: bold; -fx-text-fill: rgba(34,48,27,0.6);
+                                  -fx-font-size: 13px; -fx-min-width: 110;" />
+                    <Label fx:id="roleLabel" text=""
+                           style="-fx-text-fill: #22301b; -fx-font-size: 14px;" />
+                </HBox>
+
+            </VBox>
+        </VBox>
+
+        <!-- ACTIONS STATUT -->
         <HBox spacing="12" alignment="CENTER_LEFT"
-              style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(90, 152, 20, 0.08), rgba(90, 152, 20, 0.05));
-                     -fx-background-radius: 12px; -fx-padding: 20;">
-            <Label text="Status Actions:"
-                   style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 15px;" />
+              style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(90,152,20,0.08), rgba(90,152,20,0.04));
+                     -fx-background-radius: 14px; -fx-padding: 18 22; -fx-max-width: 640;
+                     -fx-border-color: rgba(90,152,20,0.15); -fx-border-width: 1; -fx-border-radius: 14px;">
+            <Label text="Actions sur le statut :"
+                   style="-fx-font-weight: bold; -fx-text-fill: #22301b; -fx-font-size: 14px;" />
             <Region HBox.hgrow="ALWAYS" />
-
-            <Button fx:id="activateBtn" text="✓ Activate User" onAction="#handleActivate"
+            <Button fx:id="activateBtn" text="✓ Activer" onAction="#handleActivate"
                     style="-fx-background-color: #27ae60; -fx-text-fill: white;
-                           -fx-padding: 10 24px; -fx-font-size: 13px; -fx-font-weight: bold;
-                           -fx-background-radius: 8px; -fx-cursor: hand;
-                           -fx-effect: dropshadow(gaussian, rgba(39, 174, 96, 0.3), 8, 0, 0, 2);" />
-
-            <Button fx:id="blockBtn" text="🚫 Block User" onAction="#handleBlock"
+                           -fx-padding: 10 24; -fx-font-size: 13px; -fx-font-weight: bold;
+                           -fx-background-radius: 10px; -fx-cursor: hand;" />
+            <Button fx:id="blockBtn" text="🚫 Bloquer" onAction="#handleBlock"
                     style="-fx-background-color: #e74c3c; -fx-text-fill: white;
-                           -fx-padding: 10 24px; -fx-font-size: 13px; -fx-font-weight: bold;
-                           -fx-background-radius: 8px; -fx-cursor: hand;
-                           -fx-effect: dropshadow(gaussian, rgba(231, 76, 60, 0.3), 8, 0, 0, 2);" />
+                           -fx-padding: 10 24; -fx-font-size: 13px; -fx-font-weight: bold;
+                           -fx-background-radius: 10px; -fx-cursor: hand;" />
         </HBox>
 
-        <!-- User Actions -->
-        <HBox spacing="12" alignment="CENTER_LEFT">
-            <Button text="✏ Edit User" onAction="#handleModifier"
+        <!-- BOUTONS NAVIGATION -->
+        <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 0 0 20 0; -fx-max-width: 640;">
+            <Button text="✏ Modifier" onAction="#handleModifier"
                     style="-fx-background-color: #f39c12; -fx-text-fill: white;
-                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-font-weight: bold;
-                           -fx-background-radius: 25px; -fx-cursor: hand;
-                           -fx-effect: dropshadow(gaussian, rgba(243, 156, 18, 0.3), 10, 0, 0, 4);" />
-
-            <Button text="🗑 Delete User" onAction="#handleDelete"
+                           -fx-padding: 12 28; -fx-font-size: 14px; -fx-font-weight: bold;
+                           -fx-background-radius: 25px; -fx-cursor: hand;" />
+            <Button fx:id="deleteBtn" text="🗑 Supprimer" onAction="#handleDelete"
                     style="-fx-background-color: transparent; -fx-text-fill: #e74c3c;
                            -fx-border-color: #e74c3c; -fx-border-width: 2;
                            -fx-border-radius: 25px; -fx-background-radius: 25px;
-                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-cursor: hand;" />
-
+                           -fx-padding: 12 28; -fx-font-size: 14px; -fx-cursor: hand;" />
             <Region HBox.hgrow="ALWAYS" />
-
-            <Button text="← Back to Users" onAction="#handleBack"
+            <Button text="← Retour" onAction="#handleBack"
                     style="-fx-background-color: transparent; -fx-text-fill: #22301b;
-                           -fx-border-color: rgba(43, 59, 31, 0.3); -fx-border-width: 2;
+                           -fx-border-color: rgba(43,59,31,0.3); -fx-border-width: 2;
                            -fx-border-radius: 25px; -fx-background-radius: 25px;
-                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-cursor: hand;" />
+                           -fx-padding: 12 28; -fx-font-size: 14px; -fx-cursor: hand;" />
         </HBox>
-    </VBox>
 
-</VBox>
+    </VBox>
+</ScrollPane>
