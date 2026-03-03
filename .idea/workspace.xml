@@ -4,17 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="ou hedhi agenda lilla kemla ttpusha">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="pull this work">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/GerantHome.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/GerantHome.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/GerantProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/GerantProfile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/HomeContentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/HomeContentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/agenda/Agendaculture.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/agenda/Agendaculture.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/home_content.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/home_content.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/module-info.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AffectationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AffectationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/affectation_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/affectation_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/evaluation_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/evaluation_view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,7 +210,7 @@
       <workItem from="1772422711744" duration="4920000" />
       <workItem from="1772484225823" duration="636000" />
       <workItem from="1772484909142" duration="1370000" />
-      <workItem from="1772496694165" duration="325000" />
+      <workItem from="1772496694165" duration="1363000" />
     </task>
     <task id="LOCAL-00001" summary="tous gestion + user">
       <option name="closed" value="true" />
@@ -393,7 +388,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772426162531</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="pull this work">
+      <option name="closed" value="true" />
+      <created>1772497164897</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1772497164897</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -454,7 +457,8 @@
     <MESSAGE value="AGENDA TAMEL FIHOM BERASMI" />
     <MESSAGE value="API ZEN quotes to the landing page improved user experience" />
     <MESSAGE value="ou hedhi agenda lilla kemla ttpusha" />
-    <option name="LAST_COMMIT_MESSAGE" value="ou hedhi agenda lilla kemla ttpusha" />
+    <MESSAGE value="pull this work" />
+    <option name="LAST_COMMIT_MESSAGE" value="pull this work" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

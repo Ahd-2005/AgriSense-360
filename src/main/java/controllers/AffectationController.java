@@ -13,6 +13,7 @@ import entity.AffectationTravail;
 import services.AffectationTravailService;
 import services.AIReportService;
 import services.DiscordWebhookService;
+import services.GeocodingService;
 import services.WeatherService;
 
 import java.net.URL;
@@ -43,28 +44,15 @@ public class AffectationController implements Initializable {
     @FXML private Button btnClear;
     @FXML private Button btnCheckMeteo;
     @FXML private Button btnAIPlan;
+    @FXML private Button btnLocaliser;
     @FXML private Label lblMeteoResult;
     @FXML private Label lblAIPlanResult;
+    @FXML private Label lblGeoResult;
 
     private final AffectationTravailService service = new AffectationTravailService();
     private final ObservableList<AffectationTravail> affectationList = FXCollections.observableArrayList();
     private FilteredList<AffectationTravail> filteredList;
     private AffectationTravail selectedAffectation;
-
-    @FXML
-    private void onSwitchToEvaluation() {
-        MainLayoutController.getInstance().navigateToEvaluation();
-    }
-
-    @FXML
-    private void onSwitchToDashboard() {
-        MainLayoutController.getInstance().navigateToDashboardWorkers();
-    }
-
-    @FXML
-    private void onSwitchToCalendar() {
-        MainLayoutController.getInstance().navigateToCalendar();
-    }
 
     private static final String[] STATUT_OPTIONS = {"En cours", "Terminée", "Annulée", "En attente"};
 
@@ -83,11 +71,12 @@ public class AffectationController implements Initializable {
 
         // Setup FilteredList
         filteredList = new FilteredList<>(affectationList, p -> true);
-        
-        // Setup SortedList
-        SortedList<AffectationTravail> sortedList = new SortedList<>(filteredList);
+
+        // Setup SortedList (custom sorting via applyFilters, not TableView column sorting)
+        SortedList<AffectationTravail> sortedList = new SortedList<>(filteredList,
+                (a1, a2) -> a2.getDateDebut().compareTo(a1.getDateDebut()));
         tvAffectations.setItems(sortedList);
-        
+
         tvAffectations.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             selectedAffectation = newVal;
             if (newVal != null) {
@@ -97,7 +86,7 @@ public class AffectationController implements Initializable {
 
         // Setup search listener
         tfSearch.textProperty().addListener((obs, oldVal, newVal) -> applyFilters());
-        
+
         // Setup sort listener
         cbSort.valueProperty().addListener((obs, oldVal, newVal) -> applyFilters());
 
@@ -249,7 +238,7 @@ public class AffectationController implements Initializable {
                 if ("DECONSEILLE".equals(info.suitability)) {
                     showInfo("Alerte Météo ☁️",
                             "Les conditions météo à « " + info.cityName + " » sont défavorables.\n"
-                            + info.getSummary() + "\n\nIl est déconseillé de planifier un travail agricole.");
+                                    + info.getSummary() + "\n\nIl est déconseillé de planifier un travail agricole.");
                 }
             } else {
                 lblMeteoResult.setText("❌ " + info.errorMessage);
@@ -268,80 +257,6 @@ public class AffectationController implements Initializable {
         t.start();
     }
 
-    @FXML
-    private void onAIPlan() {
-        String type = tfTypeTravail.getText() != null ? tfTypeTravail.getText().trim() : "";
-        String zone = tfZoneTravail.getText() != null ? tfZoneTravail.getText().trim() : "";
-        LocalDate debut = dpDateDebut.getValue();
-        LocalDate fin = dpDateFin.getValue();
-
-        if (type.isEmpty() && zone.isEmpty()) {
-            lblAIPlanResult.setText("⚠️ Renseignez au moins le type de travail ou la zone pour la planification IA.");
-            lblAIPlanResult.setStyle("-fx-text-fill: #d68910; -fx-font-weight: bold; -fx-font-size: 12px; " +
-                    "-fx-padding: 6 10; -fx-background-color: #fff8e1; -fx-background-radius: 6; -fx-border-color: #ffe082; -fx-border-radius: 6;");
-            return;
-        }
-
-        lblAIPlanResult.setText("⏳ L'IA analyse la situation et prépare des recommandations...");
-        lblAIPlanResult.setStyle("-fx-text-fill: #555; -fx-font-size: 12px; -fx-padding: 6 10; " +
-                "-fx-background-color: #f5f0ff; -fx-background-radius: 6; -fx-border-color: #d1b3ff; -fx-border-radius: 6;");
-        btnAIPlan.setDisable(true);
-
-        // Build context for the AI
-        StringBuilder context = new StringBuilder();
-        context.append("Type de travail: ").append(type.isEmpty() ? "Non spécifié" : type).append("\n");
-        context.append("Zone de travail: ").append(zone.isEmpty() ? "Non spécifiée" : zone).append("\n");
-        if (debut != null) context.append("Date début prévue: ").append(debut).append("\n");
-        if (fin != null) context.append("Date fin prévue: ").append(fin).append("\n");
-
-        // Add existing affectations for context
-        try {
-            List<AffectationTravail> existing = service.getAll();
-            if (!existing.isEmpty()) {
-                context.append("\nAffectations existantes (").append(existing.size()).append("):\n");
-                for (AffectationTravail a : existing) {
-                    context.append("  - ").append(a.getTypeTravail())
-                           .append(" | Zone: ").append(a.getZoneTravail())
-                           .append(" | ").append(a.getDateDebut()).append(" → ").append(a.getDateFin())
-                           .append(" | Statut: ").append(a.getStatut()).append("\n");
-                }
-            }
-        } catch (SQLException ignored) {}
-
-        String prompt = "Tu es un expert en planification agricole intelligente. " +
-                "Analyse les données suivantes et fournis des recommandations de planification.\n\n" +
-                context + "\n" +
-                "Réponds en français avec exactement ces 3 sections courtes :\n\n" +
-                "🎯 RECOMMANDATION\n(Analyse si le timing et la zone sont optimaux, suggère des ajustements)\n\n" +
-                "⚠️ CONFLITS POTENTIELS\n(Identifie les chevauchements avec les affectations existantes ou risques)\n\n" +
-                "💡 OPTIMISATION\n(Suggestions concrètes pour améliorer la productivité de cette affectation)\n\n" +
-                "Sois concis (max 150 mots total).";
-
-        Task<String> aiTask = new Task<>() {
-            @Override
-            protected String call() {
-                return AIReportService.generateFromPrompt(prompt);
-            }
-        };
-
-        aiTask.setOnSucceeded(e -> {
-            btnAIPlan.setDisable(false);
-            lblAIPlanResult.setText(aiTask.getValue());
-            lblAIPlanResult.setStyle("-fx-text-fill: #333; -fx-font-size: 12px; -fx-padding: 6 10; " +
-                    "-fx-background-color: #f5f0ff; -fx-background-radius: 6; -fx-border-color: #d1b3ff; -fx-border-radius: 6;");
-        });
-
-        aiTask.setOnFailed(e -> {
-            btnAIPlan.setDisable(false);
-            lblAIPlanResult.setText("❌ Erreur lors de la planification IA.");
-            lblAIPlanResult.setStyle("-fx-text-fill: #c0392b; -fx-font-weight: bold;");
-        });
-
-        Thread t2 = new Thread(aiTask);
-        t2.setDaemon(true);
-        t2.start();
-    }
-
     private void clearForm() {
         tfTypeTravail.clear();
         dpDateDebut.setValue(null);
@@ -349,7 +264,6 @@ public class AffectationController implements Initializable {
         tfZoneTravail.clear();
         cbStatut.setValue(null);
         lblMeteoResult.setText("");
-        lblAIPlanResult.setText("");
     }
 
     private AffectationTravail formToModel(Integer id) {
@@ -397,5 +311,102 @@ public class AffectationController implements Initializable {
         a.setHeaderText(null);
         a.setContentText(message);
         a.showAndWait();
+    }
+
+    // ── Géocodage Google Maps ───────────────────────────────────────
+
+    @FXML
+    private void onLocaliser() {
+        String zone = tfZoneTravail.getText() != null ? tfZoneTravail.getText().trim() : "";
+        if (zone.isEmpty()) {
+            lblGeoResult.setText("⚠️ Renseignez d'abord la zone de travail.");
+            lblGeoResult.setStyle("-fx-text-fill: #d68910; -fx-font-weight: bold;");
+            return;
+        }
+
+        lblGeoResult.setText("⏳ Géocodage de « " + zone + " » en cours...");
+        lblGeoResult.setStyle("-fx-text-fill: #555;");
+        btnLocaliser.setDisable(true);
+
+        Task<GeocodingService.GeocodingResult> task = new Task<>() {
+            @Override
+            protected GeocodingService.GeocodingResult call() {
+                return GeocodingService.geocode(zone);
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            GeocodingService.GeocodingResult result = task.getValue();
+            btnLocaliser.setDisable(false);
+            if (result.success) {
+                lblGeoResult.setText(result.getSummary());
+                lblGeoResult.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold; -fx-font-size: 12px;");
+                // Ouvrir Google Maps dans le navigateur
+                try {
+                    java.awt.Desktop.getDesktop().browse(new java.net.URI(result.getGoogleMapsUrl()));
+                } catch (Exception ex) {
+                    System.err.println("Impossible d'ouvrir le navigateur: " + ex.getMessage());
+                }
+            } else {
+                lblGeoResult.setText("❌ " + result.errorMessage);
+                lblGeoResult.setStyle("-fx-text-fill: #c0392b; -fx-font-weight: bold;");
+            }
+        });
+
+        task.setOnFailed(e -> {
+            btnLocaliser.setDisable(false);
+            lblGeoResult.setText("❌ Erreur inattendue lors du géocodage.");
+            lblGeoResult.setStyle("-fx-text-fill: #c0392b;");
+        });
+
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
+    }
+
+    // ── AI Planning ────────────────────────────────────────────────
+
+    @FXML
+    private void onAIPlan() {
+        if (selectedAffectation == null) {
+            showError("Sélection requise", "Veuillez sélectionner une affectation pour la planification IA.");
+            return;
+        }
+        lblAIPlanResult.setText("⏳ Génération du plan IA en cours...");
+        btnAIPlan.setDisable(true);
+
+        AffectationTravail copy = selectedAffectation;
+        Task<String> task = new Task<>() {
+            @Override
+            protected String call() {
+                return AIReportService.generateWorkPlan(copy);
+            }
+        };
+        task.setOnSucceeded(e -> {
+            lblAIPlanResult.setText(task.getValue());
+            btnAIPlan.setDisable(false);
+        });
+        task.setOnFailed(e -> {
+            lblAIPlanResult.setText("❌ Erreur: " + task.getException().getMessage());
+            btnAIPlan.setDisable(false);
+        });
+        new Thread(task).start();
+    }
+
+    // ── Navigation ─────────────────────────────────────────────────
+
+    @FXML
+    private void onSwitchToEvaluation() {
+        MainLayoutController.getInstance().navigateToEvaluation();
+    }
+
+    @FXML
+    private void onSwitchToDashboard() {
+        MainLayoutController.getInstance().navigateToDashboardWorkers();
+    }
+
+    @FXML
+    private void onSwitchToCalendar() {
+        MainLayoutController.getInstance().navigateToCalendar();
     }
 }

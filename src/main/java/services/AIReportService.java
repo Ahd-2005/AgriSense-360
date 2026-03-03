@@ -96,59 +96,6 @@ public class AIReportService {
     }
 
     /**
-     * Génère une réponse IA à partir d'un prompt libre.
-     * Utilisé pour la planification intelligente et autres fonctionnalités IA.
-     */
-    public static String generateFromPrompt(String prompt) {
-        try {
-            JsonObject message = new JsonObject();
-            message.addProperty("role", "user");
-            message.addProperty("content", prompt);
-
-            JsonArray messages = new JsonArray();
-            messages.add(message);
-
-            JsonObject body = new JsonObject();
-            body.addProperty("model", MODEL);
-            body.add("messages", messages);
-            body.addProperty("max_tokens", 500);
-            body.addProperty("temperature", 0.6);
-
-            HttpClient client = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofSeconds(15))
-                    .build();
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(API_URL))
-                    .timeout(Duration.ofSeconds(30))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + API_KEY)
-                    .POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(body)))
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
-                return json.getAsJsonArray("choices")
-                        .get(0).getAsJsonObject()
-                        .getAsJsonObject("message")
-                        .get("content").getAsString().trim();
-            } else if (response.statusCode() == 401) {
-                return "❌ Clé API Groq invalide. Obtenez une clé gratuite sur console.groq.com";
-            } else if (response.statusCode() == 429) {
-                return "⚠️ Limite de requêtes Groq atteinte. Réessayez dans quelques instants.";
-            } else {
-                return "Erreur API (" + response.statusCode() + ")";
-            }
-        } catch (java.net.UnknownHostException e) {
-            return "❌ Pas de connexion Internet.";
-        } catch (Exception e) {
-            return "❌ Erreur: " + e.getMessage();
-        }
-    }
-
-    /**
      * Construit le prompt envoyé à l'IA avec toutes les données de l'affectation.
      */
     private static String buildPrompt(AffectationTravail affectation,
@@ -202,5 +149,83 @@ public class AIReportService {
         sb.append("(liste de 2-3 recommandations pratiques adaptées au contexte agricole)\n");
 
         return sb.toString();
+    }
+
+    /**
+     * Génère un plan de travail IA pour une affectation (sans évaluations requises).
+     */
+    public static String generateWorkPlan(AffectationTravail affectation) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Tu es un expert en gestion agricole et planification de travaux agricoles. ")
+          .append("Génère un plan de travail détaillé et pratique en français pour l'affectation suivante.\n\n");
+
+        sb.append("═══ AFFECTATION DE TRAVAIL ═══\n");
+        sb.append("• Type de travail   : ").append(affectation.getTypeTravail()).append("\n");
+        sb.append("• Zone de travail   : ").append(affectation.getZoneTravail()).append("\n");
+        sb.append("• Période           : du ").append(affectation.getDateDebut())
+          .append(" au ").append(affectation.getDateFin()).append("\n");
+        sb.append("• Statut            : ").append(affectation.getStatut()).append("\n\n");
+
+        sb.append("═══ FORMAT DU PLAN ATTENDU ═══\n");
+        sb.append("Génère un plan structuré avec exactement ces 4 sections en français :\n\n");
+        sb.append("📋 RÉSUMÉ DE LA MISSION\n");
+        sb.append("(2-3 phrases décrivant l'objectif et le contexte de ce travail)\n\n");
+        sb.append("📅 ÉTAPES DE RÉALISATION\n");
+        sb.append("(liste de 4-5 étapes chronologiques avec durée estimée)\n\n");
+        sb.append("⚠️ RISQUES ET PRÉCAUTIONS\n");
+        sb.append("(liste de 2-3 risques à anticiper selon la zone et le type de travail)\n\n");
+        sb.append("💡 RECOMMANDATIONS\n");
+        sb.append("(2-3 conseils pratiques pour optimiser ce travail agricole)\n");
+
+        String prompt = sb.toString();
+
+        try {
+            JsonObject message = new JsonObject();
+            message.addProperty("role", "user");
+            message.addProperty("content", prompt);
+
+            JsonArray messages = new JsonArray();
+            messages.add(message);
+
+            JsonObject body = new JsonObject();
+            body.addProperty("model", MODEL);
+            body.add("messages", messages);
+            body.addProperty("max_tokens", 700);
+            body.addProperty("temperature", 0.65);
+
+            HttpClient client = HttpClient.newBuilder()
+                    .connectTimeout(Duration.ofSeconds(15))
+                    .build();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(API_URL))
+                    .timeout(Duration.ofSeconds(30))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + API_KEY)
+                    .POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(body)))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println("[AIReportService/WorkPlan] HTTP " + response.statusCode() + " → " + response.body());
+
+            if (response.statusCode() == 200) {
+                JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
+                return json.getAsJsonArray("choices")
+                        .get(0).getAsJsonObject()
+                        .getAsJsonObject("message")
+                        .get("content").getAsString().trim();
+            } else if (response.statusCode() == 401) {
+                return "❌ Clé API Groq invalide.\nObtenez une clé gratuite sur console.groq.com → API Keys";
+            } else if (response.statusCode() == 429) {
+                return "⚠️ Limite de requêtes Groq atteinte. Réessayez dans quelques instants.";
+            } else {
+                return "Erreur API Groq (" + response.statusCode() + ").\nDétail : " + response.body();
+            }
+        } catch (java.net.UnknownHostException e) {
+            return "❌ Pas de connexion Internet. Vérifiez votre réseau.";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "❌ Erreur lors de la génération : " + e.getMessage();
+        }
     }
 }

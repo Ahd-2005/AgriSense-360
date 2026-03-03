@@ -71,6 +71,10 @@
                         style="-fx-background-color: #7b2d8b; -fx-text-fill: white; -fx-font-weight: bold;
                                -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 7 14 7 14;"
                         onAction="#onAIPlan"/>
+                <Button fx:id="btnLocaliser" text="📍 Localiser sur Carte"
+                        style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 7 14 7 14;"
+                        onAction="#onLocaliser"/>
             </HBox>
             <!-- Résultat météo -->
             <Label fx:id="lblMeteoResult"
@@ -84,27 +88,33 @@
                    style="-fx-font-size: 12px; -fx-padding: 6 10 6 10;
                           -fx-background-color: #f5f0ff; -fx-background-radius: 6;
                           -fx-border-color: #d1b3ff; -fx-border-radius: 6;"/>
+            <!-- Résultat géocodage Google Maps -->
+            <Label fx:id="lblGeoResult"
+                   wrapText="true"
+                   style="-fx-font-size: 12px; -fx-padding: 6 10 6 10;
+                          -fx-background-color: #fff8f0; -fx-background-radius: 6;
+                          -fx-border-color: #f0c878; -fx-border-radius: 6;"/>
         </VBox>
 
         <!-- TableView avec filtres -->
         <VBox spacing="10">
             <Label text="Liste des affectations" styleClass="section-title-main"/>
-            
+
             <!-- Search and Sort Controls -->
             <HBox spacing="15" styleClass="filter-controls" style="-fx-padding: 15; -fx-background-color: #f9f9f9; -fx-border-radius: 8; -fx-border-color: #e0e0e0;">
                 <Label text="🔍 Rechercher:" style="-fx-font-weight: bold;"/>
                 <TextField fx:id="tfSearch" promptText="Filtrer par type de travail..." prefWidth="250" styleClass="search-field"/>
-                
+
                 <Separator orientation="VERTICAL" prefHeight="30"/>
-                
+
                 <Label text="📊 Trier par:" style="-fx-font-weight: bold;"/>
                 <ComboBox fx:id="cbSort" prefWidth="200" promptText="Sélectionner ordre"/>
-                
+
                 <Region HBox.hgrow="ALWAYS"/>
-                
+
                 <Button text="🔄 Réinitialiser" styleClass="ghost" onAction="#onResetFilters" prefWidth="120"/>
             </HBox>
-            
+
             <TableView fx:id="tvAffectations" prefHeight="300" styleClass="table-view" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
