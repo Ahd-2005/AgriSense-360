@@ -4,73 +4,145 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
+<ScrollPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.OuvrierHome"
-            style="-fx-background-color: #f5f5f5;">
+            fitToWidth="true"
+            style="-fx-background-color: transparent; -fx-background: transparent;">
 
-    <!-- TOP BAR -->
-    <top>
-        <VBox style="-fx-background-color: #673AB7; -fx-padding: 20;">
-            <Label fx:id="welcomeLabel"
-                   style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;" />
-            <Label fx:id="roleLabel"
-                   style="-fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 5 0 0 0;" />
-        </VBox>
-    </top>
+    <VBox spacing="28" style="-fx-padding: 40; -fx-background-color: #fbf7ef;">
 
-    <!-- CENTER CONTENT -->
-    <center>
-        <VBox spacing="20" alignment="CENTER" style="-fx-padding: 40;">
+        <!-- EN-TÊTE ACCUEIL -->
+        <HBox spacing="20" alignment="CENTER_LEFT"
+              style="-fx-background-color: linear-gradient(to right, #2d7a3a, #43a047);
+                     -fx-background-radius: 20px; -fx-padding: 30 35;">
 
-            <Label text="Ouvrier Dashboard"
-                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #333;" />
+            <StackPane fx:id="avatarPane" minWidth="72" minHeight="72" maxWidth="72" maxHeight="72" />
 
-            <Label text="Welcome to your workspace!"
-                   style="-fx-font-size: 16px; -fx-text-fill: #666;" />
-
-            <!-- Action Buttons -->
-            <VBox spacing="15" alignment="CENTER" style="-fx-max-width: 400;">
-
-                <Button text="📋 My Tasks"
-                        onAction="#handleMyTasks"
-                        style="-fx-pref-width: 300; -fx-pref-height: 50; -fx-font-size: 16px;
-                               -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-cursor: hand;" />
-
-                <Button text="⏰ Time Sheet"
-                        onAction="#handleTimeSheet"
-                        style="-fx-pref-width: 300; -fx-pref-height: 50; -fx-font-size: 16px;
-                               -fx-background-color: #2196F3; -fx-text-fill: white; -fx-cursor: hand;" />
-
-                <Button text="📁 My Projects"
-                        onAction="#handleMyProjects"
-                        style="-fx-pref-width: 300; -fx-pref-height: 50; -fx-font-size: 16px;
-                               -fx-background-color: #FF9800; -fx-text-fill: white; -fx-cursor: hand;" />
-
-                <Button text="👤 My Profile"
-                        onAction="#handleMyProfile"
-                        style="-fx-pref-width: 300; -fx-pref-height: 50; -fx-font-size: 16px;
-                               -fx-background-color: #607D8B; -fx-text-fill: white; -fx-cursor: hand;" />
-
+            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                <Label fx:id="welcomeLabel" text=""
+                       style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;" />
+                <Label fx:id="roleLabel" text=""
+                       style="-fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.80);" />
+                <Label fx:id="dateLabel" text=""
+                       style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.65);" />
             </VBox>
 
-        </VBox>
-    </center>
-
-    <!-- BOTTOM BAR -->
-    <bottom>
-        <HBox spacing="20" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: white;">
-
-            <Label fx:id="loginTimeLabel"
-                   style="-fx-font-size: 12px; -fx-text-fill: #999;" />
-
-            <Region HBox.hgrow="ALWAYS" />
-
-            <Button text="🚪 Logout"
-                    onAction="#handleLogout"
-                    style="-fx-background-color: #f44336; -fx-text-fill: white;
-                           -fx-padding: 8 20; -fx-font-size: 14px;" />
+            <!-- Stats tâches dans le bandeau -->
+            <HBox spacing="16" alignment="CENTER">
+                <VBox alignment="CENTER" spacing="2"
+                      style="-fx-background-color: rgba(255,255,255,0.18); -fx-background-radius: 14px;
+                             -fx-padding: 14 22;">
+                    <Label fx:id="tachesTotalLabel" text="0"
+                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" />
+                    <Label text="Tâches totales"
+                           style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.75);" />
+                </VBox>
+                <VBox alignment="CENTER" spacing="2"
+                      style="-fx-background-color: rgba(255,255,255,0.18); -fx-background-radius: 14px;
+                             -fx-padding: 14 22;">
+                    <Label fx:id="tachesActivesLabel" text="0"
+                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" />
+                    <Label text="En cours / attente"
+                           style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.75);" />
+                </VBox>
+                <VBox alignment="CENTER" spacing="2"
+                      style="-fx-background-color: rgba(255,255,255,0.18); -fx-background-radius: 14px;
+                             -fx-padding: 14 22;">
+                    <Label fx:id="tachesTermineesLabel" text="0"
+                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" />
+                    <Label text="Terminées"
+                           style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.75);" />
+                </VBox>
+            </HBox>
         </HBox>
-    </bottom>
 
-</BorderPane>
+        <!-- TITRE SECTION -->
+        <Label text="Accès rapide"
+               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
+
+        <!-- CARTES NAVIGATION -->
+        <HBox spacing="20">
+
+            <!-- Mes Tâches -->
+            <VBox spacing="12" alignment="CENTER"
+                  style="-fx-background-color: white; -fx-background-radius: 18px;
+                         -fx-padding: 30 24; -fx-cursor: hand;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.09), 10, 0, 0, 3);
+                         -fx-border-color: rgba(43,59,31,0.08); -fx-border-width: 1;
+                         -fx-border-radius: 18px;"
+                  HBox.hgrow="ALWAYS"
+                  onMouseClicked="#handleMyTasks">
+                <Label text="📋" style="-fx-font-size: 36px;" />
+                <Label text="Mes Tâches"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
+                <Label text="Voir et gérer mes tâches assignées"
+                       style="-fx-font-size: 12px; -fx-text-fill: rgba(34,48,27,0.55);
+                              -fx-wrap-text: true; -fx-text-alignment: center;" />
+                <Button text="Ouvrir →" onAction="#handleMyTasks"
+                        style="-fx-background-color: #2d6a1f; -fx-text-fill: white;
+                               -fx-padding: 9 22; -fx-background-radius: 20px;
+                               -fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand;" />
+            </VBox>
+
+            <!-- Mon Profil -->
+            <VBox spacing="12" alignment="CENTER"
+                  style="-fx-background-color: white; -fx-background-radius: 18px;
+                         -fx-padding: 30 24; -fx-cursor: hand;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.09), 10, 0, 0, 3);
+                         -fx-border-color: rgba(43,59,31,0.08); -fx-border-width: 1;
+                         -fx-border-radius: 18px;"
+                  HBox.hgrow="ALWAYS"
+                  onMouseClicked="#handleMyProfile">
+                <Label text="👤" style="-fx-font-size: 36px;" />
+                <Label text="Mon Profil"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
+                <Label text="Consulter et modifier mon profil"
+                       style="-fx-font-size: 12px; -fx-text-fill: rgba(34,48,27,0.55);
+                              -fx-wrap-text: true; -fx-text-alignment: center;" />
+                <Button text="Ouvrir →" onAction="#handleMyProfile"
+                        style="-fx-background-color: #2980b9; -fx-text-fill: white;
+                               -fx-padding: 9 22; -fx-background-radius: 20px;
+                               -fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand;" />
+            </VBox>
+
+            <!-- Déconnexion -->
+            <VBox spacing="12" alignment="CENTER"
+                  style="-fx-background-color: white; -fx-background-radius: 18px;
+                         -fx-padding: 30 24; -fx-cursor: hand;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.09), 10, 0, 0, 3);
+                         -fx-border-color: rgba(43,59,31,0.08); -fx-border-width: 1;
+                         -fx-border-radius: 18px;"
+                  HBox.hgrow="ALWAYS">
+                <Label text="🚪" style="-fx-font-size: 36px;" />
+                <Label text="Déconnexion"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
+                <Label text="Se déconnecter de l'application"
+                       style="-fx-font-size: 12px; -fx-text-fill: rgba(34,48,27,0.55);
+                              -fx-wrap-text: true; -fx-text-alignment: center;" />
+                <Button text="Se déconnecter" onAction="#handleLogout"
+                        style="-fx-background-color: transparent; -fx-text-fill: #e74c3c;
+                               -fx-border-color: #e74c3c; -fx-border-width: 1.5;
+                               -fx-padding: 9 22; -fx-background-radius: 20px;
+                               -fx-border-radius: 20px; -fx-font-size: 12px;
+                               -fx-font-weight: bold; -fx-cursor: hand;" />
+            </VBox>
+
+        </HBox>
+
+        <!-- APERÇU DES 3 DERNIÈRES TÂCHES -->
+        <VBox spacing="12">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="🕐 Tâches récentes"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Tout voir →" onAction="#handleMyTasks"
+                        style="-fx-background-color: transparent; -fx-text-fill: #2d6a1f;
+                               -fx-font-weight: bold; -fx-font-size: 13px; -fx-cursor: hand;
+                               -fx-border-width: 0;" />
+            </HBox>
+            <VBox fx:id="recentTachesContainer" spacing="10" />
+        </VBox>
+
+    </VBox>
+</ScrollPane>

@@ -187,6 +187,6 @@ public class WorkersCalendarController implements Initializable {
 
     @FXML
     private void onSwitchToDashboard() {
-        MainLayoutController.getInstance().navigateToDashboardWorkers();
+        MainLayoutController.getInstance().navigateToWorkers();
     }
 }

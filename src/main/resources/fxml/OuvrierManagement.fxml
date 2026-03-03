@@ -12,7 +12,7 @@
 
     <VBox spacing="25" style="-fx-padding: 40; -fx-background-color: #fbf7ef;">
 
-        <!-- TOP HEADER -->
+        <!-- EN-TÊTE -->
         <VBox spacing="8">
             <Label text="Gestion des Ouvriers"
                    style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
@@ -20,30 +20,69 @@
                    style="-fx-font-size: 16px; -fx-text-fill: rgba(23, 35, 24, 0.72);" />
         </VBox>
 
-        <!-- ACTIONS BAR -->
+        <!-- BARRE D'ACTIONS -->
         <HBox spacing="15" alignment="CENTER_LEFT"
-              style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(90, 152, 20, 0.15), rgba(90, 152, 20, 0.08));
+              style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(90,152,20,0.15), rgba(90,152,20,0.08));
                      -fx-background-radius: 16px; -fx-padding: 20 25;">
-            <Label text="Tous les Ouvriers"
+            <Label text="Tous les ouvriers"
                    style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #22301b;" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="➕ Ajouter Ouvrier" onAction="#handleAddOuvrier"
-                    style="-fx-background-color: #5a9814; -fx-text-fill: white;
-                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-font-weight: bold;
+            <Button text="➕ Ajouter un ouvrier" onAction="#handleAddOuvrier"
+                    style="-fx-background-color: #2d6a1f;
+                           -fx-text-fill: white;
+                           -fx-padding: 12 28; -fx-font-size: 14px; -fx-font-weight: bold;
                            -fx-background-radius: 25px; -fx-cursor: hand;
-                           -fx-effect: dropshadow(gaussian, rgba(90, 152, 20, 0.3), 10, 0, 0, 4);" />
-            <Button text="🔄 Actualiser" onAction="#handleRefresh"
-                    style="-fx-background-color: transparent; -fx-text-fill: #22301b;
-                           -fx-border-color: rgba(43, 59, 31, 0.3); -fx-border-width: 2;
-                           -fx-border-radius: 25px; -fx-background-radius: 25px;
-                           -fx-padding: 12 28px; -fx-font-size: 14px; -fx-cursor: hand;" />
+                           -fx-effect: dropshadow(gaussian, rgba(45,106,31,0.45), 12, 0, 0, 4);" />
         </HBox>
 
-        <!-- OUVRIERS CARD GRID -->
-        <VBox fx:id="cardContainer" spacing="15" style="-fx-padding: 5;">
-            <!-- Ouvrier cards will be added here dynamically -->
-        </VBox>
+        <!-- BARRE DE RECHERCHE ET TRI -->
+        <HBox spacing="15" alignment="CENTER_LEFT"
+              style="-fx-background-color: white; -fx-background-radius: 14px;
+                     -fx-padding: 16 20;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 8, 0, 0, 2);
+                     -fx-border-color: rgba(43,59,31,0.08); -fx-border-width: 1; -fx-border-radius: 14px;">
+
+            <HBox alignment="CENTER_LEFT" spacing="8"
+                  style="-fx-background-color: #f5f5f5; -fx-background-radius: 10px; -fx-padding: 8 14;">
+                <Label text="🔍" style="-fx-font-size: 14px; -fx-text-fill: #888;" />
+                <TextField fx:id="searchField"
+                           promptText="Rechercher par nom, email, téléphone..."
+                           onKeyReleased="#handleSearch"
+                           style="-fx-background-color: transparent; -fx-border-width: 0;
+                                  -fx-font-size: 13px; -fx-text-fill: #333; -fx-pref-width: 280;" />
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Label text="Trier par :"
+                   style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555;" />
+            <ComboBox fx:id="sortComboBox" onAction="#handleSort"
+                      style="-fx-background-color: white; -fx-border-color: rgba(43,59,31,0.25);
+                             -fx-border-radius: 8px; -fx-background-radius: 8px;
+                             -fx-font-size: 13px; -fx-pref-width: 160;" />
+
+            <Label text="Statut :"
+                   style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555;" />
+            <ComboBox fx:id="statusFilterComboBox" onAction="#handleStatusFilter"
+                      style="-fx-background-color: white; -fx-border-color: rgba(43,59,31,0.25);
+                             -fx-border-radius: 8px; -fx-background-radius: 8px;
+                             -fx-font-size: 13px; -fx-pref-width: 160;" />
+
+            <Button text="✖ Réinitialiser" onAction="#handleResetFilters"
+                    style="-fx-background-color: transparent; -fx-text-fill: #e74c3c;
+                           -fx-border-color: #e74c3c; -fx-border-width: 1.5;
+                           -fx-border-radius: 8px; -fx-background-radius: 8px;
+                           -fx-padding: 8 14; -fx-font-size: 12px; -fx-cursor: hand;" />
+        </HBox>
+
+        <!-- COMPTEUR -->
+        <HBox>
+            <Label fx:id="resultCountLabel"
+                   style="-fx-font-size: 13px; -fx-text-fill: rgba(34,48,27,0.6); -fx-font-style: italic;" />
+        </HBox>
+
+        <!-- LISTE DES CARTES -->
+        <VBox fx:id="cardContainer" spacing="15" style="-fx-padding: 5;" />
 
     </VBox>
-
 </ScrollPane>

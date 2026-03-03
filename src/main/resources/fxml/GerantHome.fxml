@@ -6,84 +6,58 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controllers.GerantHome"
-            style="-fx-background-color: #f5f5f5;">
+            fx:controller="controllers.GerantHome">
+    <stylesheets>
+        <String fx:value="@../css/user.css"/>
+    </stylesheets>
 
     <!-- TOP BAR -->
     <top>
-        <VBox style="-fx-background-color: #27ae60; -fx-padding: 20;">
-            <Label fx:id="welcomeLabel"
-                   style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;" />
-            <Label fx:id="roleLabel"
-                   style="-fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 5 0 0 0;" />
+        <VBox styleClass="top-bar">
+            <Label fx:id="welcomeLabel" styleClass="top-bar-title"/>
+            <Label fx:id="roleLabel"    styleClass="top-bar-subtitle"/>
         </VBox>
     </top>
 
     <!-- CENTER CONTENT -->
     <center>
-        <VBox spacing="20" alignment="CENTER" style="-fx-padding: 40;">
-
-            <Label text="Tableau de Bord Gérant"
-                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #333;" />
-
-            <Label text="Gestion de la Ferme"
-                   style="-fx-font-size: 16px; -fx-text-fill: #666;" />
+        <VBox spacing="20" alignment="CENTER" styleClass="page-body">
+            <Label text="Tableau de Bord Gérant" styleClass="dash-heading"/>
+            <Label text="Gestion de la Ferme"    styleClass="dash-sub"/>
 
             <!-- Action Buttons Grid -->
             <GridPane hgap="15" vgap="15" alignment="CENTER">
-
-                <!-- Row 1 -->
-                <Button text="🌾 Cultures &amp;Parcelles"
-                        onAction="#handleCultures"
+                <Button text="🌾 Cultures &amp; Parcelles" onAction="#handleCultures"
+                        styleClass="btn-nav-tile"
                         GridPane.columnIndex="0" GridPane.rowIndex="0"
-                        style="-fx-pref-width: 220; -fx-pref-height: 80; -fx-font-size: 14px;
-                               -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-cursor: hand;" />
-
-                <Button text="📦 Stocks"
-                        onAction="#handleStocks"
+                        prefWidth="220"/>
+                <Button text="📦 Stocks" onAction="#handleStocks"
+                        styleClass="btn-nav-tile"
                         GridPane.columnIndex="1" GridPane.rowIndex="0"
-                        style="-fx-pref-width: 220; -fx-pref-height: 80; -fx-font-size: 14px;
-                               -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-cursor: hand;" />
-
-                <!-- Row 2 -->
-                <Button text="🚜 Équipements"
-                        onAction="#handleEquipements"
+                        prefWidth="220"/>
+                <Button text="🚜 Équipements" onAction="#handleEquipements"
+                        styleClass="btn-nav-tile"
                         GridPane.columnIndex="0" GridPane.rowIndex="1"
-                        style="-fx-pref-width: 220; -fx-pref-height: 80; -fx-font-size: 14px;
-                               -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-cursor: hand;" />
-
-                <Button text="🐄 Animaux"
-                        onAction="#handleAnimaux"
+                        prefWidth="220"/>
+                <Button text="🐄 Animaux" onAction="#handleAnimaux"
+                        styleClass="btn-nav-tile"
                         GridPane.columnIndex="1" GridPane.rowIndex="1"
-                        style="-fx-pref-width: 220; -fx-pref-height: 80; -fx-font-size: 14px;
-                               -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-cursor: hand;" />
-
-                <!-- Row 3 - Highlight Ouvriers -->
-                <Button text="👷 Gestion Ouvriers"
-                        onAction="#handleOuvriers"
-                        GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"
-                        style="-fx-pref-width: 455; -fx-pref-height: 80; -fx-font-size: 16px;
-                               -fx-background-color: #2ecc71; -fx-text-fill: white; -fx-cursor: hand;
-                               -fx-font-weight: bold;" />
-
+                        prefWidth="220"/>
+                <Button text="👷 Gestion Ouvriers" onAction="#handleOuvriers"
+                        styleClass="btn-nav-tile"
+                        GridPane.columnIndex="0" GridPane.rowIndex="2"
+                        GridPane.columnSpan="2"
+                        prefWidth="455"/>
             </GridPane>
-
         </VBox>
     </center>
 
     <!-- BOTTOM BAR -->
     <bottom>
-        <HBox spacing="20" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: white;">
-
-            <Label fx:id="loginTimeLabel"
-                   style="-fx-font-size: 12px; -fx-text-fill: #999;" />
-
-            <Region HBox.hgrow="ALWAYS" />
-
-            <Button text="🚪 Déconnexion"
-                    onAction="#handleLogout"
-                    style="-fx-background-color: #95a5a6; -fx-text-fill: white;
-                           -fx-padding: 8 20; -fx-font-size: 14px; -fx-cursor: hand;" />
+        <HBox spacing="20" alignment="CENTER" styleClass="bottom-bar">
+            <Label fx:id="loginTimeLabel" styleClass="bottom-bar-label"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="🚪 Déconnexion" onAction="#handleLogout" styleClass="btn-logout"/>
         </HBox>
     </bottom>
 

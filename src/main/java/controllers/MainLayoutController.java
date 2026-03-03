@@ -464,6 +464,8 @@ public class MainLayoutController {
             case ROLE_OUVRIER:
                 showButton(homeBtn, homeLabel);
                 homeLabel.setText("Mes Tâches");
+                // S'assurer que btnBOS est aussi caché
+                setVisible(btnBOS, false);
                 break;
 
             default:
@@ -615,37 +617,37 @@ public class MainLayoutController {
     @FXML
     public void navigateToAddStock() {
         loadContent("/fxml/addStock.fxml");
-        setActiveButton(addstockBtn);
+        //setActiveButton(addstockBtn);
     }
 
     @FXML
     public void navigateToEditStock() {
         loadContent("/fxml/editStock.fxml");
-        setActiveButton(ModstockBtn);
+        //setActiveButton(ModstockBtn);
     }
 
     @FXML
     public void navigateToProductList() {
         loadContent("/fxml/ProductList.fxml");
-        setActiveButton(ProdBtn);
+       // setActiveButton(ProdBtn);
     }
 
     @FXML
     public void navigateToStockList() {
         loadContent("/fxml/StockList.fxml");
-        setActiveButton(liststockBtn);
+        //setActiveButton(liststockBtn);
     }
 
     @FXML
     public void navigateToEditProduct() {
         loadContent("/fxml/ModifProd.fxml");
-        setActiveButton(editprodBtn);
+       // setActiveButton(editprodBtn);
     }
 
     @FXML
     public void navigateToAddProduct() {
         loadContent("/fxml/AjoutPrduit.fxml");
-        setActiveButton(addprodBtn);
+        //setActiveButton(addprodBtn);
     }
 
     private static Stock stockToEdit;

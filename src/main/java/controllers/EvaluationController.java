@@ -56,7 +56,7 @@ public class EvaluationController implements Initializable {
 
     @FXML
     private void onSwitchToDashboard() {
-        MainLayoutController.getInstance().navigateToDashboardWorkers();
+        MainLayoutController.getInstance().navigateToWorkers();
     }
 
     @FXML
@@ -100,11 +100,11 @@ public class EvaluationController implements Initializable {
 
         // Setup FilteredList
         filteredList = new FilteredList<>(evaluationList, p -> true);
-        
+
         // Setup SortedList
         SortedList<EvaluationPerformance> sortedList = new SortedList<>(filteredList);
         tvEvaluations.setItems(sortedList);
-        
+
         tvEvaluations.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             selectedEvaluation = newVal;
             if (newVal != null) {
@@ -117,7 +117,7 @@ public class EvaluationController implements Initializable {
 
         // Setup quality filter listener
         cbSearchQualite.valueProperty().addListener((obs, oldVal, newVal) -> applyFilters());
-        
+
         // Setup sort listener
         cbSortDate.valueProperty().addListener((obs, oldVal, newVal) -> applyFilters());
 

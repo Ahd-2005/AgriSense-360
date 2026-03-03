@@ -17,15 +17,17 @@ public class FaceRecognitionService {
     private final Path scriptPath;
     private static boolean initialized = false;
 
-    private static final String DEFAULT_PYTHON = "C:\\Users\\iamam\\OneDrive\\Bureau\\AgriSense-360\\.venv\\Scripts\\python.exe";
-    private static final String DEFAULT_SCRIPT = "face_recognition_script.py";
+    // ── Default paths — adjust if needed ──────────────
+    private static final String DEFAULT_PYTHON = "python";        // or "python3" on Linux/Mac
+    private static final String DEFAULT_SCRIPT = "face_recognition_script.py"; // in project root
 
     private FaceRecognitionService(String pythonExecutable, String scriptPath) {
         this.pythonExecutable = pythonExecutable;
-        this.scriptPath = Paths.get(scriptPath);
-        initialized = true;
+        this.scriptPath       = Paths.get(scriptPath);
+        initialized           = true;
     }
 
+    // ── Singleton with custom paths ────────────────────
     public static synchronized FaceRecognitionService getInstance(String pythonExecutable, String scriptPath) {
         if (instance == null) {
             instance = new FaceRecognitionService(pythonExecutable, scriptPath);
@@ -33,6 +35,7 @@ public class FaceRecognitionService {
         return instance;
     }
 
+    // ✅ Singleton with default paths (use this in login)
     public static synchronized FaceRecognitionService getInstance() {
         if (instance == null) {
             instance = new FaceRecognitionService(DEFAULT_PYTHON, DEFAULT_SCRIPT);
@@ -98,7 +101,8 @@ public class FaceRecognitionService {
         );
     }
 
-    // ── LOGIN BY FACE ──────────────────────────────────
+    // ── LOGIN BY FACE — main entry point for login page ──
+    // Returns the matched user's DB id, or -1 if no match
     public int loginByFace(String imagePath) {
         try {
             FaceRecognitionResult result = compareFace(imagePath, 0.6);
@@ -110,7 +114,7 @@ public class FaceRecognitionService {
         } catch (IOException e) {
             System.err.println("Face recognition I/O error: " + e.getMessage());
         }
-        return -1;
+        return -1; // no match
     }
 
     // ── EXECUTE PYTHON SCRIPT ──────────────────────────
@@ -124,12 +128,17 @@ public class FaceRecognitionService {
                 new InputStreamReader(process.getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
+                output.append(line);
             }
         }
 
         try {
-            process.waitFor();
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                JSONObject error = new JSONObject();
+                error.put("error", "Script failed with exit code " + exitCode + ": " + output);
+                return error;
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             JSONObject error = new JSONObject();
@@ -137,55 +146,39 @@ public class FaceRecognitionService {
             return error;
         }
 
-        // Skip warning lines, find the JSON line starting with '{'
-        for (String line : output.toString().split("\n")) {
-            line = line.trim();
-            if (line.startsWith("{")) {
-                return new JSONObject(line);
-            }
+        String outputStr = output.toString().trim();
+        if (outputStr.isEmpty()) {
+            JSONObject error = new JSONObject();
+            error.put("error", "Empty response from Python script");
+            return error;
         }
 
-        JSONObject error = new JSONObject();
-        error.put("error", "No JSON response from script: " + output.toString().trim());
-        return error;
+        return new JSONObject(outputStr);
     }
 
     // ── EXCEPTION ──────────────────────────────────────
     public static class FaceRecognitionException extends Exception {
-        public FaceRecognitionException(String message) {
-            super(message);
-        }
+        public FaceRecognitionException(String message) { super(message); }
     }
 
     // ── RESULT ─────────────────────────────────────────
     public static class FaceRecognitionResult {
         private final boolean success;
-        private final String message;
+        private final String  message;
         private final Integer userId;
-        private final double distance;
+        private final double  distance;
 
         public FaceRecognitionResult(boolean success, String message, Integer userId, double distance) {
-            this.success = success;
-            this.message = message;
-            this.userId = userId;
+            this.success  = success;
+            this.message  = message;
+            this.userId   = userId;
             this.distance = distance;
         }
 
-        public boolean isSuccess() {
-            return success;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public Integer getUserId() {
-            return userId;
-        }
-
-        public double getDistance() {
-            return distance;
-        }
+        public boolean isSuccess()   { return success; }
+        public String  getMessage()  { return message; }
+        public Integer getUserId()   { return userId; }
+        public double  getDistance() { return distance; }
 
         @Override
         public String toString() {
