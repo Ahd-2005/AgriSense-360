@@ -37,7 +37,6 @@ public class AnimalController implements Initializable {
     @FXML private TextField searchField;
     @FXML private ComboBox<String> searchFieldCombo;
 
-    // Inline validation labels
     @FXML private Label earTagError;
     @FXML private Label typeError;
     @FXML private Label weightError;
@@ -141,8 +140,8 @@ public class AnimalController implements Initializable {
         header.getStyleClass().add("mgmt-table-header-row");
         header.setAlignment(Pos.CENTER_LEFT);
         
-        String[] headers = {"ID", "Ear Tag", "Type", "Weight", "Health", "Birth Date", "Age", "Origin", "Location"};
-        double[] widths = {50, 80, 90, 80, 90, 110, 70, 120, 120};
+        String[] headers = {"ID", "Ear Tag", "Type", "Weight", "Health", "Birth Date", "Age", "Origin", "Location", "Actions"};
+        double[] widths = {50, 80, 90, 80, 90, 110, 70, 120, 120, 100};
         
         for (int i = 0; i < headers.length; i++) {
             Label headerLabel = new Label(headers[i]);
@@ -179,7 +178,7 @@ public class AnimalController implements Initializable {
         }
         row.setAlignment(Pos.CENTER_LEFT);
 
-        double[] widths = {50, 80, 90, 80, 90, 110, 70, 120, 120};
+        double[] widths = {50, 80, 90, 80, 90, 110, 70, 120, 120, 100};
         String[] values = {
             a.getId() != null ? a.getId().toString() : "-",
             a.getEarTag() != null ? a.getEarTag().toString() : "-",
@@ -213,7 +212,17 @@ public class AnimalController implements Initializable {
             }
             row.getChildren().add(cell);
         }
-        
+
+        Button dossiersBtn = new Button("+ Dossier");
+        dossiersBtn.getStyleClass().add("mgmt-btn-ghost");
+        dossiersBtn.setPrefWidth(100);
+        dossiersBtn.setOnMouseClicked(javafx.event.Event::consume);
+        dossiersBtn.setOnAction(e -> {
+            if (HealthRecordController.onNavigate != null)
+                HealthRecordController.onNavigate.accept(a);
+        });
+        row.getChildren().add(dossiersBtn);
+
         row.setOnMouseClicked(e -> {
             selectedAnimal = a;
             refreshTable();
@@ -353,13 +362,13 @@ public class AnimalController implements Initializable {
             }
         }
 
-        // Type: required
+
         if (typeCombo.getSelectionModel().isEmpty()) {
             setError(typeError, "Please select a type.");
             valid = false;
         }
 
-        // Weight: optional, must be non-negative if provided
+
         String weightText = weightField.getText().trim();
         if (!weightText.isEmpty()) {
             try {
@@ -374,14 +383,14 @@ public class AnimalController implements Initializable {
             }
         }
 
-        // Birth date: must not be in the future
+
         LocalDate birthDate = birthDatePicker.getValue();
         if (birthDate != null && birthDate.isAfter(LocalDate.now())) {
             setError(birthDateError, "Birth date cannot be in the future.");
             valid = false;
         }
 
-        // Entry date: must not be before birth date; must not be in the future
+
         LocalDate entryDate = entryDatePicker.getValue();
         if (entryDate != null) {
             if (entryDate.isAfter(LocalDate.now())) {
@@ -393,13 +402,13 @@ public class AnimalController implements Initializable {
             }
         }
 
-        // Origin: required
+
         if (originCombo.getSelectionModel().isEmpty()) {
             setError(originError, "Please select an origin.");
             valid = false;
         }
 
-        // Location: required
+
         if (locationCombo.getSelectionModel().isEmpty()) {
             setError(locationError, "Please select a location.");
             valid = false;
@@ -408,7 +417,7 @@ public class AnimalController implements Initializable {
         return valid;
     }
 
-    // ───────────────────────────────────────────────────────────
+
 
     @FXML
     private void onRefreshAnimals() {

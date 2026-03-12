@@ -13,18 +13,18 @@ public class ServiceEnumManagement {
 
     private static final Pattern ENUM_PATTERN = Pattern.compile("enum\\((.+)\\)", Pattern.CASE_INSENSITIVE);
 
-    private final Connection connection;
-
-    public ServiceEnumManagement() {
-        connection = MyDataBase.getInstance().getCnx();
+    private Connection conn() {
+        return MyDataBase.getInstance().getCnx();
     }
 
 
     public List<String> getEnumValues(String tableName, String columnName) throws SQLException {
-        String schema = connection.getCatalog();
+        Connection c = conn();
+        if (c == null) throw new SQLException("No database connection");
+        String schema = c.getCatalog();
         if (schema == null) schema = "agrisense-360";
         String sql = "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ?";
-        PreparedStatement ps = connection.prepareStatement(sql);
+        PreparedStatement ps = c.prepareStatement(sql);
         ps.setString(1, schema);
         ps.setString(2, tableName);
         ps.setString(3, columnName);
@@ -62,29 +62,35 @@ public class ServiceEnumManagement {
     }
 
     public int countAnimalsWithType(String type) throws SQLException {
+        Connection c = conn();
+        if (c == null) throw new SQLException("No database connection");
         String sql = "SELECT COUNT(*) FROM Animal WHERE type = ?";
-        PreparedStatement ps = connection.prepareStatement(sql);
+        PreparedStatement ps = c.prepareStatement(sql);
         ps.setString(1, type);
         ResultSet rs = ps.executeQuery();
         return rs.next() ? rs.getInt(1) : 0;
     }
 
     public int countAnimalsWithLocation(String location) throws SQLException {
+        Connection c = conn();
+        if (c == null) throw new SQLException("No database connection");
         String sql = "SELECT COUNT(*) FROM Animal WHERE location = ?";
-        PreparedStatement ps = connection.prepareStatement(sql);
+        PreparedStatement ps = c.prepareStatement(sql);
         ps.setString(1, location);
         ResultSet rs = ps.executeQuery();
         return rs.next() ? rs.getInt(1) : 0;
     }
 
     private void alterEnumColumn(String tableName, String columnName, List<String> values) throws SQLException {
+        Connection c = conn();
+        if (c == null) throw new SQLException("No database connection");
         StringBuilder enumDef = new StringBuilder();
         for (int i = 0; i < values.size(); i++) {
             if (i > 0) enumDef.append(",");
             enumDef.append("'").append(values.get(i).replace("'", "''")).append("'");
         }
         String sql = "ALTER TABLE " + tableName + " MODIFY COLUMN " + columnName + " ENUM(" + enumDef + ")";
-        Statement st = connection.createStatement();
+        Statement st = c.createStatement();
         st.executeUpdate(sql);
     }
 

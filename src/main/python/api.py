@@ -1,22 +1,35 @@
 from pathlib import Path
 from datetime import date
+from typing import Optional
 
 import joblib
 import numpy as np
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel, field_validator
 
 BASE = Path(__file__).parent
-MODEL_PATH = BASE / "condition_model.pkl"
+GENERAL_MODEL_PATH = BASE / "condition_model.pkl"
+CUSTOM_MODEL_PATH  = BASE / "custom_model.pkl"
 
 app = FastAPI(title="AgriSense Condition Predictor", version="1.0.0")
 
-bundle = joblib.load(MODEL_PATH)
-model       = bundle["model"]
-le_type     = bundle["le_type"]
-le_appetite = bundle["le_appetite"]
-le_condition= bundle["le_condition"]
+general_bundle = joblib.load(GENERAL_MODEL_PATH)
+
+custom_bundle: Optional[dict] = None
+if CUSTOM_MODEL_PATH.exists():
+    custom_bundle = joblib.load(CUSTOM_MODEL_PATH)
+
+
+def get_bundle(model_name: str) -> dict:
+    if model_name == "custom":
+        if custom_bundle is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Custom model not found. Train one first from the Options tab."
+            )
+        return custom_bundle
+    return general_bundle
 
 
 class PredictionRequest(BaseModel):
@@ -26,14 +39,6 @@ class PredictionRequest(BaseModel):
     appetite: str
     record_date: date
     production: float
-
-    @field_validator("animal_type")
-    @classmethod
-    def validate_type(cls, v):
-        allowed = ["cow", "sheep", "goat"]
-        if v.lower() not in allowed:
-            raise ValueError(f"animal_type must be one of {allowed}")
-        return v.lower()
 
     @field_validator("appetite")
     @classmethod
@@ -50,6 +55,11 @@ class PredictionRequest(BaseModel):
             raise ValueError("vaccinated must be 0 or 1")
         return v
 
+    @field_validator("animal_type")
+    @classmethod
+    def normalize_type(cls, v):
+        return v.lower()
+
 
 class PredictionResponse(BaseModel):
     condition: str
@@ -57,7 +67,13 @@ class PredictionResponse(BaseModel):
 
 
 @app.post("/predict", response_model=PredictionResponse)
-def predict(req: PredictionRequest):
+def predict(req: PredictionRequest, model: str = Query(default="general")):
+    bundle = get_bundle(model)
+    mdl        = bundle["model"]
+    le_type     = bundle["le_type"]
+    le_appetite = bundle["le_appetite"]
+    le_condition= bundle["le_condition"]
+
     try:
         type_enc     = le_type.transform([req.animal_type])[0]
         appetite_enc = le_appetite.transform([req.appetite])[0]
@@ -76,10 +92,10 @@ def predict(req: PredictionRequest):
         req.production,
     ]])
 
-    pred_enc   = model.predict(X)[0]
-    proba      = model.predict_proba(X)[0]
-    condition  = le_condition.inverse_transform([pred_enc])[0]
-    prob_dict  = {
+    pred_enc  = mdl.predict(X)[0]
+    proba     = mdl.predict_proba(X)[0]
+    condition = le_condition.inverse_transform([pred_enc])[0]
+    prob_dict = {
         le_condition.classes_[i]: round(float(proba[i]), 4)
         for i in range(len(le_condition.classes_))
     }
@@ -89,13 +105,25 @@ def predict(req: PredictionRequest):
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "model": "condition_model.pkl"}
+    return {
+        "status": "ok",
+        "general_model": GENERAL_MODEL_PATH.exists(),
+        "custom_model": CUSTOM_MODEL_PATH.exists(),
+    }
+
+
+@app.get("/custom_model_available")
+def custom_model_available():
+    return {"available": CUSTOM_MODEL_PATH.exists()}
 
 
 @app.get("/classes")
 def get_classes():
+    le_condition = general_bundle["le_condition"]
+    le_type      = general_bundle["le_type"]
+    le_appetite  = general_bundle["le_appetite"]
     return {
-        "conditions": list(le_condition.classes_),
+        "conditions":   list(le_condition.classes_),
         "animal_types": list(le_type.classes_),
-        "appetites": list(le_appetite.classes_),
+        "appetites":    list(le_appetite.classes_),
     }

@@ -498,6 +498,18 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);
 }
 
+.ai-condition-badge-batch {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 0;
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-pref-width: 68px;
+    -fx-min-width: 68px;
+    -fx-max-width: 68px;
+    -fx-alignment: center;
+}
+
 .ai-condition-badge-healthy {
     -fx-background-color: linear-gradient(to right, #2e7d32, #43a047);
 }
@@ -546,4 +558,75 @@
     -fx-font-size: 12px;
     -fx-text-fill: rgba(35, 48, 27, 0.55);
     -fx-font-weight: bold;
+}
+
+.stats-kpi-card {
+    -fx-background-color: white;
+    -fx-background-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.09), 18, 0, 0, 4);
+    -fx-border-color: rgba(43, 59, 31, 0.09);
+    -fx-border-width: 1;
+    -fx-border-radius: 14px;
+    -fx-padding: 22 20;
+}
+
+.stats-kpi-card-danger {
+    -fx-background-color: white;
+    -fx-background-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(229,57,53,0.14), 18, 0, 0, 4);
+    -fx-border-color: rgba(229, 57, 53, 0.22);
+    -fx-border-width: 1;
+    -fx-border-radius: 14px;
+    -fx-padding: 22 20;
+}
+
+.stats-kpi-value {
+    -fx-font-size: 38px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e2d17;
+}
+
+.stats-kpi-value-danger {
+    -fx-font-size: 38px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e53935;
+}
+
+.stats-kpi-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(35, 48, 27, 0.55);
+    -fx-font-weight: bold;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: rgba(43, 59, 31, 0.06);
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: rgba(43, 59, 31, 0.06);
+}
+
+.chart-vertical-zero-line,
+.chart-horizontal-zero-line {
+    -fx-stroke: rgba(43, 59, 31, 0.15);
+}
+
+.axis {
+    -fx-tick-label-fill: rgba(35, 48, 27, 0.60);
+    -fx-font-size: 11px;
+}
+
+.chart-title {
+    -fx-text-fill: #1e2d17;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-font-size: 11px;
 }

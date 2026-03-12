@@ -14,39 +14,40 @@
         </padding>
 
         <VBox spacing="2">
-            <Label text="Types &amp; Locations" styleClass="mgmt-form-title"/>
-            <Label text="Add or remove animal types and locations" styleClass="mgmt-form-subtitle"/>
+            <Label text="Types &amp; Emplacements" styleClass="mgmt-form-title"/>
+            <Label text="Ajouter ou supprimer des types d'animaux et des emplacements" styleClass="mgmt-form-subtitle"/>
         </VBox>
 
         <HBox spacing="24">
 
-            <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS">
+            <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS" maxHeight="Infinity">
                 <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
-                    <Label text="Animal Types" styleClass="mgmt-form-title"/>
+                    <Label text="Types d'Animaux" styleClass="mgmt-form-title"/>
                 </HBox>
-                <VBox styleClass="mgmt-form-body" spacing="14">
-                    <ListView fx:id="typesList" styleClass="mgmt-list-view" prefHeight="180"/>
+                <VBox styleClass="mgmt-form-body" spacing="14" VBox.vgrow="ALWAYS">
+                    <ListView fx:id="typesList" styleClass="mgmt-list-view" prefHeight="180" VBox.vgrow="ALWAYS"/>
                     <HBox spacing="8" alignment="CENTER_LEFT">
-                        <ComboBox fx:id="animalTypeCombo" promptText="Loading farm animals..."
+                        <ComboBox fx:id="animalTypeCombo" promptText="Sélectionner ou saisir un type..."
+                                  editable="true"
                                   styleClass="mgmt-combo" HBox.hgrow="ALWAYS" maxWidth="Infinity" visibleRowCount="10"/>
-                        <Button text="Add" onAction="#onAddType" styleClass="mgmt-btn-primary"/>
+                        <Button text="Ajouter" onAction="#onAddType" styleClass="mgmt-btn-primary"/>
                     </HBox>
-                    <Button fx:id="deleteTypeBtn" text="Delete Selected Type" onAction="#onDeleteType"
+                    <Button fx:id="deleteTypeBtn" text="Supprimer le Type Sélectionné" onAction="#onDeleteType"
                             styleClass="mgmt-btn-danger" disable="true" maxWidth="Infinity"/>
                 </VBox>
             </VBox>
 
-            <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS">
+            <VBox styleClass="mgmt-form-card" spacing="0" HBox.hgrow="ALWAYS" maxHeight="Infinity">
                 <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
-                    <Label text="Locations" styleClass="mgmt-form-title"/>
+                    <Label text="Emplacements" styleClass="mgmt-form-title"/>
                 </HBox>
-                <VBox styleClass="mgmt-form-body" spacing="14">
-                    <ListView fx:id="locationsList" styleClass="mgmt-list-view" prefHeight="180"/>
+                <VBox styleClass="mgmt-form-body" spacing="14" VBox.vgrow="ALWAYS">
+                    <ListView fx:id="locationsList" styleClass="mgmt-list-view" prefHeight="180" VBox.vgrow="ALWAYS"/>
                     <HBox spacing="8" alignment="CENTER_LEFT">
-                        <TextField fx:id="newLocationField" promptText="New location name..." styleClass="mgmt-input" HBox.hgrow="ALWAYS"/>
-                        <Button text="Add" onAction="#onAddLocation" styleClass="mgmt-btn-primary"/>
+                        <TextField fx:id="newLocationField" promptText="Nom du nouvel emplacement..." styleClass="mgmt-input" HBox.hgrow="ALWAYS"/>
+                        <Button text="Ajouter" onAction="#onAddLocation" styleClass="mgmt-btn-primary"/>
                     </HBox>
-                    <Button fx:id="deleteLocationBtn" text="Delete Selected Location" onAction="#onDeleteLocation"
+                    <Button fx:id="deleteLocationBtn" text="Supprimer l'Emplacement Sélectionné" onAction="#onDeleteLocation"
                             styleClass="mgmt-btn-danger" disable="true" maxWidth="Infinity"/>
                 </VBox>
             </VBox>
@@ -56,26 +57,26 @@
         <VBox styleClass="mgmt-form-card" spacing="0">
             <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
                 <VBox spacing="3">
-                    <Label text="Vet Email Report" styleClass="mgmt-form-title"/>
-                    <Label text="Send a health status report to your veterinarian" styleClass="mgmt-form-subtitle"/>
+                    <Label text="Rapport Email Vétérinaire" styleClass="mgmt-form-title"/>
+                    <Label text="Envoyer un rapport de santé à votre vétérinaire" styleClass="mgmt-form-subtitle"/>
                 </VBox>
             </HBox>
             <VBox styleClass="mgmt-form-body" spacing="14">
 
                 <GridPane hgap="16" vgap="10">
-                    <Label text="Vet Email" styleClass="mgmt-form-label"
+                    <Label text="Email Vétérinaire" styleClass="mgmt-form-label"
                            GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="CENTER"/>
                     <TextField fx:id="vetEmailField" promptText=""
                                styleClass="mgmt-input" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="280"/>
                 </GridPane>
 
-                <Label text="Additional Notes" styleClass="mgmt-form-label"/>
+                <Label text="Notes Supplémentaires" styleClass="mgmt-form-label"/>
                 <TextArea fx:id="notesArea"
-                          promptText="Any other observations or comments you want to add?"
+                          promptText="D'autres observations ou commentaires à ajouter ?"
                           styleClass="mgmt-input" prefHeight="100" wrapText="true"/>
 
                 <HBox spacing="14" alignment="CENTER_LEFT">
-                    <Button text="Send Report" onAction="#onSendVetReport" styleClass="mgmt-btn-primary"/>
+                    <Button text="Envoyer le Rapport" onAction="#onSendVetReport" styleClass="mgmt-btn-primary"/>
                     <Label fx:id="emailStatusLabel" styleClass="mgmt-form-subtitle"/>
                 </HBox>
 
@@ -85,25 +86,52 @@
         <VBox styleClass="mgmt-form-card" spacing="0">
             <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
                 <VBox spacing="3">
-                    <Label text="Custom Model Training" styleClass="mgmt-form-title"/>
-                    <Label text="You can use your own data to make a better predictions for your own farm" styleClass="mgmt-form-subtitle"/>
+                    <Label text="Entraînement du Modèle Personnalisé" styleClass="mgmt-form-title"/>
+                    <Label text="Utilisez vos propres données pour de meilleures prédictions pour votre ferme" styleClass="mgmt-form-subtitle"/>
                 </VBox>
             </HBox>
             <VBox styleClass="mgmt-form-body" spacing="14">
 
                 <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Label text="Health records in database:" styleClass="mgmt-form-label"/>
+                    <Label text="Dossiers de santé en base :" styleClass="mgmt-form-label"/>
                     <Label fx:id="recordCountLabel" text="..." styleClass="ai-detail-value"/>
                 </HBox>
 
                 <Label fx:id="trainInfoLabel" text="" styleClass="mgmt-form-subtitle" wrapText="true"/>
 
                 <HBox spacing="14" alignment="CENTER_LEFT">
-                    <Button fx:id="trainModelBtn" text="Export Data &amp; Retrain Model"
+                    <Button fx:id="trainModelBtn" text="Exporter &amp; Réentraîner le Modèle"
                             onAction="#onTrainModel" styleClass="mgmt-btn-primary" disable="true"/>
                     <Label fx:id="trainStatusLabel" text="" styleClass="mgmt-form-subtitle" wrapText="true"/>
                 </HBox>
 
+            </VBox>
+        </VBox>
+
+        <VBox styleClass="mgmt-form-card" spacing="0">
+            <HBox styleClass="mgmt-form-card-header" alignment="CENTER_LEFT" spacing="0">
+                <VBox spacing="3">
+                    <Label text="Exporter un Rapport PDF" styleClass="mgmt-form-title"/>
+                    <Label text="Choisissez les sections a inclure dans le rapport de la ferme" styleClass="mgmt-form-subtitle"/>
+                </VBox>
+            </HBox>
+            <VBox styleClass="mgmt-form-body" spacing="12">
+                <CheckBox fx:id="pdfSummaryCheck"
+                          text="Resume de la Ferme (totaux, vaccination, animaux a risque)"
+                          selected="true" styleClass="mgmt-form-label"/>
+                <CheckBox fx:id="pdfAllAnimalsCheck"
+                          text="Liste complete des animaux"
+                          selected="true" styleClass="mgmt-form-label"/>
+                <CheckBox fx:id="pdfAtRiskCheck"
+                          text="Animaux a risque (malades, blesses, critiques)"
+                          selected="true" styleClass="mgmt-form-label"/>
+                <CheckBox fx:id="pdfRecentRecordsCheck"
+                          text="Dossiers de sante recents (20 derniers)"
+                          selected="false" styleClass="mgmt-form-label"/>
+                <HBox spacing="14" alignment="CENTER_LEFT">
+                    <Button text="Generer le Rapport PDF" onAction="#onExportPdf" styleClass="mgmt-btn-primary"/>
+                    <Label fx:id="pdfStatusLabel" text="" styleClass="mgmt-form-subtitle" wrapText="true"/>
+                </HBox>
             </VBox>
         </VBox>
 

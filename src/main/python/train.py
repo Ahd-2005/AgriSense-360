@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
@@ -67,7 +68,8 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 
-clf = RandomForestClassifier(n_estimators=200, max_depth=12, random_state=42, n_jobs=-1)
+clf = RandomForestClassifier(n_estimators=200, max_depth=12, random_state=42, n_jobs=-1,
+                             class_weight='balanced')
 clf.fit(X_train, y_train)
 
 y_pred = clf.predict(X_test)
@@ -87,6 +89,6 @@ bundle = {
     "feature_names": FEATURES,
 }
 
-model_path = BASE / "condition_model.pkl"
+model_path = BASE / ("custom_model.pkl" if "--custom" in sys.argv else "condition_model.pkl")
 joblib.dump(bundle, model_path)
 print(f"\nModel saved to {model_path}")

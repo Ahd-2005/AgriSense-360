@@ -11,9 +11,11 @@ import javafx.scene.control.*;
 import services.ServiceAnimal;
 import services.ServiceAnimalHealthRecord;
 import services.ServiceEnumManagement;
+import services.PdfReportService;
 import utils.AnimalListRefresh;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
@@ -34,7 +36,7 @@ import java.util.stream.Collectors;
 
 public class OptionsController implements Initializable {
 
-    private static final String BREVO_API_KEY = "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";
+    private static final String BREVO_API_KEY = "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";
     private static final String FROM_EMAIL     = "rinmo7620@gmail.com";
     private static final int    TRAIN_THRESHOLD = 1000;
 
@@ -54,6 +56,12 @@ public class OptionsController implements Initializable {
     @FXML private Button trainModelBtn;
     @FXML private Label trainStatusLabel;
 
+    @FXML private CheckBox pdfSummaryCheck;
+    @FXML private CheckBox pdfAllAnimalsCheck;
+    @FXML private CheckBox pdfAtRiskCheck;
+    @FXML private CheckBox pdfRecentRecordsCheck;
+    @FXML private Label pdfStatusLabel;
+
     private final ServiceEnumManagement serviceEnum = new ServiceEnumManagement();
     private final ServiceAnimal serviceAnimal = new ServiceAnimal();
     private final ServiceAnimalHealthRecord serviceAnimalHealthRecord = new ServiceAnimalHealthRecord();
@@ -70,7 +78,8 @@ public class OptionsController implements Initializable {
                 .addListener((o, old, val) -> deleteLocationBtn.setDisable(val == null));
         refreshLists();
         loadRecordCount();
-        loadAnimalTypesFromApi();
+        List<String> sorted = defaultFarmAnimals().stream().sorted().collect(Collectors.toList());
+        animalTypeCombo.getItems().setAll(sorted);
     }
 
     private void loadRecordCount() {
@@ -101,61 +110,6 @@ public class OptionsController implements Initializable {
         }
     }
 
-    private void loadAnimalTypesFromApi() {
-        Thread t = new Thread(() -> {
-            List<String> animals = fetchFarmAnimalsFromWikipedia();
-            if (animals.isEmpty()) animals = defaultFarmAnimals();
-            List<String> sorted = animals.stream().sorted().collect(Collectors.toList());
-            Platform.runLater(() -> {
-                animalTypeCombo.getItems().setAll(sorted);
-                animalTypeCombo.setPromptText("Select a farm animal...");
-            });
-        });
-        t.setDaemon(true);
-        t.start();
-    }
-
-    private List<String> fetchFarmAnimalsFromWikipedia() {
-        try {
-            String url = "https://en.wikipedia.org/w/api.php?action=query&list=categorymembers"
-                    + "&cmtitle=Category:Livestock&format=json&cmlimit=200&cmtype=page";
-            HttpRequest req = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("User-Agent", "AgriSense360/1.0")
-                    .GET()
-                    .build();
-            HttpResponse<String> resp = HttpClient.newHttpClient().send(req, HttpResponse.BodyHandlers.ofString());
-            String body = resp.body();
-
-            List<String> result = new ArrayList<>();
-            int idx = 0;
-            while ((idx = body.indexOf("\"title\":\"", idx)) != -1) {
-                idx += 9;
-                int end = body.indexOf("\"", idx);
-                String title = body.substring(idx, end);
-                if (isValidFarmAnimalName(title)) result.add(title);
-            }
-            return result.isEmpty() ? defaultFarmAnimals() : result;
-        } catch (Exception e) {
-            return defaultFarmAnimals();
-        }
-    }
-
-    private boolean isValidFarmAnimalName(String name) {
-        if (name.length() > 28) return false;
-        String lower = name.toLowerCase();
-        String[] skip = {
-            "history", "list", "industry", "production", "farm", "management",
-            "breed", "breeding", "feed", "food", "market", "trade", "husbandry",
-            "slaughter", "welfare", "disease", "agriculture", " in ", " of ", " and ",
-            "environmental", "impact", "economic", "category", "portal"
-        };
-        for (String s : skip) {
-            if (lower.contains(s)) return false;
-        }
-        return true;
-    }
-
     private List<String> defaultFarmAnimals() {
         return new ArrayList<>(Arrays.asList(
             "Alpaca", "Buffalo", "Camel", "Cattle", "Chicken", "Cow",
@@ -167,10 +121,11 @@ public class OptionsController implements Initializable {
 
     @FXML
     private void onAddType() {
-        String v = animalTypeCombo.getValue();
-        if (v == null || v.trim().isEmpty()) { showError("Select an animal type first."); return; }
+        String v = animalTypeCombo.getEditor().getText();
+        if (v == null || v.trim().isEmpty()) { showError("Select or type an animal type first."); return; }
         try {
             serviceEnum.addEnumValue("Animal", "type", v.trim());
+            animalTypeCombo.getEditor().clear();
             animalTypeCombo.setValue(null);
             refreshLists();
             AnimalListRefresh.notifyAnimalChanged();
@@ -273,7 +228,7 @@ public class OptionsController implements Initializable {
 
                 Platform.runLater(() -> setTrainStatus("Data exported. Training model...", null));
 
-                ProcessBuilder pb = new ProcessBuilder("python", "train.py");
+                ProcessBuilder pb = new ProcessBuilder("python", "train.py", "--custom");
                 pb.directory(pythonDir.toFile());
                 pb.redirectErrorStream(true);
                 Process process = pb.start();
@@ -286,6 +241,7 @@ public class OptionsController implements Initializable {
                     Platform.runLater(() -> {
                         setTrainStatus("Model trained and saved. Restart the AI server (api.py) to apply it.", true);
                         trainModelBtn.setDisable(false);
+                        AIPredictionController.notifyModelTrained();
                     });
                 }
             } catch (Exception ex) {
@@ -412,6 +368,59 @@ public class OptionsController implements Initializable {
         } else {
             trainStatusLabel.setStyle("-fx-text-fill: #e53935;");
         }
+    }
+
+    @FXML
+    private void onExportPdf() {
+        boolean summary  = pdfSummaryCheck.isSelected();
+        boolean all      = pdfAllAnimalsCheck.isSelected();
+        boolean atRisk   = pdfAtRiskCheck.isSelected();
+        boolean recent   = pdfRecentRecordsCheck.isSelected();
+
+        if (!summary && !all && !atRisk && !recent) {
+            pdfStatusLabel.setText("Selectionnez au moins une section.");
+            pdfStatusLabel.setStyle("-fx-text-fill: #e53935;");
+            return;
+        }
+
+        javafx.stage.FileChooser chooser = new javafx.stage.FileChooser();
+        chooser.setTitle("Enregistrer le Rapport PDF");
+        chooser.setInitialFileName("rapport_ferme_" + LocalDate.now() + ".pdf");
+        chooser.getExtensionFilters().add(
+                new javafx.stage.FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
+        File file = chooser.showSaveDialog(pdfSummaryCheck.getScene().getWindow());
+        if (file == null) return;
+
+        pdfStatusLabel.setText("Generation en cours...");
+        pdfStatusLabel.setStyle("-fx-text-fill: #888888;");
+
+        Thread t = new Thread(() -> {
+            try {
+                List<Animal> animals = serviceAnimal.getAll();
+                List<AnimalHealthRecord> records = recent
+                        ? serviceAnimalHealthRecord.getAll().stream()
+                                .filter(r -> r.getRecordDate() != null)
+                                .sorted((a, b) -> b.getRecordDate().compareTo(a.getRecordDate()))
+                                .limit(20)
+                                .collect(Collectors.toList())
+                        : new ArrayList<>();
+
+                new PdfReportService().generateFarmReport(
+                        summary, all, atRisk, recent, animals, records, file);
+
+                Platform.runLater(() -> {
+                    pdfStatusLabel.setText("Rapport genere : " + file.getName());
+                    pdfStatusLabel.setStyle("-fx-text-fill: #2e7d32;");
+                });
+            } catch (Exception ex) {
+                Platform.runLater(() -> {
+                    pdfStatusLabel.setText("Erreur : " + ex.getMessage());
+                    pdfStatusLabel.setStyle("-fx-text-fill: #e53935;");
+                });
+            }
+        });
+        t.setDaemon(true);
+        t.start();
     }
 
     private void showInfo(String msg)  { new Alert(Alert.AlertType.INFORMATION, msg).showAndWait(); }
