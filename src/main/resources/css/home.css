@@ -46,8 +46,8 @@
 
 .hero-stack {
     -fx-min-height: 0;
-    -fx-pref-height: USE_COMPUTED_SIZE;
-    -fx-max-height: USE_PREF_SIZE;
+    -fx-pref-height: -1;
+    -fx-max-height: -1;
 }
 
 .hero-bg-overlay {

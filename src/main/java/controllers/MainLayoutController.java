@@ -65,6 +65,8 @@ public class MainLayoutController {
     @FXML private Button editprodBtn;
     @FXML private Button btnBOS;
     @FXML private Button exchangeRateBtn;
+    @FXML private Button farmBtn;
+    @FXML private Button recruitmentBtn;
 
     @FXML private Label homeLabel;
     @FXML private Label animalsLabel;
@@ -79,8 +81,9 @@ public class MainLayoutController {
     @FXML private Button ouvrierBtn;
     @FXML private Label ouvrierLabel;
     @FXML private Label exchangeRateLabel;
-    @FXML private Button farmBtn;
-    @FXML private Label  farmLabel;
+    @FXML private Label farmLabel;
+    @FXML private Label recruitmentLabel;
+
     @FXML private Label stockAlertBadge;
 
     private boolean badgeFermeParUtilisateur = false;
@@ -450,7 +453,12 @@ public class MainLayoutController {
             case ROLE_ADMIN:
                 showButton(homeBtn, homeLabel);
                 showButton(usersBtn, usersLabel);
-                btnBOS.setVisible(true); btnBOS.setManaged(true);   // ← only admin sees Backoffice Stock
+                break;
+
+            case ROLE_OWNER:
+                showButton(homeBtn, homeLabel);
+                showButton(farmBtn, farmLabel);
+                showButton(recruitmentBtn, recruitmentLabel);
                 break;
 
             case ROLE_GERANT:
@@ -461,25 +469,20 @@ public class MainLayoutController {
                 showButton(cultureBtn, cultureLabel);
                 showButton(workersBtn, workersLabel);
                 showButton(ouvrierBtn, ouvrierLabel);
+                // ROLE_GERANT can also see their assigned farm
+                showButton(farmBtn, farmLabel);
                 break;
 
             case ROLE_OUVRIER:
                 showButton(homeBtn, homeLabel);
                 homeLabel.setText("Mes Tâches");
+                // S'assurer que btnBOS est aussi caché
                 setVisible(btnBOS, false);
                 break;
 
-            case ROLE_OWNER:
-                showButton(homeBtn, homeLabel);
-                showButton(farmBtn, farmLabel);          // ← NEW: My Farms button
-                showButton(ouvrierBtn, ouvrierLabel);    // ouvriers from owner's farms
-                showButton(usersBtn, usersLabel);
-                usersLabel.setText("Candidatures");
-                break;
-
             case ROLE_PENDING:
-                // Pending users only see a waiting screen — no sidebar access
-                hideAllButtons();
+                showButton(homeBtn, homeLabel);
+                homeLabel.setText("Attente");
                 break;
 
             default:
@@ -498,7 +501,8 @@ public class MainLayoutController {
         usersBtn.setVisible(false);     usersBtn.setManaged(false);
         workersBtn.setVisible(false);   workersBtn.setManaged(false);
         ouvrierBtn.setVisible(false);   ouvrierBtn.setManaged(false);
-        btnBOS.setVisible(false);       btnBOS.setManaged(false);   // ← NEW
+        farmBtn.setVisible(false);      farmBtn.setManaged(false);
+        recruitmentBtn.setVisible(false); recruitmentBtn.setManaged(false);
     }
 
     private void showButton(Button button, Label label) {
@@ -575,9 +579,10 @@ public class MainLayoutController {
         if (usersBtn.isVisible())     { usersLabel.setVisible(true);     usersLabel.setManaged(true); }
         if (workersBtn.isVisible())   { workersLabel.setVisible(true);   workersLabel.setManaged(true); }
         if (ouvrierBtn.isVisible())   { ouvrierLabel.setVisible(true);   ouvrierLabel.setManaged(true); }
+        if (farmBtn.isVisible())      { farmLabel.setVisible(true);      farmLabel.setManaged(true); }
+        if (recruitmentBtn.isVisible()) { recruitmentLabel.setVisible(true); recruitmentLabel.setManaged(true); }
         profileLabel.setVisible(true); profileLabel.setManaged(true);
         logoutLabel.setVisible(true);  logoutLabel.setManaged(true);
-        if (farmBtn.isVisible()) { farmLabel.setVisible(true); farmLabel.setManaged(true); }
     }
 
     private void hideAllLabels() {
@@ -591,7 +596,8 @@ public class MainLayoutController {
         profileLabel.setVisible(false);   profileLabel.setManaged(false);
         logoutLabel.setVisible(false);    logoutLabel.setManaged(false);
         ouvrierLabel.setVisible(false);   ouvrierLabel.setManaged(false);
-        farmLabel.setVisible(false); farmLabel.setManaged(false);
+        farmLabel.setVisible(false);     farmLabel.setManaged(false);
+        recruitmentLabel.setVisible(false); recruitmentLabel.setManaged(false);
     }
 
     @FXML
@@ -600,14 +606,6 @@ public class MainLayoutController {
             switch (currentUser.getRole()) {
                 case ROLE_OUVRIER:
                     loadContent("/fxml/mes_taches.fxml");
-                    break;
-                case ROLE_OWNER:
-                    loadContent("/fxml/OwnerFarm.fxml");     // ← owner lands on their farm dashboard
-                    break;
-
-                case ROLE_PENDING:
-                    // Pending users browse farms to apply to
-                    loadContent("/fxml/FarmList.fxml");
                     break;
                 case ROLE_ADMIN:
                 case ROLE_GERANT:
@@ -654,7 +652,7 @@ public class MainLayoutController {
     @FXML
     public void navigateToProductList() {
         loadContent("/fxml/ProductList.fxml");
-        // setActiveButton(ProdBtn);
+       // setActiveButton(ProdBtn);
     }
 
     @FXML
@@ -666,7 +664,7 @@ public class MainLayoutController {
     @FXML
     public void navigateToEditProduct() {
         loadContent("/fxml/ModifProd.fxml");
-        // setActiveButton(editprodBtn);
+       // setActiveButton(editprodBtn);
     }
 
     @FXML
@@ -743,12 +741,7 @@ public class MainLayoutController {
 
     @FXML
     public void navigateToUsers() {
-        if (currentUser != null && currentUser.getRole() == Role.ROLE_OWNER) {
-            // ✅ Owner sees pending applications instead of admin dashboard
-            loadContent("/fxml/PendingApplications.fxml");
-        } else {
-            loadContent("/fxml/AdminDashboard.fxml");
-        }
+        loadContent("/fxml/AdminDashboard.fxml");
         setActiveButton(usersBtn);
     }
 
@@ -762,6 +755,18 @@ public class MainLayoutController {
     public void navigateToOuvrier() {
         loadContent("/fxml/OuvrierManagement.fxml");
         setActiveButton(ouvrierBtn);
+    }
+
+    @FXML
+    public void navigateToOwnerFarms() {
+        loadContent("/fxml/OwnerFarm.fxml");
+        setActiveButton(farmBtn);
+    }
+
+    @FXML
+    private void navigateToRecruitment() {
+        loadContent("/fxml/PendingApplications.fxml");
+        setActiveButton(recruitmentBtn);
     }
 
     @FXML
@@ -785,14 +790,6 @@ public class MainLayoutController {
         loadContent("/fxml/GerantProfile.fxml");
         setActiveButton(profileBtn);
     }
-    @FXML
-    public void navigateToOwnerFarms() {
-        loadContent("/fxml/OwnerFarm.fxml");
-        setActiveButton(farmBtn);
-    }
-
-
-
 
     /**
      * Load Face ID verification page inside contentArea.

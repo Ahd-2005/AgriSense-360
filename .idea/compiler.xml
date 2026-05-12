@@ -15,12 +15,8 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="Agritech" options="" />
-    </option>
-  </component>
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="AgriSense-360" options="--add-reads com.example.agrisens360=ALL-UNNAMED" />
+      <module name="agrisens360" options="--add-reads com.example.agrisens360=ALL-UNNAMED" />
     </option>
   </component>
 </project>

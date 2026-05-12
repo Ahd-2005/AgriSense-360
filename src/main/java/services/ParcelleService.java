@@ -13,7 +13,7 @@ public class ParcelleService {
 
     // CREATE - Initialize surface_restant = surface
     public void addParcelle(Parcelle p) throws SQLException {
-        String sql = "INSERT INTO parcelle (nom, surface, surface_restant, localisation, type_sol, statut) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO parcelle (nom, surface, surface_restant, localisation, type_sol, statut, farm_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, p.getNom());
         ps.setDouble(2, p.getSurface());
@@ -21,6 +21,8 @@ public class ParcelleService {
         ps.setString(4, p.getLocalisation());
         ps.setString(5, p.getTypeSol());
         ps.setString(6, "Libre");
+        if (p.getFarmId() != null) ps.setInt(7, p.getFarmId());
+        else ps.setNull(7, Types.INTEGER);
         ps.executeUpdate();
     }
 
@@ -38,7 +40,30 @@ public class ParcelleService {
                     rs.getDouble("surface"),
                     rs.getString("localisation"),
                     rs.getString("type_sol"),
-                    rs.getString("statut")
+                    rs.getString("statut"),
+                    rs.getObject("farm_id") != null ? rs.getInt("farm_id") : null
+            );
+            list.add(p);
+        }
+        return list;
+    }
+
+    public List<Parcelle> getParcellesByFarm(int farmId) throws SQLException {
+        List<Parcelle> list = new ArrayList<>();
+        String sql = "SELECT * FROM parcelle WHERE farm_id = ?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, farmId);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Parcelle p = new Parcelle(
+                    rs.getInt("id"),
+                    rs.getString("nom"),
+                    rs.getDouble("surface"),
+                    rs.getString("localisation"),
+                    rs.getString("type_sol"),
+                    rs.getString("statut"),
+                    rs.getObject("farm_id") != null ? rs.getInt("farm_id") : null
             );
             list.add(p);
         }

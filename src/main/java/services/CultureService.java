@@ -80,6 +80,25 @@ public class CultureService {
         return list;
     }
 
+    public List<Culture> getCulturesByFarm(int farmId) throws SQLException {
+        List<Culture> list = new ArrayList<>();
+        String sql = "SELECT c.* FROM culture c " +
+                     "JOIN parcelle p ON c.parcelle_id = p.id " +
+                     "WHERE p.farm_id = ?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, farmId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            list.add(new Culture(
+                    rs.getInt("id"), rs.getString("nom"), rs.getString("type_culture"),
+                    rs.getDate("date_plantation"), rs.getDate("date_recolte"),
+                    rs.getString("etat"), rs.getInt("parcelle_id"),
+                    rs.getDouble("surface"), rs.getString("img")
+            ));
+        }
+        return list;
+    }
+
     // UPDATE
     public void updateCulture(Culture c) throws SQLException {
         Connection conn = null;

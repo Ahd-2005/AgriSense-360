@@ -9,130 +9,148 @@ import java.util.Base64;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-/**
- * CameraService — zero-disk-I/O webcam streaming.
- *
- * Spawns ONE Python process running camera_capture_script.py in stream mode.
- * Python prints base64-encoded JPEG frames line by line to stdout.
- * Java reads them directly via BufferedReader — no temp files, no lag.
- */
 public class CameraService {
 
-    private static final String PYTHON     = "python";
-    private static final String SCRIPT     = "camera_capture_script.py";
-
-    private Process       streamProcess;
+    private Process        streamProcess;
     private BufferedReader stdoutReader;
-    private Thread        previewThread;
-    private Thread        captureThread;
+    private Thread         previewThread;
     private final AtomicBoolean previewRunning = new AtomicBoolean(false);
     private volatile boolean    cameraReady    = false;
 
-    // ── Open: spawn Python stream process ────────────────
+    private static String extractScriptToTemp(String scriptName) throws Exception {
+        try {
+            String exeDir = new File(
+                    CameraService.class.getProtectionDomain()
+                            .getCodeSource().getLocation().toURI()
+            ).getParentFile().getAbsolutePath();
+            File f = new File(exeDir, scriptName);
+            if (f.exists()) return f.getAbsolutePath();
+            File up = new File(exeDir + File.separator + ".." + File.separator + scriptName);
+            if (up.exists()) return up.getCanonicalPath();
+        } catch (Exception ignored) {}
+
+        InputStream in = CameraService.class.getResourceAsStream("/scripts/" + scriptName);
+        if (in != null) {
+            Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"), "agrisense_scripts");
+            Files.createDirectories(tempDir);
+            Path dest = tempDir.resolve(scriptName);
+            Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
+            in.close();
+            System.out.println("[CameraService] Script extracted to: " + dest);
+            return dest.toAbsolutePath().toString();
+        }
+        return scriptName;
+    }
+
+    private static String resolvePython() {
+        String fromEnv = System.getenv("PYTHON_EXE");
+        if (fromEnv != null && !fromEnv.isBlank()) return fromEnv.trim();
+        String[] candidates = {
+                "C:\\Program Files\\Python313\\python.exe",
+                "C:\\Program Files\\Python312\\python.exe",
+                "C:\\Program Files\\Python311\\python.exe",
+                "C:\\Program Files\\Python310\\python.exe",
+                "C:\\Python313\\python.exe",
+                "C:\\Python312\\python.exe",
+                "C:\\Python310\\python.exe",
+                "C:\\Python39\\python.exe",
+        };
+        for (String c : candidates) { if (new File(c).exists()) return c; }
+        return "python";
+    }
+
     public boolean open() {
         try {
-            ProcessBuilder pb = new ProcessBuilder(PYTHON, SCRIPT, "stream");
-            pb.redirectErrorStream(false);   // keep stdout and stderr separate
+            String python = resolvePython();
+            String script = extractScriptToTemp("camera_capture_script.py");
+            System.out.println("[CameraService] Python: " + python);
+            System.out.println("[CameraService] Script: " + script);
+
+            ProcessBuilder pb = new ProcessBuilder(python, script, "stream");
+            pb.redirectErrorStream(false);
             streamProcess = pb.start();
+            stdoutReader = new BufferedReader(new InputStreamReader(streamProcess.getInputStream()));
 
-            stdoutReader = new BufferedReader(
-                    new InputStreamReader(streamProcess.getInputStream()));
-
-            // Wait for "READY" signal (max 8 seconds)
             long deadline = System.currentTimeMillis() + 8000;
             String line;
             while (System.currentTimeMillis() < deadline) {
                 if (stdoutReader.ready()) {
                     line = stdoutReader.readLine();
                     if (line == null) break;
-                    if (line.startsWith("ERROR")) {
-                        System.err.println("Camera script: " + line);
-                        return false;
-                    }
-                    if (line.equals("READY")) {
-                        cameraReady = true;
-                        return true;
-                    }
+                    if (line.startsWith("ERROR")) { System.err.println("Camera: " + line); return false; }
+                    if (line.equals("READY")) { cameraReady = true; return true; }
                 }
                 Thread.sleep(100);
             }
             System.err.println("Camera: timed out waiting for READY");
             return false;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        } catch (Exception e) { e.printStackTrace(); return false; }
     }
 
-    // ── Start preview: read base64 lines → JavaFX Image ──
     public void startPreview(Consumer<Image> imageConsumer) {
         if (!cameraReady) return;
         previewRunning.set(true);
-
         previewThread = new Thread(() -> {
             try {
                 String line;
                 while (previewRunning.get() && (line = stdoutReader.readLine()) != null) {
                     if (line.startsWith("ERROR") || line.startsWith("OK")) continue;
-
                     byte[] jpegBytes = Base64.getDecoder().decode(line);
-                    // Wrap bytes in stream for JavaFX Image
-                    ByteArrayInputStream bis = new ByteArrayInputStream(jpegBytes);
-                    Image img = new Image(bis, 480, 360, true, false);
-
+                    Image img = new Image(new ByteArrayInputStream(jpegBytes), 480, 360, true, false);
                     Platform.runLater(() -> imageConsumer.accept(img));
                 }
-            } catch (IOException e) {
-                if (previewRunning.get()) e.printStackTrace();
-            }
+            } catch (IOException e) { if (previewRunning.get()) e.printStackTrace(); }
         });
         previewThread.setDaemon(true);
         previewThread.start();
     }
 
-    // ── Capture one high-res snapshot ────────────────────
-    // Stops streaming first, runs a separate capture process
     public String captureAndSave() {
-        // Pause preview so camera isn't held by two processes
         previewRunning.set(false);
         if (previewThread != null) previewThread.interrupt();
         stopProcess();
 
         try {
-            Path tmp = Files.createTempDirectory("agrisense_snap_");
-            String outPath = tmp.resolve("snap_" + System.currentTimeMillis() + ".png")
+            Path tmpDir = Files.createTempDirectory("agrisense_snap_");
+            // ✅ We pass .png path but script now saves as .jpg (always 3-channel)
+            String requestedPath = tmpDir.resolve("snap_" + System.currentTimeMillis() + ".png")
                     .toAbsolutePath().toString();
-
-            // Small delay so Windows releases the camera
             Thread.sleep(600);
 
-            ProcessBuilder pb = new ProcessBuilder(
-                    PYTHON, SCRIPT, "capture", "--output", outPath);
+            String python = resolvePython();
+            String script = extractScriptToTemp("camera_capture_script.py");
+
+            ProcessBuilder pb = new ProcessBuilder(python, script, "capture", "--output", requestedPath);
             pb.redirectErrorStream(true);
             Process p = pb.start();
 
-            // Read output for error checking
-            try (BufferedReader r = new BufferedReader(
-                    new InputStreamReader(p.getInputStream()))) {
+            String actualPath = null;
+            try (BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
                 String line;
                 while ((line = r.readLine()) != null) {
                     System.out.println("[capture] " + line);
                     if (line.startsWith("ERROR")) return null;
+                    // ✅ Script prints "OK:<actual_path>" — extract the real saved path
+                    if (line.startsWith("OK:")) {
+                        actualPath = line.substring(3).trim();
+                    }
                 }
             }
             p.waitFor();
 
-            File f = new File(outPath);
-            return f.exists() ? outPath : null;
+            // Return the actual saved path (may be .jpg instead of .png)
+            if (actualPath != null && new File(actualPath).exists()) {
+                return actualPath;
+            }
+            // Fallback: check if .jpg version exists
+            File jpgFile = new File(requestedPath.replace(".png", ".jpg"));
+            if (jpgFile.exists()) return jpgFile.getAbsolutePath();
 
-        } catch (Exception e) {
-            e.printStackTrace();
             return null;
-        }
+
+        } catch (Exception e) { e.printStackTrace(); return null; }
     }
 
-    // ── Stop everything ───────────────────────────────────
     public void stop() {
         previewRunning.set(false);
         cameraReady = false;
@@ -141,9 +159,7 @@ public class CameraService {
     }
 
     private void stopProcess() {
-        if (streamProcess != null && streamProcess.isAlive()) {
-            streamProcess.destroyForcibly();
-        }
+        if (streamProcess != null && streamProcess.isAlive()) streamProcess.destroyForcibly();
     }
 
     public boolean isOpen() {

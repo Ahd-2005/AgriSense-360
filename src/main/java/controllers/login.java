@@ -69,7 +69,7 @@ public class login {
             user loggedInUser = service.login(email, password);
 
             if (loggedInUser != null) {
-                if ("BLOCKED".equals(loggedInUser.getStatus())) {
+                if ("blocked".equals(loggedInUser.getStatus())) {
                     showError(loginError, "❌ Votre compte a été bloqué. Contactez l'administrateur.");
                     return;
                 }
@@ -131,23 +131,50 @@ public class login {
             SessionManager sessionManager = SessionManager.getInstance();
             sessionManager.createSession(loggedInUser);
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainLayout.fxml"));
+            String fxmlPath;
+            String title;
+            Object controller = null;
+
+            if ("pending".equals(loggedInUser.getStatus()) && loggedInUser.getFarmId() != null) {
+                // Application submitted, waiting for owner
+                fxmlPath = "/fxml/PendingWaiting.fxml";
+                title = "En attente d'approbation - AgriSense 360";
+            } else if (loggedInUser.getRole() == user.Role.ROLE_PENDING) {
+                // No application submitted yet
+                fxmlPath = "/fxml/FarmList.fxml";
+                title = "Choisir une ferme - AgriSense 360";
+            } else {
+                // Fully active user (Owner or Approved Gerant/Ouvrier)
+                fxmlPath = "/fxml/MainLayout.fxml";
+                title = "AgriSense 360 - Dashboard";
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
 
-            MainLayoutController mainController = loader.getController();
-            mainController.configureForUserRole(loggedInUser.getRole());
-            mainController.setCurrentUser(loggedInUser);
+            // Init data for non-main layouts
+            if (fxmlPath.contains("PendingWaiting")) {
+                PendingWaitingController pwc = loader.getController();
+                pwc.initData(loggedInUser);
+            } else if (fxmlPath.contains("FarmList")) {
+                FarmListController flc = loader.getController();
+                flc.initData(loggedInUser);
+            } else if (fxmlPath.contains("MainLayout")) {
+                MainLayoutController mainController = loader.getController();
+                mainController.configureForUserRole(loggedInUser.getRole());
+                mainController.setCurrentUser(loggedInUser);
+            }
 
             Stage stage = (Stage) emailField.getScene().getWindow();
             Scene scene = new Scene(root, 1400, 800);
             stage.setScene(scene);
-            stage.setTitle("AgriSense 360 - Dashboard");
+            stage.setTitle(title);
             stage.centerOnScreen();
             stage.show();
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
-            showError(loginError, "❌ Impossible de créer la session");
+            showError(loginError, "❌ Impossible de créer la session: " + e.getMessage());
         }
     }
 

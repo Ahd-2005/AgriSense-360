@@ -82,9 +82,15 @@ public class DashboardCultureController {
 
     @FXML
     public void initialize() {
+        entity.user currentUser = services.SessionManager.getInstance().getCurrentUser();
         try {
-            allCultures = cultureService.getAllCultures();
-            allParcelles = parcelleService.getAllParcelles();
+            if (currentUser != null && currentUser.getFarmId() != null) {
+                allCultures = cultureService.getCulturesByFarm(currentUser.getFarmId());
+                allParcelles = parcelleService.getParcellesByFarm(currentUser.getFarmId());
+            } else {
+                allCultures = cultureService.getAllCultures();
+                allParcelles = parcelleService.getAllParcelles();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             allCultures = new ArrayList<>();

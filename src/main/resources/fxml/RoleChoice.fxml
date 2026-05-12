@@ -25,8 +25,36 @@
             <Label text="Quel est votre rôle dans l'exploitation ?"
                    style="-fx-font-size: 15px; -fx-text-fill: #546e7a;" />
 
-            <!-- Les deux cartes de choix -->
-            <HBox alignment="CENTER" spacing="30">
+            <!-- Les trois cartes de choix -->
+            <HBox alignment="CENTER" spacing="20">
+
+                <!-- Carte PROPRIÉTAIRE -->
+                <VBox alignment="CENTER" spacing="15"
+                      style="-fx-background-color: white;
+                             -fx-background-radius: 15;
+                             -fx-border-radius: 15;
+                             -fx-border-color: #FF9800;
+                             -fx-border-width: 2;
+                             -fx-padding: 30 35;
+                             -fx-cursor: hand;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+
+                    <Label text="🏡"
+                           style="-fx-font-size: 50px;" />
+
+                    <Label text="Propriétaire"
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #E65100;" />
+
+                    <Label text="Posséder une ferme,&#10;recruter des gérants"
+                           style="-fx-font-size: 13px; -fx-text-fill: #546e7a; -fx-text-alignment: center;"
+                           wrapText="true" />
+
+                    <Button text="Choisir Propriétaire"
+                            onAction="#chooseOwner"
+                            style="-fx-background-color: #FF9800; -fx-text-fill: white;
+                                   -fx-padding: 12 25; -fx-font-size: 14px; -fx-font-weight: bold;
+                                   -fx-background-radius: 20; -fx-cursor: hand;" />
+                </VBox>
 
                 <!-- Carte GÉRANT -->
                 <VBox alignment="CENTER" spacing="15"
@@ -35,11 +63,11 @@
                              -fx-border-radius: 15;
                              -fx-border-color: #4CAF50;
                              -fx-border-width: 2;
-                             -fx-padding: 35 45;
+                             -fx-padding: 30 35;
                              -fx-cursor: hand;
                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
 
-                    <Label text="🏢"
+                    <Label text="🧑‍💼"
                            style="-fx-font-size: 50px;" />
 
                     <Label text="Gérant"
@@ -50,10 +78,9 @@
                            wrapText="true" />
 
                     <Button text="Choisir Gérant"
-                            fx:id="gerantBtn"
                             onAction="#chooseGerant"
                             style="-fx-background-color: #4CAF50; -fx-text-fill: white;
-                                   -fx-padding: 12 30; -fx-font-size: 14px; -fx-font-weight: bold;
+                                   -fx-padding: 12 25; -fx-font-size: 14px; -fx-font-weight: bold;
                                    -fx-background-radius: 20; -fx-cursor: hand;" />
                 </VBox>
 
@@ -64,7 +91,7 @@
                              -fx-border-radius: 15;
                              -fx-border-color: #2196F3;
                              -fx-border-width: 2;
-                             -fx-padding: 35 45;
+                             -fx-padding: 30 35;
                              -fx-cursor: hand;
                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
 
@@ -79,10 +106,9 @@
                            wrapText="true" />
 
                     <Button text="Choisir Ouvrier"
-                            fx:id="ouvrierBtn"
                             onAction="#chooseOuvrier"
                             style="-fx-background-color: #2196F3; -fx-text-fill: white;
-                                   -fx-padding: 12 30; -fx-font-size: 14px; -fx-font-weight: bold;
+                                   -fx-padding: 12 25; -fx-font-size: 14px; -fx-font-weight: bold;
                                    -fx-background-radius: 20; -fx-cursor: hand;" />
                 </VBox>
             </HBox>

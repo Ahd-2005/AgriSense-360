@@ -7,14 +7,32 @@ import utils.MyDataBase;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.UUID;
 
 public class SessionManager {
     private static SessionManager instance;
-    private static final String SESSION_FILE  = "agrisense_session.dat";
-    private static final String CLOSE_TIME_FILE = "agrisense_close_time.dat"; // ← NEW
+
+    // ✅ FIX: Use AppData folder so the .exe can always read/write session files
+    private static final String APP_DATA_DIR   = getAppDataDir();
+    private static final String SESSION_FILE   = APP_DATA_DIR + File.separator + "agrisense_session.dat";
+    private static final String CLOSE_TIME_FILE = APP_DATA_DIR + File.separator + "agrisense_close_time.dat";
+
+    private static String getAppDataDir() {
+        String appData = System.getenv("APPDATA");
+        if (appData == null || appData.isBlank()) {
+            appData = System.getProperty("user.home");
+        }
+        String dir = appData + File.separator + "AgriSense360";
+        try {
+            Files.createDirectories(Paths.get(dir));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return dir;
+    }
 
     // Full session duration in DB: 7 days
     private static final long SESSION_DURATION = 7L * 24 * 60 * 60 * 1000;
@@ -57,13 +75,9 @@ public class SessionManager {
 
     // ============================================================
     // CHARGER LA SESSION AU DÉMARRAGE
-    // Extra check: if app was closed > 10 min ago → force login
     // ============================================================
     public boolean loadSavedSession() {
         try {
-            // ── 1. Check if app was closed more than 10 min ago ──
-            // ✅ FIX: Read value fully FIRST, close the reader, THEN delete
-            //    (Windows locks files that are still open — must close before delete)
             File closeTimeFile = new File(CLOSE_TIME_FILE);
             if (closeTimeFile.exists()) {
                 long closeTime = 0;
@@ -72,35 +86,33 @@ public class SessionManager {
                     if (line != null) {
                         closeTime = Long.parseLong(line.trim());
                     }
-                } // ← reader fully closed here before any file operation
+                }
 
                 long idleMs = System.currentTimeMillis() - closeTime;
                 if (idleMs > MAX_IDLE_MS) {
                     System.out.println("⏱ App fermée il y a "
                             + (idleMs / 1000 / 60) + " min → session expirée. Re-login requis.");
-                    clearAllSessionFiles(); // ← safe: reader already closed
+                    clearAllSessionFiles();
                     return false;
                 }
                 System.out.println("✅ Idle time: " + (idleMs / 1000) + "s — OK");
             }
 
-            // ── 2. Check if session file exists ──────────────────
             File sessionFile = new File(SESSION_FILE);
             if (!sessionFile.exists()) {
                 System.out.println("No active session. Loading landing page...");
                 return false;
             }
 
-            // ── 3. Read token FIRST, close reader, THEN validate/delete
             String sessionToken = null;
             try (BufferedReader reader = new BufferedReader(new FileReader(sessionFile))) {
                 sessionToken = reader.readLine();
-            } // ← reader fully closed here
+            }
 
             if (sessionToken != null && !sessionToken.isEmpty()) {
                 boolean valid = validateAndLoadSession(sessionToken);
                 if (!valid) {
-                    clearAllSessionFiles(); // ← safe: reader already closed
+                    clearAllSessionFiles();
                     System.out.println("Session invalide ou expirée. Redirection vers login.");
                 }
                 return valid;
@@ -145,11 +157,29 @@ public class SessionManager {
                 currentUser.setEmail(rs.getString("email"));
                 currentUser.setPhone(rs.getString("phone"));
                 currentUser.setStatus(rs.getString("status"));
-                currentUser.setRoleFromString(rs.getString("roles"));
+                
+                // ✅ Handle Symfony JSON roles
+                String rolesStr = rs.getString("roles");
+                String roleName = "ROLE_PENDING";
+                if (rolesStr != null) {
+                    if (rolesStr.startsWith("[")) {
+                        org.json.JSONArray rolesArray = new org.json.JSONArray(rolesStr);
+                        if (rolesArray.length() > 0) roleName = rolesArray.getString(0);
+                    } else {
+                        roleName = rolesStr;
+                    }
+                }
+                try {
+                    currentUser.setRole(Role.valueOf(roleName));
+                } catch (Exception e) {
+                    currentUser.setRole(Role.ROLE_PENDING);
+                }
 
-                // ✅ Load profile picture too
                 String profilePic = rs.getString("profile_picture");
                 if (profilePic != null) currentUser.setProfilePicture(profilePic);
+                
+                // ✅ Load farm_id for filtering
+                currentUser.setFarmId(rs.getObject("farm_id") != null ? rs.getInt("farm_id") : null);
 
                 updateLastActivity(sessionToken);
 
@@ -175,8 +205,8 @@ public class SessionManager {
     // SAUVEGARDER EN DB
     // ============================================================
     private void saveSessionToDatabase(UserSession session) throws SQLException {
-        String query = "INSERT INTO user_sessions (user_id, session_token, expires_at, device_info, ip_address, is_active) " +
-                "VALUES (?, ?, ?, ?, ?, TRUE)";
+        String query = "INSERT INTO user_sessions (user_id, session_token, expires_at, device_info, ip_address, is_active, created_at, last_activity) " +
+                "VALUES (?, ?, ?, ?, ?, TRUE, NOW(), NOW())";
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -217,7 +247,7 @@ public class SessionManager {
     }
 
     // ============================================================
-    // ✅ SAVE CLOSE TIMESTAMP — called from HelloApplication.stop()
+    // SAVE CLOSE TIMESTAMP
     // ============================================================
     public void saveCloseTimestamp() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CLOSE_TIME_FILE))) {
@@ -247,7 +277,7 @@ public class SessionManager {
     }
 
     // ============================================================
-    // LOGOUT — invalide la session et supprime les fichiers locaux
+    // LOGOUT
     // ============================================================
     public void logout() {
         if (currentSession != null) {

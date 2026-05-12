@@ -173,6 +173,15 @@
                                 </HBox>
                             </graphic>
                         </Button>
+                        <Button fx:id="recruitmentBtn" styleClass="nav-link" onAction="#navigateToRecruitment"
+                                visible="false" managed="false">
+                            <graphic>
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="📝" />
+                                    <Label fx:id="recruitmentLabel" text="Candidatures" styleClass="nav-label" />
+                                </HBox>
+                            </graphic>
+                        </Button>
                     </VBox>
                 </VBox>
             </ScrollPane>

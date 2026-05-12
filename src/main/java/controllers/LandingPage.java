@@ -84,7 +84,7 @@ public class LandingPage {
                 }
                 conn.disconnect();
             } catch (Exception e) {
-                e.printStackTrace();
+                // Silently fallback on timeout or network error
                 setFallbackQuote();
             }
         });

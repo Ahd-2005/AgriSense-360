@@ -10,6 +10,9 @@ public class user {
     private Role role;
     private String status; // ACTIVE or BLOCKED
     private String profilePicture;
+    private Integer farmId;
+    private String cvFile;
+    private String desiredRole;
 
     public enum Role {
         ROLE_PENDING,   // signed up but not yet accepted into any farm
@@ -21,7 +24,7 @@ public class user {
 
     // Empty constructor
     public user() {
-        this.status = "ACTIVE";
+        this.status = "active";
     }
 
     // Constructor without id (for signup)
@@ -31,7 +34,7 @@ public class user {
         this.password = password;
         this.phone = phone;
         this.role = role;
-        this.status = "ACTIVE";
+        this.status = "active";
     }
 
     // Constructor with id (for DB fetch)
@@ -42,11 +45,11 @@ public class user {
         this.password = password;
         this.phone = phone;
         this.role = role;
-        this.status = "ACTIVE";
+        this.status = "active";
     }
 
     // Full constructor with status
-    public user(int id, String name, String email, String password, String phone, Role role, String status, String profilePicture) {
+    public user(int id, String name, String email, String password, String phone, Role role, String status, String profilePicture, Integer farmId, String cvFile, String desiredRole) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -55,6 +58,9 @@ public class user {
         this.role = role;
         this.status = status;
         this.profilePicture = profilePicture;
+        this.farmId = farmId;
+        this.cvFile = cvFile;
+        this.desiredRole = desiredRole;
     }
 
     // ===== GETTERS & SETTERS =====
@@ -88,6 +94,15 @@ public class user {
 
     public String getProfilePicture() { return profilePicture; }
     public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
+
+    public Integer getFarmId() { return farmId; }
+    public void setFarmId(Integer farmId) { this.farmId = farmId; }
+
+    public String getCvFile() { return cvFile; }
+    public void setCvFile(String cvFile) { this.cvFile = cvFile; }
+
+    public String getDesiredRole() { return desiredRole; }
+    public void setDesiredRole(String desiredRole) { this.desiredRole = desiredRole; }
 
     @Override
     public String toString() {

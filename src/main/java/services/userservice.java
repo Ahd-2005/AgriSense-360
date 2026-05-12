@@ -27,17 +27,27 @@ public class userservice {
         // ✅ Hash the plain-text password before storing
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(12));
 
-        String sql = "INSERT INTO user (name, email, password, phone, roles, status, profile_picture) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // ✅ Updated for Symfony compatibility (roles as JSON, added status, first_login, auth_provider)
+        String sql = "INSERT INTO user (name, email, password, phone, roles, status, profile_picture, first_login, auth_provider, created_at) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, user.getName());
         ps.setString(2, user.getEmail());
-        ps.setString(3, hashedPassword);          // store hash
+        ps.setString(3, hashedPassword);          
         ps.setString(4, user.getPhone());
-        ps.setString(5, user.getRole().name());
-        ps.setString(6, "ACTIVE");
+        
+        // Store role as JSON array for Symfony
+        ps.setString(5, "[\"" + user.getRole().name() + "\"]"); 
+        
+        ps.setString(6, user.getStatus()); // Use object status
         ps.setString(7, user.getProfilePicture());
+        ps.setBoolean(8, true); // first_login
+        ps.setString(9, "local"); // auth_provider
+        ps.setTimestamp(10, new java.sql.Timestamp(System.currentTimeMillis()));
+        
         ps.executeUpdate();
-        System.out.println("✅ User inserted with hashed password");
+        System.out.println("✅ User inserted with hashed password and JSON roles");
     }
 
     public void updateProfilePicture(int userId, String pictureUrl) throws SQLException {
@@ -63,27 +73,24 @@ public class userservice {
                 String storedHash = rs.getString("password");
                 String status     = rs.getString("status");
 
-                // ✅ Verify plain password against stored hash
-                if (!BCrypt.checkpw(plainPassword, storedHash)) {
+                // ✅ FIX: Symfony uses $2y$ which jBCrypt doesn't support. 
+                // We convert it to $2a$ (they are identical algorithms).
+                String compatibleHash = storedHash;
+                if (storedHash != null && storedHash.startsWith("$2y$")) {
+                    compatibleHash = "$2a$" + storedHash.substring(4);
+                }
+
+                // ✅ Verify plain password against compatible hash
+                if (!BCrypt.checkpw(plainPassword, compatibleHash)) {
                     return null; // wrong password
                 }
 
-                if ("BLOCKED".equals(status)) {
+                if ("blocked".equals(status)) {
                     // Return user object so the controller can show the "blocked" message
-                    return new user(
-                            rs.getInt("id"), rs.getString("name"), rs.getString("email"),
-                            storedHash, rs.getString("phone"),
-                            Role.valueOf(rs.getString("roles")), status,
-                            rs.getString("profile_picture")
-                    );
+                    return mapRow(rs);
                 }
 
-                return new user(
-                        rs.getInt("id"), rs.getString("name"), rs.getString("email"),
-                        storedHash, rs.getString("phone"),
-                        Role.valueOf(rs.getString("roles")), status,
-                        rs.getString("profile_picture")
-                );
+                return mapRow(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -123,10 +130,10 @@ public class userservice {
     // UPDATE USER
     // ===============================
     public void updateUser(user user) throws SQLException {
-        String sql = "UPDATE user SET name = ?, email = ?, phone = ?, roles = ?, status = ?";
+        String sql = "UPDATE user SET name = ?, email = ?, phone = ?, roles = ?, status = ?, updated_at = ?";
 
         boolean hasNewPassword = user.getPassword() != null && !user.getPassword().isEmpty()
-                && !user.getPassword().startsWith("$2a$"); // not already a hash
+                && !user.getPassword().startsWith("$2a$") && !user.getPassword().startsWith("$2y$");
 
         if (hasNewPassword) {
             sql += ", password = ?";
@@ -137,20 +144,23 @@ public class userservice {
         ps.setString(1, user.getName());
         ps.setString(2, user.getEmail());
         ps.setString(3, user.getPhone());
-        ps.setString(4, user.getRole().name());
+        
+        // Store role as JSON array for Symfony
+        ps.setString(4, "[\"" + user.getRole().name() + "\"]");
+        
         ps.setString(5, user.getStatus());
+        ps.setTimestamp(6, new java.sql.Timestamp(System.currentTimeMillis()));
 
         if (hasNewPassword) {
-            // ✅ Hash the new password before updating
             String newHash = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(12));
-            ps.setString(6, newHash);
-            ps.setInt(7, user.getId());
+            ps.setString(7, newHash);
+            ps.setInt(8, user.getId());
         } else {
-            ps.setInt(6, user.getId());
+            ps.setInt(7, user.getId());
         }
 
         ps.executeUpdate();
-        System.out.println("✅ User updated");
+        System.out.println("✅ User updated with JSON roles");
     }
 
     // ===============================
@@ -231,22 +241,24 @@ public class userservice {
         user newUser = new user();
         newUser.setName(name);
         newUser.setEmail(email);
-        // ✅ Hash the placeholder password too
         newUser.setPassword(BCrypt.hashpw("GOOGLE_AUTH_" + System.currentTimeMillis(), BCrypt.gensalt(12)));
         newUser.setPhone("00000000");
-        newUser.setRole(user.Role.ROLE_PENDING); // Google signup = pending
+        newUser.setRole(user.Role.ROLE_PENDING);
         newUser.setStatus("ACTIVE");
 
-        // Use raw insert (password already hashed, skip ajouter's double-hash)
-        String sql = "INSERT INTO user (name, email, password, phone, roles, status, profile_picture) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // ✅ Updated for Symfony compatibility
+        String sql = "INSERT INTO user (name, email, password, phone, roles, status, auth_provider, first_login, created_at) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, newUser.getName());
         ps.setString(2, newUser.getEmail());
         ps.setString(3, newUser.getPassword());
         ps.setString(4, newUser.getPhone());
-        ps.setString(5, newUser.getRole().name());
+        ps.setString(5, "[\"ROLE_PENDING\"]");
         ps.setString(6, "ACTIVE");
-        ps.setString(7, null);
+        ps.setString(7, "google");
+        ps.setBoolean(8, false);
+        ps.setTimestamp(9, new java.sql.Timestamp(System.currentTimeMillis()));
         ps.executeUpdate();
 
         return findByEmail(email);
@@ -256,15 +268,46 @@ public class userservice {
     // PRIVATE HELPER
     // ===============================
     private user mapRow(ResultSet rs) throws SQLException {
+        String rolesStr = rs.getString("roles");
+        String roleName = "ROLE_PENDING";
+
+        if (rolesStr != null) {
+            if (rolesStr.startsWith("[")) {
+                // Parse JSON array
+                org.json.JSONArray rolesArray = new org.json.JSONArray(rolesStr);
+                if (rolesArray.length() > 0) {
+                    roleName = rolesArray.getString(0);
+                }
+            } else {
+                // Fallback for legacy plain string roles
+                roleName = rolesStr;
+            }
+        }
+
+        Role role;
+        try {
+            role = Role.valueOf(roleName);
+        } catch (IllegalArgumentException e) {
+            System.err.println("⚠️ Unknown role found in DB: " + roleName + ". Defaulting to ROLE_PENDING.");
+            role = Role.ROLE_PENDING;
+        }
+
+        Integer farmId = rs.getObject("farm_id") != null ? rs.getInt("farm_id") : null;
+        String cvFile = rs.getString("cv_file");
+        String desiredRole = rs.getString("ai_suggested_role");
+
         return new user(
                 rs.getInt("id"),
                 rs.getString("name"),
                 rs.getString("email"),
                 rs.getString("password"),
                 rs.getString("phone"),
-                Role.valueOf(rs.getString("roles")),
+                role,
                 rs.getString("status"),
-                rs.getString("profile_picture")
+                rs.getString("profile_picture"),
+                farmId,
+                cvFile,
+                desiredRole
         );
     }
     // ===============================

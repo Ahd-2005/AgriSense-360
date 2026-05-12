@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import jakarta.mail.Message;
@@ -54,7 +55,28 @@ public class EmailService {
         }
         Session session = getSession();
         Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(from));
+
+        // Parse "Display Name <email@example.com>" format safely
+        InternetAddress fromAddress;
+        try {
+            InternetAddress[] parsed = InternetAddress.parse(from, false);
+            if (parsed.length > 0) {
+                fromAddress = parsed[0];
+                // Re-encode personal name (display name) as UTF-8 to handle special chars
+                if (fromAddress.getPersonal() != null) {
+                    fromAddress = new InternetAddress(
+                            fromAddress.getAddress(),
+                            fromAddress.getPersonal(),
+                            StandardCharsets.UTF_8.name()
+                    );
+                }
+            } else {
+                fromAddress = new InternetAddress(from);
+            }
+        } catch (UnsupportedEncodingException e) {
+            fromAddress = new InternetAddress(from);
+        }
+        message.setFrom(fromAddress);
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
         message.setSubject(subject);
         return message;

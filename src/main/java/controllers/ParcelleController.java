@@ -56,6 +56,7 @@ public class ParcelleController {
     private List<Parcelle> allParcelles = new ArrayList<>();
 
     private List<Parcelle> filteredParcelles = new ArrayList<>();
+    private entity.user currentUser;
 
     // ── List of all 24 Tunisian governorates ──────────────────────────────────
 
@@ -76,41 +77,33 @@ public class ParcelleController {
     @FXML
 
     public void initialize() {
+        services.SessionManager sessionManager = services.SessionManager.getInstance();
+        if (sessionManager.isLoggedIn()) {
+            this.currentUser = sessionManager.getCurrentUser();
+        }
 
         if (parcelleGrid != null) {
-
             loadParcelleCards();
-
         }
-
         if (searchField != null) {
-
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-
                 filterParcelles(newValue);
-
             });
-
         }
-
     }
 
     private void loadParcelleCards() {
-
         try {
-
-            allParcelles = service.getAllParcelles();
-
+            if (currentUser != null && currentUser.getFarmId() != null) {
+                allParcelles = service.getParcellesByFarm(currentUser.getFarmId());
+            } else {
+                allParcelles = service.getAllParcelles();
+            }
             filteredParcelles = new ArrayList<>(allParcelles);
-
             displayParcelles(filteredParcelles);
-
         } catch (SQLException e) {
-
             e.printStackTrace();
-
         }
-
     }
 
     private void filterParcelles(String searchText) {
@@ -932,6 +925,10 @@ public class ParcelleController {
             p.setTypeSol(typeSol.trim());
 
             p.setStatut(statut.trim());
+            
+            if (currentUser != null && currentUser.getFarmId() != null) {
+                p.setFarmId(currentUser.getFarmId());
+            }
 
             service.addParcelle(p);
 

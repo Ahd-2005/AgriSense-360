@@ -6,36 +6,28 @@ import entity.Stock;
 import org.json.JSONObject;
 import utils.MyDataBase;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.math.BigDecimal;
+import java.nio.file.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * HarvestAIService
- * Appelle harvest_ai.py (modele sklearn local) pour calculer la quantite recoltee,
- * cree un Produit depuis la Culture (avec sa photo/img), puis insere le resultat dans la table stock.
- */
 public class HarvestAIService {
 
     private final ServiceStockStock stockService = new ServiceStockStock();
     private final ServiceStockProduit produitService = new ServiceStockProduit();
-
-    // Agriculteur ID par defaut - idéalement recupere depuis SessionManager
     private static final int DEFAULT_AGRICULTEUR_ID = 3;
 
-    // ─── Resultat retourne au Controller ────────────────────────────────────
+    // ─── Result ──────────────────────────────────────────────────────────────
     public static class HarvestResult {
         public final double quantiteKg;
         public final int rendementPct;
         public final String explication;
         public final boolean success;
         public final String errorMessage;
-        // Infos supplementaires pour affichage
         public double surfaceM2;
         public double surfaceHa;
         public int parcelleId;
@@ -59,28 +51,17 @@ public class HarvestAIService {
         }
     }
 
-    // ─── Point d'entree principal ────────────────────────────────────────────
-    /**
-     * 1) Appelle Python pour calculer la quantite
-     * 2) Si quantite > 0, cree un Produit (depuis la Culture) puis insere dans stock
-     * 3) Retourne le resultat pour l'affichage
-     */
+    // ─── Main entry point ────────────────────────────────────────────────────
     public HarvestResult recolterCulture(Culture culture, String emplacement) {
-        // Calculer via le modele IA
         HarvestResult aiResult = callPythonModel(culture);
+        if (!aiResult.success) return aiResult;
 
-        if (!aiResult.success) {
-            return aiResult;
-        }
+        aiResult.surfaceM2   = culture.getSurface();
+        aiResult.surfaceHa   = culture.getSurface() / 10000.0;
+        aiResult.parcelleId  = culture.getParcelleId();
+        aiResult.cultureName = culture.getNom();
+        aiResult.emplacement = emplacement;
 
-        // Enrichir le resultat avec les infos culture/parcelle
-        aiResult.surfaceM2    = culture.getSurface();
-        aiResult.surfaceHa    = culture.getSurface() / 10000.0;
-        aiResult.parcelleId   = culture.getParcelleId();
-        aiResult.cultureName  = culture.getNom();
-        aiResult.emplacement  = emplacement;
-
-        // Si quantite > 0 -> creer produit si besoin, puis inserer/mettre a jour le stock
         if (aiResult.quantiteKg > 0) {
             try {
                 insertOrUpdateStockFromCulture(culture, aiResult.quantiteKg, emplacement);
@@ -91,78 +72,38 @@ public class HarvestAIService {
                 );
             }
         }
-
         return aiResult;
     }
 
-    // ─── Creer ou recuperer le Produit associe a la Culture ──────────────────
-    /**
-     * La table stock requiert un produit_id (FK vers produit).
-     * On cree donc d'abord un produit qui correspond a la culture recoltee,
-     * en reutilisant l'image de la culture (culture.getImg()) comme photo_url.
-     *
-     * Si un produit avec le meme nom existe deja pour cet agriculteur,
-     * on le reutilise (contrainte unique : agriculteur_id + nom).
-     */
+    // ─── Produit helper ──────────────────────────────────────────────────────
     private int getOrCreateProduitForCulture(Culture culture) throws Exception {
         String nom = culture.getNom();
-
-        // 1. Chercher un produit existant par nom (pour eviter la contrainte unique)
         Integer existingId = findProduitIdByNom(nom);
-        if (existingId != null) {
-            return existingId;
-        }
+        if (existingId != null) return existingId;
 
-        // 2. Creer un nouveau produit depuis les donnees de la culture
         Produit produit = new Produit();
         produit.setAgriculteurId(DEFAULT_AGRICULTEUR_ID);
         produit.setNom(nom);
-
-        // Categorie = type_Culture de la culture
         String categorie = culture.getTypeCulture() != null ? culture.getTypeCulture() : "Récolte";
         produit.setCategorie(categorie);
-
-        // Description avec les infos de la culture
-        String description = "Récolte automatique depuis la culture. " +
-                "Surface: " + String.format("%.0f", culture.getSurface()) + " m² | " +
-                "Type: " + categorie;
-        produit.setDescription(description);
-
-        // Prix unitaire par defaut (0.00)
+        produit.setDescription("Récolte automatique depuis la culture. Surface: "
+                + String.format("%.0f", culture.getSurface()) + " m² | Type: " + categorie);
         produit.setPrixUnitaire(BigDecimal.ZERO);
-
-        // Photo: utiliser l'image de la culture
-        // Dans la DB, culture.img stocke juste le nom du fichier (ex: "avoine.png")
-        // On construit le chemin complet comme utilise dans CultureController
         String imgPath = culture.getImg();
-        if (imgPath != null && !imgPath.isBlank()) {
-            // Construire le meme chemin que CultureController utilise
-            produit.setPhotoUrl("/images/cultures/" + imgPath);
-        } else {
-            produit.setPhotoUrl("");
-        }
-
+        produit.setPhotoUrl(imgPath != null && !imgPath.isBlank() ? "/images/cultures/" + imgPath : "");
         produit.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
         int newId = produitService.ajouter(produit);
-        if (newId == -1) {
-            throw new Exception("Impossible de creer le produit pour la culture: " + nom);
-        }
+        if (newId == -1) throw new Exception("Impossible de creer le produit pour: " + nom);
         return newId;
     }
 
-    /**
-     * Cherche un produit par son nom dans la table produit.
-     * Retourne l'ID si trouve, null sinon.
-     */
     private Integer findProduitIdByNom(String nom) {
         String sql = "SELECT id FROM produit WHERE nom = ? LIMIT 1";
         try (PreparedStatement pst = MyDataBase.getInstance().getCnx().prepareStatement(sql)) {
             pst.setString(1, nom);
             try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("id");
-                }
+                if (rs.next()) return rs.getInt("id");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -170,31 +111,16 @@ public class HarvestAIService {
         return null;
     }
 
-    // ─── Insertion dans la table stock ───────────────────────────────────────
-    /**
-     * 1) Recupere ou cree le produit correspondant a la culture
-     * 2) Cree ou met a jour l'entree stock avec ce produit_id
-     */
     private void insertOrUpdateStockFromCulture(Culture culture, double quantiteKg, String emplacement) throws Exception {
-        // Etape 1: obtenir un produit_id valide (FK produit)
         int produitId = getOrCreateProduitForCulture(culture);
-
-        // Etape 2: verifier si un stock existe deja pour ce produit
         Stock existing = stockService.recupererParProduitId(produitId);
 
         if (existing != null) {
-            // Additionner a l'existant
-            BigDecimal newQty = existing.getQuantiteActuelle()
-                    .add(BigDecimal.valueOf(quantiteKg));
-            existing.setQuantiteActuelle(newQty);
+            existing.setQuantiteActuelle(existing.getQuantiteActuelle().add(BigDecimal.valueOf(quantiteKg)));
             existing.setDateReception(Date.valueOf(LocalDate.now()));
-            // Mettre a jour l'emplacement si fourni
-            if (emplacement != null && !emplacement.isBlank()) {
-                existing.setEmplacement(emplacement);
-            }
+            if (emplacement != null && !emplacement.isBlank()) existing.setEmplacement(emplacement);
             stockService.modifier(existing);
         } else {
-            // Creer une nouvelle entree stock
             Stock stock = new Stock();
             stock.setProduitId(produitId);
             stock.setQuantiteActuelle(BigDecimal.valueOf(quantiteKg));
@@ -202,31 +128,30 @@ public class HarvestAIService {
             stock.setUniteMesure("kg");
             stock.setDateReception(Date.valueOf(LocalDate.now()));
             stock.setDateExpiration(null);
-            stock.setEmplacement(
-                    emplacement != null && !emplacement.isBlank()
-                            ? emplacement
-                            : "Entrepot principal"
-            );
+            stock.setEmplacement(emplacement != null && !emplacement.isBlank() ? emplacement : "Entrepot principal");
             stockService.ajouter(stock);
         }
     }
 
-    // ─── Appel Python ────────────────────────────────────────────────────────
+    // ─── Call Python ─────────────────────────────────────────────────────────
     private HarvestResult callPythonModel(Culture culture) {
         try {
-            String scriptPath = resolveScriptPath();
-            String today = LocalDate.now().toString();
+            // ✅ FIX: Extract script from jar/resources to a real temp file
+            String scriptPath = extractScriptToTemp("harvest_ai.py");
+            String pythonExe  = resolvePythonExe();
+            String today      = LocalDate.now().toString();
+
+            System.out.println("[HarvestAI] Python: " + pythonExe);
+            System.out.println("[HarvestAI] Script: " + scriptPath);
 
             String etat           = culture.getEtat()           != null ? culture.getEtat()           : "maturite";
             String dateRecolte    = culture.getDateRecolte()    != null ? culture.getDateRecolte().toString()    : today;
             String datePlantation = culture.getDatePlantation() != null ? culture.getDatePlantation().toString() : today;
             String typeCulture    = culture.getTypeCulture()    != null ? culture.getTypeCulture()    : "Cereales";
             String nom            = culture.getNom()            != null ? culture.getNom()            : "Culture";
-            // Surface en m2 dans la DB -> convertir en ha pour le modele
             double surfaceHa      = culture.getSurface() / 10000.0;
 
             List<String> cmd = new ArrayList<>();
-            String pythonExe = resolvePythonExe();
             cmd.add(pythonExe);
             cmd.add(scriptPath);
             cmd.add(nom);
@@ -241,7 +166,7 @@ public class HarvestAIService {
             pb.environment().put("PYTHONIOENCODING", "utf-8");
             pb.environment().remove("PYTHONHOME");
             pb.environment().remove("PYTHONPATH");
-            pb.directory(new java.io.File(scriptPath).getParentFile());
+            pb.directory(new File(scriptPath).getParentFile());
 
             Process process = pb.start();
 
@@ -266,7 +191,50 @@ public class HarvestAIService {
         }
     }
 
-    // ─── Parse JSON retourne par Python ─────────────────────────────────────
+    // ─── ✅ KEY FIX: Extract .py from jar to a real temp file ────────────────
+    /**
+     * When running as an exe (fat jar), getResource() returns a jar:// URL.
+     * Python cannot run a script inside a jar — it needs a real file on disk.
+     * This method copies the script to %TEMP% and returns the real path.
+     */
+    private String extractScriptToTemp(String scriptName) throws Exception {
+        // 1. Try next to the exe first (for easy customization after install)
+        try {
+            String exeDir = new File(
+                    getClass().getProtectionDomain().getCodeSource().getLocation().toURI()
+            ).getParentFile().getAbsolutePath();
+
+            File next = new File(exeDir, scriptName);
+            if (next.exists()) return next.getAbsolutePath();
+
+            File up = new File(exeDir + File.separator + ".." + File.separator + scriptName);
+            if (up.exists()) return up.getCanonicalPath();
+        } catch (Exception ignored) {}
+
+        // 2. Extract from resources (works from fat jar)
+        InputStream in = getClass().getResourceAsStream("/scripts/" + scriptName);
+        if (in != null) {
+            // Use a stable temp location so we don't re-extract every call
+            Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"), "agrisense_scripts");
+            Files.createDirectories(tempDir);
+            Path dest = tempDir.resolve(scriptName);
+            // Always overwrite to ensure latest version
+            Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
+            in.close();
+            System.out.println("[HarvestAI] Script extracted to: " + dest);
+            return dest.toAbsolutePath().toString();
+        }
+
+        // 3. IntelliJ fallback
+        Path fallback = Paths.get("src", "main", "resources", "scripts", scriptName);
+        if (Files.exists(fallback)) return fallback.toAbsolutePath().toString();
+
+        throw new Exception(
+                "Script " + scriptName + " introuvable. Placez-le dans src/main/resources/scripts/"
+        );
+    }
+
+    // ─── Parse JSON from Python ──────────────────────────────────────────────
     private HarvestResult parseResult(String jsonStr) {
         try {
             JSONObject obj = new JSONObject(jsonStr);
@@ -279,46 +247,27 @@ public class HarvestAIService {
         }
     }
 
-    // ─── Chemin du script Python ─────────────────────────────────────────────
+    // ─── Find Python executable ──────────────────────────────────────────────
     private String resolvePythonExe() {
         String fromEnv = System.getenv("PYTHON_EXE");
-        if (fromEnv != null && !fromEnv.isBlank()) {
-            return fromEnv.trim();
-        }
-        String progFiles = "C:\\Program Files";
+        if (fromEnv != null && !fromEnv.isBlank()) return fromEnv.trim();
+
         String[] candidates = {
-                progFiles + "\\Python313\\python.exe",
-                progFiles + "\\Python312\\python.exe",
-                progFiles + "\\Python311\\python.exe",
-                progFiles + "\\Python310\\python.exe",
+                "C:\\Program Files\\Python313\\python.exe",
+                "C:\\Program Files\\Python312\\python.exe",
+                "C:\\Program Files\\Python311\\python.exe",
+                "C:\\Program Files\\Python310\\python.exe",
                 "C:\\Python313\\python.exe",
                 "C:\\Python312\\python.exe",
                 "C:\\Python310\\python.exe",
                 "C:\\Python39\\python.exe",
         };
-        for (String candidate : candidates) {
-            if (candidate != null && !candidate.isBlank() && new java.io.File(candidate).exists()) {
-                System.out.println("[HarvestAI] Python: " + candidate);
-                return candidate;
+        for (String c : candidates) {
+            if (new File(c).exists()) {
+                System.out.println("[HarvestAI] Found Python: " + c);
+                return c;
             }
         }
         return "python";
-    }
-
-    private String resolveScriptPath() throws Exception {
-        var url = getClass().getResource("/scripts/harvest_ai.py");
-        if (url != null) {
-            return java.nio.file.Paths.get(url.toURI()).toString();
-        }
-        java.nio.file.Path fallback = java.nio.file.Paths.get(
-                "src", "main", "resources", "scripts", "harvest_ai.py"
-        );
-        if (java.nio.file.Files.exists(fallback)) {
-            return fallback.toAbsolutePath().toString();
-        }
-        throw new Exception(
-                "Script harvest_ai.py introuvable. " +
-                        "Placez-le dans src/main/resources/scripts/"
-        );
     }
 }

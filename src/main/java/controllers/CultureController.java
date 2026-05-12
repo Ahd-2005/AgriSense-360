@@ -247,35 +247,17 @@ public class CultureController {
 
 
     private void loadCultureCards() {
-
         try {
-
-            allCultures = service.getAllCultures();
-
-
-
-            // DISABLED: Automatic state update
-
-            // boolean statesUpdated = updateAllCulturesStates();
-
-            // if (statesUpdated) {
-
-            //     allCultures = service.getAllCultures();
-
-            // }
-
-
-
+            if (currentUser != null && currentUser.getFarmId() != null) {
+                allCultures = service.getCulturesByFarm(currentUser.getFarmId());
+            } else {
+                allCultures = service.getAllCultures();
+            }
             filteredCultures = new ArrayList<>(allCultures);
-
             displayCultures(filteredCultures);
-
         } catch (SQLException e) {
-
             e.printStackTrace();
-
         }
-
     }
 
     /*

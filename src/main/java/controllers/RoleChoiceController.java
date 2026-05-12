@@ -29,6 +29,11 @@ public class RoleChoiceController {
     }
 
     @FXML
+    private void chooseOwner() {
+        createAndLogin(user.Role.ROLE_OWNER);
+    }
+
+    @FXML
     private void chooseGerant() {
         createAndLogin(user.Role.ROLE_GERANT);
     }
@@ -49,7 +54,13 @@ public class RoleChoiceController {
             newUser.setPassword("GOOGLE_" + System.currentTimeMillis());
             newUser.setPhone("00000000");
             newUser.setRole(role);
-            newUser.setStatus("ACTIVE");
+            
+            // Owner is active immediately, others are pending
+            if (role == user.Role.ROLE_OWNER) {
+                newUser.setStatus("active");
+            } else {
+                newUser.setStatus("pending");
+            }
 
             service.ajouter(newUser);
 
@@ -64,25 +75,48 @@ public class RoleChoiceController {
             // Créer la session
             SessionManager.getInstance().createSession(created);
 
-            // Naviguer vers MainLayout
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainLayout.fxml"));
-            Parent root = loader.load();
-
-            MainLayoutController mainController = loader.getController();
-            mainController.configureForUserRole(created.getRole());
-            mainController.setCurrentUser(created);
-
-            Stage stage = (Stage) userNameLabel.getScene().getWindow();
-            Scene scene = new Scene(root, 1400, 800);
-            stage.setScene(scene);
-            stage.setTitle("AgriSense 360 - Dashboard");
-            stage.centerOnScreen();
-            stage.show();
+            // Navigation based on role
+            if (role == user.Role.ROLE_OWNER) {
+                goToMainLayout(created);
+            } else {
+                goToFarmList(created);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
             showError("❌ Erreur: " + e.getMessage());
         }
+    }
+
+    private void goToMainLayout(user created) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainLayout.fxml"));
+        Parent root = loader.load();
+
+        MainLayoutController mainController = loader.getController();
+        mainController.configureForUserRole(created.getRole());
+        mainController.setCurrentUser(created);
+
+        Stage stage = (Stage) userNameLabel.getScene().getWindow();
+        Scene scene = new Scene(root, 1400, 800);
+        stage.setScene(scene);
+        stage.setTitle("AgriSense 360 - Dashboard Propriétaire");
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    private void goToFarmList(user created) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FarmList.fxml"));
+        Parent root = loader.load();
+
+        FarmListController controller = loader.getController();
+        controller.initData(created);
+
+        Stage stage = (Stage) userNameLabel.getScene().getWindow();
+        Scene scene = new Scene(root, 1400, 800);
+        stage.setScene(scene);
+        stage.setTitle("AgriSense 360 - Choisir une ferme");
+        stage.centerOnScreen();
+        stage.show();
     }
 
     private void showError(String msg) {

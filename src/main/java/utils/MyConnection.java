@@ -12,7 +12,7 @@ public class MyConnection {
     private MyConnection() {
         try {
             cnx = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/smartfarm?useSSL=false&serverTimezone=UTC",
+                    "jdbc:mysql://localhost:3306/agrisense-360?useSSL=false&serverTimezone=UTC",
                     "root",
                     ""
             );

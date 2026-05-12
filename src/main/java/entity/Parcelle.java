@@ -8,6 +8,7 @@ public class Parcelle {
     private String localisation;
     private String typeSol;
     private String statut;
+    private Integer farmId;
 
     // Empty constructor
     public Parcelle() {}
@@ -22,13 +23,14 @@ public class Parcelle {
     }
 
     // Constructor with id (for SELECT)
-    public Parcelle(int id, String nom, double surface, String localisation, String typeSol, String statut) {
+    public Parcelle(int id, String nom, double surface, String localisation, String typeSol, String statut, Integer farmId) {
         this.id = id;
         this.nom = nom;
         this.surface = surface;
         this.localisation = localisation;
         this.typeSol = typeSol;
         this.statut = statut;
+        this.farmId = farmId;
     }
 
     // Getters & Setters
@@ -49,4 +51,7 @@ public class Parcelle {
 
     public String getStatut() { return statut; }
     public void setStatut(String statut) { this.statut = statut; }
+
+    public Integer getFarmId() { return farmId; }
+    public void setFarmId(Integer farmId) { this.farmId = farmId; }
 }
