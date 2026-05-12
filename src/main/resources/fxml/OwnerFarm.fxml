@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.OwnerFarmController"
+            fitToWidth="true"
+            style="-fx-background-color: transparent; -fx-background: transparent;">
+
+    <VBox spacing="28" style="-fx-padding: 40; -fx-background-color: #fbf7ef;">
+
+        <!-- ══════════ HEADER ══════════ -->
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label fx:id="ownerNameLabel" text="Tableau de bord"
+                       style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #22301b;"/>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="🌾 Mes fermes :"
+                           style="-fx-font-size: 15px; -fx-text-fill: #546e7a;"/>
+                    <Label fx:id="farmCountLabel" text="0 ferme"
+                           style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                </HBox>
+            </VBox>
+            <Button text="➕ Ajouter une ferme" onAction="#handleShowAddForm"
+                    style="-fx-background-color: #2d6a1f; -fx-text-fill: white;
+                           -fx-font-size: 14px; -fx-font-weight: bold;
+                           -fx-padding: 12 28; -fx-background-radius: 25; -fx-cursor: hand;
+                           -fx-effect: dropshadow(gaussian, rgba(45,106,31,0.4), 10, 0, 0, 3);"/>
+        </HBox>
+
+        <!-- ══════════ ADD FARM FORM (hidden by default) ══════════ -->
+        <VBox fx:id="addFarmPane" spacing="16" visible="false" managed="false"
+              style="-fx-background-color: white; -fx-background-radius: 14;
+                     -fx-border-color: #c8e6c9; -fx-border-radius: 14; -fx-border-width: 1.5;
+                     -fx-padding: 28; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);">
+
+            <Label text="🌱 Nouvelle ferme"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1b5e20;"/>
+
+            <GridPane hgap="20" vgap="14">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <!-- Row 0 -->
+                <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <Label text="Nom de la ferme *" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <TextField fx:id="nameField" promptText="Ex: Ferme El Baraka"
+                               style="-fx-background-radius: 8; -fx-border-color: #c8e6c9; -fx-border-radius: 8;
+                                      -fx-padding: 9 12; -fx-font-size: 13px;"/>
+                </VBox>
+                <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <Label text="Localisation *" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <TextField fx:id="locationField" promptText="Ex: Nabeul, Tunisie"
+                               style="-fx-background-radius: 8; -fx-border-color: #c8e6c9; -fx-border-radius: 8;
+                                      -fx-padding: 9 12; -fx-font-size: 13px;"/>
+                </VBox>
+
+                <!-- Row 1 -->
+                <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <Label text="Superficie (ha) *" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <TextField fx:id="surfaceField" promptText="Ex: 12.5"
+                               style="-fx-background-radius: 8; -fx-border-color: #c8e6c9; -fx-border-radius: 8;
+                                      -fx-padding: 9 12; -fx-font-size: 13px;"/>
+                </VBox>
+                <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <Label text="Image" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button text="📁 Choisir une image" onAction="#handleChooseImage"
+                                style="-fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32;
+                                       -fx-border-color: #4CAF50; -fx-border-width: 1.5;
+                                       -fx-border-radius: 8; -fx-background-radius: 8;
+                                       -fx-padding: 8 14; -fx-cursor: hand; -fx-font-size: 13px;"/>
+                        <Label fx:id="imageFileLabel" text="Aucun fichier choisi"
+                               style="-fx-font-size: 12px; -fx-text-fill: #888;"/>
+                    </HBox>
+                </VBox>
+            </GridPane>
+
+            <!-- Description -->
+            <VBox spacing="5">
+                <Label text="Description" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+                <TextArea fx:id="descArea" promptText="Décrivez votre ferme..."
+                          prefRowCount="3" wrapText="true"
+                          style="-fx-background-radius: 8; -fx-border-color: #c8e6c9; -fx-border-radius: 8;
+                                 -fx-padding: 9 12; -fx-font-size: 13px;"/>
+            </VBox>
+
+            <!-- Error message -->
+            <Label fx:id="formError" text="" visible="false"
+                   style="-fx-text-fill: #c62828; -fx-font-size: 13px;"/>
+
+            <!-- Buttons -->
+            <HBox spacing="12" alignment="CENTER_RIGHT">
+                <Button text="Annuler" onAction="#handleCancelAdd"
+                        style="-fx-background-color: #f5f5f5; -fx-text-fill: #555;
+                               -fx-border-color: #ccc; -fx-border-width: 1.5;
+                               -fx-border-radius: 20; -fx-background-radius: 20;
+                               -fx-padding: 9 24; -fx-cursor: hand; -fx-font-size: 13px;"/>
+                <Button text="✅ Enregistrer la ferme" onAction="#handleSaveFarm"
+                        style="-fx-background-color: #2d6a1f; -fx-text-fill: white;
+                               -fx-background-radius: 20; -fx-padding: 9 24;
+                               -fx-cursor: hand; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+
+        <!-- ══════════ FARM CARDS ══════════ -->
+        <Label fx:id="emptyLabel" text="🌿 Vous n'avez pas encore de fermes. Ajoutez-en une !"
+               visible="false" managed="false"
+               style="-fx-font-size: 16px; -fx-text-fill: #888; -fx-padding: 30;"/>
+
+        <GridPane fx:id="farmsGrid" hgap="20" vgap="20"/>
+
+    </VBox>
+</ScrollPane>

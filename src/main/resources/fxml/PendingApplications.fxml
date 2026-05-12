@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.PendingApplicationsController"
+            style="-fx-background-color: #f5f5f5;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15"
+              style="-fx-background-color: white; -fx-padding: 18 25;
+                     -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;">
+            <Label fx:id="titleLabel" text="📋 Candidatures en attente"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1b3a1f;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="🔄 Actualiser"
+                    onAction="#handleRefresh"
+                    style="-fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32;
+                           -fx-border-color: #4CAF50; -fx-border-width: 1.5;
+                           -fx-background-radius: 8; -fx-border-radius: 8;
+                           -fx-padding: 8 18; -fx-cursor: hand;" />
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox fx:id="applicationsContainer" spacing="15" style="-fx-padding: 20;">
+                <Label fx:id="emptyLabel"
+                       text="✅ Aucune candidature en attente pour le moment."
+                       visible="false" managed="false"
+                       style="-fx-font-size: 16px; -fx-text-fill: #888;" />
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

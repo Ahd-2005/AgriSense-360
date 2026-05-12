@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.FarmApplyController"
+            style="-fx-background-color: #f1f8e9;">
+
+    <top>
+        <VBox style="-fx-background-color: #2e7d32; -fx-padding: 20 30;">
+            <Label text="📋 Postuler à une ferme"
+                   style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;" />
+            <Label text="Remplissez le formulaire de candidature ci-dessous."
+                   style="-fx-font-size: 14px; -fx-text-fill: #c8e6c9;" />
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <HBox spacing="40" style="-fx-padding: 30;" alignment="TOP_CENTER">
+
+                <!-- LEFT: Farm Info Card -->
+                <VBox spacing="12" style="-fx-background-color: white; -fx-padding: 25;
+                                          -fx-background-radius: 12; -fx-border-color: #c8e6c9;
+                                          -fx-border-radius: 12; -fx-min-width: 350; -fx-max-width: 350;">
+                    <Label text="🌾 Ferme sélectionnée"
+                           style="-fx-font-size: 14px; -fx-text-fill: #888; -fx-font-weight: bold;" />
+                    <Label fx:id="farmNameLabel"
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"
+                           wrapText="true" />
+                    <Label fx:id="farmLocationLabel" style="-fx-font-size: 14px; -fx-text-fill: #546e7a;" />
+                    <Label fx:id="farmSurfaceLabel"  style="-fx-font-size: 14px; -fx-text-fill: #546e7a;" />
+                    <Separator />
+                    <Label fx:id="farmDescLabel" wrapText="true" maxWidth="300"
+                           style="-fx-font-size: 13px; -fx-text-fill: #757575;" />
+                </VBox>
+
+                <!-- RIGHT: Application Form -->
+                <VBox spacing="20" style="-fx-background-color: white; -fx-padding: 30;
+                                          -fx-background-radius: 12; -fx-border-color: #c8e6c9;
+                                          -fx-border-radius: 12; -fx-min-width: 420;">
+
+                    <Label text="Votre candidature"
+                           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1b5e20;" />
+
+                    <!-- Role selection -->
+                    <VBox spacing="8">
+                        <Label text="Quel poste souhaitez-vous ?"
+                               style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #333;" />
+                        <HBox spacing="20">
+                            <fx:define>
+                                <ToggleGroup fx:id="roleGroup"/>
+                            </fx:define>
+                            <RadioButton fx:id="gerantRadio" text="🧑‍💼 Gérant" toggleGroup="$roleGroup"
+                                         style="-fx-font-size: 14px;" />
+                            <RadioButton fx:id="ouvrierRadio" text="👷 Ouvrier" toggleGroup="$roleGroup"
+                                         selected="true" style="-fx-font-size: 14px;" />
+                        </HBox>
+                        <Label fx:id="roleError" text="❌ Veuillez sélectionner un poste."
+                               visible="false"
+                               style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;" />
+                    </VBox>
+
+                    <!-- CV Upload -->
+                    <VBox spacing="8">
+                        <Label text="Votre CV (PDF ou Word)"
+                               style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #333;" />
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Button text="📂 Choisir un fichier"
+                                    onAction="#handleChooseCv"
+                                    style="-fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32;
+                                           -fx-border-color: #4CAF50; -fx-border-width: 1.5;
+                                           -fx-background-radius: 8; -fx-border-radius: 8;
+                                           -fx-padding: 10 18; -fx-cursor: hand; -fx-font-size: 13px;" />
+                            <Label fx:id="cvFileLabel" text="Aucun fichier sélectionné"
+                                   style="-fx-font-size: 13px; -fx-text-fill: #888;" />
+                        </HBox>
+                        <Label fx:id="cvError" text="❌ Veuillez joindre votre CV."
+                               visible="false"
+                               style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;" />
+                    </VBox>
+
+                    <Label fx:id="successMsg" visible="false"
+                           text="✅ Candidature envoyée avec succès!"
+                           style="-fx-text-fill: #2e7d32; -fx-font-size: 14px; -fx-font-weight: bold;" />
+
+                    <!-- Action Buttons -->
+                    <HBox spacing="15">
+                        <Button text="← Retour"
+                                onAction="#goBack"
+                                style="-fx-background-color: transparent; -fx-text-fill: #4CAF50;
+                                       -fx-border-color: #4CAF50; -fx-border-width: 1.5;
+                                       -fx-background-radius: 20; -fx-border-radius: 20;
+                                       -fx-padding: 10 25; -fx-cursor: hand;" />
+                        <Button text="Envoyer ma candidature ✈"
+                                onAction="#handleSubmit"
+                                style="-fx-background-color: #4CAF50; -fx-text-fill: white;
+                                       -fx-font-size: 14px; -fx-font-weight: bold;
+                                       -fx-background-radius: 20; -fx-padding: 12 30;
+                                       -fx-cursor: hand;" />
+                    </HBox>
+                </VBox>
+
+            </HBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

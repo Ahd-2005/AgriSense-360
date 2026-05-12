@@ -4,46 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="Merge remote-tracking branch 'origin/gestion-ouvrier' into gestion_user&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;agrisense_close_time.dat&#10;#&#9;agrisense_session.dat&#10;#&#9;src/main/java/controllers/HomeContentController.java&#10;#&#9;src/main/java/module-info.java&#10;#&#9;src/main/resources/css/home.css&#10;#&#9;src/main/resources/css/sidebar.css&#10;#&#9;src/main/resources/fxml/MainLayout.fxml&#10;#&#9;target/classes/module-info.class">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="bf980684-281f-45fe-8232-ed1a22e4418c" name="Changes" comment="ouvrier+tache ffectée+ tri, recherche dans liste">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agrisense_close_time.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_close_time.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" afterPath="$PROJECT_DIR$/agrisense_session.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/agrisense_session.dat" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/EvaluationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/EvaluationController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MainLayoutController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/OuvrierAdd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/OuvrierAdd.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/OuvrierDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/OuvrierDetails.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/OuvrierEdit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/OuvrierEdit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/OuvrierHome.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/OuvrierHome.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/OuvrierManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/OuvrierManagement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/UserAdd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/UserAdd.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/UserDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/UserDetails.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/UserEdit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/UserEdit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/WorkersCalendarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/WorkersCalendarController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/signup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/signup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entity/user.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entity/user.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/services/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/services/GoogleAuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/GoogleAuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/services/userservice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/services/userservice.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/agenda/AgendaCulture.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/css/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/home.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/css/sidebar.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/sidebar.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/AdminDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/AdminDashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/GerantHome.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/GerantHome.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainLayout.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierAdd.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierAdd.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierDetails.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierDetails.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierEdit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierEdit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierHome.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierHome.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierManagement.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/OuvrierManagement.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/UserAdd.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/UserAdd.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/UserDetails.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/UserDetails.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/UserEdit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/UserEdit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/animal-view.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/animals-management-view.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/mes_taches.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CultureController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ParcelleController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/module-info.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/signup.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/signup.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +53,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Ahd-2005/AgriSense-360.git&quot;,
-    &quot;accountId&quot;: &quot;d12e9602-95d0-4a74-a022-1b9524b17cac&quot;
+    &quot;accountId&quot;: &quot;1f133cb3-140e-4dbc-b395-42ea5a63a50e&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
@@ -153,7 +128,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.runner",
+    "settings.editor.selected.configurable": "project.propVCSSupport.Mappings",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   },
@@ -236,6 +211,11 @@
       <workItem from="1772315762126" duration="5207000" />
       <workItem from="1772332726064" duration="10492000" />
       <workItem from="1772381881200" duration="9352000" />
+      <workItem from="1775310600944" duration="10463000" />
+      <workItem from="1775501168772" duration="1500000" />
+      <workItem from="1775762816553" duration="2156000" />
+      <workItem from="1776529927369" duration="7419000" />
+      <workItem from="1778535299337" duration="10170000" />
     </task>
     <task id="LOCAL-00001" summary="tous gestion + user">
       <option name="closed" value="true" />
@@ -357,7 +337,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772341290312</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="ouvrier+tache ffectée+ tri, recherche dans liste">
+      <option name="closed" value="true" />
+      <created>1772502572139</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1772502572139</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -401,7 +389,8 @@
     <MESSAGE value="fixes for perfection" />
     <MESSAGE value="we added historique de parcelle avec exportation pdf" />
     <MESSAGE value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif" />
-    <option name="LAST_COMMIT_MESSAGE" value="homecontent fixed better designed +IMPLEMENTATION d un chatbot interactif" />
+    <MESSAGE value="ouvrier+tache ffectée+ tri, recherche dans liste" />
+    <option name="LAST_COMMIT_MESSAGE" value="ouvrier+tache ffectée+ tri, recherche dans liste" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

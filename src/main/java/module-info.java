@@ -17,7 +17,7 @@ module com.example.agrisens360 {
     requires java.desktop;
     requires java.net.http;
 
-
+    requires jbcrypt;
     requires jakarta.mail;
     requires com.google.gson;
 

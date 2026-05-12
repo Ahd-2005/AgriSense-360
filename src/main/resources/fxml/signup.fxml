@@ -17,6 +17,18 @@
             <Label text="Créer votre compte"
                    style="-fx-font-size: 18px; -fx-text-fill: #546e7a;" />
 
+            <!-- Step indicator -->
+            <HBox alignment="CENTER" spacing="8">
+                <Label text="① Compte"
+                       style="-fx-background-color:#2e7d32;-fx-text-fill:white;-fx-padding:5 14;-fx-background-radius:20;-fx-font-size:13px;-fx-font-weight:bold;" />
+                <Label text="──" style="-fx-text-fill:#aaa;"/>
+                <Label text="② Photo"
+                       style="-fx-background-color:#e0e0e0;-fx-text-fill:#888;-fx-padding:5 14;-fx-background-radius:20;-fx-font-size:13px;" />
+                <Label text="──" style="-fx-text-fill:#aaa;"/>
+                <Label text="③ Choisir une ferme"
+                       style="-fx-background-color:#e0e0e0;-fx-text-fill:#888;-fx-padding:5 14;-fx-background-radius:20;-fx-font-size:13px;" />
+            </HBox>
+
             <VBox spacing="15" style="-fx-max-width: 450; -fx-alignment: center;">
 
                 <!-- NAME FIELD -->
@@ -74,21 +86,14 @@
                            visible="false" />
                 </VBox>
 
-                <!-- ROLE CHOICE -->
-                <VBox spacing="5">
-                    <Label text="Sélectionner le rôle:"
-                           style="-fx-font-size: 14px; -fx-text-fill: #546e7a; -fx-font-weight: bold;" />
-                    <ChoiceBox fx:id="roleChoice"
-                               style="-fx-pref-width: 450; -fx-pref-height: 45;
-                                      -fx-background-radius: 10; -fx-border-radius: 10;
-                                      -fx-font-size: 16px;" />
-                    <Label fx:id="roleError"
-                           style="-fx-text-fill: #d32f2f; -fx-font-size: 12px; -fx-font-weight: bold;"
-                           visible="false" />
-                </VBox>
+                <!-- ✅ No role choice — all new users start as ROLE_PENDING -->
+                <Label text="📋 Après inscription vous pourrez postuler à une ferme."
+                       style="-fx-font-size: 13px; -fx-text-fill: #2e7d32;
+                              -fx-background-color: #f1f8e9; -fx-padding: 8 12;
+                              -fx-background-radius: 8;" wrapText="true" />
 
                 <!-- SUBMIT BUTTON -->
-                <Button text="Créer le compte"
+                <Button text="Créer le compte →"
                         onAction="#handleSignup"
                         style="-fx-background-color: #4CAF50; -fx-text-fill: white;
                                -fx-padding: 15 50; -fx-font-size: 16px; -fx-font-weight: bold;

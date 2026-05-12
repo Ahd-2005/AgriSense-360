@@ -161,6 +161,15 @@
                                 </HBox>
                             </graphic>
                         </Button>
+                        <Button fx:id="farmBtn" styleClass="nav-link" onAction="#navigateToOwnerFarms"
+                                visible="false" managed="false">
+                            <graphic>
+                                <HBox spacing="12" alignment="CENTER_LEFT">
+                                    <Label style="-fx-font-size: 22px; -fx-min-width: 28px;" text="🌾" />
+                                    <Label fx:id="farmLabel" text="Mes Fermes" styleClass="nav-label" />
+                                </HBox>
+                            </graphic>
+                        </Button>
                     </VBox>
                 </VBox>
             </ScrollPane>

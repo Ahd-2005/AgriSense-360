@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import entity.user;
-import entity.user.Role;
 import services.userservice;
 
 import java.sql.SQLException;
@@ -20,7 +19,6 @@ public class signup {
     @FXML private PasswordField passwordField;
     @FXML private PasswordField confirmPasswordField;
     @FXML private TextField phoneField;
-    @FXML private ChoiceBox<Role> roleChoice;
 
     // Error labels
     @FXML private Label nameError;
@@ -28,7 +26,6 @@ public class signup {
     @FXML private Label passwordError;
     @FXML private Label confirmPasswordError;
     @FXML private Label phoneError;
-    @FXML private Label roleError;
 
     // Regex patterns
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
@@ -43,8 +40,6 @@ public class signup {
 
     @FXML
     public void initialize() {
-        roleChoice.getItems().addAll(Role.ROLE_GERANT, Role.ROLE_OUVRIER);
-        roleChoice.setValue(Role.ROLE_OUVRIER);
         hideAllErrors();
     }
 
@@ -58,7 +53,6 @@ public class signup {
         if (!validatePassword())        isValid = false;
         if (!validateConfirmPassword()) isValid = false;
         if (!validatePhone())           isValid = false;
-        if (!validateRole())            isValid = false;
 
         if (!isValid) return;
 
@@ -72,18 +66,17 @@ public class signup {
                 return;
             }
 
-            // Create new user
+            // ✅ Create new user as ROLE_PENDING — no role choice for new signups
             user newUser = new user();
             newUser.setName(nameField.getText().trim());
             newUser.setEmail(emailField.getText().trim().toLowerCase());
-            newUser.setPassword(passwordField.getText().trim());
+            newUser.setPassword(passwordField.getText().trim()); // plain — will be hashed in service
             newUser.setPhone(phoneField.getText().trim());
-            newUser.setRole(roleChoice.getValue());
+            newUser.setRole(user.Role.ROLE_PENDING);  // always pending at signup
 
-            // ✅ Insert into DB
             service.ajouter(newUser);
 
-            // ✅ Fetch the created user WITH its generated ID from DB
+            // Fetch the created user with its DB-generated ID
             user createdUser = service.findByEmail(newUser.getEmail());
 
             if (createdUser == null) {
@@ -91,7 +84,7 @@ public class signup {
                 return;
             }
 
-            // ✅ Redirect to Profile Setup (NOT login directly)
+            // ✅ Go to profile picture setup first, then farm list
             goToProfileSetup(createdUser);
 
         } catch (SQLException e) {
@@ -102,7 +95,6 @@ public class signup {
 
     // ============= NAVIGATION =============
 
-    // ✅ Goes to Profile Picture Setup page
     private void goToProfileSetup(user createdUser) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ProfileSetup.fxml"));
@@ -118,76 +110,88 @@ public class signup {
 
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Erreur", "❌ Impossible d'ouvrir la page de profil: " + e.getMessage());
+            // If ProfileSetup doesn't exist yet, go straight to farm list
+            goToFarmList(createdUser);
         }
     }
 
-    // ✅ Used ONLY by the "← Retour" back button
-    @FXML
-    public void goBack() {
-        goToLogin();
-    }
-
-    private void goToLogin() {
+    // ✅ Called from ProfileSetupController after picture is set (or skipped)
+    public static void navigateToFarmList(user createdUser, Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+            FXMLLoader loader = new FXMLLoader(signup.class.getResource("/fxml/FarmList.fxml"));
             Parent root = loader.load();
 
-            Stage stage = (Stage) nameField.getScene().getWindow();
+            FarmListController controller = loader.getController();
+            controller.initData(createdUser);
+
             stage.setScene(new Scene(root, 1400, 800));
-            stage.setTitle("Login - AgriSense 360");
+            stage.setTitle("Choisir une ferme - AgriSense 360");
             stage.centerOnScreen();
 
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Erreur", "Échec du chargement de la page de connexion!");
         }
     }
 
-    // ============= VALIDATION METHODS =============
+    private void goToFarmList(user createdUser) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/FarmList.fxml"));
+            Parent root = loader.load();
+
+            FarmListController controller = loader.getController();
+            controller.initData(createdUser);
+
+            Stage stage = (Stage) nameField.getScene().getWindow();
+            stage.setScene(new Scene(root, 1400, 800));
+            stage.setTitle("Choisir une ferme - AgriSense 360");
+            stage.centerOnScreen();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Erreur", "❌ Impossible d'ouvrir la liste des fermes: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void goBack() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) nameField.getScene().getWindow();
+            stage.setScene(new Scene(root, 1400, 800));
+            stage.setTitle("Login - AgriSense 360");
+            stage.centerOnScreen();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ============= VALIDATION =============
 
     private boolean validateName() {
         String name = nameField.getText().trim();
-        if (name.isEmpty()) {
-            showError(nameError, "❌ Le nom est obligatoire");
-            return false;
-        }
-        if (!NAME_PATTERN.matcher(name).matches()) {
-            showError(nameError, "❌ Nom invalide (lettres uniquement, 2-50 caractères)");
-            return false;
-        }
+        if (name.isEmpty()) { showError(nameError, "❌ Le nom est obligatoire"); return false; }
+        if (!NAME_PATTERN.matcher(name).matches()) { showError(nameError, "❌ Nom invalide (lettres uniquement, 2-50 caractères)"); return false; }
         return true;
     }
 
     private boolean validateEmail() {
         String email = emailField.getText().trim();
-        if (email.isEmpty()) {
-            showError(emailError, "❌ L'email est obligatoire");
-            return false;
-        }
-        if (!EMAIL_PATTERN.matcher(email).matches()) {
-            showError(emailError, "❌ Format d'email invalide (ex: user@example.com)");
-            return false;
-        }
+        if (email.isEmpty()) { showError(emailError, "❌ L'email est obligatoire"); return false; }
+        if (!EMAIL_PATTERN.matcher(email).matches()) { showError(emailError, "❌ Format d'email invalide (ex: user@example.com)"); return false; }
         return true;
     }
 
     private boolean validatePassword() {
         String password = passwordField.getText().trim();
-        if (password.isEmpty()) {
-            showError(passwordError, "❌ Le mot de passe est obligatoire");
-            return false;
-        }
-        if (password.length() < 8) {
-            showError(passwordError, "❌ Le mot de passe doit contenir au moins 8 caractères");
-            return false;
-        }
+        if (password.isEmpty()) { showError(passwordError, "❌ Le mot de passe est obligatoire"); return false; }
+        if (password.length() < 8) { showError(passwordError, "❌ Minimum 8 caractères"); return false; }
         boolean hasUpperCase = password.matches(".*[A-Z].*");
         boolean hasLowerCase = password.matches(".*[a-z].*");
         boolean hasDigit     = password.matches(".*[0-9].*");
         boolean hasSpecial   = password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
         if (!hasUpperCase || !hasLowerCase || !hasDigit || !hasSpecial) {
-            showError(passwordError, "❌ Mot de passe faible (min 8 car, majuscule, minuscule, chiffre, caractère spécial)");
+            showError(passwordError, "❌ Mot de passe faible (majuscule, minuscule, chiffre, caractère spécial)");
             return false;
         }
         return true;
@@ -196,39 +200,19 @@ public class signup {
     private boolean validateConfirmPassword() {
         String password        = passwordField.getText().trim();
         String confirmPassword = confirmPasswordField.getText().trim();
-        if (confirmPassword.isEmpty()) {
-            showError(confirmPasswordError, "❌ Veuillez confirmer le mot de passe");
-            return false;
-        }
-        if (!password.equals(confirmPassword)) {
-            showError(confirmPasswordError, "❌ Les mots de passe ne correspondent pas");
-            return false;
-        }
+        if (confirmPassword.isEmpty()) { showError(confirmPasswordError, "❌ Veuillez confirmer le mot de passe"); return false; }
+        if (!password.equals(confirmPassword)) { showError(confirmPasswordError, "❌ Les mots de passe ne correspondent pas"); return false; }
         return true;
     }
 
     private boolean validatePhone() {
         String phone = phoneField.getText().trim();
-        if (phone.isEmpty()) {
-            showError(phoneError, "❌ Le numéro de téléphone est obligatoire");
-            return false;
-        }
-        if (!PHONE_PATTERN.matcher(phone).matches()) {
-            showError(phoneError, "❌ Numéro invalide (8 chiffres requis)");
-            return false;
-        }
+        if (phone.isEmpty()) { showError(phoneError, "❌ Le numéro de téléphone est obligatoire"); return false; }
+        if (!PHONE_PATTERN.matcher(phone).matches()) { showError(phoneError, "❌ Numéro invalide (8 chiffres requis)"); return false; }
         return true;
     }
 
-    private boolean validateRole() {
-        if (roleChoice.getValue() == null) {
-            showError(roleError, "❌ Veuillez sélectionner un rôle");
-            return false;
-        }
-        return true;
-    }
-
-    // ============= HELPER METHODS =============
+    // ============= HELPERS =============
 
     private void showError(Label errorLabel, String message) {
         errorLabel.setText(message);
@@ -241,7 +225,6 @@ public class signup {
         passwordError.setVisible(false);
         confirmPasswordError.setVisible(false);
         phoneError.setVisible(false);
-        roleError.setVisible(false);
     }
 
     private void showAlert(String title, String message) {
