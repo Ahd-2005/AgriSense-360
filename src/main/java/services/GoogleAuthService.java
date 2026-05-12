@@ -96,7 +96,7 @@ public class GoogleAuthService {
 
     // Crée un petit serveur HTTP temporaire pour capter le code
     private String listenForAuthCode() throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(8888)) {
+        try (ServerSocket serverSocket = new ServerSocket(8080)) {
             serverSocket.setSoTimeout(120000); // timeout 2 minutes
             Socket socket = serverSocket.accept();
 

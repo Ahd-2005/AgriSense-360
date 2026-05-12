@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.FarmListController"
+            style="-fx-background-color: #f1f8e9;">
+
+    <top>
+        <VBox style="-fx-background-color: #2e7d32; -fx-padding: 20 30;">
+            <Label text="🌾 AgriSense 360 — Choisissez votre ferme"
+                   style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;" />
+            <Label fx:id="welcomeLabel"
+                   style="-fx-font-size: 15px; -fx-text-fill: #c8e6c9;" />
+            <!-- Step indicator -->
+            <HBox spacing="8" style="-fx-padding: 10 0 0 0;">
+                <Label text="① Compte ✓"
+                       style="-fx-background-color:rgba(255,255,255,0.2);-fx-text-fill:white;-fx-padding:4 12;-fx-background-radius:20;-fx-font-size:12px;" />
+                <Label text="──" style="-fx-text-fill:rgba(255,255,255,0.4);"/>
+                <Label text="② Photo ✓"
+                       style="-fx-background-color:rgba(255,255,255,0.2);-fx-text-fill:white;-fx-padding:4 12;-fx-background-radius:20;-fx-font-size:12px;" />
+                <Label text="──" style="-fx-text-fill:rgba(255,255,255,0.4);"/>
+                <Label text="③ Choisir une ferme"
+                       style="-fx-background-color:white;-fx-text-fill:#2e7d32;-fx-padding:4 12;-fx-background-radius:20;-fx-font-size:12px;-fx-font-weight:bold;" />
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="15" style="-fx-padding: 20;">
+            <Label fx:id="statusLabel" visible="false"
+                   style="-fx-font-size: 14px; -fx-text-fill: #d32f2f;" />
+
+            <ScrollPane fx:id="scrollPane" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+                <GridPane fx:id="farmsGrid" hgap="20" vgap="20" style="-fx-padding: 10;">
+                    <columnConstraints>
+                        <ColumnConstraints prefWidth="340" />
+                        <ColumnConstraints prefWidth="340" />
+                        <ColumnConstraints prefWidth="340" />
+                    </columnConstraints>
+                </GridPane>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="15" style="-fx-padding: 15 30; -fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 1 0 0 0;">
+            <Label text="Vous pourrez postuler à d'autres fermes plus tard depuis votre profil."
+                   style="-fx-font-size: 12px; -fx-text-fill: #888;" />
+            <Button text="Passer pour l'instant →"
+                    onAction="#handleSkip"
+                    style="-fx-background-color: transparent; -fx-text-fill: #2e7d32;
+                           -fx-border-color: #2e7d32; -fx-border-width: 1.5;
+                           -fx-background-radius: 20; -fx-border-radius: 20;
+                           -fx-padding: 8 20; -fx-cursor: hand;" />
+        </HBox>
+    </bottom>
+
+</BorderPane>

@@ -11,7 +11,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import entity.user;
+import services.SessionManager;
 import services.TacheService;
+import services.applicationservice;
+import services.farmservice;
 import services.userservice;
 
 import java.sql.SQLException;
@@ -20,6 +23,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Shows ouvriers that belong to the current owner's farms only.
+ * For ROLE_ADMIN or ROLE_GERANT, all ouvriers are shown (unchanged behaviour).
+ */
 public class OuvrierManagement {
 
     @FXML private VBox cardContainer;
@@ -32,9 +39,7 @@ public class OuvrierManagement {
 
     @FXML
     public void initialize() {
-        sortComboBox.getItems().addAll(
-                "Nom (A → Z)", "Nom (Z → A)", "Email (A → Z)", "Statut"
-        );
+        sortComboBox.getItems().addAll("Nom (A → Z)", "Nom (Z → A)", "Email (A → Z)", "Statut");
         sortComboBox.setPromptText("Choisir un tri...");
 
         statusFilterComboBox.getItems().addAll("Tous les statuts", "ACTIF", "BLOQUÉ");
@@ -43,12 +48,32 @@ public class OuvrierManagement {
         loadOuvriers();
     }
 
-    // ───────────────────────────────────────────────
-    // CHARGEMENT
-    // ───────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────
+    // LOADING  — scoped to owner's farms when the logged-in user is ROLE_OWNER
+    // ─────────────────────────────────────────────────────────────────────
     private void loadOuvriers() {
         try {
-            allOuvriers = new userservice().getAllOuvriers();
+            user currentUser = SessionManager.getInstance().getCurrentUser();
+
+            if (currentUser != null && currentUser.getRole() == user.Role.ROLE_OWNER) {
+                // Only load ouvriers accepted into THIS owner's farms
+                farmservice fs = new farmservice();
+                applicationservice appSvc = new applicationservice();
+
+                List<Integer> farmIds   = fs.getFarmIdsByOwner(currentUser.getId());
+                List<Integer> ouvrierIds = appSvc.getAcceptedUserIdsByFarms(farmIds);
+
+                if (ouvrierIds.isEmpty()) {
+                    allOuvriers = new ArrayList<>();
+                } else {
+                    userservice us = new userservice();
+                    allOuvriers = us.getUsersByIds(ouvrierIds);
+                }
+            } else {
+                // Admin / Gérant → show all ouvriers (original behaviour)
+                allOuvriers = new userservice().getAllOuvriers();
+            }
+
             applyFiltersAndSort();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -56,9 +81,9 @@ public class OuvrierManagement {
         }
     }
 
-    // ───────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────
     // FILTRES & TRI
-    // ───────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────
     @FXML private void handleSearch()       { applyFiltersAndSort(); }
     @FXML private void handleSort()         { applyFiltersAndSort(); }
     @FXML private void handleStatusFilter() { applyFiltersAndSort(); }
@@ -105,7 +130,7 @@ public class OuvrierManagement {
 
         cardContainer.getChildren().clear();
         if (filtered.isEmpty()) {
-            Label empty = new Label("Aucun ouvrier trouvé.");
+            Label empty = new Label("Aucun ouvrier trouvé dans vos fermes.");
             empty.setStyle("-fx-font-size: 16px; -fx-text-fill: gray; -fx-padding: 50;");
             cardContainer.getChildren().add(empty);
         } else {
@@ -113,9 +138,9 @@ public class OuvrierManagement {
         }
     }
 
-    // ───────────────────────────────────────────────
-    // CARTE OUVRIER (avec compteur tâches)
-    // ───────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────
+    // CARTE OUVRIER  (unchanged from original)
+    // ─────────────────────────────────────────────────────────────────────
     private HBox createOuvrierCard(user ouvrier) {
         HBox card = new HBox(20);
         card.setAlignment(Pos.CENTER_LEFT);
@@ -128,14 +153,11 @@ public class OuvrierManagement {
                         "-fx-border-radius: 16px;"
         );
 
-        // ── Avatar ──
         StackPane avatarPane = buildAvatar(ouvrier);
 
-        // ── Infos ──
         VBox infoBox = new VBox(6);
         HBox.setHgrow(infoBox, Priority.ALWAYS);
 
-        // Nom + badge rôle
         HBox nameLine = new HBox(10);
         nameLine.setAlignment(Pos.CENTER_LEFT);
         Label nameLabel = new Label(ouvrier.getName());
@@ -147,7 +169,6 @@ public class OuvrierManagement {
                         "-fx-background-color: rgba(211,84,0,0.15); -fx-text-fill: #d35400;");
         nameLine.getChildren().addAll(nameLabel, roleBadge);
 
-        // Email + téléphone
         HBox contactLine = new HBox(22);
         contactLine.setAlignment(Pos.CENTER_LEFT);
         contactLine.getChildren().addAll(
@@ -155,12 +176,9 @@ public class OuvrierManagement {
                 infoChip("📱", ouvrier.getPhone() != null ? ouvrier.getPhone() : "—")
         );
 
-        // ── Compteur de tâches actives ──
         HBox tacheLine = buildTacheChip(ouvrier.getId());
-
         infoBox.getChildren().addAll(nameLine, contactLine, tacheLine);
 
-        // ── Badge statut ──
         Label statusBadge = new Label("ACTIVE".equals(ouvrier.getStatus()) ? "✔ Actif" : "✖ Bloqué");
         statusBadge.setStyle(
                 "-fx-padding: 6 18; -fx-background-radius: 15px; -fx-font-size: 12px; -fx-font-weight: bold;" +
@@ -169,7 +187,6 @@ public class OuvrierManagement {
                                 : "-fx-background-color: rgba(231,76,60,0.15); -fx-text-fill: #e74c3c;")
         );
 
-        // ── Boutons ──
         HBox actions = new HBox(10);
         actions.setAlignment(Pos.CENTER_RIGHT);
         Button viewBtn   = makeBtn("👁 Voir",     "#3498db");
@@ -185,23 +202,16 @@ public class OuvrierManagement {
         return card;
     }
 
-    /**
-     * Construit la puce de comptage de tâches pour un ouvrier.
-     * Affiche : "📋 N tâche(s) active(s)" ou "✅ Toutes terminées" ou "📋 Aucune tâche"
-     */
     private HBox buildTacheChip(int ouvrierId) {
         HBox chip = new HBox(6);
         chip.setAlignment(Pos.CENTER_LEFT);
-
         try {
             TacheService ts = new TacheService();
             int actives = ts.countTachesActives(ouvrierId);
             List<entity.Tache> toutesLesTaches = ts.getTachesParOuvrier(ouvrierId);
             int total = toutesLesTaches.size();
 
-            String texte;
-            String style;
-
+            String texte; String style;
             if (total == 0) {
                 texte = "📋 Aucune tâche";
                 style = "-fx-font-size:12px; -fx-text-fill:rgba(34,48,27,0.45);";
@@ -212,64 +222,19 @@ public class OuvrierManagement {
                 texte = "📋 " + actives + " tâche" + (actives > 1 ? "s" : "") + " active" + (actives > 1 ? "s" : "");
                 style = "-fx-font-size:12px; -fx-text-fill:#e67e22; -fx-font-weight:bold;";
             }
-
-            Label lbl = new Label(texte);
-            lbl.setStyle(style);
+            Label lbl = new Label(texte); lbl.setStyle(style);
             chip.getChildren().add(lbl);
-
         } catch (SQLException e) {
             Label lbl = new Label("📋 —");
             lbl.setStyle("-fx-font-size:12px; -fx-text-fill:rgba(34,48,27,0.45);");
             chip.getChildren().add(lbl);
         }
-
         return chip;
     }
 
-    // ── Avatar ────────────────────────────────────
-    private StackPane buildAvatar(user u) {
-        StackPane pane = new StackPane();
-        pane.setMinSize(56, 56); pane.setMaxSize(56, 56);
-        String picUrl = u.getProfilePicture();
-        if (picUrl != null && !picUrl.isBlank()) {
-            try {
-                ImageView iv = new ImageView(new Image(picUrl, 56, 56, true, true));
-                iv.setFitWidth(56); iv.setFitHeight(56);
-                Circle clip = new Circle(28, 28, 28);
-                iv.setClip(clip);
-                pane.getChildren().add(iv);
-                return pane;
-            } catch (Exception ignored) {}
-        }
-        Label lbl = new Label(getInitials(u.getName()));
-        lbl.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;");
-        StackPane bg = new StackPane(lbl);
-        bg.setMinSize(56, 56); bg.setMaxSize(56, 56);
-        bg.setStyle("-fx-background-color:" + getAvatarColor(u.getName()) + "; -fx-background-radius:28;");
-        pane.getChildren().add(bg);
-        return pane;
-    }
-
-    private HBox infoChip(String icon, String text) {
-        HBox chip = new HBox(5);
-        chip.setAlignment(Pos.CENTER_LEFT);
-        Label ico = new Label(icon); ico.setStyle("-fx-font-size:12px;");
-        Label lbl = new Label(text); lbl.setStyle("-fx-font-size:13px; -fx-text-fill:rgba(34,48,27,0.75);");
-        chip.getChildren().addAll(ico, lbl);
-        return chip;
-    }
-
-    private Button makeBtn(String text, String color) {
-        Button btn = new Button(text);
-        btn.setStyle("-fx-background-color:" + color + "; -fx-text-fill:white;" +
-                "-fx-padding:7 14; -fx-cursor:hand; -fx-font-size:12px;" +
-                "-fx-background-radius:8px; -fx-font-weight:bold;");
-        return btn;
-    }
-
-    // ───────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────
     // ACTIONS
-    // ───────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────
     private void handleViewOuvrier(user ouvrier) {
         loadInMainLayout("/fxml/OuvrierDetails.fxml", controller -> {
             OuvrierDetails c = (OuvrierDetails) controller;
@@ -314,16 +279,17 @@ public class OuvrierManagement {
 
     public void refreshTable() { loadOuvriers(); }
 
-    // ───────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────
     // NAVIGATION
-    // ───────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────
     private void loadInMainLayout(String fxmlPath, ControllerCallback callback) {
         try {
-            Parent root = cardContainer.getScene().getRoot();
-            if (root instanceof BorderPane) {
-                StackPane contentArea = (StackPane) ((BorderPane) root).getCenter();
+            javafx.scene.Parent root = cardContainer.getScene().getRoot();
+            if (root instanceof javafx.scene.layout.BorderPane) {
+                javafx.scene.layout.StackPane contentArea =
+                        (javafx.scene.layout.StackPane) ((javafx.scene.layout.BorderPane) root).getCenter();
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-                Parent content = loader.load();
+                javafx.scene.Parent content = loader.load();
                 if (callback != null) callback.onControllerLoaded(loader.getController());
                 contentArea.getChildren().clear();
                 contentArea.getChildren().add(content);
@@ -337,7 +303,48 @@ public class OuvrierManagement {
     @FunctionalInterface
     private interface ControllerCallback { void onControllerLoaded(Object controller); }
 
-    // ── Helpers avatar ────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────
+    // HELPERS
+    // ─────────────────────────────────────────────────────────────────────
+    private StackPane buildAvatar(user u) {
+        StackPane pane = new StackPane();
+        pane.setMinSize(56, 56); pane.setMaxSize(56, 56);
+        String picUrl = u.getProfilePicture();
+        if (picUrl != null && !picUrl.isBlank()) {
+            try {
+                ImageView iv = new ImageView(new Image(picUrl, 56, 56, true, true));
+                iv.setFitWidth(56); iv.setFitHeight(56);
+                Circle clip = new Circle(28, 28, 28);
+                iv.setClip(clip);
+                pane.getChildren().add(iv);
+                return pane;
+            } catch (Exception ignored) {}
+        }
+        Label lbl = new Label(getInitials(u.getName()));
+        lbl.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;");
+        StackPane bg = new StackPane(lbl);
+        bg.setMinSize(56, 56); bg.setMaxSize(56, 56);
+        bg.setStyle("-fx-background-color:" + getAvatarColor(u.getName()) + "; -fx-background-radius:28;");
+        pane.getChildren().add(bg);
+        return pane;
+    }
+
+    private HBox infoChip(String icon, String text) {
+        HBox chip = new HBox(5); chip.setAlignment(Pos.CENTER_LEFT);
+        Label ico = new Label(icon); ico.setStyle("-fx-font-size:12px;");
+        Label lbl = new Label(text); lbl.setStyle("-fx-font-size:13px; -fx-text-fill:rgba(34,48,27,0.75);");
+        chip.getChildren().addAll(ico, lbl);
+        return chip;
+    }
+
+    private Button makeBtn(String text, String color) {
+        Button btn = new Button(text);
+        btn.setStyle("-fx-background-color:" + color + "; -fx-text-fill:white;" +
+                "-fx-padding:7 14; -fx-cursor:hand; -fx-font-size:12px;" +
+                "-fx-background-radius:8px; -fx-font-weight:bold;");
+        return btn;
+    }
+
     private String getInitials(String name) {
         if (name == null || name.isBlank()) return "?";
         String[] parts = name.trim().split("\\s+");

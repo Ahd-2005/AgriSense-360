@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.PendingWaitingController"
+            style="-fx-background-color: #f1f8e9;">
+
+    <center>
+        <VBox alignment="CENTER" spacing="25" style="-fx-padding: 60;">
+
+            <Label text="⏳" style="-fx-font-size: 72px;" />
+
+            <Label text="Candidature envoyée !"
+                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;" />
+
+            <VBox alignment="CENTER" spacing="8"
+                  style="-fx-background-color: white; -fx-padding: 25 40;
+                         -fx-background-radius: 12; -fx-border-color: #c8e6c9;
+                         -fx-border-radius: 12; -fx-max-width: 550;">
+                <Label text="Bonjour" style="-fx-font-size: 16px; -fx-text-fill: #546e7a;" />
+                <Label fx:id="nameLabel"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1b5e20;" />
+                <Separator style="-fx-padding: 5 0;" />
+                <Label wrapText="true" textAlignment="CENTER" maxWidth="480"
+                       text="Votre candidature a été transmise au propriétaire de la ferme. Vous recevrez une notification dès qu'elle sera traitée."
+                       style="-fx-font-size: 14px; -fx-text-fill: #546e7a;" />
+                <Label wrapText="true" textAlignment="CENTER" maxWidth="480"
+                       text="En attendant, vous pouvez postuler à d'autres fermes disponibles."
+                       style="-fx-font-size: 13px; -fx-text-fill: #888;" />
+            </VBox>
+
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="🌾 Voir d'autres fermes"
+                        onAction="#handleBrowseMoreFarms"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;
+                               -fx-font-size: 14px; -fx-font-weight: bold;
+                               -fx-background-radius: 25; -fx-padding: 12 30; -fx-cursor: hand;" />
+                <Button text="Se déconnecter"
+                        onAction="#handleLogout"
+                        style="-fx-background-color: transparent; -fx-text-fill: #888;
+                               -fx-border-color: #ccc; -fx-border-width: 1.5;
+                               -fx-background-radius: 25; -fx-border-radius: 25;
+                               -fx-padding: 12 30; -fx-cursor: hand;" />
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

@@ -8,17 +8,20 @@ public class user {
     private String password;
     private String phone;
     private Role role;
-    private String status; // NEW: ACTIVE or BLOCKED
+    private String status; // ACTIVE or BLOCKED
     private String profilePicture;
+
     public enum Role {
-        ROLE_OUVRIER,
-        ROLE_GERANT,
-        ROLE_ADMIN
+        ROLE_PENDING,   // signed up but not yet accepted into any farm
+        ROLE_OWNER,     // owns a farm, can accept/reject applications
+        ROLE_GERANT,    // assigned by owner as manager
+        ROLE_OUVRIER,   // assigned by owner as worker
+        ROLE_ADMIN      // system admin
     }
 
     // Empty constructor
     public user() {
-        this.status = "ACTIVE"; // default
+        this.status = "ACTIVE";
     }
 
     // Constructor without id (for signup)
@@ -28,7 +31,7 @@ public class user {
         this.password = password;
         this.phone = phone;
         this.role = role;
-        this.status = "ACTIVE"; // default
+        this.status = "ACTIVE";
     }
 
     // Constructor with id (for DB fetch)
@@ -39,11 +42,11 @@ public class user {
         this.password = password;
         this.phone = phone;
         this.role = role;
-        this.status = "ACTIVE"; // default
+        this.status = "ACTIVE";
     }
 
     // Full constructor with status
-    public user(int id, String name, String email, String password, String phone, Role role, String status,String profilePicture) {
+    public user(int id, String name, String email, String password, String phone, Role role, String status, String profilePicture) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -77,26 +80,17 @@ public class user {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    // Convert enum to String
     public String getRoleAsString() { return role.name(); }
 
-    // Convert String to enum
     public void setRoleFromString(String roleString) {
         this.role = Role.valueOf(roleString);
     }
 
     public String getProfilePicture() { return profilePicture; }
-
     public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", role=" + role +
-                ", status='" + status + '\'' +
-                '}';
+        return "User{id=" + id + ", name='" + name + "', email='" + email + "', role=" + role + ", status='" + status + "'}";
     }
 }
